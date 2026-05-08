@@ -3,6 +3,7 @@ import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
 import { site } from "@/lib/site";
+import { Analytics } from "@vercel/analytics/next";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default function RootLayout({
         <div className="v2-bg-glow" aria-hidden />
         <LightsOutIntro />
         {children}
+        <Analytics />
       </body>
     </html>
   );
