@@ -28,6 +28,9 @@ type Project = {
     logo?: {
       src: string;
       alt: string;
+      variant?: "wide" | "square";
+      width?: number;
+      height?: number;
     };
   };
   tags: string[];
@@ -67,6 +70,30 @@ const projects: Project[] = [
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },
   {
+    title: "USACO Platinum",
+    category: "Competitive programming · USA Computing Olympiad",
+    dates: "Dec 2023",
+    summary:
+      "Placed in the top 1% at the most prestigious informatics competition in the United States.",
+    impact:
+      "Scored a perfect 1000 / 1000 in the December 2023 USACO Gold Division Contest, qualifying for the Platinum division.",
+    award: {
+      label: "Perfect Score · Gold → Platinum",
+      detail: "USA Computing Olympiad",
+    },
+    metrics: [
+      { value: "1000 / 1000", label: "Gold Division" },
+      { value: "Top 1%", label: "national rank" },
+      { value: "Platinum", label: "qualifier" },
+    ],
+    tags: ["C++", "Advanced DSA", "Algorithms", "gdb"],
+    details: [
+      "Solved every problem in the December 2023 USACO Gold Division Contest with a perfect 1000 / 1000.",
+      "Top 1% nationally in the United States' most prestigious informatics olympiad.",
+      "Wrote and debugged advanced data-structure and algorithm solutions in C++ under timed-contest constraints.",
+    ],
+  },
+  {
     title: "Need for Speed",
     category: "CFD + ML aerodynamics research",
     dates: "2021 - 2022",
@@ -85,6 +112,9 @@ const projects: Project[] = [
       logo: {
         src: "/images/cwsf/cwsf-logo.png",
         alt: "Canada-Wide Science Fair (CWSF / ESPC) logo",
+        variant: "wide",
+        width: 632,
+        height: 200,
       },
     },
     metrics: [
@@ -216,9 +246,13 @@ export function Projects() {
                 <Image
                   src={active.brand.logo.src}
                   alt={active.brand.logo.alt}
-                  width={92}
-                  height={92}
-                  className="v2-work-brand-logo"
+                  width={active.brand.logo.width ?? 92}
+                  height={active.brand.logo.height ?? 92}
+                  className={`v2-work-brand-logo ${
+                    active.brand.logo.variant === "wide"
+                      ? "v2-work-brand-logo--wide"
+                      : ""
+                  }`}
                 />
               ) : (
                 <span className="v2-ieee-wordmark">{active.brand.label}</span>

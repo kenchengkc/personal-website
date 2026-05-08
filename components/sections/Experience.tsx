@@ -13,6 +13,7 @@ type Stint = {
   summary: string;
   bullets: string[];
   tags: string[];
+  links?: { label: string; href: string }[];
   logo?: {
     src: string;
     alt: string;
@@ -54,6 +55,12 @@ const items: Stint[] = [
       "90%+ detection accuracy; voice-first chatbot via Gemini, ElevenLabs, OpenAI Whisper.",
     ],
     tags: ["React", "Flask", "Python", "Supabase"],
+    links: [
+      {
+        label: "Devpost: InsureFire",
+        href: "https://devpost.com/software/insurefire",
+      },
+    ],
     logo: {
       src: "/images/embers/la-hacks-2025.png",
       alt: "LA Hacks 2025 logo",
@@ -192,6 +199,22 @@ export function Experience() {
               </span>
             ))}
           </div>
+
+          {active.links && active.links.length > 0 && (
+            <div className="v2-work-links">
+              {active.links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="v2-proj-link"
+                >
+                  {link.label} →
+                </a>
+              ))}
+            </div>
+          )}
         </article>
       </div>
     </section>

@@ -1127,6 +1127,19 @@ button { font: inherit; cursor: pointer; }
   clip-path: inset(3% round 12px);
   flex-shrink: 0;
 }
+/* Wide banner-style logos render at natural aspect ratio without the
+   square-letterbox frame. Bound by a max-width/height so they sit cleanly
+   in the panel-aside slot. */
+.v2-work-brand-logo--wide {
+  width: auto;
+  height: auto;
+  max-height: 64px;
+  max-width: 200px;
+  object-fit: contain;
+  background: transparent;
+  clip-path: none;
+  border-radius: 0;
+}
 .v2-work-brand span:last-child {
   display: flex;
   flex-direction: column;
