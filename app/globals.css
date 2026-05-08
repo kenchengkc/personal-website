@@ -191,14 +191,38 @@ button { font: inherit; cursor: pointer; }
 .v2-section { margin-top: 100px; scroll-margin-top: 90px; }
 
 /* ============ HERO ============ */
-.v2-hero { padding-top: 12px; scroll-margin-top: 90px; }
-.v2-hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 56px;
-  align-items: center;
+.v2-hero {
+  position: relative;
+  padding-top: 12px;
+  scroll-margin-top: 90px;
 }
-@media (max-width: 900px) { .v2-hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+.v2-hero-copy,
+.v2-hero-track,
+.v2-hero-spec,
+.v2-hero-socials { position: relative; z-index: 1; }
+
+/* Big ambient silhouette behind the hero title */
+.v2-hero-bg {
+  position: absolute;
+  inset: -40px -10vw 0 auto;
+  width: 90vw;
+  max-width: 1200px;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  transform: translateY(-4%);
+}
+.v2-hero-bg svg {
+  width: 100%;
+  height: auto;
+  opacity: 0.045;
+}
+@media (max-width: 720px) {
+  .v2-hero-bg { display: none; }
+}
 
 .v2-eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
@@ -246,28 +270,6 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-hero-meta b { color: var(--color-text-dim); font-weight: 500; }
 
-.v2-hero-visual {
-  display: flex; flex-direction: column; gap: 18px;
-}
-.v2-hero-card {
-  position: relative;
-  border: 1px solid var(--color-border);
-  background: linear-gradient(180deg, rgba(47,98,255,0.12), var(--color-surface) 60%);
-  border-radius: 16px;
-  padding: 18px 18px 0;
-  overflow: hidden;
-}
-.v2-hero-card::before {
-  content: ''; position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 6px);
-  pointer-events: none;
-  opacity: 0.6;
-}
-.v2-hero-card-head {
-  display: flex; justify-content: space-between; align-items: center;
-  position: relative;
-}
 .v2-pill {
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -278,35 +280,97 @@ button { font: inherit; cursor: pointer; }
   border-radius: 999px;
   white-space: nowrap;
 }
-.v2-hero-car-wrap {
+
+/* The "racing line" that bleeds across the section with the car perched on it */
+.v2-hero-track {
   position: relative;
-  margin: 6px -10px -8px;
-  animation: v2carDrift 4s ease-in-out infinite alternate;
+  margin: 56px -28px 0;
+  height: 96px;
+  display: flex;
+  align-items: center;
 }
-.v2-hero-car-wrap svg,
-.v2-hero-car-wrap img { width: 100%; height: auto; display: block; border-radius: 6px; }
-@keyframes v2carDrift {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-3px); }
+.v2-hero-track-tags {
+  position: absolute;
+  top: -22px;
+  left: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
-.v2-hero-card-rows {
-  position: relative;
+.v2-hero-track-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.08) 8%,
+    var(--color-accent) 50%,
+    rgba(255,255,255,0.08) 92%,
+    transparent 100%
+  );
+  transform: translateY(-0.5px);
+}
+.v2-hero-track-line::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 14px var(--color-accent-glow);
+  transform: translate(-50%, -50%);
+}
+.v2-hero-track-car {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  width: 360px;
+  max-width: 60%;
+  transform: translateY(-58%);
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.6));
+  animation: v2heroDrift 5s ease-in-out infinite alternate;
+}
+.v2-hero-track-car svg { width: 100%; height: auto; display: block; }
+@keyframes v2heroDrift {
+  0% { transform: translate(0, -58%); }
+  100% { transform: translate(8px, -60%); }
+}
+@media (max-width: 720px) {
+  .v2-hero-track { margin: 44px -28px 0; height: 80px; }
+  .v2-hero-track-car { right: 4%; width: 80%; }
+}
+
+/* Schematic spec caption under the track */
+.v2-hero-spec {
+  margin: 22px 0 0;
+  padding: 16px 0 0;
   border-top: 1px solid var(--color-border);
-  margin-top: 10px;
-  padding: 14px 0 16px;
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.v2-hero-card-row {
+.v2-hero-spec-row {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 12px;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
   font-size: 13px;
   align-items: baseline;
 }
-.v2-hero-card-row span { color: var(--color-muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
-.v2-hero-card-row b { color: var(--color-text); font-weight: 500; }
+.v2-hero-spec-row dt { margin: 0; color: var(--color-muted); }
+.v2-hero-spec-row dd { margin: 0; color: var(--color-text); font-weight: 500; }
 
-.v2-hero-socials { display: flex; flex-direction: column; gap: 8px; }
+.v2-hero-socials {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
 .v2-social {
   display: inline-flex; align-items: center; gap: 10px;
   font-size: 13.5px; color: var(--color-muted);
@@ -533,6 +597,18 @@ button { font: inherit; cursor: pointer; }
   background: var(--color-border);
   margin-top: 4px;
 }
+.v2-exp-rail-marker {
+  width: 18px;
+  height: 30px;
+  display: block;
+  z-index: 2;
+  filter: drop-shadow(0 0 10px var(--color-accent-glow));
+}
+.v2-exp-rail-marker svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 .v2-exp-body {
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -741,8 +817,36 @@ button { font: inherit; cursor: pointer; }
 
 /* ============ FOOTER ============ */
 .v2-footer {
+  position: relative;
   border-top: 1px solid var(--color-border);
   margin-top: 60px;
+}
+.v2-footer-track {
+  position: absolute;
+  left: 0; right: 0;
+  top: -14px;
+  height: 28px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.v2-footer-track-car {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 96px;
+  height: auto;
+  transform: translateY(-58%);
+  opacity: 0.85;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.6));
+  animation: v2footerDrive 14s linear infinite;
+  color: var(--color-text);
+}
+@keyframes v2footerDrive {
+  0%   { left: -120px; }
+  100% { left: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2-footer-track-car { animation: none; left: 50%; transform: translate(-50%, -58%); }
 }
 .v2-footer-inner {
   max-width: var(--max);

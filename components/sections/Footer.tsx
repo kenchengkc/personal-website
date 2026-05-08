@@ -1,3 +1,4 @@
+import { CarSilhouette } from "@/components/cars/CarSilhouette";
 import { site } from "@/lib/site";
 
 const credits = [
@@ -18,6 +19,12 @@ const credits = [
 export function Footer() {
   return (
     <footer className="v2-footer">
+      <div className="v2-footer-track" aria-hidden>
+        <CarSilhouette
+          className="v2-footer-track-car"
+          fill="var(--color-text)"
+        />
+      </div>
       <div className="v2-footer-inner">
         <div className="v2-footer-brand">
           <span

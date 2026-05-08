@@ -1,4 +1,5 @@
 import { SectionHead } from "./SectionHead";
+import { CarTopDown } from "@/components/cars/CarTopDown";
 
 const items = [
   {
@@ -67,14 +68,16 @@ export function Experience() {
         {items.map((it, i) => (
           <div key={it.org} className="v2-exp-item">
             <div className="v2-exp-rail">
-              <span
-                className="v2-exp-rail-dot"
-                style={{
-                  background: i === 0 ? "var(--color-accent)" : "#3a3a3e",
-                  boxShadow:
-                    i === 0 ? "0 0 14px var(--color-accent)" : "none",
-                }}
-              />
+              {i === 0 ? (
+                <span className="v2-exp-rail-marker" aria-hidden>
+                  <CarTopDown fill="var(--color-accent)" />
+                </span>
+              ) : (
+                <span
+                  className="v2-exp-rail-dot"
+                  style={{ background: "#3a3a3e" }}
+                />
+              )}
               {i < items.length - 1 && <span className="v2-exp-rail-line" />}
             </div>
             <div className="v2-exp-body">
