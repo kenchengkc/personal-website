@@ -383,6 +383,20 @@ button { font: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
 }
+.v2-hero-track::before {
+  content: '';
+  position: absolute;
+  left: 36%;
+  right: 4%;
+  top: 22%;
+  bottom: 8%;
+  background:
+    radial-gradient(ellipse at 58% 48%, rgba(132,173,255,0.18), transparent 64%),
+    linear-gradient(90deg, transparent, rgba(31,63,139,0.18), transparent);
+  filter: blur(14px);
+  opacity: 0.78;
+  pointer-events: none;
+}
 .v2-hero-track-tags {
   position: absolute;
   top: -22px;
@@ -420,22 +434,88 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-hero-track-car {
   position: absolute;
+  display: block;
+  isolation: isolate;
   right: 5%;
   top: 50%;
   width: 560px;
-  height: auto;
+  aspect-ratio: 1644 / 530;
   max-width: 78%;
-  object-fit: contain;
   transform: translate(var(--hero-car-x, 0px), -46%);
-  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.6));
+  filter:
+    drop-shadow(0 16px 24px rgba(0,0,0,0.68))
+    drop-shadow(0 0 20px rgba(63,109,255,0.12));
   will-change: transform;
 }
+.v2-hero-track-car::before,
+.v2-hero-track-car::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.v2-hero-track-car::before {
+  z-index: 0;
+  left: 7%;
+  right: 3%;
+  top: 12%;
+  bottom: 9%;
+  background:
+    radial-gradient(ellipse at 66% 40%, rgba(132,173,255,0.2), transparent 58%),
+    radial-gradient(ellipse at 38% 76%, rgba(31,63,139,0.16), transparent 54%);
+  filter: blur(16px);
+  opacity: 0.7;
+}
+.v2-hero-track-car::after {
+  z-index: 1;
+  left: 7%;
+  right: 7%;
+  bottom: 3%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.72), rgba(0,0,0,0.2) 48%, transparent 72%);
+  filter: blur(5px);
+  transform: translateY(36%);
+}
+.v2-hero-track-car-img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg);
+  user-select: none;
+  pointer-events: none;
+}
+.rb-wheel-shell {
+  position: absolute;
+  z-index: 3;
+  display: block;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.rb-wheel-shell--front {
+  left: 29.08%;
+  top: 72.64%;
+  width: 11.19%;
+}
+.rb-wheel-shell--rear {
+  left: 88.69%;
+  top: 55.85%;
+  width: 10.71%;
+}
 .rb-wheel {
-  transform-box: fill-box;
+  display: block;
+  width: 100%;
+  height: auto;
   transform-origin: center;
+  border-radius: 50%;
+  filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg);
 }
 .v2-hero-track-car .rb-wheel {
-  animation: rbWheelSpin 620ms linear infinite;
+  animation: rbWheelSpin 520ms linear infinite;
 }
 .v2-hero-track-car .rb-wheel {
   animation-play-state: var(--hero-wheel-state, paused);
