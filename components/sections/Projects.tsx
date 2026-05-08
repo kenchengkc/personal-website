@@ -164,7 +164,7 @@ const projects: Project[] = [
     category: "Operations research · UF Center for Applied Optimization",
     dates: "Jun - Jul 2023",
     summary:
-      "Vehicle Routing Problem solver accelerated with ML and data-mining patterns.",
+      "Capacitated Vehicle Routing Problem (CVRP) solver accelerated with ML and data-mining patterns.",
     impact:
       "15% compute-time reduction on TB-scale routing; Best Paper at SSTP (<10% acceptance).",
     award: {
@@ -187,7 +187,7 @@ const projects: Project[] = [
     ],
     tags: ["C++", "CMake", "SLURM batch scripts", "Java", "JavaFX"],
     details: [
-      "Pattern mining drove early-termination heuristics inside the C++ solver.",
+      "Pattern mining drove early-termination heuristics inside the C++ CVRP solver.",
       "Analyzed dual-value / variable patterns in Column Generation solutions on the UF HiPerGator supercomputer.",
       "Built a JavaFX visualization tool so OR researchers could inspect candidate routes.",
     ],
@@ -311,7 +311,8 @@ export function Projects() {
                   download={link.download}
                   className="v2-proj-link"
                 >
-                  {link.label} <Arrow size={12} />
+                  <span className="v2-proj-link-text">{link.label}</span>
+                  <Arrow size={12} />
                 </a>
               ))}
             </div>

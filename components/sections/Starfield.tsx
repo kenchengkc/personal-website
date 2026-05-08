@@ -76,6 +76,51 @@ const stars: Star[] = [
   { x: 50, y: 14, size: 1.5, opacity: 0.6, twinkle: 3.8, delay: 1.2 },
   { x: 52, y: 44, size: 1, opacity: 0.55, twinkle: 5.2, delay: 0.6 },
   { x: 54, y: 80, size: 1, opacity: 0.5, tone: "ice" },
+
+  // Far-left fill (x: 0-12) — covers a previously sparse band
+  { x: 1, y: 4, size: 1, opacity: 0.5, twinkle: 4.4, tone: "ice" },
+  { x: 2, y: 38, size: 1.2, opacity: 0.6, twinkle: 3.6, delay: 0.8 },
+  { x: 3, y: 70, size: 1, opacity: 0.5, tone: "warm" },
+  { x: 5, y: 54, size: 0.8, opacity: 0.45, twinkle: 5.0, delay: 1.5 },
+  { x: 6, y: 84, size: 1, opacity: 0.55, tone: "lavender" },
+  { x: 7, y: 18, size: 1.4, opacity: 0.7, twinkle: 4.0 },
+  { x: 8, y: 64, size: 1, opacity: 0.5, tone: "ice", twinkle: 5.4, delay: 0.4 },
+  { x: 10, y: 46, size: 0.9, opacity: 0.5 },
+  { x: 11, y: 92, size: 1, opacity: 0.45, twinkle: 4.6, delay: 1.2, tone: "warm" },
+
+  // Far-right bottom fill (x: 88-99, y: 68-96) — was thin
+  { x: 88, y: 88, size: 1.2, opacity: 0.7, twinkle: 4.4, delay: 0.6, tone: "ice" },
+  { x: 90, y: 72, size: 1, opacity: 0.55 },
+  { x: 91, y: 95, size: 1, opacity: 0.5, twinkle: 5.0, tone: "warm" },
+  { x: 93, y: 80, size: 1.4, opacity: 0.75, twinkle: 3.8, delay: 1.0 },
+  { x: 95, y: 70, size: 1, opacity: 0.55, tone: "lavender" },
+  { x: 96, y: 88, size: 1, opacity: 0.6, twinkle: 4.6, delay: 0.3 },
+  { x: 98, y: 76, size: 1.2, opacity: 0.7, tone: "ice" },
+  { x: 99, y: 92, size: 1, opacity: 0.5, twinkle: 5.2, delay: 1.4 },
+
+  // Mid-bottom band fill (x: 16-86, y: 72-95) — the section that previously
+  // had only 4-5 stars across half the screen width
+  { x: 16, y: 74, size: 1, opacity: 0.5, tone: "ice" },
+  { x: 19, y: 90, size: 1.2, opacity: 0.6, twinkle: 4.2, delay: 0.5 },
+  { x: 24, y: 80, size: 1, opacity: 0.55, tone: "warm" },
+  { x: 27, y: 92, size: 1, opacity: 0.45, twinkle: 5.0, delay: 1.2 },
+  { x: 30, y: 76, size: 1.2, opacity: 0.65, twinkle: 3.8, delay: 0.2, tone: "ice" },
+  { x: 33, y: 86, size: 0.9, opacity: 0.5 },
+  { x: 36, y: 94, size: 1, opacity: 0.5, tone: "lavender" },
+  { x: 39, y: 78, size: 1.4, opacity: 0.7, twinkle: 4.6, delay: 1.0 },
+  { x: 43, y: 72, size: 1, opacity: 0.55, tone: "ice" },
+  { x: 47, y: 88, size: 1, opacity: 0.5, twinkle: 5.4, delay: 0.8 },
+  { x: 51, y: 76, size: 1.2, opacity: 0.65, tone: "warm" },
+  { x: 54, y: 94, size: 1, opacity: 0.45, twinkle: 4.0, delay: 1.6 },
+  { x: 57, y: 82, size: 0.9, opacity: 0.5 },
+  { x: 60, y: 70, size: 1.4, opacity: 0.7, twinkle: 3.6, delay: 0.4, tone: "ice" },
+  { x: 63, y: 90, size: 1, opacity: 0.55, tone: "lavender" },
+  { x: 67, y: 78, size: 1, opacity: 0.5, twinkle: 5.2 },
+  { x: 70, y: 86, size: 1.2, opacity: 0.65, twinkle: 4.4, delay: 1.1, tone: "warm" },
+  { x: 73, y: 94, size: 1, opacity: 0.5 },
+  { x: 76, y: 72, size: 1, opacity: 0.55, tone: "ice", twinkle: 4.8, delay: 0.6 },
+  { x: 80, y: 84, size: 1.2, opacity: 0.6 },
+  { x: 84, y: 78, size: 1, opacity: 0.55, twinkle: 5.0, delay: 1.3, tone: "lavender" },
 ];
 
 export function Starfield({ className }: { className?: string }) {

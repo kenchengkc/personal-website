@@ -16,6 +16,7 @@ export function LightsOutIntro() {
   const [phase, setPhase] = useState<Phase>("lighting");
   const [litCount, setLitCount] = useState(0);
   const [skipFade, setSkipFade] = useState(false);
+  const [skipped, setSkipped] = useState(false);
 
   // Returning visitors: hide the overlay synchronously before paint.
   useIsoLayoutEffect(() => {
@@ -56,6 +57,7 @@ export function LightsOutIntro() {
 
   function skip() {
     sessionStorage.setItem(STORAGE_KEY, "1");
+    setSkipped(true);
     setPhase("done");
   }
 
@@ -74,7 +76,10 @@ export function LightsOutIntro() {
       <div className="intro-vignette" />
       <div className="intro-grain" />
 
-      <div className="intro-content">
+      <div
+        className="intro-content"
+        style={skipped ? { display: "none" } : undefined}
+      >
         <div className="intro-meta">
           <span className="intro-meta-dot" />
           <span>FORMATION LAP COMPLETE - GRID SET</span>
@@ -134,7 +139,7 @@ export function LightsOutIntro() {
         SKIP &gt;&gt;
       </button>
 
-      {phase === "out" && <div className="intro-flash" />}
+      {phase === "out" && !skipped && <div className="intro-flash" />}
     </div>
   );
 }

@@ -59,7 +59,7 @@ const items: Stint[] = [
     tags: ["React", "Flask", "Python", "TypeScript", "APIs", "Supabase"],
     links: [
       {
-        label: "Devpost: InsureFire",
+        label: "Embers' Devpost",
         href: "https://devpost.com/software/insurefire",
       },
     ],
@@ -95,9 +95,9 @@ const items: Stint[] = [
     loc: "Gainesville, FL, USA",
     dates: "Jun - Jul 2023",
     summary:
-      "OR + ML research accelerating large-scale Vehicle Routing Problem solvers; awarded Best Paper at SSTP.",
+      "OR + ML research accelerating large-scale Vehicle Routing Problem (VRP) solvers; awarded Best Paper at SSTP.",
     bullets: [
-      "Improved Vehicle Routing Problem solver with ML & patterns from data mining, reducing compute time on TB-scale datasets by 15%.",
+      "Improved a VRP solver with ML and data-mining patterns, reducing compute time on TB-scale datasets by 15%.",
       "Developed a Java-based visualization tool for route solutions, enabling interpretable insights for researchers.",
       "Analyzed patterns between dual values and variables in Column Generation-based solutions using simulations on the UF Supercomputer (HiPerGator).",
       "Won the Best Paper Award at the Student Science Training Program (SSTP, less than 10% acceptance rate).",
@@ -214,7 +214,10 @@ export function Experience() {
                   rel="noopener noreferrer"
                   className="v2-proj-link"
                 >
-                  {link.label} →
+                  <span className="v2-proj-link-text">{link.label}</span>
+                  <span className="v2-proj-link-arrow" aria-hidden>
+                    →
+                  </span>
                 </a>
               ))}
             </div>
