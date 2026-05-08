@@ -737,19 +737,29 @@ button { font: inherit; cursor: pointer; }
 
 /* Rendered SVG spinner stacked on top of the photo wheel. The photo wheel
    is 3/4-angle and would wobble if rotated; the rendered spinner is a flat
-   axis-aligned circle so its rotation is pixel-perfect. Sized down (scale
-   0.84) and shifted right + down so the rim disc lands inside the photo
-   wheel's tire rather than spilling past it. */
+   axis-aligned circle so its rotation is pixel-perfect. Each wheel shifts
+   its rim toward the camera-side of the perspective: front wheel slides
+   left + down, rear wheel slides right + down. */
 .rb-wheel-spinner {
+  --rb-tx: 7%;
+  --rb-ty: 13%;
   position: absolute;
   inset: 0;
   display: block;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  transform: translate(7%, 11%) scale(0.84) rotate(0deg);
+  transform: translate(var(--rb-tx), var(--rb-ty)) scale(0.84) rotate(0deg);
   transform-origin: center center;
   will-change: transform, opacity;
+}
+.rb-wheel-shell--front .rb-wheel-spinner {
+  --rb-tx: 1%;
+  --rb-ty: 14%;
+}
+.rb-wheel-shell--rear .rb-wheel-spinner {
+  --rb-tx: 13%;
+  --rb-ty: 14%;
 }
 .rb-wheel-spinner svg {
   width: 100%;
@@ -761,8 +771,8 @@ button { font: inherit; cursor: pointer; }
   animation: rbSpinnerRoll 360ms linear infinite;
 }
 @keyframes rbSpinnerRoll {
-  from { transform: translate(7%, 11%) scale(0.84) rotate(0deg); }
-  to   { transform: translate(7%, 11%) scale(0.84) rotate(-360deg); }
+  from { transform: translate(var(--rb-tx), var(--rb-ty)) scale(0.84) rotate(0deg); }
+  to   { transform: translate(var(--rb-tx), var(--rb-ty)) scale(0.84) rotate(-360deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .rb-wheel-spinner { animation: none !important; opacity: 0 !important; }
