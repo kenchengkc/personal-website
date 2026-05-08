@@ -6,41 +6,41 @@ type Props = {
 export function CarSilhouette({ className }: Props) {
   return (
     <svg
-      viewBox="0 0 1180 330"
+      viewBox="0 0 1200 330"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-hidden
     >
       <defs>
-        <linearGradient id="rb-carbon" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#16213a" />
-          <stop offset="0.44" stopColor="#060c18" />
-          <stop offset="1" stopColor="#010308" />
+        <linearGradient id="rb-dark" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#17233a" />
+          <stop offset="0.5" stopColor="#050b17" />
+          <stop offset="1" stopColor="#01040a" />
         </linearGradient>
-        <linearGradient id="rb-carbon-soft" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#10192b" />
-          <stop offset="0.56" stopColor="#050913" />
+        <linearGradient id="rb-black" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#07101d" />
+          <stop offset="0.5" stopColor="#02050b" />
           <stop offset="1" stopColor="#000207" />
         </linearGradient>
-        <linearGradient id="rb-yellow-panel" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffde65" />
-          <stop offset="0.5" stopColor="#f7a700" />
-          <stop offset="1" stopColor="#d66c00" />
+        <linearGradient id="rb-yellow" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#ffdf67" />
+          <stop offset="0.48" stopColor="#f5a400" />
+          <stop offset="1" stopColor="#d86b00" />
         </linearGradient>
-        <linearGradient id="rb-red-panel" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ff342a" />
-          <stop offset="0.52" stopColor="#df0000" />
+        <linearGradient id="rb-red" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#ff352c" />
+          <stop offset="0.55" stopColor="#df0000" />
           <stop offset="1" stopColor="#820000" />
         </linearGradient>
-        <radialGradient id="rb-tire" cx="0.5" cy="0.5" r="0.62">
-          <stop offset="0" stopColor="#252a31" />
-          <stop offset="0.44" stopColor="#090b10" />
+        <radialGradient id="rb-tyre" cx="0.5" cy="0.48" r="0.62">
+          <stop offset="0" stopColor="#283241" />
+          <stop offset="0.45" stopColor="#070a10" />
           <stop offset="1" stopColor="#000" />
         </radialGradient>
-        <filter id="rb-car-shadow" x="-6%" y="-12%" width="112%" height="140%">
+        <filter id="rb-shadow" x="-5%" y="-14%" width="110%" height="145%">
           <feDropShadow
             dx="0"
-            dy="13"
+            dy="12"
             stdDeviation="8"
             floodColor="#000"
             floodOpacity="0.62"
@@ -48,486 +48,276 @@ export function CarSilhouette({ className }: Props) {
         </filter>
       </defs>
 
-      <ellipse cx="590" cy="286" rx="535" ry="16" fill="#000" opacity="0.5" />
+      <ellipse cx="604" cy="286" rx="522" ry="15" fill="#000" opacity="0.48" />
 
-      <g filter="url(#rb-car-shadow)" strokeLinejoin="round">
-        <g className="rb-wheel rb-wheel-front">
-          <circle cx="325" cy="226" r="70" fill="url(#rb-tire)" />
-          <circle
-            cx="325"
-            cy="226"
-            r="57"
-            fill="none"
-            stroke="#dc0000"
-            strokeWidth="7"
-          />
-          <circle
-            cx="325"
-            cy="226"
-            r="40"
-            fill="#05070c"
-            stroke="#263244"
-            strokeWidth="7"
-          />
-          <path
-            d="M325 186 L325 266 M285 226 L365 226 M297 198 L353 254 M353 198 L297 254"
-            stroke="#5f6b7a"
-            strokeWidth="5"
-            strokeLinecap="round"
-            opacity="0.7"
-          />
-          <path
-            d="M281 180 A70 70 0 0 1 366 187"
-            fill="none"
-            stroke="#ef0000"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M359 270 A70 70 0 0 1 284 269"
-            fill="none"
-            stroke="#ef0000"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-          <circle
-            cx="325"
-            cy="226"
-            r="10"
-            fill="#d8df00"
-            stroke="#030407"
-            strokeWidth="4"
-          />
-        </g>
+      <g filter="url(#rb-shadow)" strokeLinejoin="round">
+        <path
+          d="M122 250 C278 268 511 271 726 250 C842 239 942 221 1038 191 L1080 213 C976 258 806 282 552 288 C360 291 210 277 122 250 Z"
+          fill="#02050b"
+          stroke="#101b2e"
+          strokeWidth="6"
+        />
 
-        <g className="rb-wheel rb-wheel-rear">
-          <circle cx="965" cy="213" r="73" fill="url(#rb-tire)" />
-          <circle
-            cx="965"
-            cy="213"
-            r="60"
-            fill="none"
-            stroke="#dc0000"
-            strokeWidth="7"
-          />
-          <circle
-            cx="965"
-            cy="213"
-            r="41"
-            fill="#05070c"
-            stroke="#263244"
-            strokeWidth="7"
-          />
+        <g>
           <path
-            d="M965 172 L965 254 M924 213 L1006 213 M936 184 L994 242 M994 184 L936 242"
-            stroke="#5f6b7a"
-            strokeWidth="5"
-            strokeLinecap="round"
-            opacity="0.7"
-          />
-          <path
-            d="M920 166 A73 73 0 0 1 1011 174"
-            fill="none"
-            stroke="#ef0000"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M1002 260 A73 73 0 0 1 925 258"
-            fill="none"
-            stroke="#ef0000"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-          <circle
-            cx="965"
-            cy="213"
-            r="10"
-            fill="#d8df00"
-            stroke="#030407"
-            strokeWidth="4"
-          />
-        </g>
-
-        <g className="rb-front-wing">
-          <path
-            d="M34 232 L224 232 L254 247 L202 262 L44 256 Z"
-            fill="#050811"
-            stroke="#010307"
-            strokeWidth="5"
-          />
-          <path
-            d="M42 199 L42 164 L136 151 L194 164 L194 225 L70 224 Z"
-            fill="url(#rb-carbon-soft)"
-            stroke="#010307"
-            strokeWidth="5"
-          />
-          <path
-            d="M50 178 L145 164 L181 172 L72 193 Z"
-            fill="#121c30"
-            stroke="#273247"
-            strokeWidth="3"
-          />
-          <path
-            d="M58 229 L218 230"
-            stroke="#df0000"
+            d="M35 236 L210 236 L256 252 L202 266 L42 260 Z"
+            fill="#040811"
+            stroke="#010308"
             strokeWidth="6"
-            strokeLinecap="round"
           />
           <path
-            d="M92 216 L171 208"
-            stroke="#f4a900"
+            d="M52 198 L52 164 L158 152 L220 170 L210 226 L74 226 Z"
+            fill="#0e182a"
+            stroke="#010308"
             strokeWidth="6"
-            strokeLinecap="round"
           />
-          <path
-            d="M111 246 L171 251"
-            stroke="#df0000"
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
+          <path d="M66 178 L158 164 L202 174 L88 196 Z" fill="#1c2940" stroke="#31425c" strokeWidth="4" />
+          <path d="M62 238 L219 239" stroke="#e00000" strokeWidth="7" strokeLinecap="round" />
+          <path d="M112 254 L183 258" stroke="#e00000" strokeWidth="8" strokeLinecap="round" />
           <text
-            x="83"
-            y="207"
+            x="86"
+            y="218"
             fill="#f8fafc"
             fontFamily="Arial Black, Arial, sans-serif"
-            fontSize="31"
+            fontSize="34"
             fontWeight="900"
-            letterSpacing="-1"
           >
             11
           </text>
         </g>
 
         <path
-          className="rb-floor"
-          d="M210 246 C332 254 514 254 694 238 C786 230 863 216 922 196 L1025 205 C933 245 776 269 552 278 C412 283 294 275 210 246 Z"
-          fill="#02050b"
-          stroke="#111b2f"
-          strokeWidth="5"
-        />
-        <path
-          d="M382 258 C507 244 719 238 850 214"
-          fill="none"
-          stroke="#27344a"
-          strokeWidth="5"
-          opacity="0.9"
+          d="M115 209 C178 181 273 163 402 151 L526 141 C594 135 642 117 706 94 L777 70 C849 53 930 73 991 121 L1052 169 C982 190 866 209 722 221 L415 247 C279 256 173 240 115 209 Z"
+          fill="url(#rb-dark)"
+          stroke="#010308"
+          strokeWidth="7"
         />
 
         <path
-          className="rb-main-body"
-          d="M112 204 C169 178 252 158 369 148 L493 140 C548 134 596 122 659 102 L743 78 C816 64 897 84 959 132 L1015 177 C953 197 856 215 724 226 L407 249 C278 255 172 239 112 204 Z"
-          fill="url(#rb-carbon)"
-          stroke="#010307"
+          d="M116 202 C180 176 279 160 407 151 L482 147 C418 171 330 187 229 197 C181 202 143 204 116 202 Z"
+          fill="url(#rb-yellow)"
+          stroke="#05070b"
           strokeWidth="6"
         />
-
         <path
-          className="rb-yellow-nose"
-          d="M114 197 C169 174 248 158 366 149 L438 145 C394 164 317 181 227 190 C181 195 143 198 114 197 Z"
-          fill="url(#rb-yellow-panel)"
-          stroke="#06070b"
-          strokeWidth="5"
+          d="M176 199 C214 177 259 172 306 184 C270 194 238 210 210 229 C202 214 190 204 176 199 Z"
+          fill="url(#rb-red)"
+          stroke="#410000"
+          strokeWidth="4"
         />
         <path
-          className="rb-red-nose-livery"
-          d="M160 193 C193 174 232 168 272 177 C243 188 219 202 197 219 C188 206 178 198 160 193 Z"
-          fill="url(#rb-red-panel)"
-          stroke="#330000"
-          strokeWidth="3"
-        />
-        <path
-          d="M168 190 C198 169 230 171 265 186"
+          d="M184 196 C219 174 257 176 298 190"
           fill="none"
-          stroke="#ffd02a"
-          strokeWidth="5"
+          stroke="#ffd233"
+          strokeWidth="6"
           strokeLinecap="round"
         />
 
         <path
-          className="rb-cockpit-shell"
-          d="M352 149 C421 132 506 125 584 129 C554 143 526 162 509 187 L331 195 C284 197 241 195 206 188 C260 176 311 163 352 149 Z"
+          d="M359 151 C435 132 525 126 609 133 C573 149 541 169 522 194 L329 201 C276 202 235 198 204 190 C263 177 315 164 359 151 Z"
           fill="#101a2d"
           stroke="#02040a"
-          strokeWidth="5"
-        />
-        <path
-          d="M366 170 L526 168 L509 187 L342 193 Z"
-          fill="#050912"
-          stroke="#1c2a43"
-          strokeWidth="3"
-          opacity="0.95"
-        />
-
-        <path
-          className="rb-engine-cover"
-          d="M602 100 C673 82 778 84 869 131 C839 165 782 181 705 180 L571 165 C536 151 537 122 602 100 Z"
-          fill="url(#rb-yellow-panel)"
-          stroke="#05070b"
           strokeWidth="6"
         />
         <path
-          className="rb-airbox"
-          d="M555 140 L592 99 L643 94 L631 167 L558 168 Z"
-          fill="url(#rb-yellow-panel)"
-          stroke="#05070b"
-          strokeWidth="6"
-        />
-        <ellipse
-          cx="574"
-          cy="124"
-          rx="24"
-          ry="31"
-          fill="#03060c"
-          stroke="#141e31"
-          strokeWidth="5"
-        />
-        <path
-          d="M548 95 L638 92 L650 104 L561 112 Z"
-          fill="#050811"
-          stroke="#1a2438"
+          d="M387 174 L535 172 L516 192 L351 197 Z"
+          fill="#06101e"
+          stroke="#22324c"
           strokeWidth="4"
         />
 
         <path
-          className="rb-sidepod"
-          d="M651 157 C720 170 801 179 907 168 C881 202 816 226 702 236 L431 250 C357 252 291 244 236 229 C306 211 392 202 492 198 L624 190 C635 176 644 166 651 157 Z"
-          fill="#030711"
-          stroke="#111b2f"
-          strokeWidth="5"
+          d="M604 103 C680 81 792 83 885 130 C854 164 794 181 714 178 L575 162 C542 148 543 123 604 103 Z"
+          fill="url(#rb-yellow)"
+          stroke="#05070b"
+          strokeWidth="7"
         />
         <path
-          d="M595 180 L759 193"
-          fill="none"
-          stroke="#df0000"
-          strokeWidth="6"
-          strokeLinecap="round"
+          d="M562 143 L603 100 L655 96 L642 169 L564 171 Z"
+          fill="url(#rb-yellow)"
+          stroke="#05070b"
+          strokeWidth="7"
         />
-        <path
-          d="M675 232 C726 227 786 216 833 198"
-          fill="none"
-          stroke="#1c2840"
-          strokeWidth="9"
-          strokeLinecap="round"
-        />
-        <g opacity="0.84">
-          <path d="M468 244 L512 235" stroke="#28354b" strokeWidth="4" />
-          <path d="M516 244 L560 234" stroke="#28354b" strokeWidth="4" />
-          <path d="M566 241 L611 232" stroke="#28354b" strokeWidth="4" />
-          <path d="M615 238 L661 229" stroke="#28354b" strokeWidth="4" />
-        </g>
+        <ellipse cx="584" cy="127" rx="24" ry="31" fill="#03060c" stroke="#17243a" strokeWidth="5" />
+        <path d="M554 96 L653 92 L666 105 L568 113 Z" fill="#050914" stroke="#1a2940" strokeWidth="4" />
 
-        <g className="rb-halo">
+        <path
+          d="M657 159 C735 173 819 177 917 166 C895 202 824 227 705 239 L441 254 C366 255 293 246 235 229 C310 212 399 203 502 199 L625 191 C637 177 648 166 657 159 Z"
+          fill="#02070f"
+          stroke="#142037"
+          strokeWidth="6"
+        />
+        <path d="M616 182 L765 194" stroke="#e00000" strokeWidth="6" strokeLinecap="round" />
+        <path d="M411 249 C538 236 708 230 846 203" stroke="#263752" strokeWidth="5" fill="none" />
+
+        <g>
           <path
-            d="M500 146 C508 111 538 90 578 87 C616 85 648 104 661 135"
+            d="M508 147 C517 111 546 90 585 87 C625 84 657 102 671 135"
             fill="none"
-            stroke="#010307"
-            strokeWidth="20"
+            stroke="#010308"
+            strokeWidth="22"
             strokeLinecap="round"
           />
           <path
-            d="M508 145 C516 121 541 107 576 106 C608 106 632 119 642 139"
+            d="M516 145 C526 121 551 108 583 107 C616 107 641 119 652 139"
             fill="none"
-            stroke="#253147"
+            stroke="#263752"
             strokeWidth="6"
             strokeLinecap="round"
           />
-          <ellipse
-            cx="566"
-            cy="137"
-            rx="29"
-            ry="25"
-            fill="#121a2b"
-            stroke="#02040a"
+          <ellipse cx="573" cy="138" rx="29" ry="25" fill="#141e31" stroke="#02040a" strokeWidth="4" />
+          <path d="M548 131 Q574 109 598 131 L597 144 L549 144 Z" fill="#dbe5f5" opacity="0.66" />
+          <path d="M556 122 Q575 109 594 123" fill="none" stroke="#e00000" strokeWidth="5" strokeLinecap="round" />
+        </g>
+
+        <g>
+          <path d="M394 170 L284 219" stroke="#010308" strokeWidth="8" strokeLinecap="round" />
+          <path d="M418 188 L357 232" stroke="#010308" strokeWidth="8" strokeLinecap="round" />
+          <path d="M775 177 L929 223" stroke="#010308" strokeWidth="9" strokeLinecap="round" />
+          <path d="M834 168 L981 222" stroke="#010308" strokeWidth="8" strokeLinecap="round" />
+          <path d="M284 219 L357 232" stroke="#2b3c57" strokeWidth="3" strokeLinecap="round" />
+          <path d="M929 223 L981 222" stroke="#2b3c57" strokeWidth="3" strokeLinecap="round" />
+        </g>
+
+        <g>
+          <path
+            d="M688 123 C731 94 777 98 824 126 C786 128 753 138 724 158 C716 143 704 131 688 123 Z"
+            fill="url(#rb-red)"
+            stroke="#410000"
             strokeWidth="4"
           />
           <path
-            d="M541 130 Q566 108 591 130 L590 143 L542 143 Z"
-            fill="#e7eef9"
-            opacity="0.6"
-          />
-          <path
-            d="M550 120 Q569 106 589 122"
+            d="M697 123 C735 96 773 99 815 126"
             fill="none"
-            stroke="#df0000"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-        </g>
-
-        <g className="rb-suspension">
-          <path
-            d="M388 168 L270 214"
-            stroke="#02050b"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <path
-            d="M404 183 L348 221"
-            stroke="#02050b"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <path
-            d="M771 177 L929 212"
-            stroke="#02050b"
-            strokeWidth="9"
-            strokeLinecap="round"
-          />
-          <path
-            d="M821 169 L976 211"
-            stroke="#02050b"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <path
-            d="M271 214 L348 221"
-            stroke="#26344b"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <path
-            d="M929 212 L976 211"
-            stroke="#26344b"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </g>
-
-        <g className="rb-rear-wing">
-          <path
-            d="M895 95 L1017 83 L1110 115 L1087 138 L920 130 Z"
-            fill="#050811"
-            stroke="#010307"
-            strokeWidth="5"
-          />
-          <path
-            d="M884 122 L1115 149 L1104 170 L895 149 Z"
-            fill="#070b13"
-            stroke="#010307"
-            strokeWidth="5"
-          />
-          <path
-            d="M890 87 L905 197 L927 197 L916 87 Z"
-            fill="#02050b"
-            stroke="#0d1424"
-            strokeWidth="4"
-          />
-          <path
-            d="M1076 112 L1132 120 L1123 192 L1060 184 Z"
-            fill="#090e18"
-            stroke="#010307"
-            strokeWidth="5"
-          />
-          <path
-            d="M951 121 L1065 137"
-            stroke="#28354b"
+            stroke="#ffd233"
             strokeWidth="7"
             strokeLinecap="round"
           />
+          <path d="M755 124 L824 105" stroke="#ffd233" strokeWidth="6" strokeLinecap="round" />
+          <circle cx="768" cy="122" r="6" fill="#ffd233" />
+        </g>
+
+        <g>
+          <path
+            d="M913 93 L1032 82 L1127 115 L1102 139 L936 130 Z"
+            fill="#050914"
+            stroke="#010308"
+            strokeWidth="6"
+          />
+          <path
+            d="M900 122 L1135 149 L1124 171 L914 150 Z"
+            fill="#070b13"
+            stroke="#010308"
+            strokeWidth="6"
+          />
+          <path d="M906 86 L922 198 L946 198 L934 86 Z" fill="#02050b" stroke="#101a2c" strokeWidth="5" />
+          <path d="M1095 112 L1151 120 L1142 191 L1078 184 Z" fill="#090e18" stroke="#010308" strokeWidth="6" />
           <text
-            x="962"
+            x="980"
             y="134"
             fill="#f8fafc"
             fontFamily="Arial Black, Arial, sans-serif"
-            fontSize="31"
+            fontSize="32"
             fontWeight="900"
-            transform="rotate(9 962 134)"
+            transform="rotate(8 980 134)"
           >
             HONDA
           </text>
-          <text
-            x="1070"
-            y="174"
-            fill="#f8fafc"
-            fontFamily="Arial Black, Arial, sans-serif"
-            fontSize="22"
-            fontWeight="900"
-          >
+          <text x="1090" y="175" fill="#f8fafc" fontFamily="Arial Black, Arial, sans-serif" fontSize="22" fontWeight="900">
             1
           </text>
         </g>
 
-        <g className="rb-bull-livery">
-          <path
-            d="M688 124 C725 99 764 100 807 126 C774 128 743 136 714 154 C707 142 698 132 688 124 Z"
-            fill="url(#rb-red-panel)"
-            stroke="#4d0000"
-            strokeWidth="3"
-          />
-          <path
-            d="M696 124 C730 96 766 99 801 125"
+        <g className="rb-wheel rb-wheel-front">
+          <circle cx="336" cy="235" r="61" fill="url(#rb-tyre)" />
+          <circle
+            cx="336"
+            cy="235"
+            r="51"
             fill="none"
-            stroke="#ffd02a"
+            stroke="#e00000"
+            strokeWidth="7"
+          />
+          <circle
+            cx="336"
+            cy="235"
+            r="34"
+            fill="#07101a"
+            stroke="#2c3b51"
             strokeWidth="6"
-            strokeLinecap="round"
           />
           <path
-            d="M758 121 L812 107"
-            stroke="#ffd02a"
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-          <circle cx="754" cy="120" r="5" fill="#ffd02a" />
-          <path
-            d="M721 137 C745 128 768 129 792 142"
-            fill="none"
-            stroke="#ffd02a"
+            d="M336 202 L336 268 M303 235 L369 235 M313 212 L359 258 M359 212 L313 258"
+            stroke="#697789"
             strokeWidth="4"
             strokeLinecap="round"
+            opacity="0.72"
+          />
+          <circle
+            cx="336"
+            cy="235"
+            r="9"
+            fill="#d7df00"
+            stroke="#02040a"
+            strokeWidth="4"
+          />
+        </g>
+
+        <g className="rb-wheel rb-wheel-rear">
+          <circle cx="948" cy="224" r="66" fill="url(#rb-tyre)" />
+          <circle
+            cx="948"
+            cy="224"
+            r="55"
+            fill="none"
+            stroke="#e00000"
+            strokeWidth="8"
+          />
+          <circle
+            cx="948"
+            cy="224"
+            r="37"
+            fill="#07101a"
+            stroke="#2c3b51"
+            strokeWidth="6"
+          />
+          <path
+            d="M948 188 L948 260 M912 224 L984 224 M923 199 L973 249 M973 199 L923 249"
+            stroke="#697789"
+            strokeWidth="4"
+            strokeLinecap="round"
+            opacity="0.72"
+          />
+          <circle
+            cx="948"
+            cy="224"
+            r="9"
+            fill="#d7df00"
+            stroke="#02040a"
+            strokeWidth="4"
           />
         </g>
 
         <text
-          x="525"
-          y="221"
+          x="527"
+          y="223"
           fill="#f8fafc"
           fontFamily="Arial Black, Arial, sans-serif"
-          fontSize="56"
+          fontSize="50"
           fontWeight="900"
           letterSpacing="3"
         >
           ORACLE
         </text>
         <text
-          x="770"
-          y="196"
+          x="760"
+          y="194"
           fill="#df0000"
           fontFamily="Arial Black, Arial, sans-serif"
-          fontSize="35"
+          fontSize="32"
           fontWeight="900"
         >
           RedBull
-        </text>
-        <text
-          x="443"
-          y="172"
-          fill="#f8fafc"
-          fontFamily="Arial, sans-serif"
-          fontSize="20"
-          fontWeight="800"
-        >
-          ROKT
-        </text>
-        <text
-          x="356"
-          y="179"
-          fill="#f8fafc"
-          fontFamily="Arial, sans-serif"
-          fontSize="18"
-          fontWeight="800"
-        >
-          1Password
-        </text>
-        <text
-          x="772"
-          y="153"
-          fill="#df0000"
-          fontFamily="Arial Black, Arial, sans-serif"
-          fontSize="38"
-          fontWeight="900"
-        >
-          1
         </text>
       </g>
     </svg>

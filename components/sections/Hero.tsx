@@ -64,10 +64,7 @@ export function Hero() {
 
       <div className="v2-hero-copy">
         <div className="v2-eyebrow">
-          <span
-            className="v2-eyebrow-dot"
-            style={{ background: "var(--color-accent)" }}
-          />
+          <span className="v2-eyebrow-dot" />
           Available for Summer 2027 internships
         </div>
 
@@ -109,14 +106,20 @@ export function Hero() {
 
         <div className="v2-hero-meta">
           <span>
-            <b>Columbia University</b> · B.S. Computer Science · Stats minor
-            · GPA 3.7 · Expected May 2028
+            <em>Columbia University</em>
+            <b>B.S. Computer Science</b>
+            <small>Stats minor · GPA 3.7 · Expected May 2028</small>
           </span>
           <span>
-            Coursework: DSA, Linear Algebra, Probability Theory, Linear
-            Regression, Multivariable Calculus
+            <em>Coursework</em>
+            <b>DSA · Linear Algebra · Probability Theory</b>
+            <small>Linear Regression · Multivariable Calculus</small>
           </span>
-          <span>{site.location}</span>
+          <span>
+            <em>Based in</em>
+            <b>{site.location}</b>
+            <small>Open to internships, research, and builder teams</small>
+          </span>
         </div>
       </div>
 
