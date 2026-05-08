@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Medal } from "lucide-react";
 import { SectionHead } from "./SectionHead";
 import { Arrow } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
@@ -18,6 +19,7 @@ type Project = {
   summary: string;
   impact: string;
   metrics: { value: string; label: string }[];
+  award?: { label: string; detail: string };
   tags: string[];
   details: string[];
   links?: ProjectLink[];
@@ -53,6 +55,10 @@ const projects: Project[] = [
       "Machine-learning workflow for modeling and improving Formula 1 race-car aerodynamic behavior.",
     impact:
       "National science fair winning research connecting simulation, ML, and performance engineering.",
+    award: {
+      label: "Gold Medal",
+      detail: "Canada Wide Science Fair",
+    },
     metrics: [
       { value: "CWSF", label: "national champion" },
       { value: "2022", label: "award year" },
@@ -162,6 +168,15 @@ export function Projects() {
           </div>
 
           <p className="v2-work-summary">{active.summary}</p>
+          {active.award && (
+            <div className="v2-work-award" aria-label={active.award.label}>
+              <Medal size={22} strokeWidth={2.2} />
+              <span>
+                <b>{active.award.label}</b>
+                <small>{active.award.detail}</small>
+              </span>
+            </div>
+          )}
           <p className="v2-work-impact">{active.impact}</p>
 
           <div className="v2-work-metrics">

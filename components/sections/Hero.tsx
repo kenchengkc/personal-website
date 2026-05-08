@@ -60,9 +60,7 @@ export function Hero() {
 
   return (
     <section className="v2-hero" id="home" ref={heroRef}>
-      <div className="v2-hero-bg" aria-hidden>
-        <CarSilhouette fill="var(--color-text)" />
-      </div>
+      <div className="v2-hero-bg" aria-hidden />
 
       <div className="v2-hero-copy">
         <div className="v2-eyebrow">
@@ -76,7 +74,7 @@ export function Hero() {
         <h1 className="v2-hero-title">
           Hi, I&rsquo;m Ken - <br />
           I build{" "}
-          <em style={{ color: "var(--color-accent)" }}>fast</em> systems for{" "}
+          <em style={{ color: "var(--color-accent-text)" }}>fast</em> systems for{" "}
           <br />
           machine learning &amp; quant.
         </h1>
@@ -129,7 +127,7 @@ export function Hero() {
             className="v2-pill"
             style={{
               borderColor: "var(--color-accent)",
-              color: "var(--color-accent)",
+              color: "var(--color-accent-text)",
             }}
           >
             ● ACTIVE
