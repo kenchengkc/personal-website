@@ -16,9 +16,9 @@ type Project = {
 const projects: Project[] = [
   {
     title: "Quantiv",
-    sub: "Options trading data platform — ML for volatility",
-    dates: "Jul 2025 — Present",
-    desc: "A Next.js + FastAPI platform that predicts implied earnings moves for 50–100 tickers weekly. IV models combined with XGBoost on historical Greeks; DuckDB + Parquet pipeline over 1B+ records.",
+    sub: "Options trading data platform - ML for volatility",
+    dates: "Jul 2025 - Present",
+    desc: "A Next.js + FastAPI platform that predicts implied earnings moves for 50-100 tickers weekly. IV models combined with XGBoost on historical Greeks; DuckDB + Parquet pipeline over 1B+ records.",
     tags: ["Next.js", "FastAPI", "XGBoost", "DuckDB", "AWS EC2", "Redis"],
     stat: { v: "1B+", l: "records" },
     stat2: { v: "100ms", l: "p95 latency" },
@@ -28,7 +28,7 @@ const projects: Project[] = [
   {
     title: "GC-INF",
     sub: "Deep learning traffic forecasting",
-    dates: "2022 — 2023",
+    dates: "2022 - 2023",
     desc: "Hybrid Graph ConvNet + Informer for adaptive signal control. 24% RMSE improvement over prior SOTA on intersection turning ratios. Published in IEEE ITSC 2023 (single-author).",
     tags: ["PyTorch", "Graph NN", "Informer", "IEEE"],
     stat: { v: "24%", l: "RMSE Δ" },
@@ -52,7 +52,7 @@ export function Projects() {
       <SectionHead
         eyebrow="Projects"
         title="Selected work"
-        sub="Things I've built and shipped — most are open source."
+        sub="Things I've built and shipped - most are open source."
       />
       <div className="v2-proj-list">
         {projects.map((p, i) => (

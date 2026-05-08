@@ -2,21 +2,21 @@ import { SectionHead } from "./SectionHead";
 
 const items = [
   {
-    role: "Quantitative Research — Independent",
+    role: "Quantitative Research - Independent",
     org: "Quantiv",
     loc: "New York, NY",
-    dates: "Jul 2025 — Present",
+    dates: "Jul 2025 - Present",
     summary:
-      "Building an options analytics platform end to end — ML, data, and frontend.",
+      "Building an options analytics platform end to end - ML, data, and frontend.",
     bullets: [
-      "Next.js + FastAPI predicting implied earnings moves for 50–100 tickers weekly.",
+      "Next.js + FastAPI predicting implied earnings moves for 50-100 tickers weekly.",
       "XGBoost on historical Greeks + IV; DuckDB pipeline over 1B+ option chain records.",
-      "Atomic-swap rsync staging on AWS EC2 — zero-downtime data updates.",
+      "Atomic-swap rsync staging on AWS EC2 - zero-downtime data updates.",
     ],
     tags: ["XGBoost", "FastAPI", "DuckDB", "AWS", "Redis"],
   },
   {
-    role: "Machine Learning Lead — Hackathon Winner",
+    role: "Machine Learning Lead - Hackathon Winner",
     org: "Embers · LA Hacks",
     loc: "UCLA",
     dates: "Apr 2025",
@@ -32,8 +32,8 @@ const items = [
     role: "Undergraduate Researcher",
     org: "Columbia · IEEE ITSC",
     loc: "New York, NY",
-    dates: "Sep 2022 — Oct 2023",
-    summary: "GC-INF — graph ConvNet + Informer for adaptive traffic signal control.",
+    dates: "Sep 2022 - Oct 2023",
+    summary: "GC-INF - graph ConvNet + Informer for adaptive traffic signal control.",
     bullets: [
       "24% RMSE improvement over prior SOTA on intersection turning ratios.",
       "Single-author IEEE ITSC 2023 publication; session chair. ISEF Top 30.",
@@ -44,7 +44,7 @@ const items = [
     role: "Research Assistant",
     org: "University of Florida · Dr. Yu Yang",
     loc: "Gainesville, FL",
-    dates: "Jun — Aug 2023",
+    dates: "Jun - Aug 2023",
     summary:
       "C++ Vehicle Routing Problem solver with ML-driven branch-and-cut acceleration.",
     bullets: [

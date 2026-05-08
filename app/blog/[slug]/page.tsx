@@ -23,9 +23,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const post = getPostSource(slug);
-  if (!post) return { title: "Post Not Found — Ken Cheng" };
+  if (!post) return { title: "Post Not Found - Ken Cheng" };
   return {
-    title: `${post.data.title} — Ken Cheng`,
+    title: `${post.data.title} - Ken Cheng`,
     description: post.data.summary,
   };
 }

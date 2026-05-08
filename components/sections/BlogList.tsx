@@ -10,7 +10,7 @@ type Props = {
 
 const fallback = [
   {
-    title: "Pricing implied moves at earnings — a practical IV model",
+    title: "Pricing implied moves at earnings - a practical IV model",
     date: "2026-04-18",
     tag: "Quant",
     read: "12 min",
@@ -39,7 +39,7 @@ export function BlogList({ posts }: Props) {
           title: p.title,
           date: p.date,
           tag: p.tags?.[0] ?? "Notes",
-          read: "—",
+          read: "-",
           href: `/blog/${p.slug}`,
         }))
       : fallback;

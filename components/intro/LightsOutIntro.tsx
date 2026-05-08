@@ -63,7 +63,7 @@ export function LightsOutIntro() {
       <div className="intro-content">
         <div className="intro-meta">
           <span className="intro-meta-dot" />
-          <span>FORMATION LAP COMPLETE — GRID SET</span>
+          <span>FORMATION LAP COMPLETE - GRID SET</span>
         </div>
 
         <div className="intro-gantry">
@@ -108,7 +108,7 @@ export function LightsOutIntro() {
             >
               {phase === "lighting" && `LIGHTS ${litCount}/5`}
               {phase === "hold" && "HOLD…"}
-              {phase === "out" && "LIGHTS OUT — GO GO GO"}
+              {phase === "out" && "LIGHTS OUT - GO GO GO"}
             </span>
           </div>
         </div>

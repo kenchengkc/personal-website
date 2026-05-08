@@ -1,6 +1,6 @@
 const items = [
   { v: "Egleston", l: "Columbia Engineering scholar (top 1%)" },
-  { v: "IEEE ITSC", l: "2023 — single-author paper, session chair" },
+  { v: "IEEE ITSC", l: "2023 - single-author paper, session chair" },
   { v: "USACO", l: "Platinum, perfect score" },
   { v: "1B+", l: "option records in production pipeline" },
 ];

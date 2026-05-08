@@ -76,7 +76,7 @@ export function ContactForm() {
       setForm(initialForm);
       setStatus({
         ok: true,
-        msg: "Thanks — I'll get back to you within a couple of days.",
+        msg: "Thanks - I'll get back to you within a couple of days.",
       });
     } catch (error) {
       setStatus({
@@ -84,7 +84,7 @@ export function ContactForm() {
         msg:
           error instanceof Error
             ? error.message
-            : "Something went wrong — try email instead.",
+            : "Something went wrong - try email instead.",
       });
     } finally {
       setSubmitting(false);

@@ -27,7 +27,7 @@ export function Hero() {
           </div>
 
           <h1 className="v2-hero-title">
-            Hi, I&rsquo;m Ken — <br />
+            Hi, I&rsquo;m Ken - <br />
             I build{" "}
             <em style={{ color: "var(--color-accent)" }}>fast</em> systems for{" "}
             <br />
@@ -88,7 +88,7 @@ export function Hero() {
             <div className="v2-hero-card-rows">
               <div className="v2-hero-card-row">
                 <span>Currently</span>
-                <b>Quantiv — options ML platform</b>
+                <b>Quantiv - options ML platform</b>
               </div>
               <div className="v2-hero-card-row">
                 <span>Stack</span>

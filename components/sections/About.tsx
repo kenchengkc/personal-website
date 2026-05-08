@@ -28,7 +28,7 @@ export function About() {
             math, the model, and the infra all have to agree.
           </p>
           <p>
-            Right now I&rsquo;m building <b>Quantiv</b> — an options analytics
+            Right now I&rsquo;m building <b>Quantiv</b> - an options analytics
             platform that combines implied-volatility models with XGBoost on
             historical Greeks to forecast earnings moves. Before that, I
             published in IEEE ITSC on graph-network traffic forecasting, and
@@ -36,7 +36,7 @@ export function About() {
           </p>
           <p>
             When I&rsquo;m not coding, you&rsquo;ll find me watching Formula 1
-            — which, if you couldn&rsquo;t tell, inspired the look of this
+            - which, if you couldn&rsquo;t tell, inspired the look of this
             site.
           </p>
         </div>

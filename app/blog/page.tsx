@@ -6,7 +6,7 @@ import { Arrow } from "@/components/icons/Icons";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 
 export const metadata = {
-  title: "Writing — Ken Cheng",
+  title: "Writing - Ken Cheng",
 };
 
 export default function BlogPage() {

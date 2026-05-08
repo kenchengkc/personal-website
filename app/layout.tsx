@@ -26,9 +26,9 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${site.name} — CS @ Columbia`,
+  title: `${site.name} - CS @ Columbia`,
   description:
-    "Ken Cheng — CS @ Columbia (Egleston Scholar). I build fast systems for machine learning and quant. IEEE-published, USACO Platinum, Quantiv founder.",
+    "Ken Cheng - CS @ Columbia (Egleston Scholar). I build fast systems for machine learning and quant. IEEE-published, USACO Platinum, Quantiv founder.",
   metadataBase: new URL("https://kencheng.dev"),
   openGraph: {
     title: site.name,
