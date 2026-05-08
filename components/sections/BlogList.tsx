@@ -49,9 +49,13 @@ export function BlogList() {
             <div>
               <div className="v2-blog-meta">
                 <span className="v2-blog-tag">{p.venue}</span>
-                <span className="v2-mono">
-                  {p.year} · {p.citations}{" "}
-                  {p.citations === 1 ? "citation" : "citations"}
+                <span className="v2-mono">{p.year}</span>
+                <span
+                  className="v2-citations"
+                  aria-label={`${p.citations} citations`}
+                >
+                  <strong>{p.citations}</strong>
+                  <span>{p.citations === 1 ? "citation" : "citations"}</span>
                 </span>
               </div>
               <h3 className="v2-blog-title">{p.title}</h3>

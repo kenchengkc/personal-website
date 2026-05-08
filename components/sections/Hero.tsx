@@ -110,12 +110,15 @@ export function Hero() {
           <span>
             <em>Columbia University</em>
             <b>B.S. Computer Science</b>
-            <small>Stats minor · GPA 3.7 · Expected May 2028</small>
+            <small>Statistics minor · GPA 3.7 · Expected May 2028</small>
           </span>
           <span>
             <em>Coursework</em>
-            <b>DSA · Linear Algebra · Probability Theory</b>
-            <small>Linear Regression · Multivariable Calculus</small>
+            <b>DSA · Artificial Intelligence · Advanced Programming in C</b>
+            <small>
+              Linear Algebra · Probability Theory · Linear Regression ·
+              Multivariable Calculus
+            </small>
           </span>
           <span>
             <em>Based in</em>
