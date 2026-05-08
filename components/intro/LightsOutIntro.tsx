@@ -57,6 +57,7 @@ export function LightsOutIntro() {
 
   function skip() {
     sessionStorage.setItem(STORAGE_KEY, "1");
+    setSkipFade(true);
     setSkipped(true);
     setPhase("done");
   }
