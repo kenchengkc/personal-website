@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "intro-played";
-const LIGHT_INTERVAL = 850;
+const LIGHT_INTERVAL = 500;
 
 function subscribe() {
   return () => undefined;
