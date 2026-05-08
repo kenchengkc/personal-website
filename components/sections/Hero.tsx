@@ -2,7 +2,14 @@
 
 import { MouseEvent } from "react";
 import Link from "next/link";
-import { Arrow, Download, GitHub, LinkedIn, Mail } from "@/components/icons/Icons";
+import {
+  Arrow,
+  Download,
+  GitHub,
+  LinkedIn,
+  Mail,
+  Scholar,
+} from "@/components/icons/Icons";
 import { CarPhoto } from "@/components/cars/CarPhoto";
 import { site } from "@/lib/site";
 
@@ -121,6 +128,15 @@ export function Hero() {
               aria-label="LinkedIn"
             >
               <LinkedIn /> linkedin.com/in/kenchengkc
+            </Link>
+            <Link
+              href={site.socials.scholar}
+              className="v2-social"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Google Scholar"
+            >
+              <Scholar /> scholar.google.com/Ken Cheng
             </Link>
             <a
               href={`mailto:${site.email}`}

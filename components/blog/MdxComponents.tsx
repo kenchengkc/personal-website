@@ -7,7 +7,7 @@ function Callout({ children }: { children: React.ReactNode }) {
         margin: "20px 0",
         padding: "14px 18px",
         border: "1px solid var(--color-border)",
-        background: "rgba(220,0,0,0.05)",
+        background: "rgba(47,98,255,0.08)",
         borderLeft: "2px solid var(--color-accent)",
         borderRadius: 10,
         fontSize: 14,

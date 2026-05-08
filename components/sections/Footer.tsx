@@ -8,12 +8,6 @@ const credits = [
     href: "https://commons.wikimedia.org/",
   },
   {
-    label: "Ferrari",
-    author: "Liauzh",
-    license: "CC BY-SA",
-    href: "https://commons.wikimedia.org/",
-  },
-  {
     label: "McLaren MP4/2C",
     author: "Michael Barera",
     license: "CC BY-SA 4.0",

@@ -1,34 +1,34 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 const STORAGE_KEY = "intro-played";
 const LIGHT_INTERVAL = 500;
 
-function subscribe() {
-  return () => undefined;
-}
-function getSnapshot() {
-  if (typeof window === "undefined") return false;
-  return sessionStorage.getItem(STORAGE_KEY) !== "1";
-}
-
 type Phase = "lighting" | "hold" | "out" | "done";
 
+// useLayoutEffect on client, no-op on server (avoids SSR warning).
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export function LightsOutIntro() {
-  const shouldPlay = useSyncExternalStore(subscribe, getSnapshot, () => false);
+  // Render visible on SSR + first client paint so the homepage never flashes.
   const [phase, setPhase] = useState<Phase>("lighting");
   const [litCount, setLitCount] = useState(0);
+  const [skipFade, setSkipFade] = useState(false);
 
-  const finish = useCallback(() => {
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem(STORAGE_KEY, "1");
+  // Returning visitors: hide the overlay synchronously before paint.
+  useIsoLayoutEffect(() => {
+    if (sessionStorage.getItem(STORAGE_KEY) === "1") {
+      setSkipFade(true);
+      setPhase("done");
     }
-    setPhase("done");
   }, []);
 
   useEffect(() => {
-    if (!shouldPlay) return;
+    if (phase === "done") return;
+    if (sessionStorage.getItem(STORAGE_KEY) === "1") return;
+
     const timers: ReturnType<typeof setTimeout>[] = [];
     for (let i = 1; i <= 5; i++) {
       timers.push(setTimeout(() => setLitCount(i), i * LIGHT_INTERVAL));
@@ -37,24 +37,33 @@ export function LightsOutIntro() {
     const holdMs = 400 + Math.floor(Math.random() * 700);
     timers.push(setTimeout(() => setPhase("hold"), onAt));
     timers.push(setTimeout(() => setPhase("out"), onAt + holdMs));
-    timers.push(setTimeout(() => finish(), onAt + holdMs + 1100));
-    return () => timers.forEach(clearTimeout);
-  }, [shouldPlay, finish]);
+    timers.push(
+      setTimeout(() => {
+        sessionStorage.setItem(STORAGE_KEY, "1");
+        setPhase("done");
+      }, onAt + holdMs + 1100),
+    );
 
-  if (!shouldPlay && phase !== "done") return null;
-  if (phase === "done") {
-    // Render nothing once finished; the overlay fades away below before unmount.
+    return () => timers.forEach(clearTimeout);
+    // Run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function skip() {
+    sessionStorage.setItem(STORAGE_KEY, "1");
+    setPhase("done");
   }
 
-  // Hide entirely once done so it stops capturing pointer events.
-  if (phase === "done") return null;
+  const done = phase === "done";
 
   return (
     <div
       className="intro-overlay"
+      aria-hidden={done}
       style={{
-        opacity: 1,
-        pointerEvents: "auto",
+        opacity: done ? 0 : 1,
+        pointerEvents: done ? "none" : "auto",
+        transition: skipFade ? "none" : undefined,
       }}
     >
       <div className="intro-vignette" />
@@ -114,7 +123,7 @@ export function LightsOutIntro() {
         </div>
       </div>
 
-      <button type="button" className="intro-skip" onClick={finish}>
+      <button type="button" className="intro-skip" onClick={skip}>
         SKIP &gt;&gt;
       </button>
 

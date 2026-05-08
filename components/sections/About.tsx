@@ -1,5 +1,5 @@
 import { SectionHead } from "./SectionHead";
-import { CarPhoto } from "@/components/cars/CarPhoto";
+import { CarSilhouette } from "@/components/cars/CarSilhouette";
 
 const skills = [
   {
@@ -42,22 +42,20 @@ export function About() {
           </p>
 
           <div className="v2-inspo">
-            <figure className="v2-inspo-figure">
-              <CarPhoto
-                src="/images/cars/ferrari.jpg"
-                alt="Modern Ferrari Formula 1 car at speed. Photo by Liauzh, CC BY-SA."
-              />
+            <figure className="v2-inspo-figure v2-inspo-figure--silhouette">
+              <div className="v2-inspo-silhouette">
+                <CarSilhouette fill="var(--color-text)" />
+              </div>
               <figcaption className="v2-mono v2-mono--dim">
-                Ferrari · modern era
+                Halo era · ground-effect
               </figcaption>
             </figure>
-            <figure className="v2-inspo-figure">
-              <CarPhoto
-                src="/images/cars/mclaren.jpg"
-                alt="McLaren MP4/2C in Marlboro livery on display. Photo by Michael Barera, CC BY-SA 4.0."
-              />
+            <figure className="v2-inspo-figure v2-inspo-figure--silhouette">
+              <div className="v2-inspo-silhouette v2-inspo-silhouette--accent">
+                <CarSilhouette fill="var(--color-accent)" />
+              </div>
               <figcaption className="v2-mono v2-mono--dim">
-                McLaren MP4/2C · 1986
+                1980s open-wheel · turbo era
               </figcaption>
             </figure>
           </div>

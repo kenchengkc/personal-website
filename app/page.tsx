@@ -6,6 +6,7 @@ import { Experience } from "@/components/sections/Experience";
 import { Projects } from "@/components/sections/Projects";
 import { BlogList } from "@/components/sections/BlogList";
 import { Contact } from "@/components/sections/Contact";
+import { FinishLine } from "@/components/sections/FinishLine";
 import { Footer } from "@/components/sections/Footer";
 import { getAllPosts } from "@/lib/blog";
 
@@ -24,6 +25,7 @@ export default function HomePage() {
         <BlogList posts={posts} />
         <Contact />
       </main>
+      <FinishLine />
       <Footer />
     </>
   );

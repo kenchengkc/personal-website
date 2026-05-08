@@ -1,6 +1,6 @@
 import { SectionHead } from "./SectionHead";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { GitHub, LinkedIn } from "@/components/icons/Icons";
+import { GitHub, LinkedIn, Scholar } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
 
 export function Contact() {
@@ -34,6 +34,14 @@ export function Contact() {
               rel="noopener noreferrer"
             >
               <LinkedIn /> LinkedIn
+            </a>
+            <a
+              href={site.socials.scholar}
+              className="v2-contact-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Scholar /> Google Scholar
             </a>
           </div>
           <div className="v2-contact-loc">

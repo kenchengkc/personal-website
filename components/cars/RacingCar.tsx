@@ -1,4 +1,4 @@
-type Livery = "red" | "dark" | "ghost" | "accent";
+type Livery = "blue" | "dark" | "ghost" | "accent";
 
 type Props = {
   accent?: string;
@@ -8,8 +8,8 @@ type Props = {
 };
 
 export function RacingCar({
-  accent = "#DC0000",
-  livery = "red",
+  accent = "#2f62ff",
+  livery = "blue",
   detailed = true,
   className = "",
 }: Props) {
@@ -24,9 +24,9 @@ export function RacingCar({
       glass: string;
     }
   > = {
-    red: {
+    blue: {
       body: accent,
-      dark: "#1a0000",
+      dark: "#001e3c",
       stripe: "#0a0a0b",
       tire: "#0c0c0d",
       rim: "#2a2a2e",
@@ -50,7 +50,7 @@ export function RacingCar({
     },
     accent: {
       body: accent,
-      dark: "#5e0000",
+      dark: "#001e3c",
       stripe: "#fff",
       tire: "#0c0c0d",
       rim: "#3a3a3e",
