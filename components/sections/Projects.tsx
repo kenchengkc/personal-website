@@ -78,6 +78,15 @@ const projects: Project[] = [
       label: "Gold Medal",
       detail: "Canada Wide Science Fair",
     },
+    brand: {
+      label: "CWSF",
+      detail: "Canada-Wide Science Fair",
+      meta: "National champion · 2022",
+      logo: {
+        src: "/images/cwsf/cwsf-logo.png",
+        alt: "Canada-Wide Science Fair (CWSF / ESPC) logo",
+      },
+    },
     metrics: [
       { value: "CWSF", label: "national champion" },
       { value: "2022", label: "award year" },

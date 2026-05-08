@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
 import { site } from "@/lib/site";
@@ -12,7 +12,7 @@ const archivo = Archivo({
   display: "swap",
 });
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${inter.variable} ${jetbrains.variable}`}
+      className={`${archivo.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}
     >
       <body>
         <div className="v2-bg-carbon" aria-hidden />

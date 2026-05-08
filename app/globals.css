@@ -44,6 +44,8 @@ body {
   position: relative;
   font-size: 16px;
   line-height: 1.55;
+  letter-spacing: -0.005em;
+  font-feature-settings: "ss01", "ss02", "cv11";
 }
 
 ::selection { background: var(--color-accent); color: #fff; }
@@ -277,6 +279,41 @@ button { font: inherit; cursor: pointer; }
 }
 @media (max-width: 720px) {
   .v2-hero-bg { display: none; }
+}
+
+/* ============ STARFIELD ============ */
+.v2-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.v2-hero-stars {
+  /* Fade out toward the very top so the nav doesn't pick up speckles */
+  mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 100%);
+}
+.v2-star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+  transform: translate3d(0, 0, 0);
+}
+.v2-star--twinkle {
+  animation-name: v2starTwinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+@keyframes v2starTwinkle {
+  0%   { opacity: 0.18; box-shadow: 0 0 4px rgba(255,255,255,0.25); }
+  60%  { opacity: 1; box-shadow: 0 0 10px rgba(255,255,255,0.85); }
+  100% { opacity: 0.35; box-shadow: 0 0 6px rgba(255,255,255,0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2-star--twinkle { animation: none; }
 }
 
 .v2-eyebrow {
@@ -571,14 +608,15 @@ button { font: inherit; cursor: pointer; }
   border-radius: 50%;
   filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg);
 }
+/* Photo wheels aren't a perfectly axis-aligned side view, so spinning them
+   wobbles. Keep wheels static; fake speed via a tiny horizontal motion blur
+   while the car is moving (parent --hero-wheel-state: running). */
 .v2-hero-track-car .rb-wheel {
-  animation: rbWheelSpin 520ms linear infinite;
+  transition: filter 0.35s ease;
 }
-.v2-hero-track-car .rb-wheel {
-  animation-play-state: var(--hero-wheel-state, paused);
-}
-@keyframes rbWheelSpin {
-  to { transform: rotate(-360deg); }
+.v2-hero[style*="running"] .v2-hero-track-car .rb-wheel {
+  filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg)
+    blur(0.7px);
 }
 @media (max-width: 720px) {
   .v2-hero-track { margin: 44px -28px 0; height: 118px; }
