@@ -30,8 +30,19 @@ html, body { margin: 0; padding: 0; }
 
 body {
   background:
-    radial-gradient(ellipse 80% 46% at 18% -8%, rgba(18, 58, 118, 0.46), transparent 62%),
-    radial-gradient(ellipse 72% 48% at 86% 8%, rgba(31, 63, 139, 0.3), transparent 58%),
+    /* Cool aurora-ish glow upper-left */
+    radial-gradient(ellipse 80% 46% at 18% -8%, rgba(18, 58, 118, 0.5), transparent 62%),
+    /* Indigo wash upper-right */
+    radial-gradient(ellipse 72% 48% at 86% 8%, rgba(31, 63, 139, 0.34), transparent 58%),
+    /* Lavender bloom mid-left */
+    radial-gradient(ellipse 50% 38% at 8% 42%, rgba(70, 56, 140, 0.22), transparent 64%),
+    /* Cyan teal bloom mid-right */
+    radial-gradient(ellipse 44% 36% at 92% 56%, rgba(28, 80, 128, 0.26), transparent 64%),
+    /* Warm ember low at bottom-left */
+    radial-gradient(ellipse 42% 28% at 22% 92%, rgba(120, 40, 60, 0.18), transparent 70%),
+    /* Deep cobalt mid */
+    radial-gradient(ellipse 60% 36% at 50% 60%, rgba(12, 30, 78, 0.34), transparent 70%),
+    /* Vertical sky base */
     linear-gradient(180deg, var(--color-sky-mid) 0%, var(--color-sky-deep) 48%, #01040b 100%);
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -308,9 +319,9 @@ button { font: inherit; cursor: pointer; }
   animation-direction: alternate;
 }
 @keyframes v2starTwinkle {
-  0%   { opacity: 0.18; box-shadow: 0 0 4px rgba(255,255,255,0.25); }
-  60%  { opacity: 1; box-shadow: 0 0 10px rgba(255,255,255,0.85); }
-  100% { opacity: 0.35; box-shadow: 0 0 6px rgba(255,255,255,0.45); }
+  0%   { opacity: 0.22; transform: translate3d(0, 0, 0) scale(0.8); }
+  60%  { opacity: 1; transform: translate3d(0, 0, 0) scale(1.15); }
+  100% { opacity: 0.4; transform: translate3d(0, 0, 0) scale(0.92); }
 }
 @media (prefers-reduced-motion: reduce) {
   .v2-star--twinkle { animation: none; }
@@ -353,7 +364,7 @@ button { font: inherit; cursor: pointer; }
 }
 @keyframes v2pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 @keyframes v2dotPulse {
-  0%, 55% {
+  0%, 45% {
     /* Long dim rest: small, dim, almost no halo. */
     transform: scale(0.78);
     filter: brightness(0.55) saturate(0.85);
@@ -364,8 +375,9 @@ button { font: inherit; cursor: pointer; }
       0 0 0 transparent,
       0 0 0 transparent;
   }
-  68% {
-    /* Snap to peak flash: oversized core, full halo bloom. */
+  56%, 78% {
+    /* Snap to peak flash and hold. Peak now sustains across ~22% of the
+       cycle so the bright moment is readable, not just a flicker. */
     transform: scale(1.28);
     filter: brightness(1.25) saturate(1.05);
     box-shadow:
@@ -375,7 +387,7 @@ button { font: inherit; cursor: pointer; }
       0 0 60px rgba(132, 173, 255, 1),
       0 0 110px rgba(63, 109, 255, 0.95);
   }
-  78% {
+  88% {
     /* Quick drop on the way back down. */
     transform: scale(1.05);
     filter: brightness(0.9) saturate(0.95);
@@ -449,14 +461,15 @@ button { font: inherit; cursor: pointer; }
   margin-top: 28px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  max-width: 760px;
+  gap: 12px;
+  width: 100%;
+  max-width: none;
 }
 .v2-hero-meta span {
   min-width: 0;
   border: 1px solid var(--color-border);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 16px 20px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.035), transparent),
     rgba(255,255,255,0.018);
