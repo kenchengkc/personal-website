@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { SectionHead } from "./SectionHead";
 import { Arrow } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
@@ -10,56 +13,78 @@ type ProjectLink = {
 
 type Project = {
   title: string;
-  sub: string;
+  category: string;
   dates: string;
-  desc: string;
+  summary: string;
+  impact: string;
+  metrics: { value: string; label: string }[];
   tags: string[];
-  stat: { v: string; l: string };
-  stat2: { v: string; l: string };
+  details: string[];
   links?: ProjectLink[];
-  featured?: boolean;
 };
 
 const projects: Project[] = [
   {
     title: "Quantiv",
-    sub: "Options trading data platform, ML for volatility",
+    category: "Options analytics platform",
     dates: "Jul 2025 - Present",
-    desc: "A Next.js + FastAPI platform that predicts implied earnings moves for 50-100 tickers weekly. IV models combined with XGBoost on historical Greeks; DuckDB + Parquet pipeline over 1B+ records.",
-    tags: [
-      "Next.js",
-      "FastAPI",
-      "XGBoost",
-      "DuckDB",
-      "Postgres",
-      "AWS EC2",
-      "Redis",
-      "Docker",
+    summary:
+      "Full-stack platform for predicting implied earnings moves across active option chains.",
+    impact:
+      "Built the data, ML, and product layer for a production options workflow with low-latency querying.",
+    metrics: [
+      { value: "1B+", label: "option records" },
+      { value: "100ms", label: "query latency" },
+      { value: "50-100", label: "tickers weekly" },
     ],
-    stat: { v: "1B+", l: "records" },
-    stat2: { v: "100ms", l: "p95 latency" },
+    tags: ["Next.js", "FastAPI", "XGBoost", "DuckDB", "AWS EC2", "Redis"],
+    details: [
+      "Combined IV models with XGBoost on historical Greeks and volatility signals.",
+      "Built DuckDB + Parquet pipelines for option chain and volatility history records.",
+      "Reduced sync downtime with atomic directory swaps and rsync staging on AWS EC2.",
+    ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
-    featured: true,
   },
   {
     title: "Need for Speed",
-    sub: "F1 aerodynamics: a novel CFD + ML method",
+    category: "CFD + ML aerodynamics research",
     dates: "2021 - 2022",
-    desc: "Computational fluid dynamics combined with machine learning to model and enhance Formula 1 race-car aerodynamics. Won the Canada-Wide Science Fair national competition in 2022 and was published on ResearchGate.",
+    summary:
+      "Machine-learning workflow for modeling and improving Formula 1 race-car aerodynamic behavior.",
+    impact:
+      "National science fair winning research connecting simulation, ML, and performance engineering.",
+    metrics: [
+      { value: "CWSF", label: "national champion" },
+      { value: "2022", label: "award year" },
+      { value: "F1", label: "aero domain" },
+    ],
     tags: ["CFD", "Machine Learning", "Aerodynamics", "Python"],
-    stat: { v: "CWSF", l: "national champion '22" },
-    stat2: { v: "F1", l: "aerodynamics" },
+    details: [
+      "Combined computational fluid dynamics outputs with machine-learning modeling.",
+      "Focused on performance characteristics relevant to open-wheel racing aerodynamics.",
+      "Published the research on ResearchGate after the national competition.",
+    ],
     links: [{ label: "Read paper", href: site.links.f1cfd }],
-    featured: true,
   },
   {
     title: "GC-INF",
-    sub: "Deep learning traffic forecasting",
+    category: "Deep learning traffic forecasting",
     dates: "2022 - 2023",
-    desc: "Hybrid Graph ConvNet + Informer for adaptive signal control. 24% RMSE improvement over prior SOTA on intersection turning ratios. Published as single-author at IEEE ITSC 2023, where I also served as session chair for Simulation and Control.",
+    summary:
+      "Hybrid Graph ConvNet + Informer model for adaptive traffic signal control.",
+    impact:
+      "Single-author IEEE ITSC publication with a measurable forecasting improvement over prior models.",
+    metrics: [
+      { value: "24%", label: "RMSE improvement" },
+      { value: "IEEE", label: "published" },
+      { value: "1st", label: "single author" },
+    ],
     tags: ["PyTorch", "Graph NN", "Informer", "IEEE"],
-    stat: { v: "24%", l: "RMSE Δ" },
-    stat2: { v: "IEEE", l: "published" },
+    details: [
+      "Forecasted intersection turning ratios using Chebyshev graph convolutions and Informer attention.",
+      "Improved RMSE by 24% over prior state-of-the-art traffic forecasting models.",
+      "Presented at IEEE ITSC 2023 and served as session chair for Simulation and Control.",
+    ],
     links: [
       { label: "Read paper", href: site.links.gcinf },
       {
@@ -71,83 +96,117 @@ const projects: Project[] = [
   },
   {
     title: "CVRP Solver",
-    sub: "Research with Dr. Yu Yang, U. Florida",
+    category: "Optimization research tooling",
     dates: "Jun - Jul 2023",
-    desc: "Capacitated Vehicle Routing Problem solver in C++ augmented with ML and data-mining patterns. 15% compute-time reduction on TB-scale datasets, validated on the 34k-core UF HiPerGator supercomputer via SLURM batch jobs. JavaFX visualization for OR researchers.",
+    summary:
+      "C++ Capacitated Vehicle Routing Problem solver accelerated with ML and data-mining patterns.",
+    impact:
+      "Improved solver performance for large-scale optimization research on high-performance compute.",
+    metrics: [
+      { value: "15%", label: "compute reduction" },
+      { value: "34k", label: "cluster cores" },
+      { value: "TB", label: "data scale" },
+    ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX"],
-    stat: { v: "15%", l: "compute Δ" },
-    stat2: { v: "34k", l: "HiPerGator cores" },
+    details: [
+      "Integrated ML-driven pruning and data-mining patterns into a C++ VRP solver.",
+      "Validated scalability on the 34k-core UF HiPerGator cluster via SLURM jobs.",
+      "Built a JavaFX visualization tool so researchers could inspect route solutions.",
+    ],
   },
 ];
 
 export function Projects() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = projects[activeIndex];
+
   return (
     <section className="v2-section" id="projects">
       <SectionHead
         eyebrow="Projects"
         title="Selected work"
-        sub="Things I've built and shipped - most are open source."
+        sub="A concise view of the systems, research, and tooling with the most signal."
       />
-      <div className="v2-proj-list">
-        {projects.map((p, i) => (
-          <article
-            key={p.title}
-            className={`v2-proj ${p.featured ? "v2-proj--featured" : ""}`}
-          >
-            <div className="v2-proj-meta">
-              <span className="v2-mono v2-mono--accent">
-                {String(i + 1).padStart(2, "0")}
+
+      <div className="v2-work">
+        <div className="v2-work-list" aria-label="Project selector">
+          {projects.map((project, index) => (
+            <button
+              key={project.title}
+              type="button"
+              className={`v2-work-tab ${
+                index === activeIndex ? "v2-work-tab--active" : ""
+              }`}
+              onClick={() => setActiveIndex(index)}
+              aria-pressed={index === activeIndex}
+            >
+              <span className="v2-work-tab-index">
+                {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="v2-mono">{p.dates}</span>
+              <span className="v2-work-tab-copy">
+                <span className="v2-work-tab-title">{project.title}</span>
+                <span className="v2-work-tab-sub">{project.category}</span>
+              </span>
+              <span className="v2-work-tab-date">{project.dates}</span>
+            </button>
+          ))}
+        </div>
+
+        <article className="v2-work-panel" key={active.title}>
+          <div className="v2-work-panel-head">
+            <div>
+              <p className="v2-mono v2-mono--accent">{active.category}</p>
+              <h3 className="v2-work-title">{active.title}</h3>
             </div>
-            <div className="v2-proj-main">
-              <h3 className="v2-proj-title">{p.title}</h3>
-              <div className="v2-proj-sub">{p.sub}</div>
-              <p className="v2-proj-desc">{p.desc}</p>
-              <div className="v2-chips">
-                {p.tags.map((t) => (
-                  <span key={t} className="v2-chip">
-                    {t}
-                  </span>
-                ))}
+            <span className="v2-work-date">{active.dates}</span>
+          </div>
+
+          <p className="v2-work-summary">{active.summary}</p>
+          <p className="v2-work-impact">{active.impact}</p>
+
+          <div className="v2-work-metrics">
+            {active.metrics.map((metric) => (
+              <div key={metric.label} className="v2-work-metric">
+                <span className="v2-work-metric-v">{metric.value}</span>
+                <span className="v2-work-metric-l">{metric.label}</span>
               </div>
-            </div>
-            <div className="v2-proj-side">
-              <div className="v2-proj-stat">
-                <div className="v2-proj-stat-v">{p.stat.v}</div>
-                <div className="v2-proj-stat-l">{p.stat.l}</div>
-              </div>
-              <div className="v2-proj-stat">
-                <div className="v2-proj-stat-v">{p.stat2.v}</div>
-                <div className="v2-proj-stat-l">{p.stat2.l}</div>
-              </div>
-              {p.links && p.links.length > 0 && (
-                <div
-                  style={{
-                    marginTop: "auto",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                  }}
+            ))}
+          </div>
+
+          <div className="v2-chips">
+            {active.tags.map((tag) => (
+              <span key={tag} className="v2-chip">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <details className="v2-work-details">
+            <summary>Implementation notes</summary>
+            <ul>
+              {active.details.map((detail) => (
+                <li key={detail}>{detail}</li>
+              ))}
+            </ul>
+          </details>
+
+          {active.links && active.links.length > 0 && (
+            <div className="v2-work-links">
+              {active.links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download={link.download}
+                  className="v2-proj-link"
                 >
-                  {p.links.map((l) => (
-                    <a
-                      key={l.href}
-                      className="v2-proj-link"
-                      href={l.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download={l.download}
-                      style={{ marginTop: 0 }}
-                    >
-                      {l.label} <Arrow size={12} />
-                    </a>
-                  ))}
-                </div>
-              )}
+                  {link.label} <Arrow size={12} />
+                </a>
+              ))}
             </div>
-          </article>
-        ))}
+          )}
+        </article>
       </div>
     </section>
   );

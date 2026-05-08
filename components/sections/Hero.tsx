@@ -85,7 +85,7 @@ export function Hero() {
 
       <div className="v2-hero-track" aria-hidden>
         <div className="v2-hero-track-tags">
-          <span className="v2-mono v2-mono--accent">NOW DRIVING</span>
+          <span className="v2-mono v2-mono--accent">CURRENT FOCUS</span>
           <span
             className="v2-pill"
             style={{
@@ -93,7 +93,7 @@ export function Hero() {
               color: "var(--color-accent)",
             }}
           >
-            ● LIVE
+            ● ACTIVE
           </span>
         </div>
         <div className="v2-hero-track-line" />
