@@ -139,10 +139,18 @@ export function Hero() {
           </span>
         </div>
         <div className="v2-hero-track-line" />
+        <div className="v2-hero-track-streaks">
+          <span className="v2-streak v2-streak--1" />
+          <span className="v2-streak v2-streak--2" />
+          <span className="v2-streak v2-streak--3" />
+          <span className="v2-streak v2-streak--4" />
+          <span className="v2-streak v2-streak--5" />
+        </div>
         <CarSilhouette
           className="v2-hero-track-car"
           fill="var(--color-text)"
         />
+        <div className="v2-hero-track-ground" />
       </div>
 
       <dl className="v2-hero-spec">

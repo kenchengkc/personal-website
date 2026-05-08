@@ -526,6 +526,89 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 0 14px var(--color-accent-glow);
   transform: translate(-50%, -50%);
 }
+
+/* Speed streaks behind the car. Five horizontal lines at varied lengths,
+   thickness, and animation cadence. They stay invisible until the hero is
+   in motion, then fly leftward to sell the speed read. */
+.v2-hero-track-streaks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.v2-hero[style*="running"] .v2-hero-track-streaks { opacity: 1; }
+
+.v2-streak {
+  position: absolute;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 35%,
+    rgba(255, 255, 255, 0.85) 60%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  animation: v2streak 0.95s linear infinite;
+  will-change: transform, opacity;
+}
+.v2-streak--1 { top: 38%; right: -22%; width: 22%; animation-delay: 0s;    animation-duration: 0.85s; }
+.v2-streak--2 { top: 46%; right: -28%; width: 28%; animation-delay: 0.18s; animation-duration: 1.05s; opacity: 0.75; height: 1px; }
+.v2-streak--3 { top: 54%; right: -18%; width: 18%; animation-delay: 0.42s; animation-duration: 0.75s; height: 2px; }
+.v2-streak--4 { top: 62%; right: -34%; width: 34%; animation-delay: 0.08s; animation-duration: 1.2s;  opacity: 0.6; }
+.v2-streak--5 { top: 70%; right: -25%; width: 25%; animation-delay: 0.55s; animation-duration: 0.9s;  height: 1px; }
+.v2-streak--3 {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-accent) 60%, transparent) 30%,
+    var(--color-accent) 60%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+@keyframes v2streak {
+  0%   { transform: translateX(0); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translateX(-160%); opacity: 0; }
+}
+
+/* Subtle ground contact shadow under the car so it stops feeling like a
+   floating cutout. */
+.v2-hero-track-ground {
+  position: absolute;
+  bottom: 8%;
+  right: 8%;
+  width: 50%;
+  height: 14px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.32) 35%,
+    transparent 70%
+  );
+  filter: blur(3px);
+  transform: translateX(var(--hero-car-x, 0));
+  transition: transform 0.05s linear;
+}
+.v2-hero[style*="running"] .v2-hero-track-ground {
+  animation: v2groundShimmer 0.18s linear infinite;
+}
+@keyframes v2groundShimmer {
+  0%, 100% { opacity: 0.95; }
+  50%      { opacity: 0.78; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-streak { animation: none !important; opacity: 0 !important; }
+  .v2-hero-track-ground { animation: none !important; }
+}
+
 .v2-hero-track-car {
   position: absolute;
   display: block;
@@ -608,15 +691,16 @@ button { font: inherit; cursor: pointer; }
   border-radius: 50%;
   filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg);
 }
-/* Photo wheels aren't a perfectly axis-aligned side view, so spinning them
-   wobbles. Keep wheels static; fake speed via a tiny horizontal motion blur
-   while the car is moving (parent --hero-wheel-state: running). */
+/* Wheels are a 3/4-angle photo, so spinning them wobbles. Keep them static;
+   sell the speed read with a horizontal-directional SVG motion blur that
+   activates while the car is in motion (parent --hero-wheel-state: running). */
 .v2-hero-track-car .rb-wheel {
   transition: filter 0.35s ease;
+  will-change: filter;
 }
 .v2-hero[style*="running"] .v2-hero-track-car .rb-wheel {
   filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg)
-    blur(0.7px);
+    url(#rb-wheel-motion);
 }
 @media (max-width: 720px) {
   .v2-hero-track { margin: 44px -28px 0; height: 118px; }
