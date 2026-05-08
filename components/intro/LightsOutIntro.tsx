@@ -116,12 +116,15 @@ export function LightsOutIntro() {
             <span className="intro-readout-k">STATUS</span>
             <span
               className={`intro-readout-v ${
-                phase === "out" ? "intro-readout-v--accent" : ""
+                phase === "out" || phase === "done"
+                  ? "intro-readout-v--accent"
+                  : ""
               }`}
             >
               {phase === "lighting" && `LIGHTS ${litCount}/5`}
               {phase === "hold" && "HOLD…"}
-              {phase === "out" && "LIGHTS OUT - GO GO GO"}
+              {(phase === "out" || phase === "done") &&
+                "LIGHTS OUT - GO GO GO"}
             </span>
           </div>
         </div>
