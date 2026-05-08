@@ -16,12 +16,14 @@ type Stint = {
   logo?: {
     src: string;
     alt: string;
+    variant?: "wide" | "square";
+    tone?: "dark" | "light";
   };
 };
 
 const items: Stint[] = [
   {
-    role: "Founder & Builder - Options Analytics Platform",
+    role: "Founder & Builder",
     org: "Quantiv",
     loc: "New York, NY",
     dates: "Jul 2025 - Present",
@@ -33,6 +35,12 @@ const items: Stint[] = [
       "Building toward a workflow that makes volatility research more accessible and operational.",
     ],
     tags: ["Founder", "Product", "ML", "Data Infra", "Options"],
+    logo: {
+      src: "/images/quantiv/quantiv-color-banner.png",
+      alt: "Quantiv logo",
+      variant: "wide",
+      tone: "dark",
+    },
   },
   {
     role: "Machine Learning Lead - Hackathon Winner",
@@ -46,6 +54,12 @@ const items: Stint[] = [
       "90%+ detection accuracy; voice-first chatbot via Gemini, ElevenLabs, OpenAI Whisper.",
     ],
     tags: ["React", "Flask", "Python", "Supabase"],
+    logo: {
+      src: "/images/embers/la-hacks-2025.png",
+      alt: "LA Hacks 2025 logo",
+      variant: "wide",
+      tone: "dark",
+    },
   },
   {
     role: "Independent Researcher - IEEE ITSC 2023",
@@ -152,7 +166,11 @@ export function Experience() {
                   alt={active.logo.alt}
                   width={128}
                   height={128}
-                  className="v2-exp-logo"
+                  className={`v2-exp-logo ${
+                    active.logo.variant === "wide" ? "v2-exp-logo--wide" : ""
+                  } ${
+                    active.logo.tone === "dark" ? "v2-exp-logo--dark" : ""
+                  }`}
                 />
               )}
               <span className="v2-work-date">{active.dates}</span>

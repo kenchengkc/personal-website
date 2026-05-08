@@ -44,6 +44,15 @@ const projects: Project[] = [
       "Founder-built platform for earnings-move research across active option chains.",
     impact:
       "Combines market data engineering, ML volatility signals, and a usable research interface for options workflows.",
+    brand: {
+      label: "Quantiv",
+      detail: "Quantiv",
+      meta: "Founder-built options platform",
+      logo: {
+        src: "/images/quantiv/quantiv-icon.png",
+        alt: "Quantiv app icon",
+      },
+    },
     metrics: [
       { value: "1B+", label: "option records" },
       { value: "100ms", label: "query latency" },

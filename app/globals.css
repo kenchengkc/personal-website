@@ -247,32 +247,32 @@ button { font: inherit; cursor: pointer; }
   transform: translateZ(0);
 }
 .v2-eyebrow-dot {
-  width: 9px; height: 9px; border-radius: 50%;
+  width: 10px; height: 10px; border-radius: 50%;
   background: #9fbdff;
   box-shadow:
-    0 0 0 4px rgba(132,173,255,0.12),
-    0 0 16px rgba(132,173,255,0.5);
-  animation: v2availabilityBlink 10s ease-in-out infinite;
+    0 0 0 5px rgba(132,173,255,0.14),
+    0 0 18px rgba(132,173,255,0.58);
+  animation: v2availabilityBlink 3s ease-in-out infinite;
 }
 @keyframes v2pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 @keyframes v2availabilityBlink {
-  0%, 84%, 100% {
-    opacity: 0.78;
-    box-shadow:
-      0 0 0 4px rgba(132,173,255,0.12),
-      0 0 14px rgba(132,173,255,0.38);
-  }
-  88% {
-    opacity: 1;
-    box-shadow:
-      0 0 0 5px rgba(132,173,255,0.16),
-      0 0 20px rgba(132,173,255,0.58);
-  }
-  92% {
+  0%, 62%, 100% {
     opacity: 0.86;
     box-shadow:
-      0 0 0 4px rgba(132,173,255,0.12),
-      0 0 15px rgba(132,173,255,0.42);
+      0 0 0 5px rgba(132,173,255,0.14),
+      0 0 18px rgba(132,173,255,0.5);
+  }
+  74% {
+    opacity: 1;
+    box-shadow:
+      0 0 0 7px rgba(132,173,255,0.2),
+      0 0 28px rgba(132,173,255,0.78);
+  }
+  86% {
+    opacity: 0.92;
+    box-shadow:
+      0 0 0 5px rgba(132,173,255,0.16),
+      0 0 20px rgba(132,173,255,0.56);
   }
 }
 @keyframes v2eyebrowPulse {
@@ -379,7 +379,7 @@ button { font: inherit; cursor: pointer; }
 .v2-hero-track {
   position: relative;
   margin: 56px -28px 0;
-  height: 96px;
+  height: 150px;
   display: flex;
   align-items: center;
 }
@@ -420,11 +420,13 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-hero-track-car {
   position: absolute;
-  right: 8%;
+  right: 5%;
   top: 50%;
-  width: 430px;
-  max-width: 68%;
-  transform: translate(var(--hero-car-x, 0px), -58%);
+  width: 560px;
+  height: auto;
+  max-width: 78%;
+  object-fit: contain;
+  transform: translate(var(--hero-car-x, 0px), -46%);
   filter: drop-shadow(0 10px 24px rgba(0,0,0,0.6));
   will-change: transform;
 }
@@ -442,8 +444,8 @@ button { font: inherit; cursor: pointer; }
   to { transform: rotate(-360deg); }
 }
 @media (max-width: 720px) {
-  .v2-hero-track { margin: 44px -28px 0; height: 80px; }
-  .v2-hero-track-car { right: 4%; width: 80%; }
+  .v2-hero-track { margin: 44px -28px 0; height: 118px; }
+  .v2-hero-track-car { right: 8%; width: 88%; max-width: 88%; }
 }
 
 /* Schematic spec caption under the track */
@@ -805,12 +807,22 @@ button { font: inherit; cursor: pointer; }
 .v2-exp-logo {
   width: 112px;
   height: 112px;
+  max-width: none;
   object-fit: contain;
+  flex-shrink: 0;
   border-radius: 12px;
   border: 1px solid var(--color-border);
   background: #fff;
   padding: 8px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.22);
+}
+.v2-exp-logo--wide {
+  width: 220px;
+  height: 92px;
+  padding: 8px 10px;
+}
+.v2-exp-logo--dark {
+  background: #02050c;
 }
 .v2-work-summary {
   margin: 0;
@@ -850,9 +862,10 @@ button { font: inherit; cursor: pointer; }
 .v2-work-brand-logo {
   width: 54px;
   height: 54px;
-  object-fit: cover;
-  border-radius: 10px;
-  background: #fff;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #101010;
+  clip-path: inset(3% round 12px);
   flex-shrink: 0;
 }
 .v2-work-brand span:last-child {
