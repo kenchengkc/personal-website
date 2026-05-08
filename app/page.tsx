@@ -22,7 +22,7 @@ export default function HomePage() {
           <div className="card-base p-6">
             <p className="telemetry-accent">FOCUS</p>
             <h3 className="mt-2 text-xl font-bold">
-              Quantiv — options analytics platform
+              Quantiv: options analytics platform
             </h3>
             <p className="mt-3 text-muted text-sm leading-relaxed">
               Building an ML-powered system to predict implied earnings moves.

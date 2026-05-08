@@ -26,12 +26,12 @@ export async function generateMetadata({ params }: Props) {
 
   if (!post) {
     return {
-      title: "Post Not Found — Ken Cheng",
+      title: "Post Not Found - Ken Cheng",
     };
   }
 
   return {
-    title: `${post.data.title} — Ken Cheng`,
+    title: `${post.data.title} - Ken Cheng`,
     description: post.data.summary,
   };
 }

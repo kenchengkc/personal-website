@@ -24,7 +24,7 @@ export function Hero() {
 
       <p className="mt-8 max-w-2xl text-lg md:text-xl text-muted leading-relaxed">
         CS undergrad at <span className="text-white">Columbia University</span>{" "}
-        (Egleston Scholar — Top 1% of Class). I build at the intersection of
+        (Egleston Scholar, Top 1% of Class). I build at the intersection of
         machine learning, quantitative finance, and systems engineering.
         IEEE-published, USACO Platinum, hackathon winner. Off-hours: F1.
       </p>

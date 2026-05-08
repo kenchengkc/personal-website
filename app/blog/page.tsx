@@ -5,7 +5,7 @@ import { Tag } from "@/components/common/Tag";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 
 export const metadata = {
-  title: "Blog — Ken Cheng",
+  title: "Blog - Ken Cheng",
 };
 
 export default function BlogPage() {
@@ -24,7 +24,7 @@ export default function BlogPage() {
         <section className="card-base p-8">
           <p className="telemetry-accent">PIT WALL STATUS</p>
           <h3 className="mt-3 text-2xl font-bold">
-            Box, box — posts coming soon
+            Box, box: posts coming soon
           </h3>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
             Drop an MDX file into content/blog with title, date, summary, and

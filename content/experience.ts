@@ -17,7 +17,7 @@ export const experiences: Experience[] = [
     id: "embers",
     role: "Machine Learning Lead & Winner",
     org: "LA Hacks · Embers",
-    location: "University of California – Los Angeles",
+    location: "University of California - Los Angeles",
     dates: "04/2025",
     tags: ["React", "Flask", "Python", "TypeScript", "APIs", "Supabase"],
     bullets: [
@@ -33,6 +33,6 @@ export const experiences: Experience[] = [
       { label: "GitHub", href: "https://github.com/kenchengkc/embers" },
     ],
     image: "/images/embers/cover.png",
-    imageAlt: "Embers app — wildfire insurance claim assistant",
+    imageAlt: "Embers app: wildfire insurance claim assistant",
   },
 ];

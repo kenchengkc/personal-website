@@ -9,7 +9,7 @@ export function ProjectCard({ project }: { project: Project }) {
       <SmartImage
         src={project.image}
         alt={project.imageAlt}
-        label={`${project.title.toUpperCase()} — IMAGE PENDING`}
+        label={`${project.title.toUpperCase()} / IMAGE PENDING`}
       />
 
       <div className="p-6 md:p-8 flex flex-col gap-5 grow">

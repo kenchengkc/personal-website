@@ -5,7 +5,7 @@ import { projects } from "@/content/projects";
 import { awards } from "@/content/awards";
 
 export const metadata = {
-  title: "Projects — Ken Cheng",
+  title: "Projects - Ken Cheng",
 };
 
 export default function ProjectsPage() {
@@ -15,7 +15,7 @@ export default function ProjectsPage() {
         lap={3}
         sector={1}
         title="Projects & Publications"
-        subtitle="Builds, research, and code I'm proud of — from quant systems to peer-reviewed ML."
+        subtitle="Builds, research, and code I'm proud of, from quant systems to peer-reviewed ML."
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

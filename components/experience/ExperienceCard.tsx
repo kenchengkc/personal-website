@@ -6,7 +6,7 @@ import type { Experience } from "@/content/experience";
 export function ExperienceCard({ exp }: { exp: Experience }) {
   return (
     <article className="card-base overflow-hidden">
-      <SmartImage src={exp.image} alt={exp.imageAlt} label={`${exp.org.toUpperCase()} — IMAGE PENDING`} />
+      <SmartImage src={exp.image} alt={exp.imageAlt} label={`${exp.org.toUpperCase()} / IMAGE PENDING`} />
 
       <div className="p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">

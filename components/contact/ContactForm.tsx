@@ -45,7 +45,7 @@ export function ContactForm() {
     if (name.length < 2 || !isValidEmail(email) || message.length < 10) {
       setStatus({
         type: "error",
-        message: "RADIO CHECK FAILED — confirm name, email, and message.",
+        message: "RADIO CHECK FAILED: confirm name, email, and message.",
       });
       return;
     }
@@ -76,15 +76,15 @@ export function ContactForm() {
       setForm(initialForm);
       setStatus({
         type: "success",
-        message: "MESSAGE TRANSMITTED — I will reply from the pit wall soon.",
+        message: "MESSAGE TRANSMITTED: I will reply from the pit wall soon.",
       });
     } catch (error) {
       setStatus({
         type: "error",
         message:
           error instanceof Error
-            ? `RADIO CHECK FAILED — ${error.message}`
-            : "RADIO CHECK FAILED — try email directly.",
+            ? `RADIO CHECK FAILED: ${error.message}`
+            : "RADIO CHECK FAILED: try email directly.",
       });
     } finally {
       setSubmitting(false);

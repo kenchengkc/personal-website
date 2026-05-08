@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${site.name} — ${site.tagline}`,
+  title: `${site.name} - ${site.tagline}`,
   description:
-    "Personal site of Ken Cheng — Computer Science at Columbia. ML, quantitative finance, and systems engineering. IEEE-published, USACO Platinum.",
+    "Personal site of Ken Cheng: Computer Science at Columbia. ML, quantitative finance, and systems engineering. IEEE-published, USACO Platinum.",
   metadataBase: new URL("https://kencheng.dev"),
   openGraph: {
     title: site.name,
