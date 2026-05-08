@@ -36,7 +36,12 @@ export function LightsOutIntro() {
     const onAt = 5 * LIGHT_INTERVAL;
     const holdMs = 400 + Math.floor(Math.random() * 700);
     timers.push(setTimeout(() => setPhase("hold"), onAt));
-    timers.push(setTimeout(() => setPhase("out"), onAt + holdMs));
+    timers.push(
+      setTimeout(() => {
+        setLitCount(0);
+        setPhase("out");
+      }, onAt + holdMs),
+    );
     timers.push(
       setTimeout(() => {
         sessionStorage.setItem(STORAGE_KEY, "1");
@@ -81,15 +86,14 @@ export function LightsOutIntro() {
               <div className="intro-pole-stem" />
               <div className="intro-pole-bar">
                 {[0, 1].map((row) => {
+                  const lightsAreOut = phase === "out" || phase === "done";
                   const isLit =
-                    phase === "out"
-                      ? false
-                      : phase === "hold" || col < litCount;
+                    !lightsAreOut && (phase === "hold" || col < litCount);
                   return (
                     <div
                       key={row}
                       className={`intro-light ${isLit ? "intro-light--on" : ""} ${
-                        phase === "out" ? "intro-light--out" : ""
+                        lightsAreOut ? "intro-light--out" : ""
                       }`}
                     />
                   );
