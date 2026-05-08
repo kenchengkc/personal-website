@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { AlertTriangle, CheckCircle2, Loader2, Send } from "lucide-react";
+import { Arrow } from "@/components/icons/Icons";
 
 type FormState = {
   name: string;
@@ -11,9 +11,9 @@ type FormState = {
 };
 
 type Status =
-  | { type: "idle" }
-  | { type: "success"; message: string }
-  | { type: "error"; message: string };
+  | { ok: true; msg: string }
+  | { ok: false; msg: string }
+  | null;
 
 const initialForm: FormState = {
   name: "",
@@ -28,10 +28,10 @@ function isValidEmail(email: string) {
 
 export function ContactForm() {
   const [form, setForm] = useState<FormState>(initialForm);
-  const [status, setStatus] = useState<Status>({ type: "idle" });
+  const [status, setStatus] = useState<Status>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  function updateField(field: keyof FormState, value: string) {
+  function update(field: keyof FormState, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
@@ -44,14 +44,14 @@ export function ContactForm() {
 
     if (name.length < 2 || !isValidEmail(email) || message.length < 10) {
       setStatus({
-        type: "error",
-        message: "RADIO CHECK FAILED: confirm name, email, and message.",
+        ok: false,
+        msg: "Please fill in your name, a valid email, and a longer message.",
       });
       return;
     }
 
     setSubmitting(true);
-    setStatus({ type: "idle" });
+    setStatus(null);
 
     try {
       const response = await fetch("/api/contact", {
@@ -75,16 +75,16 @@ export function ContactForm() {
 
       setForm(initialForm);
       setStatus({
-        type: "success",
-        message: "MESSAGE TRANSMITTED: I will reply from the pit wall soon.",
+        ok: true,
+        msg: "Thanks — I'll get back to you within a couple of days.",
       });
     } catch (error) {
       setStatus({
-        type: "error",
-        message:
+        ok: false,
+        msg:
           error instanceof Error
-            ? `RADIO CHECK FAILED: ${error.message}`
-            : "RADIO CHECK FAILED: try email directly.",
+            ? error.message
+            : "Something went wrong — try email instead.",
       });
     } finally {
       setSubmitting(false);
@@ -92,88 +92,62 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="card-base p-6 md:p-8">
-      <div className="grid gap-5">
-        <label className="grid gap-2">
-          <span className="telemetry-accent">Name</span>
-          <input
-            value={form.name}
-            onChange={(event) => updateField("name", event.target.value)}
-            required
-            minLength={2}
-            className="border border-[var(--color-border)] bg-black/40 px-4 py-3 text-sm text-white transition-colors placeholder:text-muted focus:border-accent focus:outline-none"
-            placeholder="Your name"
-          />
-        </label>
-
-        <label className="grid gap-2">
-          <span className="telemetry-accent">Email</span>
-          <input
-            type="email"
-            value={form.email}
-            onChange={(event) => updateField("email", event.target.value)}
-            required
-            className="border border-[var(--color-border)] bg-black/40 px-4 py-3 text-sm text-white transition-colors placeholder:text-muted focus:border-accent focus:outline-none"
-            placeholder="you@example.com"
-          />
-        </label>
-
-        <label className="hidden">
-          <span>Company</span>
-          <input
-            value={form.company}
-            onChange={(event) => updateField("company", event.target.value)}
-            tabIndex={-1}
-            autoComplete="off"
-          />
-        </label>
-
-        <label className="grid gap-2">
-          <span className="telemetry-accent">Message</span>
-          <textarea
-            value={form.message}
-            onChange={(event) => updateField("message", event.target.value)}
-            required
-            minLength={10}
-            rows={7}
-            className="resize-y border border-[var(--color-border)] bg-black/40 px-4 py-3 text-sm leading-relaxed text-white transition-colors placeholder:text-muted focus:border-accent focus:outline-none"
-            placeholder="Recruiting, collaboration, research, F1, or anything technical."
-          />
-        </label>
-
-        {status.type !== "idle" && (
-          <div
-            className={`flex items-start gap-3 border p-4 text-sm ${
-              status.type === "success"
-                ? "border-emerald-400/30 bg-emerald-400/5 text-emerald-200"
-                : "border-accent/40 bg-accent/10 text-white"
-            }`}
-            role={status.type === "error" ? "alert" : "status"}
-          >
-            {status.type === "success" ? (
-              <CheckCircle2 size={16} className="mt-0.5 shrink-0" />
-            ) : (
-              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-accent" />
-            )}
-            <span className="font-mono text-xs uppercase tracking-widest">
-              {status.message}
-            </span>
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={submitting}
-          className="btn btn-primary justify-center disabled:cursor-not-allowed disabled:opacity-60"
+    <form className="v2-form" onSubmit={onSubmit} noValidate>
+      <label className="v2-field">
+        <span>Your name</span>
+        <input
+          value={form.name}
+          onChange={(e) => update("name", e.target.value)}
+          placeholder="Jane Recruiter"
+          required
+          minLength={2}
+        />
+      </label>
+      <label className="v2-field">
+        <span>Email</span>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => update("email", e.target.value)}
+          placeholder="jane@company.com"
+          required
+        />
+      </label>
+      <label className="v2-field" style={{ display: "none" }} aria-hidden>
+        <span>Company</span>
+        <input
+          value={form.company}
+          onChange={(e) => update("company", e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </label>
+      <label className="v2-field">
+        <span>Message</span>
+        <textarea
+          rows={5}
+          value={form.message}
+          onChange={(e) => update("message", e.target.value)}
+          placeholder="A bit about the role, team, or what you're working on."
+          required
+          minLength={10}
+        />
+      </label>
+      {status && (
+        <div
+          className={`v2-status ${status.ok ? "v2-status--ok" : "v2-status--err"}`}
+          role={status.ok ? "status" : "alert"}
         >
-          {submitting ? (
-            <Loader2 size={14} className="animate-spin" />
-          ) : (
-            <Send size={14} />
-          )}
-          TRANSMIT
-        </button>
-      </div>
+          {status.msg}
+        </div>
+      )}
+      <button
+        type="submit"
+        className="v2-btn v2-btn--primary"
+        disabled={submitting}
+      >
+        {submitting ? "Sending…" : "Send message"} <Arrow />
+      </button>
     </form>
   );
 }

@@ -1,28 +1,34 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Nav } from "@/components/layout/Nav";
-import { Footer } from "@/components/layout/Footer";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
-import { CarbonBg } from "@/components/common/CarbonBg";
 import { site } from "@/lib/site";
 
-const geistSans = Geist({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-display",
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
   variable: "--font-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: `${site.name} - ${site.tagline}`,
+  title: `${site.name} — CS @ Columbia`,
   description:
-    "Personal site of Ken Cheng: Computer Science at Columbia. ML, quantitative finance, and systems engineering. IEEE-published, USACO Platinum.",
+    "Ken Cheng — CS @ Columbia (Egleston Scholar). I build fast systems for machine learning and quant. IEEE-published, USACO Platinum, Quantiv founder.",
   metadataBase: new URL("https://kencheng.dev"),
   openGraph: {
     title: site.name,
@@ -37,15 +43,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${archivo.variable} ${inter.variable} ${jetbrains.variable}`}
+    >
       <body>
-        <CarbonBg />
+        <div className="v2-bg-carbon" aria-hidden />
+        <div className="v2-bg-glow" aria-hidden />
         <LightsOutIntro />
-        <Nav />
-        <main className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

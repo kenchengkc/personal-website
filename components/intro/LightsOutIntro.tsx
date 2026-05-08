@@ -1,33 +1,24 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "intro-played";
-const LIGHT_INTERVAL_MS = 1000;
-const HOLD_MS = 900;
-const EXIT_MS = 500;
+const LIGHT_INTERVAL = 850;
 
-function subscribeToIntroStore() {
+function subscribe() {
   return () => undefined;
 }
-
-function getIntroSnapshot() {
+function getSnapshot() {
   if (typeof window === "undefined") return false;
   return sessionStorage.getItem(STORAGE_KEY) !== "1";
 }
 
+type Phase = "lighting" | "hold" | "out" | "done";
+
 export function LightsOutIntro() {
-  const shouldPlay = useSyncExternalStore(
-    subscribeToIntroStore,
-    getIntroSnapshot,
-    () => false,
-  );
-  const [phase, setPhase] = useState<"lighting" | "hold" | "out" | "done">(
-    "lighting",
-  );
+  const shouldPlay = useSyncExternalStore(subscribe, getSnapshot, () => false);
+  const [phase, setPhase] = useState<Phase>("lighting");
   const [litCount, setLitCount] = useState(0);
-  const reduceMotion = useReducedMotion();
 
   const finish = useCallback(() => {
     if (typeof window !== "undefined") {
@@ -38,101 +29,96 @@ export function LightsOutIntro() {
 
   useEffect(() => {
     if (!shouldPlay) return;
-
-    if (reduceMotion) {
-      const t = setTimeout(() => finish(), 250);
-      return () => clearTimeout(t);
-    }
-
     const timers: ReturnType<typeof setTimeout>[] = [];
-
     for (let i = 1; i <= 5; i++) {
-      timers.push(setTimeout(() => setLitCount(i), i * LIGHT_INTERVAL_MS));
+      timers.push(setTimeout(() => setLitCount(i), i * LIGHT_INTERVAL));
     }
-
-    const allLightsOnAt = 5 * LIGHT_INTERVAL_MS;
-    timers.push(setTimeout(() => setPhase("hold"), allLightsOnAt));
-    timers.push(setTimeout(() => setPhase("out"), allLightsOnAt + HOLD_MS));
-    timers.push(
-      setTimeout(() => finish(), allLightsOnAt + HOLD_MS + EXIT_MS),
-    );
-
+    const onAt = 5 * LIGHT_INTERVAL;
+    const holdMs = 400 + Math.floor(Math.random() * 700);
+    timers.push(setTimeout(() => setPhase("hold"), onAt));
+    timers.push(setTimeout(() => setPhase("out"), onAt + holdMs));
+    timers.push(setTimeout(() => finish(), onAt + holdMs + 1100));
     return () => timers.forEach(clearTimeout);
-  }, [finish, reduceMotion, shouldPlay]);
-
-  function skip() {
-    finish();
-  }
+  }, [shouldPlay, finish]);
 
   if (!shouldPlay && phase !== "done") return null;
+  if (phase === "done") {
+    // Render nothing once finished; the overlay fades away below before unmount.
+  }
+
+  // Hide entirely once done so it stops capturing pointer events.
+  if (phase === "done") return null;
 
   return (
-    <AnimatePresence>
-      {phase !== "done" && (
-        <motion.div
-          key="intro"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.5, ease: "easeOut" } }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black"
-        >
-          {/* Carbon backdrop */}
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-80"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse at center, rgba(40,0,0,0.4) 0%, rgba(0,0,0,0.95) 70%)",
-            }}
-          />
+    <div
+      className="intro-overlay"
+      style={{
+        opacity: 1,
+        pointerEvents: "auto",
+      }}
+    >
+      <div className="intro-vignette" />
+      <div className="intro-grain" />
 
-          <div className="relative flex flex-col items-center gap-8 px-6">
-            <p className="telemetry-accent">FORMATION LAP COMPLETE</p>
+      <div className="intro-content">
+        <div className="intro-meta">
+          <span className="intro-meta-dot" />
+          <span>FORMATION LAP COMPLETE — GRID SET</span>
+        </div>
 
-            <div className="flex gap-3 md:gap-5">
-              {[0, 1, 2, 3, 4].map((i) => {
-                const isLit =
-                  phase === "lighting" ? i < litCount : phase === "hold";
-                return (
-                  <motion.div
-                    key={i}
-                    initial={false}
-                    animate={{
-                      backgroundColor: isLit
-                        ? "rgb(220, 0, 0)"
-                        : "rgb(20, 20, 22)",
-                      boxShadow: isLit
-                        ? "0 0 40px rgba(220,0,0,0.85), inset 0 0 16px rgba(255,80,80,0.6)"
-                        : "0 0 0 rgba(0,0,0,0)",
-                    }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="h-14 w-12 md:h-20 md:w-16 rounded-sm border border-white/10"
-                  />
-                );
-              })}
+        <div className="intro-gantry">
+          {[0, 1, 2, 3, 4].map((col) => (
+            <div key={col} className="intro-pole">
+              <div className="intro-pole-stem" />
+              <div className="intro-pole-bar">
+                {[0, 1].map((row) => {
+                  const isLit =
+                    phase === "out"
+                      ? false
+                      : phase === "hold" || col < litCount;
+                  return (
+                    <div
+                      key={row}
+                      className={`intro-light ${isLit ? "intro-light--on" : ""} ${
+                        phase === "out" ? "intro-light--out" : ""
+                      }`}
+                    />
+                  );
+                })}
+              </div>
             </div>
+          ))}
+        </div>
 
-            <div className="h-[1px] w-48 bg-white/10" />
-
-            <p
-              className={`telemetry transition-colors ${
-                phase === "out" ? "text-accent" : ""
+        <div className="intro-readout">
+          <div className="intro-readout-row">
+            <span className="intro-readout-k">SESSION</span>
+            <span className="intro-readout-v">RACE · LAP 01/56</span>
+          </div>
+          <div className="intro-readout-row">
+            <span className="intro-readout-k">DRIVER</span>
+            <span className="intro-readout-v">CHENG, K.</span>
+          </div>
+          <div className="intro-readout-row">
+            <span className="intro-readout-k">STATUS</span>
+            <span
+              className={`intro-readout-v ${
+                phase === "out" ? "intro-readout-v--accent" : ""
               }`}
             >
               {phase === "lighting" && `LIGHTS ${litCount}/5`}
-              {phase === "hold" && "HOLD"}
-              {phase === "out" && "LIGHTS OUT AND AWAY WE GO"}
-            </p>
+              {phase === "hold" && "HOLD…"}
+              {phase === "out" && "LIGHTS OUT — GO GO GO"}
+            </span>
           </div>
+        </div>
+      </div>
 
-          <button
-            type="button"
-            onClick={skip}
-            className="absolute bottom-6 right-6 telemetry hover:text-accent transition-colors"
-          >
-            SKIP &gt;&gt;
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      <button type="button" className="intro-skip" onClick={finish}>
+        SKIP &gt;&gt;
+      </button>
+
+      {phase === "out" && <div className="intro-flash" />}
+    </div>
   );
 }

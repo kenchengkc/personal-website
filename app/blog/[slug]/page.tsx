@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { ArrowLeft } from "lucide-react";
-import { Tag } from "@/components/common/Tag";
+import { Nav } from "@/components/sections/Nav";
+import { Footer } from "@/components/sections/Footer";
 import { mdxComponents } from "@/components/blog/MdxComponents";
 import {
   formatPostDate,
@@ -23,15 +23,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const post = getPostSource(slug);
-
-  if (!post) {
-    return {
-      title: "Post Not Found - Ken Cheng",
-    };
-  }
-
+  if (!post) return { title: "Post Not Found — Ken Cheng" };
   return {
-    title: `${post.data.title} - Ken Cheng`,
+    title: `${post.data.title} — Ken Cheng`,
     description: post.data.summary,
   };
 }
@@ -39,46 +33,90 @@ export async function generateMetadata({ params }: Props) {
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = getPostSource(slug);
-
   if (!post) notFound();
 
   return (
-    <article className="mx-auto max-w-3xl">
-      <Link
-        href="/blog"
-        className="mb-10 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted transition-colors hover:text-accent"
-      >
-        <ArrowLeft size={14} /> Back to blog
-      </Link>
+    <>
+      <Nav />
+      <main className="v2-main">
+        <article style={{ maxWidth: 720, margin: "0 auto" }}>
+          <Link
+            href="/blog"
+            className="v2-mono"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 28,
+            }}
+          >
+            ← All writing
+          </Link>
 
-      <header className="border-b border-[var(--color-border)] pb-8">
-        <p className="telemetry-accent">
-          LAP 04 / SECTOR 2 · {formatPostDate(post.data.date)}
-        </p>
-        <h1 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
-          {post.data.title}
-        </h1>
-        <p className="mt-5 text-lg leading-relaxed text-muted">
-          {post.data.summary}
-        </p>
-        {post.data.tags && post.data.tags.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-2">
-            {post.data.tags.map((tag) => (
-              <Tag key={tag}>{tag}</Tag>
-            ))}
+          <header
+            style={{
+              borderBottom: "1px solid var(--color-border)",
+              paddingBottom: 28,
+              marginBottom: 32,
+            }}
+          >
+            <div className="v2-blog-meta">
+              {post.data.tags?.[0] && (
+                <span className="v2-blog-tag">{post.data.tags[0]}</span>
+              )}
+              <span className="v2-mono">{formatPostDate(post.data.date)}</span>
+            </div>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: "clamp(32px, 4.5vw, 52px)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.1,
+                margin: "16px 0 0",
+              }}
+            >
+              {post.data.title}
+            </h1>
+            <p
+              style={{
+                marginTop: 18,
+                color: "var(--color-text-dim)",
+                fontSize: 17,
+                lineHeight: 1.6,
+              }}
+            >
+              {post.data.summary}
+            </p>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div className="v2-chips" style={{ marginTop: 18 }}>
+                {post.data.tags.map((t) => (
+                  <span key={t} className="v2-chip">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
+          </header>
+
+          <div className="prose-v2">
+            <MDXRemote source={post.content} components={mdxComponents} />
           </div>
-        )}
-      </header>
 
-      <div className="mt-10">
-        <MDXRemote source={post.content} components={mdxComponents} />
-      </div>
-
-      <div className="mt-12 border-t border-[var(--color-border)] pt-8">
-        <Link href="/blog" className="btn">
-          <ArrowLeft size={14} /> ALL POSTS
-        </Link>
-      </div>
-    </article>
+          <div
+            style={{
+              marginTop: 48,
+              borderTop: "1px solid var(--color-border)",
+              paddingTop: 28,
+            }}
+          >
+            <Link href="/blog" className="v2-btn v2-btn--ghost">
+              ← All writing
+            </Link>
+          </div>
+        </article>
+      </main>
+      <Footer />
+    </>
   );
 }
