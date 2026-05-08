@@ -95,12 +95,12 @@ const projects: Project[] = [
   },
   {
     title: "Need for Speed",
-    category: "CFD + ML aerodynamics research",
+    category: "F1 aerodynamics surrogate model · CFD + ML",
     dates: "2021 - 2022",
     summary:
-      "CFD + machine-learning workflow for analyzing F1 race-car aerodynamic behavior.",
+      "MATLAB neural-net surrogate that replaces full CFD iteration with sub-second pressure-map predictions.",
     impact:
-      "Won the Canada-Wide Science Fair national competition in 2022.",
+      "100x faster iteration; 43% drag reduction in simulation; gold at the Canada-Wide Science Fair.",
     brand: {
       label: "CWSF",
       detail: "Canada-Wide Science Fair",
@@ -114,15 +114,15 @@ const projects: Project[] = [
       },
     },
     metrics: [
-      { value: "CWSF", label: "national champion" },
-      { value: "2022", label: "award year" },
-      { value: "F1", label: "aero domain" },
+      { value: "100x", label: "CFD iteration" },
+      { value: "43%", label: "drag reduction" },
+      { value: "Gold", label: "CWSF '22" },
     ],
-    tags: ["CFD", "Machine Learning", "Aerodynamics", "Python"],
+    tags: ["MATLAB", "Deep Learning Toolbox", "Feedforward", "trainlm"],
     details: [
-      "Predicted aerodynamic performance from simulation outputs with ML.",
-      "Focused on open-wheel geometry: front wing, sidepod airflow, rear-wing wake.",
-      "Published in Highlights in Science Engineering and Technology.",
+      "MATLAB backpropagation feed-forward network trained to generate predicted pressure maps.",
+      "Embedded the ANN in an end-to-end aero-analytics stack to drive wing geometry choices.",
+      "Single-author publication in Highlights in Science Engineering and Technology.",
     ],
     links: [{ label: "Read paper", href: site.links.f1cfd }],
   },
@@ -161,31 +161,35 @@ const projects: Project[] = [
   },
   {
     title: "CVRP Solver",
-    category: "Optimization research tooling",
+    category: "Operations research · UF Center for Applied Optimization",
     dates: "Jun - Jul 2023",
     summary:
-      "C++ Capacitated Vehicle Routing Problem solver accelerated with ML.",
+      "Vehicle Routing Problem solver accelerated with ML and data-mining patterns.",
     impact:
-      "15% compute-time reduction on TB-scale routing datasets.",
+      "15% compute-time reduction on TB-scale routing; Best Paper at SSTP (<10% acceptance).",
+    award: {
+      label: "Best Paper Award",
+      detail: "Student Science Training Program",
+    },
     brand: {
-      label: "UF ISE",
-      detail: "Center for Applied Optimization",
-      meta: "University of Florida research",
+      label: "UF",
+      detail: "University of Florida",
+      meta: "Center for Applied Optimization",
       logo: {
         src: "/images/vrp/uf-ise.jpg",
-        alt: "UF ISE logo",
+        alt: "University of Florida logo",
       },
     },
     metrics: [
       { value: "15%", label: "compute reduction" },
-      { value: "34k", label: "cluster cores" },
+      { value: "<10%", label: "SSTP acceptance" },
       { value: "TB", label: "data scale" },
     ],
-    tags: ["C++", "CMake", "SLURM", "UF ISE", "CAO"],
+    tags: ["C++", "CMake", "SLURM batch scripts", "Java", "JavaFX"],
     details: [
-      "Pattern mining drove early-termination heuristics in the search.",
-      "Scaled out on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
-      "JavaFX visualization tool so OR researchers could inspect candidate routes.",
+      "Pattern mining drove early-termination heuristics inside the C++ solver.",
+      "Analyzed dual-value / variable patterns in Column Generation solutions on the UF HiPerGator supercomputer.",
+      "Built a JavaFX visualization tool so OR researchers could inspect candidate routes.",
     ],
   },
 ];

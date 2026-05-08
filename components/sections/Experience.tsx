@@ -24,17 +24,19 @@ type Stint = {
 
 const items: Stint[] = [
   {
-    role: "Founder & Builder",
-    org: "Quantiv",
-    loc: "New York, NY",
+    role: "Founder and Lead Software Engineer",
+    org: "Quantiv - Options Trading Data Platform",
+    loc: "New York, NY, USA",
     dates: "Jul 2025 - Present",
     summary:
-      "Founded a platform for earnings-move research, volatility modeling, and option-chain analytics.",
+      "Founder and lead engineer of an options analytics platform for earnings-move research.",
     bullets: [
-      "Own product, data infrastructure, ML workflow, and frontend end to end.",
-      "Turned a personal quant research stack into a reusable, production-grade platform.",
+      "Built a Next.js + FastAPI options analytics platform to predict implied earnings moves for 50-100 tickers weekly, combining mathematical IV models with ML (XGBoost) on historical Greeks and volatility.",
+      "Scaled infrastructure with Docker containerization for faster deployment and Redis caching to reduce query latency to under 100ms.",
+      "Engineered a data pipeline (DuckDB + Parquet) to process 1B+ option chain and volatility history records.",
+      "Reduced data sync time by ~90% through atomic directory swap and rsync staging, ensuring zero-downtime updates of large option chain datasets on AWS Elastic Compute Cloud (EC2).",
     ],
-    tags: ["Founder", "Product", "ML", "Data Infra", "Options"],
+    tags: ["FastAPI", "SQL", "AWS EC2", "Redis", "Docker"],
     logo: {
       src: "/images/quantiv/quantiv-color-banner.png",
       alt: "Quantiv logo",
@@ -43,17 +45,18 @@ const items: Stint[] = [
     },
   },
   {
-    role: "Machine Learning Lead - Hackathon Winner",
-    org: "Embers · LA Hacks",
-    loc: "UCLA",
+    role: "Machine Learning Lead & Winner",
+    org: "Google at LA Hacks (University of California - Los Angeles)",
+    loc: "Los Angeles, CA, USA",
     dates: "Apr 2025",
     summary:
-      "Led a 4-person team building a CV app for wildfire insurance claims; auto-inventories items from a 30-second video.",
+      "Led a team building a CV + voice-first app for wildfire insurance claims that won three LA Hacks awards.",
     bullets: [
-      "Top 5 of 172 teams · Best Use of Google Gemini API · Best FinTech Project.",
-      "90%+ detection accuracy; voice-first chatbot via Gemini, ElevenLabs, OpenAI Whisper.",
+      "Led team to develop Embers, a React + Python/Flask Computer Vision app achieving 90%+ detection accuracy in auto-inventorying household items from 30-second videos, streamlining insurance claims for wildfire survivors.",
+      "Integrated Google Gemini, ElevenLabs, & OpenAI Whisper APIs into an intelligent voice-first chatbot assistant, enabling personalized asset valuation and reducing manual claim documentation time by an estimated 50%.",
+      "Placed as Top 5 Finalist out of 172 teams; Won Best Use of Google Gemini API and Best Financial Tech Project.",
     ],
-    tags: ["React", "Flask", "Python", "Supabase"],
+    tags: ["React", "Flask", "Python", "TypeScript", "APIs", "Supabase"],
     links: [
       {
         label: "Devpost: InsureFire",
@@ -68,35 +71,38 @@ const items: Stint[] = [
     },
   },
   {
-    role: "Independent Researcher - IEEE Intelligent Transportation Systems Conference 2023",
-    org: "GC-INF Traffic Forecasting",
-    loc: "Pre-Columbia · High school research",
+    role: "Research Software Engineer, Single-Author Deep Learning Publication",
+    org: "IEEE Intelligent Transportation Systems Conference",
+    loc: "Bilbao, Biscay, Spain",
     dates: "Sep 2022 - Oct 2023",
     summary:
-      "Built GC-INF independently in high school and published it single-author in IEEE ITSC 2023.",
+      "Independent research on graph-network traffic forecasting, published single-author at IEEE ITSC 2023.",
     bullets: [
-      "Session chair for Simulation and Control at the conference in Bilbao.",
-      "ISEF Top 30 finalist recognition for the broader research track.",
+      "Engineered GC-INF, a hybrid 4-layer Graph ConvNet + Informer transformer, that learns spatial-temporal patterns in road-graph data to predict intersection turning ratios for adaptive signal control, delivered as clean PyTorch code.",
+      "Built full ML pipeline with Chebyshev graph convolutions, ProbSparse attention, Adam optimizer + Cosine decay.",
+      "Cut 15-min turning-ratio forecast error by 24% RMSE compared to STGCN (IJCAI '17), a state-of-the-art model.",
+      "Single-author paper and session chair at IEEE ITSC 2023; selected as Team Canada-ISEF Finalist (Top 30 Canada).",
     ],
-    tags: ["IEEE ITSC", "Single Author", "High School Research"],
+    tags: ["Python (Scikit-learn)", "PyTorch", "Data pipelines"],
     logo: {
       src: "/images/gc-inf/ieee-itsc-2023.jpg",
       alt: "IEEE ITSC 2023 Bilbao logo",
     },
   },
   {
-    role: "Vehicle Routing Research Assistant",
-    org: "UF ISE · Center for Applied Optimization",
-    loc: "Gainesville, FL",
+    role: "Operations Research and Machine Learning Research Intern",
+    org: "University of Florida",
+    loc: "Gainesville, FL, USA",
     dates: "Jun - Jul 2023",
     summary:
-      "Accelerated a C++ Capacitated VRP solver with ML and data-mining heuristics.",
+      "OR + ML research accelerating large-scale Vehicle Routing Problem solvers; awarded Best Paper at SSTP.",
     bullets: [
-      "Cut compute time 15% on TB-scale routing datasets.",
-      "Scaled out on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
-      "Shipped a JavaFX visualization tool for the OR research group.",
+      "Improved Vehicle Routing Problem solver with ML & patterns from data mining, reducing compute time on TB-scale datasets by 15%.",
+      "Developed a Java-based visualization tool for route solutions, enabling interpretable insights for researchers.",
+      "Analyzed patterns between dual values and variables in Column Generation-based solutions using simulations on the UF Supercomputer (HiPerGator).",
+      "Won the Best Paper Award at the Student Science Training Program (SSTP, less than 10% acceptance rate).",
     ],
-    tags: ["UF ISE", "CAO", "C++", "SLURM", "JavaFX"],
+    tags: ["C++", "CMake", "SLURM batch scripts", "Java", "JavaFX"],
     logo: {
       src: "/images/vrp/uf-ise.jpg",
       alt: "UF ISE logo",
