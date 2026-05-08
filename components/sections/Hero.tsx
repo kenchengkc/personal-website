@@ -3,7 +3,7 @@
 import { MouseEvent } from "react";
 import Link from "next/link";
 import { Arrow, Download, GitHub, LinkedIn, Mail } from "@/components/icons/Icons";
-import { RacingCar } from "@/components/cars/RacingCar";
+import { CarPhoto } from "@/components/cars/CarPhoto";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -83,7 +83,10 @@ export function Hero() {
               </span>
             </div>
             <div className="v2-hero-car-wrap">
-              <RacingCar livery="red" />
+              <CarPhoto
+                src="/images/cars/redbull.jpg"
+                alt="Red Bull RB20 Formula 1 car at the Red Bull Ring. Photo by Lukas Raich, CC BY-SA 4.0."
+              />
             </div>
             <div className="v2-hero-card-rows">
               <div className="v2-hero-card-row">

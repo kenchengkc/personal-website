@@ -1,4 +1,5 @@
 import { SectionHead } from "./SectionHead";
+import { CarPhoto } from "@/components/cars/CarPhoto";
 
 const skills = [
   {
@@ -39,6 +40,27 @@ export function About() {
             - which, if you couldn&rsquo;t tell, inspired the look of this
             site.
           </p>
+
+          <div className="v2-inspo">
+            <figure className="v2-inspo-figure">
+              <CarPhoto
+                src="/images/cars/ferrari.jpg"
+                alt="Modern Ferrari Formula 1 car at speed. Photo by Liauzh, CC BY-SA."
+              />
+              <figcaption className="v2-mono v2-mono--dim">
+                Ferrari · modern era
+              </figcaption>
+            </figure>
+            <figure className="v2-inspo-figure">
+              <CarPhoto
+                src="/images/cars/mclaren.jpg"
+                alt="McLaren MP4/2C in Marlboro livery on display. Photo by Michael Barera, CC BY-SA 4.0."
+              />
+              <figcaption className="v2-mono v2-mono--dim">
+                McLaren MP4/2C · 1986
+              </figcaption>
+            </figure>
+          </div>
         </div>
         <div className="v2-about-side">
           <div className="v2-skills-card">
