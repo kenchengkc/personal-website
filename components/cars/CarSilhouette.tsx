@@ -61,43 +61,70 @@ export function CarSilhouette({ className }: Props) {
 
 // A clean axis-aligned circular wheel rendered as SVG so rotation is
 // pixel-perfect (the photo wheels are 3/4-angle and would wobble if rotated).
-// Layered on top of the photo wheel; fades in only while the car is moving.
+// Layered on top of the photo wheel; the rim disc is sized to fully cover
+// the photo wheel's rim so misalignment edges don't peek through.
 function RenderedSpinner({ className }: { className?: string }) {
   const spokeAngles = [0, 60, 120, 180, 240, 300];
   return (
     <span className={className} aria-hidden>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <radialGradient id="rb-spinner-rim" cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0.55" stopColor="#0b0b0d" stopOpacity="0" />
-            <stop offset="0.78" stopColor="#1a1a1d" stopOpacity="0.95" />
+          <radialGradient id="rb-spinner-tire" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0.78" stopColor="#0b0b0d" stopOpacity="0" />
+            <stop offset="0.88" stopColor="#1a1a1d" stopOpacity="0.95" />
             <stop offset="1" stopColor="#000" stopOpacity="1" />
+          </radialGradient>
+          <radialGradient id="rb-spinner-disc" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stopColor="#1a1c22" stopOpacity="1" />
+            <stop offset="0.7" stopColor="#0e1015" stopOpacity="1" />
+            <stop offset="1" stopColor="#06070a" stopOpacity="1" />
           </radialGradient>
         </defs>
 
-        {/* Tire shadow ring (mostly transparent in the middle so the photo
-            wheel shows through) */}
-        <circle cx="50" cy="50" r="48" fill="url(#rb-spinner-rim)" />
+        {/* Outer tire shadow ring (only renders the dark tire edge) */}
+        <circle cx="50" cy="50" r="50" fill="url(#rb-spinner-tire)" />
 
-        {/* Inner rim disc */}
+        {/* Red rim trim (Pirelli-style sidewall accent) */}
         <circle
           cx="50"
           cy="50"
-          r="30"
-          fill="rgba(15, 17, 22, 0.85)"
-          stroke="rgba(60, 64, 72, 0.6)"
-          strokeWidth="1.2"
+          r="45"
+          fill="none"
+          stroke="rgba(220, 0, 0, 0.6)"
+          strokeWidth="1.4"
         />
 
-        {/* Spokes — these are what visually "spin" */}
+        {/* Rim disc — fills the visible wheel face so the photo wheel
+            beneath is fully covered while spinning */}
+        <circle
+          cx="50"
+          cy="50"
+          r="43"
+          fill="url(#rb-spinner-disc)"
+          stroke="rgba(70, 76, 86, 0.55)"
+          strokeWidth="0.8"
+        />
+
+        {/* Faint brake-disc concentric ring for depth */}
+        <circle
+          cx="50"
+          cy="50"
+          r="36"
+          fill="none"
+          stroke="rgba(140, 146, 158, 0.18)"
+          strokeWidth="0.6"
+        />
+
+        {/* Spokes — extended to reach the rim edge so rotation reads at any
+            scale */}
         <g
-          stroke="rgba(225, 228, 235, 0.55)"
-          strokeWidth="2.4"
+          stroke="rgba(220, 224, 232, 0.55)"
+          strokeWidth="3.2"
           strokeLinecap="round"
         >
           {spokeAngles.map((a) => {
-            const r1 = 9;
-            const r2 = 28;
+            const r1 = 12;
+            const r2 = 39;
             const rad = ((a - 90) * Math.PI) / 180;
             return (
               <line
@@ -111,19 +138,44 @@ function RenderedSpinner({ className }: { className?: string }) {
           })}
         </g>
 
-        {/* Center hub + accent nut */}
+        {/* Spoke shadow pass (slightly inset, darker) for depth */}
+        <g
+          stroke="rgba(0, 0, 0, 0.45)"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        >
+          {spokeAngles.map((a) => {
+            const r1 = 13;
+            const r2 = 38;
+            const rad = ((a - 90 + 1.5) * Math.PI) / 180;
+            return (
+              <line
+                key={a}
+                x1={50 + r1 * Math.cos(rad)}
+                y1={50 + r1 * Math.sin(rad)}
+                x2={50 + r2 * Math.cos(rad)}
+                y2={50 + r2 * Math.sin(rad)}
+              />
+            );
+          })}
+        </g>
+
+        {/* Center hub */}
         <circle
           cx="50"
           cy="50"
-          r="9"
-          fill="#0d0e12"
-          stroke="rgba(80, 86, 96, 0.7)"
+          r="12"
+          fill="#0a0b0f"
+          stroke="rgba(90, 96, 106, 0.7)"
           strokeWidth="1.2"
         />
-        <circle cx="50" cy="50" r="3.5" fill="#dc0000" />
 
-        {/* High-contrast indicator marker so spin is unmistakable up close */}
-        <circle cx="50" cy="22" r="2.4" fill="#ffd45c" />
+        {/* Red center nut (matches photo wheel) */}
+        <circle cx="50" cy="50" r="4.5" fill="#dc0000" />
+        <circle cx="48.5" cy="48.5" r="1.4" fill="rgba(255, 200, 200, 0.7)" />
+
+        {/* High-contrast valve / marker so rotation reads on close inspection */}
+        <circle cx="50" cy="17" r="2.6" fill="#ffd45c" />
       </svg>
     </span>
   );
