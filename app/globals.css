@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #030914;
-  --color-bg-2: #061226;
+  --color-bg: #020713;
+  --color-bg-2: #071a38;
+  --color-sky-deep: #020713;
+  --color-sky-mid: #071a38;
+  --color-sky-blue: #0a2756;
   --color-surface: #0a1427;
   --color-surface-2: #101d36;
   --color-accent: #1f3f8b;
@@ -26,7 +29,12 @@
 html, body { margin: 0; padding: 0; }
 
 body {
-  background: var(--color-bg);
+  background:
+    radial-gradient(ellipse 80% 46% at 18% -8%, rgba(18, 58, 118, 0.46), transparent 62%),
+    radial-gradient(ellipse 72% 48% at 86% 8%, rgba(31, 63, 139, 0.3), transparent 58%),
+    linear-gradient(180deg, var(--color-sky-mid) 0%, var(--color-sky-deep) 48%, #01040b 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--color-text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -67,8 +75,43 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-bg-glow {
   background:
-    radial-gradient(ellipse 60% 40% at 80% -10%, var(--color-accent-tint) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 50% at 10% 100%, rgba(255,255,255,0.025) 0%, transparent 70%);
+    radial-gradient(ellipse 56% 34% at 76% -8%, rgba(63,109,255,0.16) 0%, transparent 72%),
+    radial-gradient(ellipse 46% 38% at 12% 18%, rgba(22, 73, 145, 0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 68% 46% at 50% 54%, rgba(7,26,56,0.28) 0%, transparent 72%),
+    linear-gradient(180deg, rgba(7,26,56,0.18) 0%, rgba(2,7,19,0.48) 58%, rgba(1,4,11,0.6) 100%);
+}
+.v2-bg-glow::before,
+.v2-bg-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.v2-bg-glow::before {
+  background-image:
+    radial-gradient(circle at 7% 14%, rgba(255,255,255,0.68) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 15% 32%, rgba(183,204,255,0.45) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 24% 11%, rgba(255,255,255,0.5) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 33% 24%, rgba(132,173,255,0.44) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 41% 9%, rgba(255,255,255,0.58) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 52% 29%, rgba(255,255,255,0.5) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 61% 13%, rgba(183,204,255,0.55) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 69% 36%, rgba(255,255,255,0.42) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 78% 18%, rgba(255,255,255,0.62) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 88% 31%, rgba(132,173,255,0.46) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 95% 11%, rgba(255,255,255,0.52) 0 1px, transparent 1.7px);
+  opacity: 0.52;
+}
+.v2-bg-glow::after {
+  background:
+    radial-gradient(ellipse 55% 26% at 62% 16%, rgba(132,173,255,0.07), transparent 70%),
+    radial-gradient(ellipse 45% 24% at 18% 28%, rgba(31,63,139,0.09), transparent 76%),
+    radial-gradient(circle at 18% 8%, rgba(255,255,255,0.72) 0 1.4px, transparent 2.3px),
+    radial-gradient(circle at 46% 18%, rgba(255,255,255,0.6) 0 1.3px, transparent 2.2px),
+    radial-gradient(circle at 73% 7%, rgba(255,255,255,0.7) 0 1.4px, transparent 2.3px),
+    radial-gradient(circle at 91% 22%, rgba(255,255,255,0.56) 0 1.3px, transparent 2.2px);
+  opacity: 0.5;
+  mix-blend-mode: screen;
 }
 
 .v2-main, .v2-nav, .v2-footer { position: relative; z-index: 1; }
@@ -223,7 +266,14 @@ button { font: inherit; cursor: pointer; }
     url("/images/butler-library.jpg");
   background-size: cover;
   background-position: center 42%;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 13%, #000 82%, transparent 100%);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, #000 13%, #000 82%, transparent 100%),
+    linear-gradient(180deg, #000 0%, #000 62%, rgba(0,0,0,0.58) 78%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 13%, #000 82%, transparent 100%),
+    linear-gradient(180deg, #000 0%, #000 62%, rgba(0,0,0,0.58) 78%, transparent 100%);
+  mask-composite: intersect;
 }
 @media (max-width: 720px) {
   .v2-hero-bg { display: none; }
@@ -248,31 +298,38 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-eyebrow-dot {
   width: 10px; height: 10px; border-radius: 50%;
-  background: #9fbdff;
+  background: #bfd2ff;
   box-shadow:
-    0 0 0 5px rgba(132,173,255,0.14),
-    0 0 18px rgba(132,173,255,0.58);
-  animation: v2availabilityBlink 3s ease-in-out infinite;
+    0 0 0 5px rgba(132,173,255,0.22),
+    0 0 18px rgba(132,173,255,0.72),
+    0 0 34px rgba(63,109,255,0.44);
+  animation: v2availabilityBlink 2s ease-in-out infinite;
 }
 @keyframes v2pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 @keyframes v2availabilityBlink {
   0%, 62%, 100% {
-    opacity: 0.86;
+    opacity: 0.92;
+    background: #bfd2ff;
     box-shadow:
-      0 0 0 5px rgba(132,173,255,0.14),
-      0 0 18px rgba(132,173,255,0.5);
+      0 0 0 5px rgba(132,173,255,0.22),
+      0 0 18px rgba(132,173,255,0.68),
+      0 0 34px rgba(63,109,255,0.4);
   }
   74% {
     opacity: 1;
+    background: #f4f7ff;
     box-shadow:
-      0 0 0 7px rgba(132,173,255,0.2),
-      0 0 28px rgba(132,173,255,0.78);
+      0 0 0 8px rgba(132,173,255,0.34),
+      0 0 26px rgba(183,204,255,0.96),
+      0 0 52px rgba(63,109,255,0.72);
   }
   86% {
-    opacity: 0.92;
+    opacity: 0.96;
+    background: #d5e2ff;
     box-shadow:
-      0 0 0 5px rgba(132,173,255,0.16),
-      0 0 20px rgba(132,173,255,0.56);
+      0 0 0 6px rgba(132,173,255,0.26),
+      0 0 22px rgba(132,173,255,0.78),
+      0 0 40px rgba(63,109,255,0.5);
   }
 }
 @keyframes v2eyebrowPulse {

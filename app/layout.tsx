@@ -26,6 +26,8 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+const isVercel = process.env.VERCEL === "1";
+
 export const metadata: Metadata = {
   title: `${site.name} - CS @ Columbia`,
   description:
@@ -53,7 +55,7 @@ export default function RootLayout({
         <div className="v2-bg-glow" aria-hidden />
         <LightsOutIntro />
         {children}
-        <Analytics />
+        {isVercel ? <Analytics /> : null}
       </body>
     </html>
   );
