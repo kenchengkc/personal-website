@@ -29,11 +29,10 @@ const items: Stint[] = [
     loc: "New York, NY",
     dates: "Jul 2025 - Present",
     summary:
-      "Founded and building a platform for earnings-move research, volatility modeling, and option-chain analytics.",
+      "Founded a platform for earnings-move research, volatility modeling, and option-chain analytics.",
     bullets: [
-      "Own the product direction, data infrastructure, ML workflow, and frontend experience.",
-      "Turning a personal quant research stack into a reusable platform for faster options research.",
-      "Building toward a workflow that makes volatility research more accessible and operational.",
+      "Own product, data infrastructure, ML workflow, and frontend end to end.",
+      "Turned a personal quant research stack into a reusable, production-grade platform.",
     ],
     tags: ["Founder", "Product", "ML", "Data Infra", "Options"],
     logo: {
@@ -69,15 +68,14 @@ const items: Stint[] = [
     },
   },
   {
-    role: "Independent Researcher - IEEE ITSC 2023",
+    role: "Independent Researcher - IEEE Intelligent Transportation Systems Conference 2023",
     org: "GC-INF Traffic Forecasting",
     loc: "Pre-Columbia · High school research",
     dates: "Sep 2022 - Oct 2023",
     summary:
-      "Completed GC-INF before Columbia, then published the work as a single-author IEEE ITSC 2023 paper.",
+      "Built GC-INF independently in high school and published it single-author in IEEE ITSC 2023.",
     bullets: [
-      "Developed the model and paper independently while in high school.",
-      "Presented at IEEE ITSC 2023 and served as a session chair for Simulation and Control.",
+      "Session chair for Simulation and Control at the conference in Bilbao.",
       "ISEF Top 30 finalist recognition for the broader research track.",
     ],
     tags: ["IEEE ITSC", "Single Author", "High School Research"],
@@ -92,11 +90,11 @@ const items: Stint[] = [
     loc: "Gainesville, FL",
     dates: "Jun - Jul 2023",
     summary:
-      "Worked with UF ISE and the Center for Applied Optimization on a C++ CVRP solver accelerated with ML and data-mining patterns.",
+      "Accelerated a C++ Capacitated VRP solver with ML and data-mining heuristics.",
     bullets: [
-      "15% compute-time reduction on TB-scale datasets.",
-      "Validated scalability on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
-      "JavaFX visualization tool for OR researchers.",
+      "Cut compute time 15% on TB-scale routing datasets.",
+      "Scaled out on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
+      "Shipped a JavaFX visualization tool for the OR research group.",
     ],
     tags: ["UF ISE", "CAO", "C++", "SLURM", "JavaFX"],
     logo: {

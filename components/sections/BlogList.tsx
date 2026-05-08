@@ -14,7 +14,7 @@ const publications: Publication[] = [
   {
     title:
       "A Need For Speed: Enhancing F1 Race Cars with a Novel Computational Fluid Dynamics and Machine Learning Method",
-    venue: "Canada-Wide Science Fair · ResearchGate",
+    venue: "Highlights in Science Engineering and Technology",
     year: "2022",
     citations: 2,
     href: site.links.f1cfd,
@@ -22,7 +22,7 @@ const publications: Publication[] = [
   {
     title:
       "GC-INF: A Novel Adaptive Traffic Control System using Machine Learning for Turning Ratio Predictions",
-    venue: "IEEE ITSC 2023",
+    venue: "IEEE Intelligent Transportation Systems Conference 2023",
     year: "2023",
     citations: 1,
     href: site.links.gcinf,

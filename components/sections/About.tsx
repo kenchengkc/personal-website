@@ -49,7 +49,8 @@ export function About() {
             Right now I&rsquo;m building <b>Quantiv</b> - an options analytics
             platform that combines implied-volatility models with XGBoost on
             historical Greeks to forecast earnings moves. Before that, I
-            published in IEEE ITSC on graph-network traffic forecasting, and
+            published in the IEEE Intelligent Transportation Systems Conference
+            on graph-network traffic forecasting, and
             earned USACO Platinum with a perfect score.
           </p>
           <p>

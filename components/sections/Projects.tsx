@@ -46,11 +46,11 @@ const projects: Project[] = [
     summary:
       "Founder-built platform for earnings-move research across active option chains.",
     impact:
-      "Combines market data engineering, ML volatility signals, and a usable research interface for options workflows.",
+      "Operational research workflow combining IV models, ML volatility signals, and a low-latency query layer.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
-      meta: "Founder-built options platform",
+      meta: "Live at usequantiv.com",
       logo: {
         src: "/images/quantiv/quantiv-icon.png",
         alt: "Quantiv app icon",
@@ -63,9 +63,9 @@ const projects: Project[] = [
     ],
     tags: ["Next.js", "FastAPI", "XGBoost", "DuckDB", "AWS EC2", "Redis"],
     details: [
-      "Combined IV models with XGBoost on historical Greeks and volatility signals.",
-      "Built DuckDB + Parquet pipelines for option chain and volatility history records.",
-      "Reduced sync downtime with atomic directory swaps and rsync staging on AWS EC2.",
+      "XGBoost on historical Greeks layered on top of mathematical IV models.",
+      "DuckDB + Parquet pipeline over the full option chain and volatility history.",
+      "Atomic directory swaps with rsync staging on EC2 for zero-downtime data updates.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },
@@ -74,11 +74,11 @@ const projects: Project[] = [
     category: "Competitive programming · USA Computing Olympiad",
     dates: "Dec 2023",
     summary:
-      "Placed in the top 1% at the most prestigious informatics competition in the United States.",
+      "Qualified for Platinum, the highest division of the United States' informatics olympiad.",
     impact:
-      "Scored a perfect 1000 / 1000 in the December 2023 USACO Gold Division Contest, qualifying for the Platinum division.",
+      "Perfect 1000 / 1000 in the December 2023 Gold Division contest.",
     award: {
-      label: "Perfect Score · Gold → Platinum",
+      label: "Gold → Platinum, perfect score",
       detail: "USA Computing Olympiad",
     },
     metrics: [
@@ -88,9 +88,9 @@ const projects: Project[] = [
     ],
     tags: ["C++", "Advanced DSA", "Algorithms", "gdb"],
     details: [
-      "Solved every problem in the December 2023 USACO Gold Division Contest with a perfect 1000 / 1000.",
-      "Top 1% nationally in the United States' most prestigious informatics olympiad.",
-      "Wrote and debugged advanced data-structure and algorithm solutions in C++ under timed-contest constraints.",
+      "Competition-grade C++ across graphs, DP, segment trees, and computational geometry.",
+      "gdb profiling to chase down edge cases under tight memory and runtime budgets.",
+      "Platinum is the top of the four-division ladder; Bronze → Silver → Gold → Platinum.",
     ],
   },
   {
@@ -98,13 +98,9 @@ const projects: Project[] = [
     category: "CFD + ML aerodynamics research",
     dates: "2021 - 2022",
     summary:
-      "Machine-learning workflow for modeling and improving Formula 1 race-car aerodynamic behavior.",
+      "CFD + machine-learning workflow for analyzing F1 race-car aerodynamic behavior.",
     impact:
-      "National science fair winning research connecting simulation, ML, and performance engineering.",
-    award: {
-      label: "Gold Medal",
-      detail: "Canada Wide Science Fair",
-    },
+      "Won the Canada-Wide Science Fair national competition in 2022.",
     brand: {
       label: "CWSF",
       detail: "Canada-Wide Science Fair",
@@ -124,9 +120,9 @@ const projects: Project[] = [
     ],
     tags: ["CFD", "Machine Learning", "Aerodynamics", "Python"],
     details: [
-      "Combined computational fluid dynamics outputs with machine-learning modeling.",
-      "Focused on performance characteristics relevant to open-wheel racing aerodynamics.",
-      "Published the research on ResearchGate after the national competition.",
+      "Predicted aerodynamic performance from simulation outputs with ML.",
+      "Focused on open-wheel geometry: front wing, sidepod airflow, rear-wing wake.",
+      "Published in Highlights in Science Engineering and Technology.",
     ],
     links: [{ label: "Read paper", href: site.links.f1cfd }],
   },
@@ -137,10 +133,10 @@ const projects: Project[] = [
     summary:
       "Hybrid Graph ConvNet + Informer model for adaptive traffic signal control.",
     impact:
-      "Single-author IEEE ITSC publication with a measurable forecasting improvement over prior models.",
+      "24% RMSE improvement over the prior state-of-the-art on intersection turning ratios.",
     brand: {
       label: "IEEE",
-      detail: "ITSC 2023 publication",
+      detail: "IEEE Intelligent Transportation Systems Conference 2023",
       meta: "Peer-reviewed research venue",
     },
     metrics: [
@@ -150,9 +146,9 @@ const projects: Project[] = [
     ],
     tags: ["PyTorch", "Graph NN", "Informer", "IEEE"],
     details: [
-      "Forecasted intersection turning ratios using Chebyshev graph convolutions and Informer attention.",
-      "Improved RMSE by 24% over prior state-of-the-art traffic forecasting models.",
-      "Presented at IEEE ITSC 2023 and served as session chair for Simulation and Control.",
+      "Chebyshev graph convolutions on the road network feed Informer's ProbSparse attention.",
+      "Adam optimizer with cosine decay; trained from raw turning-ratio time series.",
+      "Single-author paper; session chair for Simulation and Control at the conference.",
     ],
     links: [
       { label: "Read paper", href: site.links.gcinf },
@@ -168,9 +164,9 @@ const projects: Project[] = [
     category: "Optimization research tooling",
     dates: "Jun - Jul 2023",
     summary:
-      "UF ISE and CAO research project building a C++ Capacitated Vehicle Routing Problem solver.",
+      "C++ Capacitated Vehicle Routing Problem solver accelerated with ML.",
     impact:
-      "Improved solver performance for large-scale optimization research at the Center for Applied Optimization.",
+      "15% compute-time reduction on TB-scale routing datasets.",
     brand: {
       label: "UF ISE",
       detail: "Center for Applied Optimization",
@@ -187,9 +183,9 @@ const projects: Project[] = [
     ],
     tags: ["C++", "CMake", "SLURM", "UF ISE", "CAO"],
     details: [
-      "Integrated ML-driven pruning and data-mining patterns into a C++ VRP solver.",
-      "Validated scalability on the 34k-core UF HiPerGator cluster via SLURM jobs.",
-      "Built a JavaFX visualization tool so researchers could inspect route solutions.",
+      "Pattern mining drove early-termination heuristics in the search.",
+      "Scaled out on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
+      "JavaFX visualization tool so OR researchers could inspect candidate routes.",
     ],
   },
 ];
