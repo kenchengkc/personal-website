@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { SectionHead } from "./SectionHead";
 import { CarTopDown } from "@/components/cars/CarTopDown";
 
@@ -12,22 +13,26 @@ type Stint = {
   summary: string;
   bullets: string[];
   tags: string[];
+  logo?: {
+    src: string;
+    alt: string;
+  };
 };
 
 const items: Stint[] = [
   {
-    role: "Quantitative Research - Independent",
+    role: "Founder & Builder - Options Analytics Platform",
     org: "Quantiv",
     loc: "New York, NY",
     dates: "Jul 2025 - Present",
     summary:
-      "Building an options analytics platform end to end - ML, data, and frontend.",
+      "Founded and building a platform for earnings-move research, volatility modeling, and option-chain analytics.",
     bullets: [
-      "Next.js + FastAPI predicting implied earnings moves for 50-100 tickers weekly.",
-      "XGBoost on historical Greeks + IV; DuckDB pipeline over 1B+ option chain records.",
-      "Atomic-swap rsync staging on AWS EC2 - zero-downtime data updates.",
+      "Own the product direction, data infrastructure, ML workflow, and frontend experience.",
+      "Turning a personal quant research stack into a reusable platform for faster options research.",
+      "Building toward a workflow that makes volatility research more accessible and operational.",
     ],
-    tags: ["XGBoost", "FastAPI", "DuckDB", "AWS", "Redis"],
+    tags: ["Founder", "Product", "ML", "Data Infra", "Options"],
   },
   {
     role: "Machine Learning Lead - Hackathon Winner",
@@ -43,31 +48,40 @@ const items: Stint[] = [
     tags: ["React", "Flask", "Python", "Supabase"],
   },
   {
-    role: "Undergraduate Researcher",
-    org: "Columbia · IEEE ITSC",
-    loc: "New York, NY",
+    role: "Independent Researcher - IEEE ITSC 2023",
+    org: "GC-INF Traffic Forecasting",
+    loc: "Pre-Columbia · High school research",
     dates: "Sep 2022 - Oct 2023",
     summary:
-      "GC-INF - graph ConvNet + Informer for adaptive traffic signal control.",
+      "Completed GC-INF before Columbia, then published the work as a single-author IEEE ITSC 2023 paper.",
     bullets: [
-      "24% RMSE improvement over prior SOTA on intersection turning ratios.",
-      "Single-author IEEE ITSC 2023 publication; session chair. ISEF Top 30.",
+      "Developed the model and paper independently while in high school.",
+      "Presented at IEEE ITSC 2023 and served as a session chair for Simulation and Control.",
+      "ISEF Top 30 finalist recognition for the broader research track.",
     ],
-    tags: ["PyTorch", "Graph NN", "Informer"],
+    tags: ["IEEE ITSC", "Single Author", "High School Research"],
+    logo: {
+      src: "/images/gc-inf/ieee-itsc-2023.jpg",
+      alt: "IEEE ITSC 2023 Bilbao logo",
+    },
   },
   {
-    role: "Research Assistant",
-    org: "University of Florida · Dr. Yu Yang",
+    role: "Vehicle Routing Research Assistant",
+    org: "UF ISE · Center for Applied Optimization",
     loc: "Gainesville, FL",
     dates: "Jun - Jul 2023",
     summary:
-      "Capacitated VRP solver in C++ accelerated with ML and data-mining patterns.",
+      "Worked with UF ISE and the Center for Applied Optimization on a C++ CVRP solver accelerated with ML and data-mining patterns.",
     bullets: [
       "15% compute-time reduction on TB-scale datasets.",
       "Validated scalability on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
       "JavaFX visualization tool for OR researchers.",
     ],
-    tags: ["C++", "CMake", "SLURM", "Java", "JavaFX"],
+    tags: ["UF ISE", "CAO", "C++", "SLURM", "JavaFX"],
+    logo: {
+      src: "/images/vrp/uf-ise.jpg",
+      alt: "UF ISE logo",
+    },
   },
 ];
 
@@ -80,7 +94,7 @@ export function Experience() {
       <SectionHead
         eyebrow="Experience"
         title="Where I've worked"
-        sub="Research, hackathons, and what I'm building now. Click any stint to dig in."
+        sub="Roles, research venues, and builders I have been part of."
       />
 
       <div className="v2-work">
@@ -131,7 +145,18 @@ export function Experience() {
                 {active.org}
               </p>
             </div>
-            <span className="v2-work-date">{active.dates}</span>
+            <div className="v2-work-panel-aside">
+              {active.logo && (
+                <Image
+                  src={active.logo.src}
+                  alt={active.logo.alt}
+                  width={128}
+                  height={128}
+                  className="v2-exp-logo"
+                />
+              )}
+              <span className="v2-work-date">{active.dates}</span>
+            </div>
           </div>
 
           <p className="v2-work-summary">{active.summary}</p>

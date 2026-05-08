@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Medal } from "lucide-react";
 import { SectionHead } from "./SectionHead";
 import { Arrow } from "@/components/icons/Icons";
@@ -20,6 +21,15 @@ type Project = {
   impact: string;
   metrics: { value: string; label: string }[];
   award?: { label: string; detail: string };
+  brand?: {
+    label: string;
+    detail: string;
+    meta: string;
+    logo?: {
+      src: string;
+      alt: string;
+    };
+  };
   tags: string[];
   details: string[];
   links?: ProjectLink[];
@@ -31,9 +41,9 @@ const projects: Project[] = [
     category: "Options analytics platform",
     dates: "Jul 2025 - Present",
     summary:
-      "Full-stack platform for predicting implied earnings moves across active option chains.",
+      "Founder-built platform for earnings-move research across active option chains.",
     impact:
-      "Built the data, ML, and product layer for a production options workflow with low-latency querying.",
+      "Combines market data engineering, ML volatility signals, and a usable research interface for options workflows.",
     metrics: [
       { value: "1B+", label: "option records" },
       { value: "100ms", label: "query latency" },
@@ -80,6 +90,11 @@ const projects: Project[] = [
       "Hybrid Graph ConvNet + Informer model for adaptive traffic signal control.",
     impact:
       "Single-author IEEE ITSC publication with a measurable forecasting improvement over prior models.",
+    brand: {
+      label: "IEEE",
+      detail: "ITSC 2023 publication",
+      meta: "Peer-reviewed research venue",
+    },
     metrics: [
       { value: "24%", label: "RMSE improvement" },
       { value: "IEEE", label: "published" },
@@ -105,15 +120,24 @@ const projects: Project[] = [
     category: "Optimization research tooling",
     dates: "Jun - Jul 2023",
     summary:
-      "C++ Capacitated Vehicle Routing Problem solver accelerated with ML and data-mining patterns.",
+      "UF ISE and CAO research project building a C++ Capacitated Vehicle Routing Problem solver.",
     impact:
-      "Improved solver performance for large-scale optimization research on high-performance compute.",
+      "Improved solver performance for large-scale optimization research at the Center for Applied Optimization.",
+    brand: {
+      label: "UF ISE",
+      detail: "Center for Applied Optimization",
+      meta: "University of Florida research",
+      logo: {
+        src: "/images/vrp/uf-ise.jpg",
+        alt: "UF ISE logo",
+      },
+    },
     metrics: [
       { value: "15%", label: "compute reduction" },
       { value: "34k", label: "cluster cores" },
       { value: "TB", label: "data scale" },
     ],
-    tags: ["C++", "CMake", "SLURM", "Java", "JavaFX"],
+    tags: ["C++", "CMake", "SLURM", "UF ISE", "CAO"],
     details: [
       "Integrated ML-driven pruning and data-mining patterns into a C++ VRP solver.",
       "Validated scalability on the 34k-core UF HiPerGator cluster via SLURM jobs.",
@@ -131,7 +155,7 @@ export function Projects() {
       <SectionHead
         eyebrow="Projects"
         title="Selected work"
-        sub="A concise view of the systems, research, and tooling with the most signal."
+        sub="Project artifacts, papers, and platforms with the technical details kept here."
       />
 
       <div className="v2-work">
@@ -168,6 +192,25 @@ export function Projects() {
           </div>
 
           <p className="v2-work-summary">{active.summary}</p>
+          {active.brand && (
+            <div className="v2-work-brand" aria-label={active.brand.detail}>
+              {active.brand.logo ? (
+                <Image
+                  src={active.brand.logo.src}
+                  alt={active.brand.logo.alt}
+                  width={92}
+                  height={92}
+                  className="v2-work-brand-logo"
+                />
+              ) : (
+                <span className="v2-ieee-wordmark">{active.brand.label}</span>
+              )}
+              <span>
+                <b>{active.brand.detail}</b>
+                <small>{active.brand.meta}</small>
+              </span>
+            </div>
+          )}
           {active.award && (
             <div className="v2-work-award" aria-label={active.award.label}>
               <Medal size={22} strokeWidth={2.2} />
