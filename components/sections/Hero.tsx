@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent } from "react";
+import { MouseEvent, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Arrow,
@@ -14,6 +14,43 @@ import { CarSilhouette } from "@/components/cars/CarSilhouette";
 import { site } from "@/lib/site";
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    function updateHeroCar() {
+      const hero = heroRef.current;
+      const track = hero?.querySelector<HTMLElement>(".v2-hero-track");
+      const car = hero?.querySelector<SVGSVGElement>(".v2-hero-track-car");
+
+      if (!hero || !track || !car) {
+        return;
+      }
+
+      const rect = hero.getBoundingClientRect();
+      const progress = Math.min(
+        1,
+        Math.max(0, -rect.top / Math.max(340, window.innerHeight * 0.8)),
+      );
+      const carWidth = car.getBoundingClientRect().width;
+      const travel = Math.max(0, track.clientWidth - carWidth - 56);
+
+      hero.style.setProperty("--hero-car-x", `${-travel * progress}px`);
+      hero.style.setProperty(
+        "--hero-wheel-state",
+        progress > 0 && progress < 1 ? "running" : "paused",
+      );
+    }
+
+    updateHeroCar();
+    window.addEventListener("scroll", updateHeroCar, { passive: true });
+    window.addEventListener("resize", updateHeroCar);
+
+    return () => {
+      window.removeEventListener("scroll", updateHeroCar);
+      window.removeEventListener("resize", updateHeroCar);
+    };
+  }, []);
+
   function scrollTo(id: string) {
     return (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -22,7 +59,7 @@ export function Hero() {
   }
 
   return (
-    <section className="v2-hero" id="home">
+    <section className="v2-hero" id="home" ref={heroRef}>
       <div className="v2-hero-bg" aria-hidden>
         <CarSilhouette fill="var(--color-text)" />
       </div>
@@ -45,11 +82,13 @@ export function Hero() {
         </h1>
 
         <p className="v2-hero-sub">
-          CS undergrad at Columbia (Egleston Scholar, top 1% of class, GPA
-          3.7). IEEE-published in deep learning, USACO Platinum perfect
-          score, and currently shipping an options analytics platform that
-          models implied volatility across a billion records. Fluent in
-          Python and C++; love tough puzzles.
+          CS undergrad at <strong>Columbia</strong> (Egleston Scholar,{" "}
+          <strong>top 1% of class</strong>, GPA 3.7).{" "}
+          <strong>IEEE-published</strong> in deep learning,{" "}
+          <strong>USACO Platinum perfect score</strong>, and currently
+          shipping an options analytics platform that models implied
+          volatility across <strong>a billion records</strong>. Fluent in{" "}
+          <strong>Python and C++</strong>; love tough puzzles.
         </p>
 
         <div className="v2-hero-actions">

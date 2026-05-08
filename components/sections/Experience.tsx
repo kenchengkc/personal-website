@@ -1,7 +1,20 @@
+"use client";
+
+import { useState } from "react";
 import { SectionHead } from "./SectionHead";
 import { CarTopDown } from "@/components/cars/CarTopDown";
 
-const items = [
+type Stint = {
+  role: string;
+  org: string;
+  loc: string;
+  dates: string;
+  summary: string;
+  bullets: string[];
+  tags: string[];
+};
+
+const items: Stint[] = [
   {
     role: "Quantitative Research - Independent",
     org: "Quantiv",
@@ -34,7 +47,8 @@ const items = [
     org: "Columbia · IEEE ITSC",
     loc: "New York, NY",
     dates: "Sep 2022 - Oct 2023",
-    summary: "GC-INF - graph ConvNet + Informer for adaptive traffic signal control.",
+    summary:
+      "GC-INF - graph ConvNet + Informer for adaptive traffic signal control.",
     bullets: [
       "24% RMSE improvement over prior SOTA on intersection turning ratios.",
       "Single-author IEEE ITSC 2023 publication; session chair. ISEF Top 30.",
@@ -58,55 +72,84 @@ const items = [
 ];
 
 export function Experience() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = items[activeIndex];
+
   return (
     <section className="v2-section" id="experience">
       <SectionHead
         eyebrow="Experience"
         title="Where I've worked"
-        sub="Research, hackathons, and what I'm building now."
+        sub="Research, hackathons, and what I'm building now. Click any stint to dig in."
       />
-      <div className="v2-exp-list">
-        {items.map((it, i) => (
-          <div key={it.org} className="v2-exp-item">
-            <div className="v2-exp-rail">
-              {i === 0 ? (
-                <span className="v2-exp-rail-marker" aria-hidden>
-                  <CarTopDown fill="var(--color-accent)" />
+
+      <div className="v2-work">
+        <div
+          className="v2-work-list v2-exp-tablist"
+          aria-label="Experience selector"
+        >
+          {items.map((it, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <button
+                key={it.org}
+                type="button"
+                className={`v2-work-tab v2-exp-tab ${
+                  isActive ? "v2-work-tab--active" : ""
+                }`}
+                onClick={() => setActiveIndex(i)}
+                aria-pressed={isActive}
+              >
+                <span className="v2-exp-tab-marker" aria-hidden>
+                  {isActive ? (
+                    <span className="v2-exp-tab-car">
+                      <CarTopDown fill="var(--color-accent)" />
+                    </span>
+                  ) : (
+                    <span className="v2-exp-tab-dot" />
+                  )}
                 </span>
-              ) : (
-                <span
-                  className="v2-exp-rail-dot"
-                  style={{ background: "#3a3a3e" }}
-                />
-              )}
-              {i < items.length - 1 && <span className="v2-exp-rail-line" />}
+                <span className="v2-work-tab-copy">
+                  <span className="v2-work-tab-title">{it.role}</span>
+                  <span className="v2-work-tab-sub">{it.org}</span>
+                </span>
+                <span className="v2-work-tab-date">{it.dates}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <article className="v2-work-panel" key={active.org}>
+          <div className="v2-work-panel-head">
+            <div>
+              <p className="v2-mono v2-mono--accent">{active.loc}</p>
+              <h3 className="v2-work-title">{active.role}</h3>
+              <p
+                className="v2-mono"
+                style={{ marginTop: 6, color: "var(--color-text-dim)" }}
+              >
+                {active.org}
+              </p>
             </div>
-            <div className="v2-exp-body">
-              <div className="v2-exp-head">
-                <div>
-                  <h3 className="v2-exp-role">{it.role}</h3>
-                  <div className="v2-exp-org">
-                    {it.org} · <span>{it.loc}</span>
-                  </div>
-                </div>
-                <span className="v2-exp-dates">{it.dates}</span>
-              </div>
-              <p className="v2-exp-summary">{it.summary}</p>
-              <ul className="v2-exp-bullets">
-                {it.bullets.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
-              <div className="v2-chips">
-                {it.tags.map((t) => (
-                  <span key={t} className="v2-chip">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <span className="v2-work-date">{active.dates}</span>
           </div>
-        ))}
+
+          <p className="v2-work-summary">{active.summary}</p>
+
+          <ul className="v2-exp-bullets">
+            {active.bullets.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+
+          <div className="v2-chips">
+            {active.tags.map((t) => (
+              <span key={t} className="v2-chip">
+                {t}
+              </span>
+            ))}
+          </div>
+        </article>
       </div>
     </section>
   );
