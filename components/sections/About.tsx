@@ -1,18 +1,35 @@
 import { SectionHead } from "./SectionHead";
-import { CarSilhouette } from "@/components/cars/CarSilhouette";
 
 const skills = [
   {
     label: "Languages",
-    items: ["Python", "TypeScript", "C++", "Java", "SQL"],
+    items: ["Python", "TypeScript", "C++", "Java", "Go", "SQL"],
   },
   {
     label: "ML / Data",
-    items: ["PyTorch", "XGBoost", "Scikit-learn", "DuckDB", "Pandas"],
+    items: [
+      "PyTorch",
+      "XGBoost",
+      "Scikit-learn",
+      "DuckDB",
+      "Pandas",
+      "Postgres",
+    ],
   },
   {
     label: "Systems",
-    items: ["Next.js", "FastAPI", "AWS", "Redis", "Docker"],
+    items: ["Next.js", "FastAPI", "Node.js", "REST APIs", "Redis"],
+  },
+  {
+    label: "Cloud / Infra",
+    items: [
+      "AWS (EC2, S3)",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "CI/CD",
+      "Bash / Linux",
+    ],
   },
 ];
 
@@ -40,25 +57,6 @@ export function About() {
             - which, if you couldn&rsquo;t tell, inspired the look of this
             site.
           </p>
-
-          <div className="v2-inspo">
-            <figure className="v2-inspo-figure v2-inspo-figure--silhouette">
-              <div className="v2-inspo-silhouette">
-                <CarSilhouette fill="var(--color-text)" />
-              </div>
-              <figcaption className="v2-mono v2-mono--dim">
-                Halo era · ground-effect
-              </figcaption>
-            </figure>
-            <figure className="v2-inspo-figure v2-inspo-figure--silhouette">
-              <div className="v2-inspo-silhouette v2-inspo-silhouette--accent">
-                <CarSilhouette fill="var(--color-accent)" />
-              </div>
-              <figcaption className="v2-mono v2-mono--dim">
-                1980s open-wheel · turbo era
-              </figcaption>
-            </figure>
-          </div>
         </div>
         <div className="v2-about-side">
           <div className="v2-skills-card">

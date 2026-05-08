@@ -45,10 +45,11 @@ export function Hero() {
         </h1>
 
         <p className="v2-hero-sub">
-          CS undergrad at Columbia (Egleston Scholar, top 1% of class).
-          IEEE-published in deep learning, USACO Platinum, and currently
-          shipping an options analytics platform that processes a billion
-          records.
+          CS undergrad at Columbia (Egleston Scholar, top 1% of class, GPA
+          3.7). IEEE-published in deep learning, USACO Platinum perfect
+          score, and currently shipping an options analytics platform that
+          models implied volatility across a billion records. Fluent in
+          Python and C++; love tough puzzles.
         </p>
 
         <div className="v2-hero-actions">
@@ -71,8 +72,12 @@ export function Hero() {
 
         <div className="v2-hero-meta">
           <span>
-            <b>Columbia University</b> · B.S. Computer Science · Stats minor ·
-            Expected May 2028
+            <b>Columbia University</b> · B.S. Computer Science · Stats minor
+            · GPA 3.7 · Expected May 2028
+          </span>
+          <span>
+            Coursework: DSA, Linear Algebra, Probability Theory, Linear
+            Regression, Multivariable Calculus
           </span>
           <span>{site.location}</span>
         </div>

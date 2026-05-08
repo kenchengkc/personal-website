@@ -22,7 +22,7 @@ const items = [
     loc: "UCLA",
     dates: "Apr 2025",
     summary:
-      "CV app for wildfire insurance claims; auto-inventories items from a 30-second video.",
+      "Led a 4-person team building a CV app for wildfire insurance claims; auto-inventories items from a 30-second video.",
     bullets: [
       "Top 5 of 172 teams · Best Use of Google Gemini API · Best FinTech Project.",
       "90%+ detection accuracy; voice-first chatbot via Gemini, ElevenLabs, OpenAI Whisper.",
@@ -45,14 +45,15 @@ const items = [
     role: "Research Assistant",
     org: "University of Florida · Dr. Yu Yang",
     loc: "Gainesville, FL",
-    dates: "Jun - Aug 2023",
+    dates: "Jun - Jul 2023",
     summary:
-      "C++ Vehicle Routing Problem solver with ML-driven branch-and-cut acceleration.",
+      "Capacitated VRP solver in C++ accelerated with ML and data-mining patterns.",
     bullets: [
       "15% compute-time reduction on TB-scale datasets.",
+      "Validated scalability on the 34k-core UF HiPerGator cluster via SLURM batch jobs.",
       "JavaFX visualization tool for OR researchers.",
     ],
-    tags: ["C++", "SLURM", "Java", "JavaFX"],
+    tags: ["C++", "CMake", "SLURM", "Java", "JavaFX"],
   },
 ];
 
