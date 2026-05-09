@@ -867,7 +867,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 320ms linear infinite;
+  animation: rbWheelStableSpin 250ms linear infinite;
 }
 
 @keyframes rbWheelStableSpin {
@@ -1305,20 +1305,22 @@ button { font: inherit; cursor: pointer; }
   height: 92px;
   padding: 8px 10px;
 }
-/* Photo variant: a personal moment image rather than a brand logo. Fills
-   the frame (cover, not contain), no white padding, larger landscape ratio. */
-.v2-exp-logo--photo {
-  width: 280px;
-  height: 175px;
-  max-width: 100%;
-  padding: 0;
-  background: #02050c;
-  border: 1px solid var(--color-border);
-  object-fit: cover;
-  object-position: center;
-}
 .v2-exp-logo--dark {
   background: #02050c;
+}
+/* Landscape conference photo (IEEE etc.): full panel width, matches horizontal slides */
+.v2-exp-photo-strip {
+  margin: 0 0 22px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: #02050c;
+}
+.v2-exp-photo-strip-img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .v2-work-summary {
   margin: 0;
@@ -1982,7 +1984,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 320ms linear infinite;
+  animation: rbWheelStableSpin 250ms linear infinite;
 }
 
 @keyframes rbWheelStableSpin {

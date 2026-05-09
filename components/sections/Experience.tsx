@@ -180,16 +180,14 @@ export function Experience() {
               </p>
             </div>
             <div className="v2-work-panel-aside">
-              {active.logo && (
+              {active.logo && active.logo.variant !== "photo" && (
                 <Image
                   src={active.logo.src}
                   alt={active.logo.alt}
-                  width={active.logo.variant === "photo" ? 320 : 128}
-                  height={active.logo.variant === "photo" ? 200 : 128}
+                  width={128}
+                  height={128}
                   className={`v2-exp-logo ${
                     active.logo.variant === "wide" ? "v2-exp-logo--wide" : ""
-                  } ${
-                    active.logo.variant === "photo" ? "v2-exp-logo--photo" : ""
                   } ${
                     active.logo.tone === "dark" ? "v2-exp-logo--dark" : ""
                   }`}
@@ -198,6 +196,19 @@ export function Experience() {
               <span className="v2-work-date">{active.dates}</span>
             </div>
           </div>
+
+          {active.logo?.variant === "photo" && (
+            <figure className="v2-exp-photo-strip">
+              <Image
+                src={active.logo.src}
+                alt={active.logo.alt}
+                width={960}
+                height={507}
+                sizes="(max-width: 900px) 100vw, 820px"
+                className="v2-exp-photo-strip-img"
+              />
+            </figure>
+          )}
 
           <p className="v2-work-summary">{active.summary}</p>
 
