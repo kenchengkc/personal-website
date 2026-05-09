@@ -877,7 +877,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 250ms linear infinite;
+  animation: rbWheelStableSpin 200ms linear infinite;
 }
 
 /* Scroll up → progress decreases → reverse spin vs. scroll down. */
@@ -2018,7 +2018,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 250ms linear infinite;
+  animation: rbWheelStableSpin 200ms linear infinite;
 }
 
 .v2-hero[data-wheel-spin="1"][data-wheel-spin-dir="reverse"] .rb-wheel-spin-scale {
