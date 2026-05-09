@@ -738,13 +738,13 @@ button { font: inherit; cursor: pointer; }
 }
 .rb-wheel-shell--front {
   /* Sized to cover full tire in redbull-real-car side view */
-  left: 29.08%;
-  top: 72.64%;
+  left: 27.5%;
+  top: 71%;
   width: 14%;
 }
 .rb-wheel-shell--rear {
-  left: 88.69%;
-  top: 55.85%;
+  left: 87.15%;
+  top: 54.35%;
   width: 13.5%;
 }
 .rb-wheel {
@@ -790,12 +790,12 @@ button { font: inherit; cursor: pointer; }
   will-change: transform;
 }
 .rb-wheel-shell--front .rb-wheel-spinner {
-  --rb-tx: 8%;
-  --rb-ty: 13%;
+  --rb-tx: 5%;
+  --rb-ty: 10%;
 }
 .rb-wheel-shell--rear .rb-wheel-spinner {
-  --rb-tx: 20%;
-  --rb-ty: 13%;
+  --rb-tx: 17%;
+  --rb-ty: 10%;
 }
 .rb-wheel-spin-img {
   width: 100%;
