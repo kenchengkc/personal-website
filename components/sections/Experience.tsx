@@ -25,18 +25,26 @@ type Stint = {
 const items: Stint[] = [
   {
     role: "Founder and Lead Software Engineer",
-    org: "Quantiv - Options Trading Data Platform",
+    org: "Quantiv · Options-implied earnings analytics",
     loc: "New York, NY, USA",
     dates: "Jul 2025 - Present",
     summary:
-      "Founder and lead engineer of an options analytics platform for earnings-move research.",
+      "Founder and lead engineer shipping an earnings-calendar product for options-implied expected moves—dashboard, GBDT stack, and billion-row Parquet/DuckDB analytics.",
     bullets: [
-      "Built a Next.js + FastAPI options analytics platform to predict implied earnings moves for 50-100 tickers weekly, combining mathematical IV models with ML (XGBoost) on historical Greeks and volatility.",
-      "Production Docker deployment on AWS EC2 with Redis for caching and sessions; prioritized reproducible daily model runs and atomic dataset releases over optimizing millisecond-level quote turnaround.",
-      "Engineered a data pipeline (DuckDB + Parquet) to process 1B+ option chain and volatility history records.",
-      "Reduced data sync time by ~90% through atomic directory swap and rsync staging, ensuring zero-downtime updates of large option chain datasets on AWS Elastic Compute Cloud (EC2).",
+      "Delivered a Next.js + FastAPI product covering ~50–100 liquid names weekly: options-implied baselines plus multi-horizon LightGBM forecasts trained on historical Greeks, IV context, and volatility features.",
+      "Production Docker on AWS EC2 with Redis for caching and sessions; emphasized reproducible daily scoring runs and atomic dataset releases instead of optimizing for quote latency.",
+      "Built DuckDB + Parquet pipelines over 1B+ option-chain and vol-history rows for research-grade feature tables and offline scoring.",
+      "Cut large-dataset refresh overhead ~90% via atomic directory swaps and rsync staging on EC2 so revised chain snapshots publish without taking the app offline.",
     ],
-    tags: ["FastAPI", "SQL", "AWS EC2", "Redis", "Docker"],
+    tags: [
+      "Next.js",
+      "FastAPI",
+      "LightGBM",
+      "DuckDB",
+      "AWS EC2",
+      "Docker",
+      "Redis",
+    ],
     logo: {
       src: "/images/quantiv/quantiv-color-banner.png",
       alt: "Quantiv logo",

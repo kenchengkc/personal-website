@@ -81,8 +81,9 @@ export function Hero() {
           <strong>top 1% of class</strong>, GPA 3.7).{" "}
           <strong>IEEE-published</strong> in deep learning,{" "}
           <strong>USACO Platinum perfect score</strong>, and currently
-          shipping an options analytics platform that models implied
-          volatility across <strong>a billion records</strong>. Fluent in{" "}
+          shipping <strong>Quantiv</strong>—options-implied earnings analytics
+          and LightGBM forecasts over <strong>billion-row</strong> chain and
+          vol history. Fluent in{" "}
           <strong>Python and C++</strong>; love tough puzzles.
         </p>
 
@@ -160,11 +161,11 @@ export function Hero() {
       <dl className="v2-hero-spec">
         <div className="v2-hero-spec-row">
           <dt className="v2-mono">CURRENT</dt>
-          <dd>Quantiv - options ML platform</dd>
+          <dd>Quantiv · earnings expected-move analytics</dd>
         </div>
         <div className="v2-hero-spec-row">
           <dt className="v2-mono">STACK</dt>
-          <dd>Next.js · FastAPI · DuckDB · XGBoost</dd>
+          <dd>Next.js · FastAPI · DuckDB · LightGBM</dd>
         </div>
         <div className="v2-hero-spec-row">
           <dt className="v2-mono">DATA</dt>

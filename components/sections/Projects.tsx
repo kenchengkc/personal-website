@@ -48,16 +48,16 @@ type Project = {
 const projects: Project[] = [
   {
     title: "Quantiv",
-    category: "Options analytics platform",
+    category: "Earnings · options-implied analytics",
     dates: "Jul 2025 - Present",
     summary:
-      "Founder-built platform for earnings-move research across active option chains.",
+      "Founder-built research stack for options-implied expected moves around earnings—dashboard, scoring pipeline, and GBDT models over institution-scale history.",
     impact:
-      "Operational research workflow combining IV models, ML volatility signals, and DuckDB-backed analytics—tuned for accurate earnings-move forecasts on a daily refresh cycle, not live quote latency.",
+      "End-to-end workflow from Parquet/DuckDB analytics to LightGBM forecasts and static JSON served by Next.js—accuracy and reproducible daily releases matter more than quote latency.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
-      meta: "Live at usequantiv.com",
+      meta: "usequantiv.com",
       logo: {
         src: "/images/quantiv/quantiv-icon.png",
         alt: "Quantiv app icon",
@@ -65,14 +65,22 @@ const projects: Project[] = [
     },
     metrics: [
       { value: "1B+", label: "option records" },
-      { value: "Daily", label: "forecast refresh" },
+      { value: "Daily", label: "model & data refresh" },
       { value: "50-100", label: "tickers weekly" },
     ],
-    tags: ["Next.js", "FastAPI", "XGBoost", "DuckDB", "AWS EC2", "Redis"],
+    tags: [
+      "Next.js",
+      "FastAPI",
+      "LightGBM",
+      "DuckDB",
+      "Parquet",
+      "AWS EC2",
+      "Redis",
+    ],
     details: [
-      "XGBoost on historical Greeks layered on top of mathematical IV models.",
-      "DuckDB + Parquet pipeline over the full option chain and volatility history.",
-      "Atomic directory swaps with rsync staging on EC2 for zero-downtime data updates.",
+      "LightGBM forecasting layered on options-implied baselines (IV surface, straddle-implied moves, Greek and vol features).",
+      "DuckDB + Parquet over full option-chain and volatility history; scoring jobs feed versioned artifacts for the web client.",
+      "Atomic dataset swaps on EC2 with rsync staging so large chain refreshes ship without downtime.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },

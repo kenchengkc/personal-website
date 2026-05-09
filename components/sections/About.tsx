@@ -9,6 +9,7 @@ const skills = [
     label: "ML / Data",
     items: [
       "PyTorch",
+      "LightGBM",
       "XGBoost",
       "Scikit-learn",
       "DuckDB",
@@ -46,11 +47,13 @@ export function About() {
             math, the model, and the infra all have to agree.
           </p>
           <p>
-            Right now I&rsquo;m building <b>Quantiv</b>—an options analytics
-            platform that combines implied-volatility models with XGBoost on
-            historical Greeks to forecast earnings moves. Data and forecasts
-            refresh on a daily cadence, with the stack aimed at accuracy and
-            scale rather than live intraday latency. Before that, I
+            Right now I&rsquo;m building <b>Quantiv</b>—a platform for
+            options-implied <b>expected moves into earnings</b>, pairing
+            IV/straddle-style baselines with <b>LightGBM</b> models on
+            historical Greeks and volatility features. Datasets and scores
+            refresh on a daily cadence; the goal is calibrated forecasts and
+            reproducible pipelines at billion-row scale, not millisecond
+            quotes. Before that, I
             published in the IEEE Intelligent Transportation Systems Conference
             on graph-network traffic forecasting, and
             earned USACO Platinum with a perfect score.

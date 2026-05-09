@@ -32,7 +32,7 @@ const isVercel = process.env.VERCEL === "1";
 export const metadata: Metadata = {
   title: `${site.name} - CS @ Columbia`,
   description:
-    "Ken Cheng - CS @ Columbia (Egleston Scholar). I build rigorous, scalable systems for machine learning and quant. IEEE-published, USACO Platinum, Quantiv founder.",
+    "Ken Cheng — Columbia CS (Egleston Scholar). Founder of Quantiv (options-implied earnings analytics, LightGBM + DuckDB at billion-row scale). IEEE-published, USACO Platinum.",
   metadataBase: new URL("https://kencheng.dev"),
   openGraph: {
     title: site.name,
