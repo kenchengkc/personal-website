@@ -373,7 +373,7 @@ button { font: inherit; cursor: pointer; }
     rgba(220, 232, 255, 0.92) 80%,
     rgba(150, 185, 255, 0.7) 100%
   );
-  animation: v2dotPulse 1.25s ease-in-out infinite;
+  animation: v2dotPulse 2s ease-in-out infinite;
   will-change: transform, box-shadow, filter;
 }
 @keyframes v2pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
@@ -770,9 +770,9 @@ button { font: inherit; cursor: pointer; }
    its rim toward the camera-side of the perspective: front wheel slides
    left + down, rear wheel slides right + down. */
 .rb-wheel-spinner {
-  --rb-tx: 10%;
-  --rb-ty: 17%;
-  --rb-scale: 0.78;
+  --rb-tx: 14%;
+  --rb-ty: 13%;
+  --rb-scale: 0.86;
   --rb-tilt: 22deg;
   position: absolute;
   inset: 0;
@@ -785,16 +785,17 @@ button { font: inherit; cursor: pointer; }
   transform-style: preserve-3d;
   will-change: transform, opacity;
 }
-/* Per-wheel offsets keep the rim's bottom-right corner pinned where it
-   already lined up; shrinking the scale alone would pull BR up-left, so
-   each axis adds 3% (= half the 6% scale delta) to compensate. */
+/* Per-wheel offsets keep the rim's bottom-LEFT corner pinned where it
+   already lined up. Scale grows from 0.78 → 0.86 (+0.08 delta), so each
+   axis shifts by +4% in x and -4% in y to compensate (BL = (50%(1-s) + tx,
+   50% + 50%s + ty); equating to old values gives the new translates). */
 .rb-wheel-shell--front .rb-wheel-spinner {
-  --rb-tx: 4%;
-  --rb-ty: 17%;
+  --rb-tx: 8%;
+  --rb-ty: 13%;
 }
 .rb-wheel-shell--rear .rb-wheel-spinner {
-  --rb-tx: 16%;
-  --rb-ty: 17%;
+  --rb-tx: 20%;
+  --rb-ty: 13%;
 }
 .rb-wheel-spinner svg {
   width: 100%;
@@ -1190,6 +1191,18 @@ button { font: inherit; cursor: pointer; }
   height: 92px;
   padding: 8px 10px;
 }
+/* Photo variant: a personal moment image rather than a brand logo. Fills
+   the frame (cover, not contain), no white padding, larger landscape ratio. */
+.v2-exp-logo--photo {
+  width: 280px;
+  height: 175px;
+  max-width: 100%;
+  padding: 0;
+  background: #02050c;
+  border: 1px solid var(--color-border);
+  object-fit: cover;
+  object-position: center;
+}
 .v2-exp-logo--dark {
   background: #02050c;
 }
@@ -1325,6 +1338,63 @@ button { font: inherit; cursor: pointer; }
   line-height: 1;
   color: var(--color-accent-text);
   letter-spacing: -0.02em;
+}
+/* Metallic gold shine for medal-grade callouts. Gradient is wider than the
+   element and animated so the highlight band sweeps across the letters
+   like polished metal catching the light. */
+.v2-work-metric-v--gold {
+  background: linear-gradient(
+    115deg,
+    #6e4f10 0%,
+    #c19a35 18%,
+    #f7e26b 32%,
+    #fff7c2 42%,
+    #f7e26b 52%,
+    #c19a35 68%,
+    #6e4f10 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(70, 48, 0, 0.6))
+    drop-shadow(0 0 12px rgba(255, 200, 70, 0.45));
+  animation: goldShine 3.6s ease-in-out infinite;
+}
+@keyframes goldShine {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2-work-metric-v--gold { animation: none; background-position: 50% 50%; }
+}
+
+/* Project video block */
+.v2-work-video {
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #02050c;
+}
+.v2-work-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #02050c;
+}
+.v2-work-video figcaption {
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  border-top: 1px solid var(--color-border);
 }
 .v2-work-metric-l {
   font-family: var(--font-mono);
