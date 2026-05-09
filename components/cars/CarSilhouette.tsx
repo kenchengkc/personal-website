@@ -65,15 +65,18 @@ export function CarSilhouette({ className }: Props) {
 function SpinningWheelFace({ className }: { className?: string }) {
   return (
     <span className={className} aria-hidden>
-      <Image
-        src="/images/cars/wheel-faceon.png"
-        alt=""
-        width={1254}
-        height={1254}
-        className="rb-wheel-spin-img"
-        draggable={false}
-        sizes="120px"
-      />
+      {/* Perspective + placement on outer span; inner span only rotates (disk plane). */}
+      <span className="rb-wheel-spin-inner">
+        <Image
+          src="/images/cars/wheel-faceon.png"
+          alt=""
+          width={1254}
+          height={1254}
+          className="rb-wheel-spin-img"
+          draggable={false}
+          sizes="120px"
+        />
+      </span>
     </span>
   );
 }

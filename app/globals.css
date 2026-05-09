@@ -735,6 +735,8 @@ button { font: inherit; cursor: pointer; }
   perspective-origin: 38% 50%;
   aspect-ratio: 1;
   height: auto;
+  /* Fills anti-alias gaps between circular clip and photo edges */
+  background: radial-gradient(circle at 50% 50%, #080f1c 0%, #03060f 72%);
 }
 .rb-wheel-shell--front {
   /* Sized to cover full tire in redbull-real-car side view */
@@ -767,16 +769,14 @@ button { font: inherit; cursor: pointer; }
     url(#rb-wheel-motion);
 }
 
-/* Full-wheel side texture (tire + rim): translate → scaleX (undo rotateY
-   foreshortening so the disk stays circular on screen) → rotateY tilt →
-   uniform scale → spin. Static wheel PNG underneath stays motion-blurred when
-   running. Rotation only while the hero track is “running”. */
+/* Full-wheel texture: outer span = translate + perspective tilt only; inner span
+   = spin only (smooth rotation in disk plane). Static wheel PNG stays blurred when running. */
 .rb-wheel-spinner {
   --rb-tx: 14%;
   --rb-ty: 13%;
   --rb-scale: 1.14;
-  --rb-tilt: 22deg;
-  /* Widen in local X before rotateY so the circle doesn’t read as a tall oval */
+  /* Milder tilt = rounder silhouette and less apparent wobble when spinning */
+  --rb-tilt: 14deg;
   --rb-foreshort-x: calc(1 / cos(var(--rb-tilt)));
   position: absolute;
   inset: 0;
@@ -784,12 +784,11 @@ button { font: inherit; cursor: pointer; }
   pointer-events: none;
   opacity: 1;
   transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
-    rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
+    rotateY(var(--rb-tilt)) scale(var(--rb-scale));
   transform-origin: center center;
   transform-style: preserve-3d;
-  will-change: transform;
 }
-/* Spinner translate: positive tx → right, positive ty → down (covers top-left gap vs base plate). */
+/* Spinner translate: positive tx → right, positive ty → down */
 .rb-wheel-shell--front .rb-wheel-spinner {
   --rb-tx: 11%;
   --rb-ty: 17%;
@@ -797,6 +796,15 @@ button { font: inherit; cursor: pointer; }
 .rb-wheel-shell--rear .rb-wheel-spinner {
   --rb-tx: 23%;
   --rb-ty: 17%;
+}
+.rb-wheel-spin-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .rb-wheel-spin-img {
   width: 100%;
@@ -807,21 +815,25 @@ button { font: inherit; cursor: pointer; }
   border-radius: 50%;
   aspect-ratio: 1;
 }
-.v2-hero[style*="running"] .rb-wheel-spinner {
-  animation: rbSpinnerRoll 360ms linear infinite;
+.rb-wheel-shell--front .rb-wheel-spin-img {
+  object-position: 54% 51%;
 }
-@keyframes rbSpinnerRoll {
-  from {
-    transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
-      rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
-  }
-  to {
-    transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
-      rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(-360deg);
-  }
+.rb-wheel-shell--rear .rb-wheel-spin-img {
+  object-position: 52% 53%;
+}
+.v2-hero[style*="running"] .rb-wheel-spin-inner {
+  animation: rbWheelSpin 360ms linear infinite;
+  will-change: transform;
+}
+@keyframes rbWheelSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rb-wheel-spinner { animation: none !important; }
+  .rb-wheel-spin-inner {
+    animation: none !important;
+    will-change: auto;
+  }
 }
 @media (max-width: 720px) {
   .v2-hero-track { margin: 44px -28px 0; height: 118px; }
