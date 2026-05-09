@@ -112,7 +112,10 @@ export function Hero() {
           </span>
           <span>
             <em>Coursework</em>
-            <b>DSA · Artificial Intelligence · Advanced Programming in C</b>
+            <b>
+              Data Structures and Algorithms · Artificial Intelligence · Advanced
+              Programming in C
+            </b>
             <small>
               Linear Algebra · Probability Theory · Linear Regression ·
               Multivariable Calculus

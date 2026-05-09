@@ -737,14 +737,15 @@ button { font: inherit; cursor: pointer; }
   height: auto;
 }
 .rb-wheel-shell--front {
+  /* Sized to cover full tire in redbull-real-car side view */
   left: 29.08%;
   top: 72.64%;
-  width: 11.19%;
+  width: 14%;
 }
 .rb-wheel-shell--rear {
   left: 88.69%;
   top: 55.85%;
-  width: 10.71%;
+  width: 13.5%;
 }
 .rb-wheel {
   display: block;
@@ -766,13 +767,14 @@ button { font: inherit; cursor: pointer; }
     url(#rb-wheel-motion);
 }
 
-/* Hub-cap photo: translate → scaleX (undo rotateY foreshortening so the disk
-   stays circular on screen) → rotateY tilt → uniform scale → spin. Base wheel
-   PNG keeps tire/context. Rotation only while the hero track is “running”. */
+/* Full-wheel side texture (tire + rim): translate → scaleX (undo rotateY
+   foreshortening so the disk stays circular on screen) → rotateY tilt →
+   uniform scale → spin. Static wheel PNG underneath stays motion-blurred when
+   running. Rotation only while the hero track is “running”. */
 .rb-wheel-spinner {
   --rb-tx: 14%;
   --rb-ty: 13%;
-  --rb-scale: 1.02;
+  --rb-scale: 1.14;
   --rb-tilt: 22deg;
   /* Widen in local X before rotateY so the circle doesn’t read as a tall oval */
   --rb-foreshort-x: calc(1 / cos(var(--rb-tilt)));
@@ -795,7 +797,7 @@ button { font: inherit; cursor: pointer; }
   --rb-tx: 20%;
   --rb-ty: 13%;
 }
-.rb-hubcap-img {
+.rb-wheel-spin-img {
   width: 100%;
   height: 100%;
   display: block;

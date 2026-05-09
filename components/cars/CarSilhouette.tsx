@@ -42,7 +42,7 @@ export function CarSilhouette({ className }: Props) {
           className="rb-wheel"
           draggable={false}
         />
-        <HubcapSpinner className="rb-wheel-spinner" />
+        <SpinningWheelFace className="rb-wheel-spinner" />
       </span>
       <span className="rb-wheel-shell rb-wheel-shell--rear">
         <Image
@@ -53,16 +53,16 @@ export function CarSilhouette({ className }: Props) {
           className="rb-wheel"
           draggable={false}
         />
-        <HubcapSpinner className="rb-wheel-spinner" />
+        <SpinningWheelFace className="rb-wheel-spinner" />
       </span>
     </span>
   );
 }
 
-/** Head-on wheel + hub-cap photo, masked to a circle and stacked over the
- *  base wheel plate (same transform as the prior rim overlay). Spins while the
- *  hero track is “running”. */
-function HubcapSpinner({ className }: { className?: string }) {
+/** Side-view photo of the full wheel (rubber tire + rim/cover), masked to a
+ *  circle and stacked over the static wheel plate. Rotates while the hero
+ *  track is “running” so motion reads on the tire sidewall and hub together. */
+function SpinningWheelFace({ className }: { className?: string }) {
   return (
     <span className={className} aria-hidden>
       <Image
@@ -70,7 +70,7 @@ function HubcapSpinner({ className }: { className?: string }) {
         alt=""
         width={1254}
         height={1254}
-        className="rb-hubcap-img"
+        className="rb-wheel-spin-img"
         draggable={false}
         sizes="120px"
       />

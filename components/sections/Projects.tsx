@@ -93,7 +93,7 @@ const projects: Project[] = [
       { value: "Top 1%", label: "national rank" },
       { value: "Platinum", label: "qualifier", tone: "platinum" },
     ],
-    tags: ["C++", "Advanced DSA", "Algorithms", "gdb"],
+    tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
     details: [
       "Competition-grade C++ across graphs, DP, segment trees, and computational geometry.",
       "gdb profiling to chase down edge cases under tight memory and runtime budgets.",
