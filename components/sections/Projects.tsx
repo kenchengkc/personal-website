@@ -53,7 +53,7 @@ const projects: Project[] = [
     summary:
       "Founder-built platform for earnings-move research across active option chains.",
     impact:
-      "Operational research workflow combining IV models, ML volatility signals, and a low-latency query layer.",
+      "Operational research workflow combining IV models, ML volatility signals, and DuckDB-backed analytics—tuned for accurate earnings-move forecasts on a daily refresh cycle, not live quote latency.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -65,7 +65,7 @@ const projects: Project[] = [
     },
     metrics: [
       { value: "1B+", label: "option records" },
-      { value: "100ms", label: "query latency" },
+      { value: "Daily", label: "forecast refresh" },
       { value: "50-100", label: "tickers weekly" },
     ],
     tags: ["Next.js", "FastAPI", "XGBoost", "DuckDB", "AWS EC2", "Redis"],

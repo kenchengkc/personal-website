@@ -71,8 +71,8 @@ export function Hero() {
         <h1 className="v2-hero-title">
           Hi, I&rsquo;m Ken - <br />
           I build{" "}
-          <em style={{ color: "var(--color-accent-text)" }}>fast</em> systems for{" "}
-          <br />
+          <em style={{ color: "var(--color-accent-text)" }}>rigorous</em>{" "}
+          systems for <br />
           machine learning and quant.
         </h1>
 
@@ -167,8 +167,8 @@ export function Hero() {
           <dd>Next.js · FastAPI · DuckDB · XGBoost</dd>
         </div>
         <div className="v2-hero-spec-row">
-          <dt className="v2-mono">PACE</dt>
-          <dd>1B+ records · 100ms p95</dd>
+          <dt className="v2-mono">DATA</dt>
+          <dd>1B+ records · daily refresh</dd>
         </div>
       </dl>
 

@@ -32,7 +32,7 @@ const items: Stint[] = [
       "Founder and lead engineer of an options analytics platform for earnings-move research.",
     bullets: [
       "Built a Next.js + FastAPI options analytics platform to predict implied earnings moves for 50-100 tickers weekly, combining mathematical IV models with ML (XGBoost) on historical Greeks and volatility.",
-      "Scaled infrastructure with Docker containerization for faster deployment and Redis caching to reduce query latency to under 100ms.",
+      "Production Docker deployment on AWS EC2 with Redis for caching and sessions; prioritized reproducible daily model runs and atomic dataset releases over optimizing millisecond-level quote turnaround.",
       "Engineered a data pipeline (DuckDB + Parquet) to process 1B+ option chain and volatility history records.",
       "Reduced data sync time by ~90% through atomic directory swap and rsync staging, ensuring zero-downtime updates of large option chain datasets on AWS Elastic Compute Cloud (EC2).",
     ],
