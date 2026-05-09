@@ -223,12 +223,12 @@ export function Hero() {
         </Link>
         <Link
           href={site.socials.scholar}
-          className="v2-social"
+          className="v2-social v2-social--scholar"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Google Scholar"
+          aria-label="Google Scholar - Ken Cheng"
         >
-          <Scholar /> {site.socials.scholar.replace(/^https:\/\//, "")}
+          <Scholar /> Google Scholar - Ken Cheng
         </Link>
         <a
           href={`mailto:${site.email}`}
