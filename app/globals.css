@@ -1371,23 +1371,21 @@ button { font: inherit; cursor: pointer; }
   .v2-work-metric-v--gold { animation: none; background-position: 50% 50%; }
 }
 
-/* Project video block */
-.v2-work-video {
+/* Project media block */
+.v2-work-media {
   margin: 0;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   overflow: hidden;
   background: #02050c;
 }
-.v2-work-video video {
+.v2-work-media-img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  background: #02050c;
+  vertical-align: middle;
 }
-.v2-work-video figcaption {
+.v2-work-media figcaption {
   padding: 10px 14px;
   font-family: var(--font-mono);
   font-size: 11px;

@@ -19,7 +19,7 @@ type Project = {
   dates: string;
   summary: string;
   impact: string;
-  metrics: { value: string; label: string }[];
+  metrics: { value: string; label: string; tone?: "gold" }[];
   award?: { label: string; detail: string };
   brand?: {
     label: string;
@@ -36,6 +36,13 @@ type Project = {
   tags: string[];
   details: string[];
   links?: ProjectLink[];
+  media?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption?: string;
+  };
 };
 
 const projects: Project[] = [
@@ -116,7 +123,7 @@ const projects: Project[] = [
     metrics: [
       { value: "100x", label: "CFD iteration" },
       { value: "43%", label: "drag reduction" },
-      { value: "Gold", label: "CWSF '22" },
+      { value: "Gold", label: "CWSF '22", tone: "gold" },
     ],
     tags: ["MATLAB", "Deep Learning Toolbox", "Feedforward", "trainlm"],
     details: [
@@ -164,9 +171,9 @@ const projects: Project[] = [
     category: "Operations research · UF Center for Applied Optimization",
     dates: "Jun - Jul 2023",
     summary:
-      "Capacitated Vehicle Routing Problem (CVRP) solver accelerated with ML and data-mining patterns.",
+      "Mined patterns from past Capacitated Vehicle Routing Problem (CVRP) solutions to teach a C++ solver which branches to prune.",
     impact:
-      "15% compute-time reduction on TB-scale routing; Best Paper at SSTP (<10% acceptance).",
+      "15% faster on TB-scale instances of an NP-hard problem; Best Paper at SSTP (<10% acceptance).",
     award: {
       label: "Best Paper Award",
       detail: "Student Science Training Program",
@@ -181,16 +188,23 @@ const projects: Project[] = [
       },
     },
     metrics: [
-      { value: "15%", label: "compute reduction" },
+      { value: "15%", label: "faster" },
+      { value: "TB", label: "instance scale" },
       { value: "<10%", label: "SSTP acceptance" },
-      { value: "TB", label: "data scale" },
     ],
     tags: ["C++", "CMake", "SLURM batch scripts", "Java", "JavaFX"],
     details: [
-      "Pattern mining drove early-termination heuristics inside the C++ CVRP solver.",
-      "Analyzed dual-value / variable patterns in Column Generation solutions on the UF HiPerGator supercomputer.",
-      "Built a JavaFX visualization tool so OR researchers could inspect candidate routes.",
+      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early.",
+      "Scaled experiments out across SLURM batch jobs on the 34k-core UF HiPerGator supercomputer.",
+      "Built a JavaFX route-visualization tool so OR researchers could step through the solver's decisions interactively (screenshot below).",
     ],
+    media: {
+      src: "/media/cvrp-visualizer.png",
+      alt: "CVRP solver JavaFX visualizer showing routes and exploration controls",
+      width: 1696,
+      height: 1800,
+      caption: "Solution exploration visualizer",
+    },
   },
 ];
 
@@ -277,7 +291,13 @@ export function Projects() {
           <div className="v2-work-metrics">
             {active.metrics.map((metric) => (
               <div key={metric.label} className="v2-work-metric">
-                <span className="v2-work-metric-v">{metric.value}</span>
+                <span
+                  className={`v2-work-metric-v ${
+                    metric.tone === "gold" ? "v2-work-metric-v--gold" : ""
+                  }`}
+                >
+                  {metric.value}
+                </span>
                 <span className="v2-work-metric-l">{metric.label}</span>
               </div>
             ))}
@@ -299,6 +319,22 @@ export function Projects() {
               ))}
             </ul>
           </details>
+
+          {active.media && (
+            <figure className="v2-work-media">
+              <Image
+                src={active.media.src}
+                alt={active.media.alt}
+                width={active.media.width}
+                height={active.media.height}
+                sizes="(max-width: 900px) 100vw, 820px"
+                className="v2-work-media-img"
+              />
+              {active.media.caption && (
+                <figcaption>{active.media.caption}</figcaption>
+              )}
+            </figure>
+          )}
 
           {active.links && active.links.length > 0 && (
             <div className="v2-work-links">
