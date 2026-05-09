@@ -19,7 +19,7 @@ export default function BlogPage() {
         <section className="v2-section" style={{ marginTop: 0 }}>
           <SectionHead
             eyebrow="Writing"
-            title="Notes & write-ups"
+            title="Notes and write-ups"
             sub="Long-form engineering posts on ML systems, quant ideas, and infra lessons."
           />
 

@@ -34,7 +34,7 @@ export function BlogList() {
     <section className="v2-section" id="blog">
       <SectionHead
         eyebrow="Publications"
-        title="Papers & writing"
+        title="Papers and writing"
         sub="Peer-reviewed and competition-published research."
       />
       <div className="v2-blog">

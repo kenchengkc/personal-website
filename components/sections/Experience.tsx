@@ -17,7 +17,7 @@ type Stint = {
   logo?: {
     src: string;
     alt: string;
-    variant?: "wide" | "square";
+    variant?: "wide" | "square" | "photo";
     tone?: "dark" | "light";
   };
 };
@@ -45,7 +45,7 @@ const items: Stint[] = [
     },
   },
   {
-    role: "Machine Learning Lead & Winner",
+    role: "Machine Learning Lead and Winner",
     org: "Google at LA Hacks (University of California - Los Angeles)",
     loc: "Los Angeles, CA, USA",
     dates: "Apr 2025",
@@ -53,7 +53,7 @@ const items: Stint[] = [
       "Led a team building a CV + voice-first app for wildfire insurance claims that won three LA Hacks awards.",
     bullets: [
       "Led team to develop Embers, a React + Python/Flask Computer Vision app achieving 90%+ detection accuracy in auto-inventorying household items from 30-second videos, streamlining insurance claims for wildfire survivors.",
-      "Integrated Google Gemini, ElevenLabs, & OpenAI Whisper APIs into an intelligent voice-first chatbot assistant, enabling personalized asset valuation and reducing manual claim documentation time by an estimated 50%.",
+      "Integrated Google Gemini, ElevenLabs, and OpenAI Whisper APIs into an intelligent voice-first chatbot assistant, enabling personalized asset valuation and reducing manual claim documentation time by an estimated 50%.",
       "Placed as Top 5 Finalist out of 172 teams; Won Best Use of Google Gemini API and Best Financial Tech Project.",
     ],
     tags: ["React", "Flask", "Python", "TypeScript", "APIs", "Supabase"],
@@ -85,8 +85,9 @@ const items: Stint[] = [
     ],
     tags: ["Python (Scikit-learn)", "PyTorch", "Data pipelines"],
     logo: {
-      src: "/images/gc-inf/ieee-itsc-2023.jpg",
-      alt: "IEEE ITSC 2023 Bilbao logo",
+      src: "/images/gc-inf/ieeeconf.png",
+      alt: "Ken Cheng presenting at IEEE ITSC 2023 in Bilbao, the Simulation and Control session he co-chaired",
+      variant: "photo",
     },
   },
   {
@@ -175,10 +176,12 @@ export function Experience() {
                 <Image
                   src={active.logo.src}
                   alt={active.logo.alt}
-                  width={128}
-                  height={128}
+                  width={active.logo.variant === "photo" ? 320 : 128}
+                  height={active.logo.variant === "photo" ? 200 : 128}
                   className={`v2-exp-logo ${
                     active.logo.variant === "wide" ? "v2-exp-logo--wide" : ""
+                  } ${
+                    active.logo.variant === "photo" ? "v2-exp-logo--photo" : ""
                   } ${
                     active.logo.tone === "dark" ? "v2-exp-logo--dark" : ""
                   }`}

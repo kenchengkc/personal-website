@@ -73,7 +73,7 @@ export function Hero() {
           I build{" "}
           <em style={{ color: "var(--color-accent-text)" }}>fast</em> systems for{" "}
           <br />
-          machine learning &amp; quant.
+          machine learning and quant.
         </h1>
 
         <p className="v2-hero-sub">
