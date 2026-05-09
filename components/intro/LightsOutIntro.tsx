@@ -7,6 +7,10 @@ const LIGHT_INTERVAL = 500;
 
 type Phase = "lighting" | "hold" | "out" | "done";
 
+function introFinished() {
+  return sessionStorage.getItem(STORAGE_KEY) === "1";
+}
+
 // useLayoutEffect on client, no-op on server (avoids SSR warning).
 const useIsoLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -15,72 +19,72 @@ export function LightsOutIntro() {
   // Render visible on SSR + first client paint so the homepage never flashes.
   const [phase, setPhase] = useState<Phase>("lighting");
   const [litCount, setLitCount] = useState(0);
-  const [skipFade, setSkipFade] = useState(false);
-  const [skipped, setSkipped] = useState(false);
 
   // Returning visitors: hide the overlay synchronously before paint.
   useIsoLayoutEffect(() => {
-    if (sessionStorage.getItem(STORAGE_KEY) === "1") {
-      setSkipFade(true);
+    if (introFinished()) {
       setPhase("done");
     }
   }, []);
 
   useEffect(() => {
-    if (phase === "done") return;
-    if (sessionStorage.getItem(STORAGE_KEY) === "1") return;
+    if (introFinished()) return;
 
     const timers: ReturnType<typeof setTimeout>[] = [];
+    const guard = (fn: () => void) => {
+      if (introFinished()) return;
+      fn();
+    };
+
     for (let i = 1; i <= 5; i++) {
-      timers.push(setTimeout(() => setLitCount(i), i * LIGHT_INTERVAL));
+      timers.push(
+        setTimeout(() => guard(() => setLitCount(i)), i * LIGHT_INTERVAL),
+      );
     }
     const onAt = 5 * LIGHT_INTERVAL;
     const holdMs = 400 + Math.floor(Math.random() * 700);
-    timers.push(setTimeout(() => setPhase("hold"), onAt));
     timers.push(
-      setTimeout(() => {
-        setLitCount(0);
-        setPhase("out");
-      }, onAt + holdMs),
+      setTimeout(() => guard(() => setPhase("hold")), onAt),
     );
     timers.push(
-      setTimeout(() => {
-        sessionStorage.setItem(STORAGE_KEY, "1");
-        setPhase("done");
-      }, onAt + holdMs + 1100),
+      setTimeout(
+        () =>
+          guard(() => {
+            setLitCount(0);
+            setPhase("out");
+          }),
+        onAt + holdMs,
+      ),
+    );
+    timers.push(
+      setTimeout(
+        () =>
+          guard(() => {
+            sessionStorage.setItem(STORAGE_KEY, "1");
+            setPhase("done");
+          }),
+        onAt + holdMs + 1100,
+      ),
     );
 
     return () => timers.forEach(clearTimeout);
-    // Run once on mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function skip() {
     sessionStorage.setItem(STORAGE_KEY, "1");
-    setSkipFade(true);
-    setSkipped(true);
     setPhase("done");
   }
 
-  const done = phase === "done";
+  if (phase === "done") {
+    return null;
+  }
 
   return (
-    <div
-      className="intro-overlay"
-      aria-hidden={done}
-      style={{
-        opacity: done ? 0 : 1,
-        pointerEvents: done ? "none" : "auto",
-        transition: skipFade ? "none" : undefined,
-      }}
-    >
+    <div className="intro-overlay" aria-hidden={false}>
       <div className="intro-vignette" />
       <div className="intro-grain" />
 
-      <div
-        className="intro-content"
-        style={skipped ? { display: "none" } : undefined}
-      >
+      <div className="intro-content">
         <div className="intro-meta">
           <span className="intro-meta-dot" />
           <span>FORMATION LAP COMPLETE - GRID SET</span>
@@ -92,7 +96,7 @@ export function LightsOutIntro() {
               <div className="intro-pole-stem" />
               <div className="intro-pole-bar">
                 {[0, 1].map((row) => {
-                  const lightsAreOut = phase === "out" || phase === "done";
+                  const lightsAreOut = phase === "out";
                   const isLit =
                     !lightsAreOut && (phase === "hold" || col < litCount);
                   return (
@@ -122,15 +126,12 @@ export function LightsOutIntro() {
             <span className="intro-readout-k">STATUS</span>
             <span
               className={`intro-readout-v ${
-                phase === "out" || phase === "done"
-                  ? "intro-readout-v--accent"
-                  : ""
+                phase === "out" ? "intro-readout-v--accent" : ""
               }`}
             >
               {phase === "lighting" && `LIGHTS ${litCount}/5`}
               {phase === "hold" && "HOLD…"}
-              {(phase === "out" || phase === "done") &&
-                "LIGHTS OUT - GO GO GO"}
+              {phase === "out" && "LIGHTS OUT - GO GO GO"}
             </span>
           </div>
         </div>
@@ -140,7 +141,7 @@ export function LightsOutIntro() {
         SKIP &gt;&gt;
       </button>
 
-      {phase === "out" && !skipped && <div className="intro-flash" />}
+      {phase === "out" && <div className="intro-flash" />}
     </div>
   );
 }

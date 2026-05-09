@@ -59,16 +59,17 @@ export function CarSilhouette({ className }: Props) {
   );
 }
 
-/** Rotating hub-cap texture (modern F1 solid wheel covers). Photo is masked to
- *  a circle and stacked over the base wheel plate so spokes never show. */
+/** Head-on wheel + hub-cap photo, masked to a circle and stacked over the
+ *  base wheel plate (same transform as the prior rim overlay). Spins while the
+ *  hero track is “running”. */
 function HubcapSpinner({ className }: { className?: string }) {
   return (
     <span className={className} aria-hidden>
       <Image
-        src="/images/cars/f1-hubcap-wheel.png"
+        src="/images/cars/wheel-faceon.png"
         alt=""
-        width={334}
-        height={386}
+        width={1254}
+        height={1254}
         className="rb-hubcap-img"
         draggable={false}
         sizes="120px"
