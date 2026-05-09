@@ -79,7 +79,9 @@ export async function POST(request: Request) {
 
   try {
     const resend = getResendClient();
-    await resend.emails.send({
+    // Resend returns { data, error } and does not throw on API errors — check `error`
+    // or failed sends look successful to the client.
+    const { error } = await resend.emails.send({
       from,
       to,
       replyTo: email,
@@ -94,6 +96,19 @@ export async function POST(request: Request) {
         </div>
       `,
     });
+
+    if (error) {
+      console.error("Resend send failed", {
+        name: error.name,
+        message: error.message,
+        from,
+        to,
+      });
+      return NextResponse.json(
+        { ok: false, error: "Email service is not configured or unavailable." },
+        { status: 500 },
+      );
+    }
   } catch (error) {
     console.error("Contact email failed", error);
     return NextResponse.json(
