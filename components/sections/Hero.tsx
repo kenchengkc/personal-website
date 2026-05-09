@@ -223,7 +223,7 @@ export function Hero() {
         </Link>
         <Link
           href={site.socials.scholar}
-          className="v2-social v2-social--scholar"
+          className="v2-social"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Google Scholar - Ken Cheng"
