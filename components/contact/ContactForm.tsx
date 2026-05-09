@@ -76,7 +76,7 @@ export function ContactForm() {
       setForm(initialForm);
       setStatus({
         ok: true,
-        msg: "Thanks - I'll get back to you within a couple of days.",
+        msg: "Thank you for reaching out! I will try to get back to you as soon as possible.",
       });
     } catch (error) {
       setStatus({
@@ -98,7 +98,7 @@ export function ContactForm() {
         <input
           value={form.name}
           onChange={(e) => update("name", e.target.value)}
-          placeholder="Jane Recruiter"
+          placeholder="John Doe"
           required
           minLength={2}
         />
@@ -109,7 +109,7 @@ export function ContactForm() {
           type="email"
           value={form.email}
           onChange={(e) => update("email", e.target.value)}
-          placeholder="jane@company.com"
+          placeholder="contact@company.com"
           required
         />
       </label>
@@ -128,7 +128,7 @@ export function ContactForm() {
           rows={5}
           value={form.message}
           onChange={(e) => update("message", e.target.value)}
-          placeholder="A bit about the role, team, or what you're working on."
+          placeholder="Feel free to share anything about a new role, team, or what you're working on."
           required
           minLength={10}
         />
