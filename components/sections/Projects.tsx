@@ -51,9 +51,9 @@ const projects: Project[] = [
     category: "Earnings · options-implied analytics",
     dates: "Jul 2025 - Present",
     summary:
-      "Founder-built research stack for options-implied expected moves around earnings: dashboard, scoring pipeline, and GBDT models over institution-scale history.",
+      "Founder-built earnings-analytics stack: TypeScript and Next.js on the web side, Python and FastAPI for scoring APIs, and LightGBM plus DuckDB over Parquet at institution scale.",
     impact:
-      "End-to-end workflow from Parquet/DuckDB analytics to LightGBM forecasts and static JSON served by Next.js. Accuracy and reproducible daily releases matter more than quote latency.",
+      "Parquet/DuckDB analytics through GBDT forecasts to versioned artifacts and the live client. Daily refreshes and reproducible pipelines matter more than quote latency.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -69,18 +69,20 @@ const projects: Project[] = [
       { value: "50-100", label: "tickers weekly" },
     ],
     tags: [
+      "TypeScript",
       "Next.js",
+      "Python",
       "FastAPI",
       "LightGBM",
       "DuckDB",
       "Parquet",
-      "AWS EC2",
       "Redis",
+      "AWS EC2",
     ],
     details: [
-      "LightGBM forecasting layered on options-implied baselines (IV surface, straddle-implied moves, Greek and vol features).",
-      "DuckDB + Parquet over full option-chain and volatility history; scoring jobs feed versioned artifacts for the web client.",
-      "Atomic dataset swaps on EC2 with rsync staging so large chain refreshes ship without downtime.",
+      "LightGBM on options-implied baselines: IV surface, straddle-implied moves, Greeks and vol-derived features.",
+      "DuckDB over partitioned Parquet for full chain and volatility history; batch scoring writes versioned artifacts for the Next.js client.",
+      "Atomic dataset swaps on EC2 with staged rsync so large refreshes ship without downtime.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },

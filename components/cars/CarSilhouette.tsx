@@ -18,8 +18,8 @@ export function CarSilhouette({ className }: Props) {
         aria-hidden
       >
         <defs>
-          <filter id="rb-wheel-motion" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4 0" />
+          <filter id="rb-wheel-motion" x="-12%" y="-12%" width="124%" height="124%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5 0" />
           </filter>
         </defs>
       </svg>
@@ -65,17 +65,20 @@ export function CarSilhouette({ className }: Props) {
 function SpinningWheelFace({ className }: { className?: string }) {
   return (
     <span className={className} aria-hidden>
-      {/* Perspective + placement on outer span; inner span only rotates (disk plane). */}
-      <span className="rb-wheel-spin-inner">
-        <Image
-          src="/images/cars/wheel-faceon.png"
-          alt=""
-          width={1254}
-          height={1254}
-          className="rb-wheel-spin-img"
-          draggable={false}
-          sizes="120px"
-        />
+      {/* Hub-centered PNG; only .rb-wheel-spin-scale rotates (globals.css). */}
+      <span className="rb-wheel-spin-yaw">
+        <span className="rb-wheel-spin-inner">
+          <span className="rb-wheel-spin-scale">
+            <img
+              src="/images/cars/wheel-spin-hub-centered.png"
+              alt=""
+              width={1006}
+              height={1006}
+              className="rb-wheel-spin-img"
+              draggable={false}
+            />
+          </span>
+        </span>
       </span>
     </span>
   );

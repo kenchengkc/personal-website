@@ -723,117 +723,207 @@ button { font: inherit; cursor: pointer; }
   user-select: none;
   pointer-events: none;
 }
+/* ============ STABLE 2.5D RACE CAR WHEELS ============ */
+
 .rb-wheel-shell {
   position: absolute;
   z-index: 3;
   display: block;
-  transform: translate(-50%, -50%);
+
+  --rb-wheel-perspective-x: 0.92;
+  --rb-wheel-tilt: -1deg;
+
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--rb-wheel-tilt))
+    scaleX(var(--rb-wheel-perspective-x));
+
+  transform-origin: 50% 50%;
   border-radius: 50%;
   overflow: hidden;
   pointer-events: none;
-  perspective: 520px;
-  perspective-origin: 38% 50%;
   aspect-ratio: 1;
   height: auto;
-  /* Fills anti-alias gaps between circular clip and photo edges */
-  background: radial-gradient(circle at 50% 50%, #080f1c 0%, #03060f 72%);
+
+  background: #020308;
+  box-shadow:
+    inset 0 0 8px 5px rgba(0, 0, 0, 0.9),
+    0 3px 8px rgba(0, 0, 0, 0.45);
 }
+
+/* Front wheel */
 .rb-wheel-shell--front {
-  /* Sized to cover full tire in redbull-real-car side view */
-  left: 29.08%;
-  top: 72.64%;
-  width: 14%;
-}
-.rb-wheel-shell--rear {
-  left: 88.69%;
-  top: 55.85%;
+  left: 29.38%;
+  top: 75.2%;
   width: 13.5%;
+
+  --rb-wheel-perspective-x: 0.92;
+  --rb-wheel-tilt: -1deg;
 }
+
+/* Rear wheel */
+.rb-wheel-shell--rear {
+  left: 89.72%;
+  top: 58.2%;
+  width: 13%;
+
+  --rb-wheel-perspective-x: 0.94;
+  --rb-wheel-tilt: -0.75deg;
+}
+
+/* Static base wheel from the car image */
 .rb-wheel {
   display: block;
   width: 100%;
   height: auto;
-  transform-origin: center;
+  transform-origin: 50% 50%;
   border-radius: 50%;
-  filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg);
+  filter: saturate(1.06) contrast(1.05) brightness(0.9) hue-rotate(2deg);
 }
-/* Wheels are a 3/4-angle photo, so spinning them wobbles. Keep them static;
-   sell the speed read with a horizontal-directional SVG motion blur that
-   activates while the car is in motion (parent --hero-wheel-state: running). */
+
+/* Remove the white highlight. Dark-only shading is safer. */
+.rb-wheel-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0%,
+      transparent 58%,
+      rgba(0, 0, 0, 0.48) 100%
+    );
+}
+
+/* Optional motion blur on the static plate */
 .v2-hero-track-car .rb-wheel {
   transition: filter 0.35s ease;
   will-change: filter;
 }
+
 .v2-hero[style*="running"] .v2-hero-track-car .rb-wheel {
-  filter: saturate(1.06) contrast(1.05) brightness(0.92) hue-rotate(2deg)
+  filter:
+    saturate(1.06)
+    contrast(1.05)
+    brightness(0.9)
+    hue-rotate(2deg)
     url(#rb-wheel-motion);
 }
 
-/* Full-wheel texture: outer span = translate + perspective tilt only; inner span
-   = spin only (smooth rotation in disk plane). Static wheel PNG stays blurred when running. */
+/* Fill the shell. No perspective here. */
 .rb-wheel-spinner {
-  --rb-tx: 14%;
-  --rb-ty: 13%;
-  /* Smaller scale keeps full tire inside circle (avoid clipping bottom-right). */
-  --rb-scale: 1.06;
-  /* Low tilt + mostly-Z spin reads rounder and less off-axis */
-  --rb-tilt: 8deg;
-  --rb-foreshort-x: calc(1 / cos(var(--rb-tilt)));
   position: absolute;
   inset: 0;
   display: block;
   pointer-events: none;
   opacity: 1;
-  transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
-    rotateY(var(--rb-tilt)) scale(var(--rb-scale));
-  transform-origin: center center;
-  transform-style: preserve-3d;
+  transform: none;
+  perspective: none;
+  transform-style: flat;
 }
-/* Spinner translate only (does not move shell vs car): lower tx = left, lower ty = up */
-.rb-wheel-shell--front .rb-wheel-spinner {
-  --rb-tx: 4%;
-  --rb-ty: 8%;
-}
-.rb-wheel-shell--rear .rb-wheel-spinner {
-  --rb-tx: 15%;
-  --rb-ty: 8%;
-}
-.rb-wheel-spin-inner {
+
+/* No yaw animation here. */
+.rb-wheel-spin-yaw {
   position: absolute;
   inset: 0;
+  transform: none;
+  transform-origin: 50% 50%;
+  transform-style: flat;
+}
+
+.v2-hero[style*="running"] .rb-wheel-spin-yaw {
+  animation: none;
+}
+
+/* Clip slightly inside the outer edge to hide white/transparent fringe. */
+.rb-wheel-spin-inner {
+  position: absolute;
+  inset: 1.5px;
   border-radius: 50%;
   overflow: hidden;
-  transform-origin: center center;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  background: #020308;
+  box-shadow: inset 0 0 10px 6px rgba(1, 3, 8, 0.88);
 }
+
+/*
+  IMPORTANT:
+  This wrapper spins.
+  The image inside does NOT spin.
+  This prevents hub-correction offsets from creating wobble.
+*/
+.rb-wheel-spin-scale {
+  --rb-clip-overscan: 1.14;
+
+  position: absolute;
+  inset: 0;
+  transform:
+    scale(var(--rb-clip-overscan))
+    rotate(0deg);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
+  animation: rbWheelStableSpin 320ms linear infinite;
+}
+
+@keyframes rbWheelStableSpin {
+  from {
+    transform:
+      scale(var(--rb-clip-overscan))
+      rotate(0deg);
+  }
+  to {
+    transform:
+      scale(var(--rb-clip-overscan))
+      rotate(-360deg);
+  }
+}
+
+/*
+  The image is only for hub alignment.
+  Adjust --rb-hub-x / --rb-hub-y if the center still drifts.
+*/
 .rb-wheel-spin-img {
+  --rb-hub-x: 0px;
+  --rb-hub-y: 0px;
+
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
+  object-position: 50% 50%;
   aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #020308;
+
+  transform: translate(var(--rb-hub-x), var(--rb-hub-y));
+  transform-origin: 50% 50%;
+  filter: brightness(0.96) contrast(1.04);
+  backface-visibility: hidden;
 }
+
+/* Use these only if the hub still looks slightly off-center */
 .rb-wheel-shell--front .rb-wheel-spin-img {
-  object-position: 46% 44%;
+  --rb-hub-x: 0px;
+  --rb-hub-y: 0px;
 }
+
 .rb-wheel-shell--rear .rb-wheel-spin-img {
-  object-position: 44% 46%;
+  --rb-hub-x: 0px;
+  --rb-hub-y: 0px;
 }
-.v2-hero[style*="running"] .rb-wheel-spin-inner {
-  animation: rbWheelSpin 360ms linear infinite;
-  will-change: transform;
-}
-@keyframes rbWheelSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
+
 @media (prefers-reduced-motion: reduce) {
-  .rb-wheel-spin-inner {
+  .rb-wheel-spin-scale {
     animation: none !important;
     will-change: auto;
+    transform:
+      scale(var(--rb-clip-overscan))
+      rotate(0deg);
   }
 }
 @media (max-width: 720px) {
@@ -1866,4 +1956,61 @@ button { font: inherit; cursor: pointer; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============ HUB-CENTERED REAL WHEEL SPIN ============ */
+
+.rb-wheel-spin-inner {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #020308;
+  box-shadow: inset 0 0 10px 6px rgba(1, 3, 8, 0.88);
+}
+
+.rb-wheel-spin-scale {
+  --rb-clip-overscan: 1.14;
+
+  position: absolute;
+  inset: 0;
+  transform:
+    scale(var(--rb-clip-overscan))
+    rotate(0deg);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
+  animation: rbWheelStableSpin 320ms linear infinite;
+}
+
+@keyframes rbWheelStableSpin {
+  from {
+    transform:
+      scale(var(--rb-clip-overscan))
+      rotate(0deg);
+  }
+  to {
+    transform:
+      scale(var(--rb-clip-overscan))
+      rotate(-360deg);
+  }
+}
+
+.rb-wheel-spin-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+
+  transform: none !important;
+  animation: none !important;
+  transform-origin: 50% 50%;
+
+  border-radius: 50%;
+  background: #020308;
+  filter: brightness(0.96) contrast(1.04);
+  backface-visibility: hidden;
 }
