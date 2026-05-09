@@ -228,7 +228,7 @@ export function Hero() {
           rel="noopener noreferrer"
           aria-label="Google Scholar - Ken Cheng"
         >
-          <Scholar /> Scholar · Ken Cheng
+          <Scholar /> Google Scholar · Ken Cheng
         </Link>
         <a
           href={`mailto:${site.email}`}
