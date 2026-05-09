@@ -67,6 +67,16 @@ body {
 
 ::selection { background: var(--color-accent); color: #fff; }
 a { color: inherit; text-decoration: none; }
+/* Always underline outbound links to Quantiv (global `a` resets decoration). */
+a[href*="usequantiv.com"] {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--color-accent-text) 85%, transparent);
+}
+a[href*="usequantiv.com"]:hover {
+  text-decoration-color: var(--color-accent-text);
+}
 button { font: inherit; cursor: pointer; }
 
 :focus-visible {
@@ -1607,6 +1617,19 @@ button { font: inherit; cursor: pointer; }
   transition: text-decoration-color 0.18s ease;
 }
 .v2-proj-link:hover .v2-proj-link-text {
+  text-decoration-color: var(--color-accent-text);
+}
+/* Row uses inline-flex; keep underline on the label only (not the arrow). */
+.v2-proj-link[href*="usequantiv.com"] {
+  text-decoration: none;
+}
+.v2-proj-link[href*="usequantiv.com"] .v2-proj-link-text {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--color-accent-text) 85%, transparent);
+}
+.v2-proj-link[href*="usequantiv.com"]:hover .v2-proj-link-text {
   text-decoration-color: var(--color-accent-text);
 }
 .v2-proj-link-arrow {

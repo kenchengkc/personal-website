@@ -283,7 +283,19 @@ export function Projects() {
               )}
               <span>
                 <b>{active.brand.detail}</b>
-                <small>{active.brand.meta}</small>
+                <small>
+                  {active.brand.meta === "usequantiv.com" ? (
+                    <a
+                      href={site.links.quantiv}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      usequantiv.com
+                    </a>
+                  ) : (
+                    active.brand.meta
+                  )}
+                </small>
               </span>
             </div>
           )}
