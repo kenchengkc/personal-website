@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useEffect, useRef } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Arrow,
@@ -15,12 +15,14 @@ import { site } from "@/lib/site";
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
+  /** Must live in React state so re-renders don't reset data-wheel-spin from JSX. */
+  const [wheelSpin, setWheelSpin] = useState(false);
 
   useEffect(() => {
     function updateHeroCar() {
       const hero = heroRef.current;
       const track = hero?.querySelector<HTMLElement>(".v2-hero-track");
-      const car = hero?.querySelector<SVGSVGElement>(".v2-hero-track-car");
+      const car = hero?.querySelector<HTMLElement>(".v2-hero-track-car");
 
       if (!hero || !track || !car) {
         return;
@@ -31,6 +33,11 @@ export function Hero() {
         1,
         Math.max(0, -rect.top / Math.max(340, window.innerHeight * 0.8)),
       );
+      /** Wheels spin only once the car is well into view (not at first pixel of scroll). */
+      const wheelSpinProgressMin = 0.56;
+      const wheelsSpin = progress >= wheelSpinProgressMin && progress < 1;
+      setWheelSpin(wheelsSpin);
+
       const carWidth = car.getBoundingClientRect().width;
       const travel = Math.max(0, track.clientWidth - carWidth - 56);
 
@@ -59,7 +66,12 @@ export function Hero() {
   }
 
   return (
-    <section className="v2-hero" id="home" ref={heroRef}>
+    <section
+      className="v2-hero"
+      id="home"
+      ref={heroRef}
+      data-wheel-spin={wheelSpin ? "1" : "0"}
+    >
       <div className="v2-hero-bg" aria-hidden />
 
       <div className="v2-hero-copy">
