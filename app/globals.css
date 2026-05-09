@@ -1377,7 +1377,7 @@ button { font: inherit; cursor: pointer; }
   0%, 100% { background-position: 0% 50%; }
   50%      { background-position: 100% 50%; }
 }
-/* Cool platinum / polished silver — same sweep treatment as gold. */
+/* Cool platinum / polished silver: same sweep treatment as gold. */
 .v2-work-metric-v--platinum {
   background: linear-gradient(
     115deg,
@@ -1566,7 +1566,7 @@ button { font: inherit; cursor: pointer; }
   text-decoration-color: var(--color-accent-text);
 }
 
-/* Citation count chip — accent-bordered pill with a big bold number so
+/* Citation count chip: accent-bordered pill with a big bold number so
    citation totals are the first thing the eye lands on in publication rows */
 .v2-citations {
   display: inline-flex;

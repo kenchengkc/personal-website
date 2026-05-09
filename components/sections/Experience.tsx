@@ -29,9 +29,9 @@ const items: Stint[] = [
     loc: "New York, NY, USA",
     dates: "Jul 2025 - Present",
     summary:
-      "Founder and lead engineer shipping an earnings-calendar product for options-implied expected moves—dashboard, GBDT stack, and billion-row Parquet/DuckDB analytics.",
+      "Founder and lead engineer shipping an earnings-calendar product for options-implied expected moves: dashboard, GBDT stack, and billion-row Parquet/DuckDB analytics.",
     bullets: [
-      "Delivered a Next.js + FastAPI product covering ~50–100 liquid names weekly: options-implied baselines plus multi-horizon LightGBM forecasts trained on historical Greeks, IV context, and volatility features.",
+      "Delivered a Next.js + FastAPI product covering ~50-100 liquid names weekly: options-implied baselines plus multi-horizon LightGBM forecasts trained on historical Greeks, IV context, and volatility features.",
       "Production Docker on AWS EC2 with Redis for caching and sessions; emphasized reproducible daily scoring runs and atomic dataset releases instead of optimizing for quote latency.",
       "Built DuckDB + Parquet pipelines over 1B+ option-chain and vol-history rows for research-grade feature tables and offline scoring.",
       "Cut large-dataset refresh overhead ~90% via atomic directory swaps and rsync staging on EC2 so revised chain snapshots publish without taking the app offline.",

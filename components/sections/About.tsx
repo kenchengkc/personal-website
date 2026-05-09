@@ -47,7 +47,7 @@ export function About() {
             math, the model, and the infra all have to agree.
           </p>
           <p>
-            Right now I&rsquo;m building <b>Quantiv</b>—a platform for
+            Right now I&rsquo;m building <b>Quantiv</b>, a platform for
             options-implied <b>expected moves into earnings</b>, pairing
             IV/straddle-style baselines with <b>LightGBM</b> models on
             historical Greeks and volatility features. Datasets and scores

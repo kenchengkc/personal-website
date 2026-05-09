@@ -81,7 +81,7 @@ export function Hero() {
           <strong>top 1% of class</strong>, GPA 3.7).{" "}
           <strong>IEEE-published</strong> in deep learning,{" "}
           <strong>USACO Platinum perfect score</strong>, and currently
-          shipping <strong>Quantiv</strong>—options-implied earnings analytics
+          shipping <strong>Quantiv</strong>: options-implied earnings analytics
           and LightGBM forecasts over <strong>billion-row</strong> chain and
           vol history. Fluent in{" "}
           <strong>Python and C++</strong>; love tough puzzles.

@@ -51,9 +51,9 @@ const projects: Project[] = [
     category: "Earnings · options-implied analytics",
     dates: "Jul 2025 - Present",
     summary:
-      "Founder-built research stack for options-implied expected moves around earnings—dashboard, scoring pipeline, and GBDT models over institution-scale history.",
+      "Founder-built research stack for options-implied expected moves around earnings: dashboard, scoring pipeline, and GBDT models over institution-scale history.",
     impact:
-      "End-to-end workflow from Parquet/DuckDB analytics to LightGBM forecasts and static JSON served by Next.js—accuracy and reproducible daily releases matter more than quote latency.",
+      "End-to-end workflow from Parquet/DuckDB analytics to LightGBM forecasts and static JSON served by Next.js. Accuracy and reproducible daily releases matter more than quote latency.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",

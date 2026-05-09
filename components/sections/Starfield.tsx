@@ -77,7 +77,7 @@ const stars: Star[] = [
   { x: 52, y: 44, size: 1, opacity: 0.55, twinkle: 5.2, delay: 0.6 },
   { x: 54, y: 80, size: 1, opacity: 0.5, tone: "ice" },
 
-  // Far-left fill (x: 0-12) — covers a previously sparse band
+  // Far-left fill (x: 0-12): covers a previously sparse band
   { x: 1, y: 4, size: 1, opacity: 0.5, twinkle: 4.4, tone: "ice" },
   { x: 2, y: 38, size: 1.2, opacity: 0.6, twinkle: 3.6, delay: 0.8 },
   { x: 3, y: 70, size: 1, opacity: 0.5, tone: "warm" },
@@ -88,7 +88,7 @@ const stars: Star[] = [
   { x: 10, y: 46, size: 0.9, opacity: 0.5 },
   { x: 11, y: 92, size: 1, opacity: 0.45, twinkle: 4.6, delay: 1.2, tone: "warm" },
 
-  // Far-right bottom fill (x: 88-99, y: 68-96) — was thin
+  // Far-right bottom fill (x: 88-99, y: 68-96): was thin
   { x: 88, y: 88, size: 1.2, opacity: 0.7, twinkle: 4.4, delay: 0.6, tone: "ice" },
   { x: 90, y: 72, size: 1, opacity: 0.55 },
   { x: 91, y: 95, size: 1, opacity: 0.5, twinkle: 5.0, tone: "warm" },
@@ -98,7 +98,7 @@ const stars: Star[] = [
   { x: 98, y: 76, size: 1.2, opacity: 0.7, tone: "ice" },
   { x: 99, y: 92, size: 1, opacity: 0.5, twinkle: 5.2, delay: 1.4 },
 
-  // Mid-bottom band fill (x: 16-86, y: 72-95) — the section that previously
+  // Mid-bottom band fill (x: 16-86, y: 72-95): the section that previously
   // had only 4-5 stars across half the screen width
   { x: 16, y: 74, size: 1, opacity: 0.5, tone: "ice" },
   { x: 19, y: 90, size: 1.2, opacity: 0.6, twinkle: 4.2, delay: 0.5 },
@@ -122,7 +122,7 @@ const stars: Star[] = [
   { x: 80, y: 84, size: 1.2, opacity: 0.6 },
   { x: 84, y: 78, size: 1, opacity: 0.55, twinkle: 5.0, delay: 1.3, tone: "lavender" },
 
-  // Page-wide expansion — left edge, full height
+  // Page-wide expansion: left edge, full height
   { x: 1, y: 22, size: 1, opacity: 0.5, twinkle: 4.4, tone: "ice" },
   { x: 2, y: 50, size: 1.2, opacity: 0.6 },
   { x: 2, y: 82, size: 1, opacity: 0.55, twinkle: 5.0, delay: 0.7 },
@@ -152,7 +152,7 @@ const stars: Star[] = [
   { x: 99, y: 18, size: 0.9, opacity: 0.5, tone: "warm" },
   { x: 99, y: 60, size: 1, opacity: 0.55, twinkle: 5.0, delay: 0.4 },
 
-  // Wider bottom band fill — make sure scrolled-to sections always see stars
+  // Wider bottom band fill: make sure scrolled-to sections always see stars
   { x: 12, y: 96, size: 1, opacity: 0.55, twinkle: 4.6 },
   { x: 14, y: 80, size: 1.2, opacity: 0.6, tone: "ice" },
   { x: 17, y: 68, size: 1, opacity: 0.5 },
