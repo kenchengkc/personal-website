@@ -764,11 +764,9 @@ button { font: inherit; cursor: pointer; }
     url(#rb-wheel-motion);
 }
 
-/* Rendered SVG spinner stacked on top of the photo wheel. The photo wheel
-   is 3/4-angle and would wobble if rotated; the rendered spinner is a flat
-   axis-aligned circle so its rotation is pixel-perfect. Each wheel shifts
-   its rim toward the camera-side of the perspective: front wheel slides
-   left + down, rear wheel slides right + down. */
+/* Hub-cap photo stacked on the wheel plate (same transform stack as the old
+   SVG rim overlay: translate + rotateY perspective tilt + scale). Base PNG
+   keeps tire/context. Rotation only while the hero track is “running”. */
 .rb-wheel-spinner {
   --rb-tx: 14%;
   --rb-ty: 13%;
@@ -778,17 +776,12 @@ button { font: inherit; cursor: pointer; }
   inset: 0;
   display: block;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: 1;
   transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
   transform-origin: center center;
   transform-style: preserve-3d;
-  will-change: transform, opacity;
+  will-change: transform;
 }
-/* Per-wheel offsets keep the rim's bottom-LEFT corner pinned where it
-   already lined up. Scale grows from 0.78 → 0.86 (+0.08 delta), so each
-   axis shifts by +4% in x and -4% in y to compensate (BL = (50%(1-s) + tx,
-   50% + 50%s + ty); equating to old values gives the new translates). */
 .rb-wheel-shell--front .rb-wheel-spinner {
   --rb-tx: 8%;
   --rb-ty: 13%;
@@ -797,13 +790,15 @@ button { font: inherit; cursor: pointer; }
   --rb-tx: 20%;
   --rb-ty: 13%;
 }
-.rb-wheel-spinner svg {
+.rb-hubcap-img {
   width: 100%;
   height: 100%;
   display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
 }
 .v2-hero[style*="running"] .rb-wheel-spinner {
-  opacity: 1;
   animation: rbSpinnerRoll 360ms linear infinite;
 }
 @keyframes rbSpinnerRoll {
@@ -811,7 +806,7 @@ button { font: inherit; cursor: pointer; }
   to   { transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(-360deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rb-wheel-spinner { animation: none !important; opacity: 0 !important; }
+  .rb-wheel-spinner { animation: none !important; }
 }
 @media (max-width: 720px) {
   .v2-hero-track { margin: 44px -28px 0; height: 118px; }
