@@ -19,7 +19,7 @@ type Project = {
   dates: string;
   summary: string;
   impact: string;
-  metrics: { value: string; label: string; tone?: "gold" }[];
+  metrics: { value: string; label: string; tone?: "gold" | "platinum" }[];
   award?: { label: string; detail: string };
   brand?: {
     label: string;
@@ -292,9 +292,13 @@ export function Projects() {
             {active.metrics.map((metric) => (
               <div key={metric.label} className="v2-work-metric">
                 <span
-                  className={`v2-work-metric-v ${
-                    metric.tone === "gold" ? "v2-work-metric-v--gold" : ""
-                  }`}
+                  className={[
+                    "v2-work-metric-v",
+                    metric.tone === "gold" && "v2-work-metric-v--gold",
+                    metric.tone === "platinum" && "v2-work-metric-v--platinum",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
                   {metric.value}
                 </span>

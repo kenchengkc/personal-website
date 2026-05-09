@@ -1362,8 +1362,37 @@ button { font: inherit; cursor: pointer; }
   0%, 100% { background-position: 0% 50%; }
   50%      { background-position: 100% 50%; }
 }
+/* Cool platinum / polished silver — same sweep treatment as gold. */
+.v2-work-metric-v--platinum {
+  background: linear-gradient(
+    115deg,
+    #1e2433 0%,
+    #4a5569 16%,
+    #8b98ae 30%,
+    #e8eef8 40%,
+    #ffffff 44%,
+    #dce4f0 50%,
+    #9aaaba 62%,
+    #5c677d 78%,
+    #2a3142 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(20, 28, 44, 0.75))
+    drop-shadow(0 0 14px rgba(180, 210, 255, 0.42));
+  animation: platinumShine 3.6s ease-in-out infinite;
+}
+@keyframes platinumShine {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
 @media (prefers-reduced-motion: reduce) {
   .v2-work-metric-v--gold { animation: none; background-position: 50% 50%; }
+  .v2-work-metric-v--platinum { animation: none; background-position: 50% 50%; }
 }
 
 /* Project media block */
