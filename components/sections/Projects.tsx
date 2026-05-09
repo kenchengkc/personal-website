@@ -91,7 +91,7 @@ const projects: Project[] = [
     metrics: [
       { value: "1000 / 1000", label: "Gold Division" },
       { value: "Top 1%", label: "national rank" },
-      { value: "Platinum", label: "qualifier" },
+      { value: "Platinum", label: "qualifier", tone: "platinum" },
     ],
     tags: ["C++", "Advanced DSA", "Algorithms", "gdb"],
     details: [

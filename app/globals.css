@@ -733,6 +733,8 @@ button { font: inherit; cursor: pointer; }
   pointer-events: none;
   perspective: 520px;
   perspective-origin: 38% 50%;
+  aspect-ratio: 1;
+  height: auto;
 }
 .rb-wheel-shell--front {
   left: 29.08%;
@@ -764,20 +766,23 @@ button { font: inherit; cursor: pointer; }
     url(#rb-wheel-motion);
 }
 
-/* Hub-cap photo stacked on the wheel plate (same transform stack as the old
-   SVG rim overlay: translate + rotateY perspective tilt + scale). Base PNG
-   keeps tire/context. Rotation only while the hero track is “running”. */
+/* Hub-cap photo: translate → scaleX (undo rotateY foreshortening so the disk
+   stays circular on screen) → rotateY tilt → uniform scale → spin. Base wheel
+   PNG keeps tire/context. Rotation only while the hero track is “running”. */
 .rb-wheel-spinner {
   --rb-tx: 14%;
   --rb-ty: 13%;
-  --rb-scale: 0.86;
+  --rb-scale: 1.02;
   --rb-tilt: 22deg;
+  /* Widen in local X before rotateY so the circle doesn’t read as a tall oval */
+  --rb-foreshort-x: calc(1 / cos(var(--rb-tilt)));
   position: absolute;
   inset: 0;
   display: block;
   pointer-events: none;
   opacity: 1;
-  transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
+  transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
+    rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
   transform-origin: center center;
   transform-style: preserve-3d;
   will-change: transform;
@@ -797,13 +802,20 @@ button { font: inherit; cursor: pointer; }
   object-fit: cover;
   object-position: center;
   border-radius: 50%;
+  aspect-ratio: 1;
 }
 .v2-hero[style*="running"] .rb-wheel-spinner {
   animation: rbSpinnerRoll 360ms linear infinite;
 }
 @keyframes rbSpinnerRoll {
-  from { transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg); }
-  to   { transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(-360deg); }
+  from {
+    transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
+      rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
+  }
+  to {
+    transform: translate(var(--rb-tx), var(--rb-ty)) scaleX(var(--rb-foreshort-x))
+      rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(-360deg);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .rb-wheel-spinner { animation: none !important; }
@@ -1003,7 +1015,8 @@ button { font: inherit; cursor: pointer; }
   display: grid;
   grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.45fr);
   gap: 16px;
-  align-items: stretch;
+  /* Left tab rail stays content-height; right panel can grow (e.g. tall images). */
+  align-items: start;
 }
 .v2-work-list {
   border: 1px solid var(--color-border);
