@@ -28,6 +28,29 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
+/** Vercel/UI paste often wraps values in quotes; Resend rejects those literals. */
+function normalizeEnvLine(value: string | undefined, fallback: string) {
+  let v = (value ?? fallback).trim();
+  const quotePairs: ReadonlyArray<readonly [string, string]> = [
+    ['"', '"'],
+    ["'", "'"],
+    ["\u201c", "\u201d"],
+    ["\u2018", "\u2019"],
+  ];
+  let changed = true;
+  while (changed && v.length >= 2) {
+    changed = false;
+    for (const [open, close] of quotePairs) {
+      if (v.startsWith(open) && v.endsWith(close)) {
+        v = v.slice(open.length, -close.length).trim();
+        changed = true;
+        break;
+      }
+    }
+  }
+  return v;
+}
+
 export async function POST(request: Request) {
   let body: ContactPayload;
 
@@ -70,9 +93,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const to = process.env.CONTACT_TO_EMAIL ?? site.email;
-  const from =
-    process.env.CONTACT_FROM_EMAIL ?? "Ken Cheng Portfolio <onboarding@resend.dev>";
+  const to = normalizeEnvLine(process.env.CONTACT_TO_EMAIL, site.email);
+  const from = normalizeEnvLine(
+    process.env.CONTACT_FROM_EMAIL,
+    "Ken Cheng Portfolio <onboarding@resend.dev>",
+  );
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeMessage = escapeHtml(message).replaceAll("\n", "<br />");

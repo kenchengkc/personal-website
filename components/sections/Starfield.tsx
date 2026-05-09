@@ -180,7 +180,7 @@ const stars: Star[] = [
   { x: 89, y: 80, size: 1.2, opacity: 0.6, twinkle: 4.2 },
 
   // Mid-page gap fill (y: 30-70) since stars stay fixed and need to sit
-  // visible while users scroll through Highlights, About, Experience, etc.
+  // visible while users scroll through About, Experience, etc.
   { x: 13, y: 36, size: 1, opacity: 0.5, twinkle: 4.6, tone: "ice" },
   { x: 17, y: 52, size: 1.2, opacity: 0.6 },
   { x: 21, y: 64, size: 1, opacity: 0.5, tone: "warm" },

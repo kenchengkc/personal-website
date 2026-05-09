@@ -13,6 +13,14 @@ type ProjectLink = {
   download?: boolean;
 };
 
+type ProjectMedia = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption?: string;
+};
+
 type Project = {
   title: string;
   category: string;
@@ -36,13 +44,7 @@ type Project = {
   tags: string[];
   details: string[];
   links?: ProjectLink[];
-  media?: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-    caption?: string;
-  };
+  media?: ProjectMedia | ProjectMedia[];
 };
 
 const projects: Project[] = [
@@ -85,6 +87,70 @@ const projects: Project[] = [
       "Atomic dataset swaps on EC2 with staged rsync so large refreshes ship without downtime.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
+  },
+  {
+    title: "Embers",
+    category: "LA Hacks · wildfire insurance + computer vision",
+    dates: "Apr 2025",
+    summary:
+      "Embers: a React + Flask pipeline that walks a home with video, runs OpenCV + YOLOv11 detections, and turns them into an insurance-ready inventory with Gemini-grounded valuations and a voice assistant.",
+    impact:
+      "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project—shipping a demoable dashboard plus live detection in a weekend.",
+    brand: {
+      label: "LA Hacks",
+      detail: "Google at LA Hacks (UCLA)",
+      meta: "172 teams · Los Angeles",
+      logo: {
+        src: "/images/embers/la-hacks-2025.png",
+        alt: "LA Hacks 2025 logo",
+        variant: "wide",
+      },
+    },
+    award: {
+      label: "Gemini API · Best FinTech",
+      detail: "LA Hacks 2025",
+    },
+    metrics: [
+      { value: "Top 5", label: "of 172 teams" },
+      { value: "90%+", label: "detection accuracy" },
+      { value: "3", label: "hackathon awards" },
+    ],
+    tags: [
+      "React",
+      "Flask",
+      "Python",
+      "OpenCV",
+      "YOLOv11",
+      "Google Gemini",
+      "Whisper",
+      "Supabase",
+    ],
+    details: [
+      "YOLOv11 + OpenCV on uploaded walkthrough video to localize household objects; counts and crops feed a Gemini prompt for consistent labels and dollar estimates.",
+      "Next-step dashboard aggregates line items into total insured value with per-item confidence, backed by a Flask API and Supabase storage.",
+      "Voice layer: Whisper transcription + Gemini/ElevenLabs for a hands-free adjuster-style chat during inventory review.",
+    ],
+    links: [
+      { label: "Embers on Devpost", href: "https://devpost.com/software/insurefire" },
+    ],
+    media: [
+      {
+        src: "/media/embers-inventory-dashboard.png",
+        alt: "Embers Your Inventory Results dashboard with total estimated value and grid of YOLO-identified household items",
+        width: 1024,
+        height: 740,
+        caption:
+          "Home property dashboard auto-built from detections: Gemini-assisted valuations and itemization on top of the YOLOv11 pipeline.",
+      },
+      {
+        src: "/media/embers-yolo-live-detection.png",
+        alt: "Split-screen webcam frames showing YOLO bounding boxes with object class, price, and confidence labels",
+        width: 1024,
+        height: 518,
+        caption:
+          "Live capture: OpenCV + YOLOv11 overlays with per-object confidence and estimated values during the walkthrough.",
+      },
+    ],
   },
   {
     title: "USACO Platinum",
@@ -221,6 +287,11 @@ const projects: Project[] = [
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = projects[activeIndex];
+  const mediaList = active.media
+    ? Array.isArray(active.media)
+      ? active.media
+      : [active.media]
+    : [];
 
   return (
     <section className="v2-section" id="projects">
@@ -346,21 +417,19 @@ export function Projects() {
             </ul>
           </details>
 
-          {active.media && (
-            <figure className="v2-work-media">
+          {mediaList.map((item) => (
+            <figure key={item.src} className="v2-work-media">
               <Image
-                src={active.media.src}
-                alt={active.media.alt}
-                width={active.media.width}
-                height={active.media.height}
+                src={item.src}
+                alt={item.alt}
+                width={item.width}
+                height={item.height}
                 sizes="(max-width: 900px) 100vw, 820px"
                 className="v2-work-media-img"
               />
-              {active.media.caption && (
-                <figcaption>{active.media.caption}</figcaption>
-              )}
+              {item.caption && <figcaption>{item.caption}</figcaption>}
             </figure>
-          )}
+          ))}
 
           {active.links && active.links.length > 0 && (
             <div className="v2-work-links">

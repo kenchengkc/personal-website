@@ -877,7 +877,12 @@ button { font: inherit; cursor: pointer; }
 }
 
 .v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 250ms linear infinite;
+  animation: rbWheelStableSpin 180ms linear infinite;
+}
+
+/* Scroll up → progress decreases → reverse spin vs. scroll down. */
+.v2-hero[data-wheel-spin="1"][data-wheel-spin-dir="reverse"] .rb-wheel-spin-scale {
+  animation-direction: reverse;
 }
 
 @keyframes rbWheelStableSpin {
@@ -974,38 +979,9 @@ button { font: inherit; cursor: pointer; }
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
   transition: color 0.18s ease;
+  overflow-wrap: anywhere;
 }
 .v2-social:hover { color: var(--color-accent-text); }
-
-/* ============ HIGHLIGHTS ============ */
-.v2-highlights { margin-top: 64px; }
-.v2-highlights-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  background: var(--color-surface);
-  overflow: hidden;
-}
-@media (max-width: 720px) { .v2-highlights-grid { grid-template-columns: repeat(2, 1fr); } }
-.v2-highlight {
-  padding: 22px 22px;
-  border-right: 1px solid var(--color-border);
-  display: flex; flex-direction: column; gap: 6px;
-}
-.v2-highlight:last-child { border-right: none; }
-@media (max-width: 720px) {
-  .v2-highlight:nth-child(2n) { border-right: none; }
-  .v2-highlight:nth-child(-n+2) { border-bottom: 1px solid var(--color-border); }
-}
-.v2-highlight-v {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 24px;
-  letter-spacing: -0.01em;
-  color: var(--color-accent-text);
-}
-.v2-highlight-l { font-size: 12.5px; color: var(--color-text-dim); line-height: 1.45; }
 
 /* ============ SECTION HEAD ============ */
 .v2-sec-head { margin-bottom: 28px; }
@@ -2007,7 +1983,11 @@ button { font: inherit; cursor: pointer; }
 }
 
 .v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 250ms linear infinite;
+  animation: rbWheelStableSpin 180ms linear infinite;
+}
+
+.v2-hero[data-wheel-spin="1"][data-wheel-spin-dir="reverse"] .rb-wheel-spin-scale {
+  animation-direction: reverse;
 }
 
 @keyframes rbWheelStableSpin {

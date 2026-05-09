@@ -17,6 +17,11 @@ export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   /** Must live in React state so re-renders don't reset data-wheel-spin from JSX. */
   const [wheelSpin, setWheelSpin] = useState(false);
+  const [wheelSpinDir, setWheelSpinDir] = useState<"forward" | "reverse">(
+    "forward",
+  );
+  const lastProgressRef = useRef(0);
+  const spinDirRef = useRef<"forward" | "reverse">("forward");
 
   useEffect(() => {
     function updateHeroCar() {
@@ -36,6 +41,18 @@ export function Hero() {
       /** Spin for the whole horizontal run: after first movement until the car reaches the far side (scroll up or down). */
       const inMotion = progress > 0 && progress < 1;
       setWheelSpin(inMotion);
+
+      if (inMotion) {
+        const prev = lastProgressRef.current;
+        if (progress > prev && spinDirRef.current !== "forward") {
+          spinDirRef.current = "forward";
+          setWheelSpinDir("forward");
+        } else if (progress < prev && spinDirRef.current !== "reverse") {
+          spinDirRef.current = "reverse";
+          setWheelSpinDir("reverse");
+        }
+      }
+      lastProgressRef.current = progress;
 
       const carWidth = car.getBoundingClientRect().width;
       const travel = Math.max(0, track.clientWidth - carWidth - 56);
@@ -70,6 +87,7 @@ export function Hero() {
       id="home"
       ref={heroRef}
       data-wheel-spin={wheelSpin ? "1" : "0"}
+      data-wheel-spin-dir={wheelSpinDir}
     >
       <div className="v2-hero-bg" aria-hidden />
 
@@ -210,7 +228,7 @@ export function Hero() {
           rel="noopener noreferrer"
           aria-label="Google Scholar"
         >
-          <Scholar /> scholar.google.com/Ken Cheng
+          <Scholar /> {site.socials.scholar}
         </Link>
         <a
           href={`mailto:${site.email}`}
