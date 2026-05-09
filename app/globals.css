@@ -988,23 +988,31 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-social {
   display: inline-flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
   transition: color 0.18s ease;
   overflow-wrap: anywhere;
 }
-/* Hero row: all four links equally weighted and easier to read than body muted text */
+/* Hero row: one line per cell; responsive type so four columns stay single-line */
 .v2-hero-socials .v2-social {
-  font-size: 14px;
+  align-items: center;
+  min-width: 0;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  font-size: clamp(11px, 1.15vw, 13.25px);
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   color: color-mix(in srgb, var(--color-text) 90%, var(--color-accent-text) 10%);
 }
 .v2-hero-socials .v2-social:hover {
   color: var(--color-accent-text-strong);
+}
+.v2-hero-socials .v2-social svg {
+  flex-shrink: 0;
 }
 
 /* ============ SECTION HEAD ============ */

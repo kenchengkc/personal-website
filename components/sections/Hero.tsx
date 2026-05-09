@@ -217,9 +217,9 @@ export function Hero() {
           className="v2-social"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="LinkedIn"
+          aria-label="LinkedIn profile"
         >
-          <LinkedIn /> linkedin.com/in/kenchengkc
+          <LinkedIn /> /in/kenchengkc
         </Link>
         <Link
           href={site.socials.scholar}
@@ -228,7 +228,7 @@ export function Hero() {
           rel="noopener noreferrer"
           aria-label="Google Scholar - Ken Cheng"
         >
-          <Scholar /> Google Scholar - Ken Cheng
+          <Scholar /> Scholar · Ken Cheng
         </Link>
         <a
           href={`mailto:${site.email}`}
