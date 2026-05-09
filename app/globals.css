@@ -311,6 +311,14 @@ button { font: inherit; cursor: pointer; }
   mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 100%);
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 100%);
 }
+/* Page-wide starfield: fixed to the viewport so stars stay visible while
+   scrolling through every section, not just the hero. */
+.v2-stars--page {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
 .v2-star {
   position: absolute;
   background: #fff;
@@ -723,6 +731,8 @@ button { font: inherit; cursor: pointer; }
   border-radius: 50%;
   overflow: hidden;
   pointer-events: none;
+  perspective: 520px;
+  perspective-origin: 38% 50%;
 }
 .rb-wheel-shell--front {
   left: 29.08%;
@@ -763,14 +773,16 @@ button { font: inherit; cursor: pointer; }
   --rb-tx: 10%;
   --rb-ty: 17%;
   --rb-scale: 0.78;
+  --rb-tilt: 22deg;
   position: absolute;
   inset: 0;
   display: block;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  transform: translate(var(--rb-tx), var(--rb-ty)) scale(var(--rb-scale)) rotate(0deg);
+  transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg);
   transform-origin: center center;
+  transform-style: preserve-3d;
   will-change: transform, opacity;
 }
 /* Per-wheel offsets keep the rim's bottom-right corner pinned where it
@@ -794,8 +806,8 @@ button { font: inherit; cursor: pointer; }
   animation: rbSpinnerRoll 360ms linear infinite;
 }
 @keyframes rbSpinnerRoll {
-  from { transform: translate(var(--rb-tx), var(--rb-ty)) scale(var(--rb-scale)) rotate(0deg); }
-  to   { transform: translate(var(--rb-tx), var(--rb-ty)) scale(var(--rb-scale)) rotate(-360deg); }
+  from { transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(0deg); }
+  to   { transform: translate(var(--rb-tx), var(--rb-ty)) rotateY(var(--rb-tilt)) scale(var(--rb-scale)) rotate(-360deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .rb-wheel-spinner { animation: none !important; opacity: 0 !important; }

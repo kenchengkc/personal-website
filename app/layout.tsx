@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
+import { Starfield } from "@/components/sections/Starfield";
 import { site } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
       <body>
         <div className="v2-bg-carbon" aria-hidden />
         <div className="v2-bg-glow" aria-hidden />
+        <Starfield className="v2-stars--page" />
         <LightsOutIntro />
         {children}
         {isVercel ? <Analytics /> : null}

@@ -11,7 +11,6 @@ import {
   Scholar,
 } from "@/components/icons/Icons";
 import { CarSilhouette } from "@/components/cars/CarSilhouette";
-import { Starfield } from "./Starfield";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -62,7 +61,6 @@ export function Hero() {
   return (
     <section className="v2-hero" id="home" ref={heroRef}>
       <div className="v2-hero-bg" aria-hidden />
-      <Starfield className="v2-hero-stars" />
 
       <div className="v2-hero-copy">
         <div className="v2-eyebrow">
