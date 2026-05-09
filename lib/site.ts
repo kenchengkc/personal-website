@@ -8,7 +8,7 @@ export const site = {
     github: "https://github.com/kenchengkc",
     linkedin: "https://linkedin.com/in/kenchengkc",
     scholar:
-      "https://scholar.google.com/citations?user=BqzD0KkAAAAJ&hl=en",
+      "https://scholar.google.com/citations?user=BqzD0KkAAAAJ",
   },
   links: {
     quantiv: "https://usequantiv.com",

@@ -228,7 +228,7 @@ export function Hero() {
           rel="noopener noreferrer"
           aria-label="Google Scholar"
         >
-          <Scholar /> {site.socials.scholar}
+          <Scholar /> {site.socials.scholar.replace(/^https:\/\//, "")}
         </Link>
         <a
           href={`mailto:${site.email}`}
