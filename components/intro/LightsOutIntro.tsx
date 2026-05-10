@@ -4,6 +4,11 @@ import { useEffect, useLayoutEffect, useState } from "react";
 
 const STORAGE_KEY = "intro-played";
 const LIGHT_INTERVAL = 500;
+/** After all five lights are on, brief pause before lights out (was ~400–1100ms). */
+const HOLD_MS_MIN = 90;
+const HOLD_MS_RANDOM = 160;
+/** How long "GO GO GO" / flash stay visible before the overlay is dismissed (was 1100ms). */
+const GO_PHASE_MS = 520;
 
 type Phase = "lighting" | "hold" | "out" | "done";
 
@@ -42,7 +47,7 @@ export function LightsOutIntro() {
       );
     }
     const onAt = 5 * LIGHT_INTERVAL;
-    const holdMs = 400 + Math.floor(Math.random() * 700);
+    const holdMs = HOLD_MS_MIN + Math.floor(Math.random() * HOLD_MS_RANDOM);
     timers.push(
       setTimeout(() => guard(() => setPhase("hold")), onAt),
     );
@@ -63,7 +68,7 @@ export function LightsOutIntro() {
             sessionStorage.setItem(STORAGE_KEY, "1");
             setPhase("done");
           }),
-        onAt + holdMs + 1100,
+        onAt + holdMs + GO_PHASE_MS,
       ),
     );
 
