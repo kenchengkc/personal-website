@@ -1,6 +1,6 @@
 "use client";
 
-// Deterministic starfield (percentage coords). A random star sparkles every 5s.
+// Deterministic starfield (percentage coords). A random star sparkles every 3.5s.
 
 import { useEffect, useState } from "react";
 
@@ -216,7 +216,7 @@ export function Starfield({ className }: { className?: string }) {
       sparkleTimer = setTimeout(() => setSparkleIndex(null), 1150);
     };
 
-    const interval = setInterval(pulse, 5000);
+    const interval = setInterval(pulse, 3500);
     return () => {
       clearInterval(interval);
       clearTimeout(sparkleTimer);
