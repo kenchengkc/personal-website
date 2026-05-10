@@ -342,8 +342,8 @@ export function Projects() {
     <section className="v2-section" id="projects">
       <SectionHead
         eyebrow="Projects"
-        title="Selected work"
-        sub="Roles and shipped work in one place: skills, metrics, notes, and links."
+        title="What I've worked on"
+        sub="Apps in production, papers that have been published internationally, and programmingcontests I'm still proud of. Look here to see what I built, what I used, and what I learned."
       />
 
       <div className="v2-work">
