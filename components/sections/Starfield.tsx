@@ -1,6 +1,7 @@
 "use client";
 
-// Deterministic starfield (percentage coords). A random star sparkles every 3.5s.
+// Deterministic starfield (percentage coords). A random star sparkles every 3.5s;
+// picks favor the far left/right margin bands half the time vs. the middle band.
 
 import { useEffect, useState } from "react";
 
@@ -203,6 +204,32 @@ const stars: Star[] = [
   { x: 88, y: 64, size: 1.2, opacity: 0.6 },
 ];
 
+/** Match `.v2-hero-bg` horizontal mask fade: margin bands vs central content. */
+const SPARKLE_EDGE_LEFT_MAX = 13;
+const SPARKLE_EDGE_RIGHT_MIN = 82;
+
+const sparkleEdgeIndices: number[] = [];
+const sparkleMiddleIndices: number[] = [];
+
+stars.forEach((s, i) => {
+  const onEdge = s.x <= SPARKLE_EDGE_LEFT_MAX || s.x >= SPARKLE_EDGE_RIGHT_MIN;
+  if (onEdge) sparkleEdgeIndices.push(i);
+  else sparkleMiddleIndices.push(i);
+});
+
+function pickSparkleIndex(): number {
+  const wantEdge = Math.random() < 0.5;
+  const primary = wantEdge ? sparkleEdgeIndices : sparkleMiddleIndices;
+  const fallback = wantEdge ? sparkleMiddleIndices : sparkleEdgeIndices;
+  if (primary.length > 0) {
+    return primary[Math.floor(Math.random() * primary.length)];
+  }
+  if (fallback.length > 0) {
+    return fallback[Math.floor(Math.random() * fallback.length)];
+  }
+  return Math.floor(Math.random() * stars.length);
+}
+
 export function Starfield({ className }: { className?: string }) {
   const [sparkleIndex, setSparkleIndex] = useState<number | null>(null);
 
@@ -210,7 +237,7 @@ export function Starfield({ className }: { className?: string }) {
     let sparkleTimer: ReturnType<typeof setTimeout>;
 
     const pulse = () => {
-      const idx = Math.floor(Math.random() * stars.length);
+      const idx = pickSparkleIndex();
       setSparkleIndex(idx);
       clearTimeout(sparkleTimer);
       sparkleTimer = setTimeout(() => setSparkleIndex(null), 1150);
