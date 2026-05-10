@@ -343,7 +343,7 @@ export function Projects() {
       <SectionHead
         eyebrow="Projects"
         title="What I've worked on"
-        sub="Apps in production, papers that have been published internationally, and programmingcontests I'm still proud of. Look here to see what I built, what I used, and what I learned."
+        sub="Apps in production, papers that have been published internationally, and competitions I'm still proud of. Look here to see what I built, what I used, and what I learned."
       />
 
       <div className="v2-work">
