@@ -1,7 +1,8 @@
-// Deterministic starfield. Coordinates are percentage-based so the layer scales
-// with its container. Stars are weighted toward the right side of the frame
-// where the hero car sits, with a denser scatter across the rest for depth
-// and a mix of warm/cool/neutral hues for variation.
+"use client";
+
+// Deterministic starfield (percentage coords). A random star sparkles every 5s.
+
+import { useEffect, useState } from "react";
 
 type StarTone = "white" | "ice" | "warm" | "lavender";
 
@@ -180,7 +181,7 @@ const stars: Star[] = [
   { x: 89, y: 80, size: 1.2, opacity: 0.6, twinkle: 4.2 },
 
   // Mid-page gap fill (y: 30-70) since stars stay fixed and need to sit
-  // visible while users scroll through About, Experience, etc.
+  // visible while users scroll through About, Projects, etc.
   { x: 13, y: 36, size: 1, opacity: 0.5, twinkle: 4.6, tone: "ice" },
   { x: 17, y: 52, size: 1.2, opacity: 0.6 },
   { x: 21, y: 64, size: 1, opacity: 0.5, tone: "warm" },
@@ -203,14 +204,37 @@ const stars: Star[] = [
 ];
 
 export function Starfield({ className }: { className?: string }) {
+  const [sparkleIndex, setSparkleIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    let sparkleTimer: ReturnType<typeof setTimeout>;
+
+    const pulse = () => {
+      const idx = Math.floor(Math.random() * stars.length);
+      setSparkleIndex(idx);
+      clearTimeout(sparkleTimer);
+      sparkleTimer = setTimeout(() => setSparkleIndex(null), 1150);
+    };
+
+    const interval = setInterval(pulse, 5000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(sparkleTimer);
+    };
+  }, []);
+
   return (
     <div className={`v2-stars ${className ?? ""}`} aria-hidden>
       {stars.map((s, i) => {
         const tone = TONES[s.tone ?? "white"];
+        const isSparkle = sparkleIndex === i;
+        const twinkleOn = Boolean(s.twinkle) && !isSparkle;
         return (
           <span
             key={i}
-            className={`v2-star ${s.twinkle ? "v2-star--twinkle" : ""}`}
+            className={`v2-star ${twinkleOn ? "v2-star--twinkle" : ""} ${
+              isSparkle ? "v2-star--sparkle" : ""
+            }`}
             style={{
               left: `${s.x}%`,
               top: `${s.y}%`,
@@ -219,7 +243,8 @@ export function Starfield({ className }: { className?: string }) {
               opacity: s.opacity,
               background: tone.core,
               boxShadow: `0 0 6px ${tone.halo}`,
-              ...(s.twinkle
+              ["--star-opacity" as string]: String(s.opacity),
+              ...(s.twinkle && !isSparkle
                 ? {
                     animationDuration: `${s.twinkle}s`,
                     animationDelay: `${s.delay ?? 0}s`,

@@ -8,13 +8,12 @@ import { site } from "@/lib/site";
 
 const links = [
   { id: "home", label: "About" },
-  { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "blog", label: "Publications" },
   { id: "contact", label: "Contact" },
 ];
 
-const SECTION_IDS = ["home", "experience", "projects", "blog", "contact"];
+const SECTION_IDS = ["home", "projects", "blog", "contact"];
 
 export function Nav() {
   const pathname = usePathname();

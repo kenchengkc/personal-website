@@ -1,5 +1,6 @@
 import { SectionHead } from "./SectionHead";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { School } from "lucide-react";
 import { GitHub, LinkedIn, Scholar } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
 
@@ -42,6 +43,14 @@ export function Contact() {
               rel="noopener noreferrer"
             >
               <Scholar /> Google Scholar
+            </a>
+            <a
+              href={site.socials.columbiaEngineering}
+              className="v2-contact-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <School size={17} strokeWidth={2} aria-hidden /> Columbia Engineering
             </a>
           </div>
           <div className="v2-contact-loc">

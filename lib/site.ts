@@ -9,6 +9,8 @@ export const site = {
     linkedin: "https://linkedin.com/in/kenchengkc",
     scholar:
       "https://scholar.google.com/citations?user=BqzD0KkAAAAJ&hl=en",
+    columbiaEngineering:
+      "https://www.engineering.columbia.edu/ken-cheng",
   },
   links: {
     quantiv: "https://usequantiv.com",

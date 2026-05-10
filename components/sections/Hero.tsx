@@ -2,6 +2,7 @@
 
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { School } from "lucide-react";
 import {
   Arrow,
   Download,
@@ -187,21 +188,6 @@ export function Hero() {
         <div className="v2-hero-track-ground" />
       </div>
 
-      <dl className="v2-hero-spec">
-        <div className="v2-hero-spec-row">
-          <dt className="v2-mono">CURRENT</dt>
-          <dd>Quantiv · earnings expected-move analytics</dd>
-        </div>
-        <div className="v2-hero-spec-row">
-          <dt className="v2-mono">STACK</dt>
-          <dd>Next.js · FastAPI · DuckDB · LightGBM</dd>
-        </div>
-        <div className="v2-hero-spec-row">
-          <dt className="v2-mono">DATA</dt>
-          <dd>1B+ records · daily refresh</dd>
-        </div>
-      </dl>
-
       <div className="v2-hero-socials">
         <Link
           href={site.socials.github}
@@ -229,6 +215,15 @@ export function Hero() {
           aria-label="Google Scholar - Ken Cheng"
         >
           <Scholar /> Google Scholar · Ken Cheng
+        </Link>
+        <Link
+          href={site.socials.columbiaEngineering}
+          className="v2-social"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Columbia Engineering profile — Egleston Scholar"
+        >
+          <School size={16} strokeWidth={2} aria-hidden /> Columbia SEAS
         </Link>
         <a
           href={`mailto:${site.email}`}

@@ -25,6 +25,8 @@ type Project = {
   title: string;
   category: string;
   dates: string;
+  /** Former “Experience” row merged into this project */
+  role?: { title: string; org: string; location: string };
   summary: string;
   impact: string;
   metrics: { value: string; label: string; tone?: "gold" | "platinum" }[];
@@ -52,8 +54,13 @@ const projects: Project[] = [
     title: "Quantiv",
     category: "Earnings · options-implied analytics",
     dates: "Jul 2025 - Present",
+    role: {
+      title: "Founder and Lead Software Engineer",
+      org: "Quantiv · Options-implied earnings analytics",
+      location: "New York, NY, USA",
+    },
     summary:
-      "Founder-built earnings-analytics stack: TypeScript and Next.js on the web side, Python and FastAPI for scoring APIs, and LightGBM plus DuckDB over Parquet at institution scale.",
+      "Founder and lead engineer on Quantiv: an earnings-calendar product for options-implied expected moves—Next.js and TypeScript on the web, Python FastAPI for scoring APIs, LightGBM plus DuckDB over billion-row Parquet at institution scale.",
     impact:
       "Parquet/DuckDB analytics through GBDT forecasts to versioned artifacts and the live client. Daily refreshes and reproducible pipelines matter more than quote latency.",
     brand: {
@@ -79,12 +86,15 @@ const projects: Project[] = [
       "DuckDB",
       "Parquet",
       "Redis",
+      "Docker",
       "AWS EC2",
     ],
     details: [
+      "Shipped a Next.js + FastAPI product covering ~50–100 liquid names weekly: options-implied baselines plus multi-horizon LightGBM forecasts trained on historical Greeks, IV context, and volatility features.",
       "LightGBM on options-implied baselines: IV surface, straddle-implied moves, Greeks and vol-derived features.",
       "DuckDB over partitioned Parquet for full chain and volatility history; batch scoring writes versioned artifacts for the Next.js client.",
-      "Atomic dataset swaps on EC2 with staged rsync so large refreshes ship without downtime.",
+      "Production Docker on AWS EC2 with Redis for caching and sessions; reproducible daily scoring runs and atomic dataset releases instead of optimizing for quote latency.",
+      "Cut large-dataset refresh overhead ~90% via atomic directory swaps and rsync staging on EC2 so revised chain snapshots publish without taking the app offline.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },
@@ -92,6 +102,11 @@ const projects: Project[] = [
     title: "Embers",
     category: "LA Hacks · wildfire insurance + computer vision",
     dates: "Apr 2025",
+    role: {
+      title: "Machine Learning Lead and Winner",
+      org: "Google at LA Hacks (University of California - Los Angeles)",
+      location: "Los Angeles, CA, USA",
+    },
     summary:
       "Embers: a React + Flask pipeline that walks a home with video, runs OpenCV + YOLOv11 detections, and turns them into an insurance-ready inventory with Gemini-grounded valuations and a voice assistant.",
     impact:
@@ -119,16 +134,19 @@ const projects: Project[] = [
       "React",
       "Flask",
       "Python",
+      "TypeScript",
       "OpenCV",
       "YOLOv11",
       "Google Gemini",
       "Whisper",
       "Supabase",
+      "APIs",
     ],
     details: [
-      "YOLOv11 + OpenCV on uploaded walkthrough video to localize household objects; counts and crops feed a Gemini prompt for consistent labels and dollar estimates.",
-      "Next-step dashboard aggregates line items into total insured value with per-item confidence, backed by a Flask API and Supabase storage.",
-      "Voice layer: Whisper transcription + Gemini/ElevenLabs for a hands-free adjuster-style chat during inventory review.",
+      "Led the team building Embers: a React + Flask computer vision app that hit 90%+ detection accuracy auto-inventorying household items from ~30s videos for wildfire insurance claims.",
+      "YOLOv11 + OpenCV on walkthrough video to localize objects; crops feed Gemini for consistent labels and dollar estimates; dashboard totals insured value with per-item confidence (Flask + Supabase).",
+      "Voice assistant: Whisper plus Gemini and ElevenLabs for hands-free asset valuation—estimated ~50% reduction in manual claim documentation time.",
+      "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project.",
     ],
     links: [
       { label: "Embers on Devpost", href: "https://devpost.com/software/insurefire" },
@@ -213,8 +231,13 @@ const projects: Project[] = [
     title: "GC-INF",
     category: "Deep learning traffic forecasting",
     dates: "2022 - 2023",
+    role: {
+      title: "Research Software Engineer, Single-Author Deep Learning Publication",
+      org: "IEEE Intelligent Transportation Systems Conference",
+      location: "Bilbao, Biscay, Spain",
+    },
     summary:
-      "Hybrid Graph ConvNet + Informer model for adaptive traffic signal control.",
+      "Independent research on graph-network traffic forecasting: hybrid Graph ConvNet + Informer for adaptive signal control, published single-author at IEEE ITSC 2023.",
     impact:
       "24% RMSE improvement over the prior state-of-the-art on intersection turning ratios.",
     brand: {
@@ -227,11 +250,20 @@ const projects: Project[] = [
       { value: "IEEE", label: "published" },
       { value: "1st", label: "single author" },
     ],
-    tags: ["PyTorch", "Graph NN", "Informer", "IEEE"],
+    tags: [
+      "Python",
+      "PyTorch",
+      "Scikit-learn",
+      "Graph NN",
+      "Informer",
+      "IEEE",
+      "Data pipelines",
+    ],
     details: [
-      "Chebyshev graph convolutions on the road network feed Informer's ProbSparse attention.",
-      "Adam optimizer with cosine decay; trained from raw turning-ratio time series.",
-      "Single-author paper; session chair for Simulation and Control at the conference.",
+      "Engineered GC-INF: a hybrid 4-layer Graph ConvNet + Informer that learns spatial-temporal patterns on road graphs to predict intersection turning ratios for adaptive control—production-quality PyTorch.",
+      "Chebyshev graph convolutions on the road network feed Informer's ProbSparse attention; Adam + cosine decay on raw turning-ratio series.",
+      "Cut 15-minute turning-ratio forecast error by 24% RMSE vs STGCN (IJCAI '17).",
+      "Single-author paper and session chair for Simulation and Control at IEEE ITSC 2023; Team Canada–ISEF finalist (top 30 Canada).",
     ],
     links: [
       { label: "Read paper", href: site.links.gcinf },
@@ -241,13 +273,25 @@ const projects: Project[] = [
         download: true,
       },
     ],
+    media: {
+      src: "/images/gc-inf/ieeeconf.png",
+      alt: "Ken Cheng presenting at IEEE ITSC 2023 in Bilbao, Simulation and Control session co-chair",
+      width: 960,
+      height: 507,
+      caption: "IEEE ITSC 2023 — research presentation and session chair.",
+    },
   },
   {
     title: "CVRP Solver",
     category: "Operations research · UF Center for Applied Optimization",
     dates: "Jun - Jul 2023",
+    role: {
+      title: "Operations Research and Machine Learning Research Intern",
+      org: "University of Florida · Center for Applied Optimization",
+      location: "Gainesville, FL, USA",
+    },
     summary:
-      "Mined patterns from past Capacitated Vehicle Routing Problem (CVRP) solutions to teach a C++ solver which branches to prune.",
+      "OR + ML research accelerating large-scale Capacitated Vehicle Routing Problem solvers: mined Column Generation patterns to prune branches faster, with SLURM-scale experiments and a JavaFX explorer for researchers.",
     impact:
       "15% faster on TB-scale instances of an NP-hard problem; Best Paper at SSTP (<10% acceptance).",
     award: {
@@ -268,11 +312,12 @@ const projects: Project[] = [
       { value: "TB", label: "instance scale" },
       { value: "<10%", label: "SSTP acceptance" },
     ],
-    tags: ["C++", "CMake", "SLURM batch scripts", "Java", "JavaFX"],
+    tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],
     details: [
-      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early.",
-      "Scaled experiments out across SLURM batch jobs on the 34k-core UF HiPerGator supercomputer.",
-      "Built a JavaFX route-visualization tool so OR researchers could step through the solver's decisions interactively (screenshot below).",
+      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early—15% faster on TB-scale instances.",
+      "Ran simulations on the UF HiPerGator supercomputer (SLURM batch jobs across tens of thousands of cores).",
+      "Built a JavaFX route-visualization tool so OR researchers could step through solver decisions interactively (screenshot below).",
+      "Best Paper Award at SSTP (Student Science Training Program, under 10% acceptance).",
     ],
     media: {
       src: "/media/cvrp-visualizer.png",
@@ -298,7 +343,7 @@ export function Projects() {
       <SectionHead
         eyebrow="Projects"
         title="Selected work"
-        sub="Project artifacts, papers, and platforms with the technical details kept here."
+        sub="Roles and shipped work in one place—skills, metrics, notes, and links."
       />
 
       <div className="v2-work">
@@ -333,6 +378,14 @@ export function Projects() {
             </div>
             <span className="v2-work-date">{active.dates}</span>
           </div>
+
+          {active.role && (
+            <div className="v2-work-role">
+              <span className="v2-work-role-title">{active.role.title}</span>
+              <span className="v2-work-role-org">{active.role.org}</span>
+              <span className="v2-work-role-loc">{active.role.location}</span>
+            </div>
+          )}
 
           <p className="v2-work-summary">{active.summary}</p>
           {active.brand && (
