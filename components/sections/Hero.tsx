@@ -221,7 +221,7 @@ export function Hero() {
           className="v2-social"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Columbia Engineering profile — Egleston Scholar"
+          aria-label="Columbia Engineering profile, Egleston Scholar"
         >
           <School size={16} strokeWidth={2} aria-hidden /> Columbia SEAS
         </Link>

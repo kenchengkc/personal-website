@@ -60,7 +60,7 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "Founder and lead engineer on Quantiv: an earnings-calendar product for options-implied expected moves—Next.js and TypeScript on the web, Python FastAPI for scoring APIs, LightGBM plus DuckDB over billion-row Parquet at institution scale.",
+      "Founder and lead engineer on Quantiv: an earnings-calendar product for options-implied expected moves; Next.js and TypeScript on the web, Python FastAPI for scoring APIs, LightGBM plus DuckDB over billion-row Parquet at institution scale.",
     impact:
       "Parquet/DuckDB analytics through GBDT forecasts to versioned artifacts and the live client. Daily refreshes and reproducible pipelines matter more than quote latency.",
     brand: {
@@ -110,7 +110,7 @@ const projects: Project[] = [
     summary:
       "Embers: a React + Flask pipeline that walks a home with video, runs OpenCV + YOLOv11 detections, and turns them into an insurance-ready inventory with Gemini-grounded valuations and a voice assistant.",
     impact:
-      "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project—shipping a demoable dashboard plus live detection in a weekend.",
+      "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project, shipping a demoable dashboard plus live detection in a weekend.",
     brand: {
       label: "LA Hacks",
       detail: "Google at LA Hacks (UCLA)",
@@ -145,7 +145,7 @@ const projects: Project[] = [
     details: [
       "Led the team building Embers: a React + Flask computer vision app that hit 90%+ detection accuracy auto-inventorying household items from ~30s videos for wildfire insurance claims.",
       "YOLOv11 + OpenCV on walkthrough video to localize objects; crops feed Gemini for consistent labels and dollar estimates; dashboard totals insured value with per-item confidence (Flask + Supabase).",
-      "Voice assistant: Whisper plus Gemini and ElevenLabs for hands-free asset valuation—estimated ~50% reduction in manual claim documentation time.",
+      "Voice assistant: Whisper plus Gemini and ElevenLabs for hands-free asset valuation; estimated ~50% reduction in manual claim documentation time.",
       "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project.",
     ],
     links: [
@@ -260,7 +260,7 @@ const projects: Project[] = [
       "Data pipelines",
     ],
     details: [
-      "Engineered GC-INF: a hybrid 4-layer Graph ConvNet + Informer that learns spatial-temporal patterns on road graphs to predict intersection turning ratios for adaptive control—production-quality PyTorch.",
+      "Engineered GC-INF: a hybrid 4-layer Graph ConvNet + Informer that learns spatial-temporal patterns on road graphs to predict intersection turning ratios for adaptive control, in production-quality PyTorch.",
       "Chebyshev graph convolutions on the road network feed Informer's ProbSparse attention; Adam + cosine decay on raw turning-ratio series.",
       "Cut 15-minute turning-ratio forecast error by 24% RMSE vs STGCN (IJCAI '17).",
       "Single-author paper and session chair for Simulation and Control at IEEE ITSC 2023; Team Canada–ISEF finalist (top 30 Canada).",
@@ -278,7 +278,7 @@ const projects: Project[] = [
       alt: "Ken Cheng presenting at IEEE ITSC 2023 in Bilbao, Simulation and Control session co-chair",
       width: 960,
       height: 507,
-      caption: "IEEE ITSC 2023 — research presentation and session chair.",
+      caption: "IEEE ITSC 2023: research presentation and session chair.",
     },
   },
   {
@@ -314,7 +314,7 @@ const projects: Project[] = [
     ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],
     details: [
-      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early—15% faster on TB-scale instances.",
+      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early (15% faster on TB-scale instances).",
       "Ran simulations on the UF HiPerGator supercomputer (SLURM batch jobs across tens of thousands of cores).",
       "Built a JavaFX route-visualization tool so OR researchers could step through solver decisions interactively (screenshot below).",
       "Best Paper Award at SSTP (Student Science Training Program, under 10% acceptance).",
@@ -343,7 +343,7 @@ export function Projects() {
       <SectionHead
         eyebrow="Projects"
         title="Selected work"
-        sub="Roles and shipped work in one place—skills, metrics, notes, and links."
+        sub="Roles and shipped work in one place: skills, metrics, notes, and links."
       />
 
       <div className="v2-work">

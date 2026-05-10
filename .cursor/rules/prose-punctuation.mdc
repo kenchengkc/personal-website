@@ -5,6 +5,6 @@ alwaysApply: true
 
 # Prose punctuation
 
-- Do **not** use the em dash (—) in site copy, metadata strings, or comments.
+- Do **not** use the em dash (Unicode U+2014) in site copy, metadata strings, or comments.
 - Prefer **commas**, **colons**, **periods** (split sentences), or **parentheses** instead.
 - Numeric ranges may use **hyphen** (e.g. `50-100`) or **to**; avoid en dash unless the project standard changes.

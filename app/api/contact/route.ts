@@ -104,7 +104,7 @@ export async function POST(request: Request) {
 
   try {
     const resend = getResendClient();
-    // Resend returns { data, error } and does not throw on API errors — check `error`
+    // Resend returns { data, error } and does not throw on API errors; check `error`
     // or failed sends look successful to the client.
     const { error } = await resend.emails.send({
       from,
