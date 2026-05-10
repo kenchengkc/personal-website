@@ -64,31 +64,26 @@ export function Nav() {
     <header className="v2-nav">
       <div className="v2-nav-inner">
         <Link href="/#home" className="v2-brand" onClick={onBrand}>
-          <span
-            className="v2-brand-mark"
-            style={{ borderColor: "var(--color-accent)" }}
-          >
-            <span
-              className="v2-brand-mark-dot"
-              style={{ background: "var(--color-accent)" }}
-            />
+          <span className="v2-brand-mark" aria-hidden>
             KC
           </span>
           <span className="v2-brand-name">Ken Cheng</span>
         </Link>
         <nav className="v2-nav-links">
-          {links.map((l) => (
-            <Link
-              key={l.id}
-              href={`/#${l.id}`}
-              onClick={onNav(l.id)}
-              className={`v2-nav-link ${
-                isHome && active === l.id ? "v2-nav-link--active" : ""
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
+          <div className="v2-nav-tabs">
+            {links.map((l) => (
+              <Link
+                key={l.id}
+                href={`/#${l.id}`}
+                onClick={onNav(l.id)}
+                className={`v2-nav-link ${
+                  isHome && active === l.id ? "v2-nav-link--active" : ""
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
           <a
             className="v2-btn v2-btn--ghost"
             href={site.resumePath}
