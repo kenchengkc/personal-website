@@ -114,7 +114,7 @@ const projects: Project[] = [
     brand: {
       label: "LA Hacks",
       detail: "Google at LA Hacks (UCLA)",
-      meta: "172 teams · Los Angeles",
+      meta: "172 teams",
       logo: {
         src: "/images/embers/la-hacks-2025.png",
         alt: "LA Hacks 2025 logo",
@@ -286,7 +286,7 @@ const projects: Project[] = [
     dates: "Jun - Jul 2023",
     role: {
       title: "Operations Research and Machine Learning Research Intern",
-      org: "University of Florida · Center for Applied Optimization",
+      org: "University of Florida",
       location: "Gainesville, FL, USA",
     },
     summary:
