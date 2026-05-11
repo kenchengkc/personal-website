@@ -3,7 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, MouseEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 import { Download } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
 
@@ -20,22 +27,83 @@ export function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [active, setActive] = useState<string>("home");
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const activeRef = useRef(active);
+  activeRef.current = active;
+
+  const [glide, setGlide] = useState<{
+    x: number;
+    w: number;
+    ready: boolean;
+  }>({ x: 0, w: 0, ready: false });
+
+  const measureGlide = useCallback((id: string) => {
+    const shell = tabsRef.current;
+    const link = linkRefs.current.get(id);
+    if (!shell || !link) return;
+    const s = shell.getBoundingClientRect();
+    const l = link.getBoundingClientRect();
+    const x = l.left - s.left;
+    const w = l.width;
+    setGlide((prev) => {
+      if (prev.ready && Math.abs(prev.x - x) < 0.5 && Math.abs(prev.w - w) < 0.5) {
+        return prev;
+      }
+      return { x, w, ready: true };
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isHome) {
+      setGlide({ x: 0, w: 0, ready: false });
+      return;
+    }
+    measureGlide(active);
+  }, [active, isHome, measureGlide]);
+
+  useLayoutEffect(() => {
+    if (!isHome) return;
+    const shell = tabsRef.current;
+    if (!shell) return;
+    const ro = new ResizeObserver(() => measureGlide(activeRef.current));
+    ro.observe(shell);
+    const onResize = () => measureGlide(activeRef.current);
+    window.addEventListener("resize", onResize);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", onResize);
+    };
+  }, [isHome, measureGlide]);
 
   useEffect(() => {
     if (!isHome) return;
+    let ticking = false;
     const onScroll = () => {
-      const y = window.scrollY + 140;
-      let cur = "home";
-      for (const id of SECTION_IDS) {
-        const el = document.getElementById(id);
-        if (el && el.offsetTop <= y) cur = id;
-      }
-      setActive(cur);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const y = window.scrollY + 140;
+        let cur = "home";
+        for (const id of SECTION_IDS) {
+          const el = document.getElementById(id);
+          if (el && el.offsetTop <= y) cur = id;
+        }
+        if (cur !== activeRef.current) {
+          setActive(cur);
+        }
+      });
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
+
+  function setLinkRef(id: string, el: HTMLAnchorElement | null) {
+    if (el) linkRefs.current.set(id, el);
+    else linkRefs.current.delete(id);
+  }
 
   function onNav(id: string) {
     return (e: MouseEvent<HTMLAnchorElement>) => {
@@ -49,6 +117,9 @@ export function Nav() {
         setActive(id);
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", `#${id}`);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => measureGlide(id));
+        });
       }
     };
   }
@@ -59,6 +130,9 @@ export function Nav() {
     setActive("home");
     document.getElementById("home")?.scrollIntoView({ behavior: "smooth" });
     history.replaceState(null, "", "/");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => measureGlide("home"));
+    });
   }
 
   return (
@@ -79,10 +153,22 @@ export function Nav() {
           <span className="v2-brand-name">Ken Cheng</span>
         </Link>
         <nav className="v2-nav-links">
-          <div className="v2-nav-tabs">
+          <div className="v2-nav-tabs" ref={tabsRef}>
+            {isHome ? (
+              <span
+                className="v2-nav-tabs-glide"
+                aria-hidden
+                style={{
+                  opacity: glide.ready ? 1 : 0,
+                  width: glide.w,
+                  transform: `translate3d(${glide.x}px, 0, 0)`,
+                }}
+              />
+            ) : null}
             {links.map((l) => (
               <Link
                 key={l.id}
+                ref={(el) => setLinkRef(l.id, el)}
                 href={`/#${l.id}`}
                 onClick={onNav(l.id)}
                 className={`v2-nav-link ${

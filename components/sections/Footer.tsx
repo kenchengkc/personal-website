@@ -20,8 +20,7 @@ export function Footer() {
             <span className="v2-brand-name">Ken Cheng</span>
             <span className="v2-footer-brand-rest">
               <span className="v2-footer-brand-sep" aria-hidden>
-                {" "}
-                ·{" "}
+                {" ·  "}
               </span>
               <span className="v2-footer-brand-year">
                 {new Date().getFullYear()}
