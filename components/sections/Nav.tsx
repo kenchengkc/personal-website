@@ -32,6 +32,29 @@ export function Nav() {
   const activeRef = useRef(active);
   activeRef.current = active;
 
+  /** While set, scroll-spy must not override `active` (smooth scroll crosses many sections). */
+  const programmaticScrollLockRef = useRef<string | null>(null);
+  const programmaticScrollTimerRef = useRef<number | null>(null);
+
+  function releaseProgrammaticScrollLock() {
+    programmaticScrollLockRef.current = null;
+    if (programmaticScrollTimerRef.current != null) {
+      window.clearTimeout(programmaticScrollTimerRef.current);
+      programmaticScrollTimerRef.current = null;
+    }
+  }
+
+  function armProgrammaticScrollLock(targetId: string) {
+    if (programmaticScrollTimerRef.current != null) {
+      window.clearTimeout(programmaticScrollTimerRef.current);
+    }
+    programmaticScrollLockRef.current = targetId;
+    programmaticScrollTimerRef.current = window.setTimeout(
+      releaseProgrammaticScrollLock,
+      1200,
+    );
+  }
+
   const [glide, setGlide] = useState<{
     x: number;
     w: number;
@@ -78,12 +101,20 @@ export function Nav() {
 
   useEffect(() => {
     if (!isHome) return;
+    const onScrollEnd = () => {
+      releaseProgrammaticScrollLock();
+    };
+    window.addEventListener("scrollend", onScrollEnd);
+
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
+        if (programmaticScrollLockRef.current) {
+          return;
+        }
         const y = window.scrollY + 140;
         let cur = "home";
         for (const id of SECTION_IDS) {
@@ -97,7 +128,11 @@ export function Nav() {
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scrollend", onScrollEnd);
+      releaseProgrammaticScrollLock();
+    };
   }, [isHome]);
 
   function setLinkRef(id: string, el: HTMLAnchorElement | null) {
@@ -114,6 +149,7 @@ export function Nav() {
       e.preventDefault();
       const el = document.getElementById(id);
       if (el) {
+        armProgrammaticScrollLock(id);
         setActive(id);
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", `#${id}`);
@@ -127,6 +163,7 @@ export function Nav() {
   function onBrand(e: MouseEvent<HTMLAnchorElement>) {
     if (!isHome) return;
     e.preventDefault();
+    armProgrammaticScrollLock("home");
     setActive("home");
     document.getElementById("home")?.scrollIntoView({ behavior: "smooth" });
     history.replaceState(null, "", "/");
