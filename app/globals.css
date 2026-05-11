@@ -286,6 +286,7 @@ button { font: inherit; cursor: pointer; }
 .v2-footer-brand-year {
   font-variant-numeric: tabular-nums;
   color: var(--color-text-dim);
+  margin-left: 0.75rem;
 }
 .v2-nav-links { display: flex; align-items: center; gap: 12px; }
 .v2-nav-tabs {
