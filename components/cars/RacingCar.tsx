@@ -203,7 +203,7 @@ export function RacingCar({
               x="528"
               y="132"
               textAnchor="middle"
-              fontFamily="'JetBrains Mono', monospace"
+              fontFamily="var(--font-mono), ui-monospace, monospace"
               fontWeight="800"
               fontSize="20"
               fill={accent}

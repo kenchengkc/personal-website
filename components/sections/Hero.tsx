@@ -234,7 +234,7 @@ export function Hero() {
           width={1536}
           height={1024}
           className="v2-hero-wordmark-img"
-          sizes="(max-width: 720px) 94vw, 960px"
+          sizes="(max-width: 720px) 96vw, 1120px"
           unoptimized
         />
       </div>

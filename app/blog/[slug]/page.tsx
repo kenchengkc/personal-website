@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
             <h1
               style={{
-                fontFamily: "var(--font-display)",
+                fontFamily: "var(--font-sans)",
                 fontWeight: 800,
                 fontSize: "clamp(32px, 4.5vw, 52px)",
                 letterSpacing: "-0.02em",
