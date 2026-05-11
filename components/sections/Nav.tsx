@@ -77,12 +77,12 @@ export function Nav() {
           </span>
           <span className="v2-brand-name">
             <Image
-              src="/images/logonamewhite.png"
-              alt=""
-              width={2508}
-              height={627}
+              src="/images/logonamewhitebold.png"
+              alt="Ken Cheng"
+              width={2804}
+              height={561}
               className="v2-brand-name-img"
-              sizes="200px"
+              sizes="220px"
               priority
             />
           </span>
