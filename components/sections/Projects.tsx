@@ -187,45 +187,12 @@ const projects: Project[] = [
       { value: "Top 1%", label: "national rank" },
       { value: "Platinum", label: "qualifier", tone: "platinum" },
     ],
-    tags: ["C++", "Advanced data structures and algorithms", "gdb"],
+    tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
     details: [
       "Competition-grade C++ across graphs, DP, segment trees, and computational geometry.",
       "gdb profiling to chase down edge cases under tight memory and runtime budgets.",
       "Platinum is the top of the four-division ladder; Bronze → Silver → Gold → Platinum.",
     ],
-  },
-  {
-    title: "Need for Speed",
-    category: "F1 aerodynamics surrogate model · CFD + ML",
-    dates: "2021 - 2022",
-    summary:
-      "MATLAB neural-net surrogate that replaces full CFD iteration with sub-second pressure-map predictions.",
-    impact:
-      "100x faster iteration; 43% drag reduction in simulation; gold at the Canada-Wide Science Fair.",
-    brand: {
-      label: "CWSF",
-      detail: "Canada-Wide Science Fair",
-      meta: "National champion · 2022",
-      logo: {
-        src: "/images/cwsf/cwsf-logo.png",
-        alt: "Canada-Wide Science Fair (CWSF / ESPC) logo",
-        variant: "wide",
-        width: 632,
-        height: 200,
-      },
-    },
-    metrics: [
-      { value: "100x", label: "CFD iteration" },
-      { value: "43%", label: "drag reduction" },
-      { value: "Gold", label: "CWSF '22", tone: "gold" },
-    ],
-    tags: ["MATLAB", "Deep Learning Toolbox", "Feedforward", "trainlm"],
-    details: [
-      "MATLAB backpropagation feed-forward network trained to generate predicted pressure maps.",
-      "Embedded the ANN in an end-to-end aero-analytics stack to drive wing geometry choices.",
-      "Single-author publication in Highlights in Science Engineering and Technology.",
-    ],
-    links: [{ label: "Read paper", href: site.links.f1cfd }],
   },
   {
     title: "GC-INF",
@@ -280,6 +247,39 @@ const projects: Project[] = [
       height: 507,
       caption: "IEEE ITSC 2023: research presentation and session chair.",
     },
+  },
+  {
+    title: "Need for Speed",
+    category: "F1 aerodynamics surrogate model · CFD + ML",
+    dates: "2021 - 2022",
+    summary:
+      "MATLAB neural-net surrogate that replaces full CFD iteration with sub-second pressure-map predictions.",
+    impact:
+      "100x faster iteration; 43% drag reduction in simulation; gold at the Canada-Wide Science Fair.",
+    brand: {
+      label: "CWSF",
+      detail: "Canada-Wide Science Fair",
+      meta: "National champion · 2022",
+      logo: {
+        src: "/images/cwsf/cwsf-logo.png",
+        alt: "Canada-Wide Science Fair (CWSF / ESPC) logo",
+        variant: "wide",
+        width: 632,
+        height: 200,
+      },
+    },
+    metrics: [
+      { value: "100x", label: "CFD iteration" },
+      { value: "43%", label: "drag reduction" },
+      { value: "Gold", label: "CWSF '22", tone: "gold" },
+    ],
+    tags: ["MATLAB", "Deep Learning Toolbox", "Feedforward", "trainlm"],
+    details: [
+      "MATLAB backpropagation feed-forward network trained to generate predicted pressure maps.",
+      "Embedded the ANN in an end-to-end aero-analytics stack to drive wing geometry choices.",
+      "Single-author publication in Highlights in Science Engineering and Technology.",
+    ],
+    links: [{ label: "Read paper", href: site.links.f1cfd }],
   },
   {
     title: "CVRP Solver",
@@ -441,50 +441,88 @@ export function Projects() {
             <span className="v2-work-date">{active.dates}</span>
           </div>
 
-          {active.role && (
-            <div className="v2-work-role">
-              <span className="v2-work-role-title">{active.role.title}</span>
-              <span className="v2-work-role-org">{active.role.org}</span>
-              <span className="v2-work-role-loc">{active.role.location}</span>
+          {(active.role || active.brand) && (
+            <div
+              className="v2-work-identity"
+              aria-label={
+                active.brand?.detail ?? active.role?.org ?? active.title
+              }
+            >
+              {active.brand && (
+                <div className="v2-work-identity-mark">
+                  {active.brand.logo ? (
+                    <Image
+                      src={active.brand.logo.src}
+                      alt={active.brand.logo.alt}
+                      width={active.brand.logo.width ?? 92}
+                      height={active.brand.logo.height ?? 92}
+                      className={`v2-work-identity-logo ${
+                        active.brand.logo.variant === "wide"
+                          ? "v2-work-identity-logo--wide"
+                          : ""
+                      }`}
+                    />
+                  ) : (
+                    <span className="v2-ieee-wordmark">
+                      {active.brand.label}
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="v2-work-identity-body">
+                {active.role ? (
+                  <>
+                    <span className="v2-work-identity-title">
+                      {active.role.title}
+                    </span>
+                    <span className="v2-work-identity-org">
+                      {active.role.org}
+                    </span>
+                    <span className="v2-work-identity-meta">
+                      {active.role.location}
+                      {active.brand?.meta ? (
+                        <>
+                          {" · "}
+                          {active.brand.meta === "usequantiv.com" ? (
+                            <a
+                              href={site.links.quantiv}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              usequantiv.com
+                            </a>
+                          ) : (
+                            active.brand.meta
+                          )}
+                        </>
+                      ) : null}
+                    </span>
+                  </>
+                ) : active.brand ? (
+                  <>
+                    <span className="v2-work-identity-title">
+                      {active.brand.detail}
+                    </span>
+                    <span className="v2-work-identity-sub">
+                      {active.brand.meta === "usequantiv.com" ? (
+                        <a
+                          href={site.links.quantiv}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          usequantiv.com
+                        </a>
+                      ) : (
+                        active.brand.meta
+                      )}
+                    </span>
+                  </>
+                ) : null}
+              </div>
             </div>
           )}
 
           <p className="v2-work-summary">{active.summary}</p>
-          {active.brand && (
-            <div className="v2-work-brand" aria-label={active.brand.detail}>
-              {active.brand.logo ? (
-                <Image
-                  src={active.brand.logo.src}
-                  alt={active.brand.logo.alt}
-                  width={active.brand.logo.width ?? 92}
-                  height={active.brand.logo.height ?? 92}
-                  className={`v2-work-brand-logo ${
-                    active.brand.logo.variant === "wide"
-                      ? "v2-work-brand-logo--wide"
-                      : ""
-                  }`}
-                />
-              ) : (
-                <span className="v2-ieee-wordmark">{active.brand.label}</span>
-              )}
-              <span>
-                <b>{active.brand.detail}</b>
-                <small>
-                  {active.brand.meta === "usequantiv.com" ? (
-                    <a
-                      href={site.links.quantiv}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      usequantiv.com
-                    </a>
-                  ) : (
-                    active.brand.meta
-                  )}
-                </small>
-              </span>
-            </div>
-          )}
           {active.award && (
             <div className="v2-work-award" aria-label={active.award.label}>
               <Medal size={22} strokeWidth={2.2} />

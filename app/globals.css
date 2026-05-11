@@ -395,7 +395,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-section { margin-top: 100px; scroll-margin-top: 90px; }
 .v2-main > .v2-section:first-of-type {
-  margin-top: 44px;
+  margin-top: 24px;
 }
 
 /* ============ HERO ============ */
@@ -1512,34 +1512,76 @@ button { font: inherit; cursor: pointer; }
   white-space: nowrap;
   padding-top: 4px;
 }
-.v2-work-role {
+/* Role + org/venue + logo (or wordmark) in one card */
+.v2-work-identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(97, 137, 246, 0.34);
+  background:
+    linear-gradient(135deg, rgba(97, 137, 246, 0.13), rgba(97, 137, 246, 0.035)),
+    rgba(0, 0, 0, 0.16);
+  box-shadow: 0 0 22px rgba(97, 137, 246, 0.08);
+}
+.v2-work-identity-mark {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.v2-work-identity-body {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--color-accent-bright) 28%, var(--color-border));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 18%, transparent), rgba(8, 14, 28, 0.92));
+  min-width: 0;
+  flex: 1;
 }
-.v2-work-role-title {
+.v2-work-identity-title {
   font-weight: 600;
   font-size: 14.5px;
   line-height: 1.25;
   color: var(--color-text);
 }
-.v2-work-role-org {
+.v2-work-identity-org {
   font-size: 13px;
   line-height: 1.35;
   color: var(--color-text-dim);
 }
-.v2-work-role-loc {
+.v2-work-identity-meta {
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent-text);
   font-weight: 500;
+}
+.v2-work-identity-meta a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.v2-work-identity-meta a:hover {
+  color: var(--color-accent-text-strong);
+}
+.v2-work-identity-sub {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  font-weight: 500;
+}
+.v2-work-identity-sub a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.v2-work-identity-sub a:hover {
+  color: var(--color-accent-text-strong);
 }
 .v2-work-panel-aside {
   display: flex;
@@ -1597,19 +1639,6 @@ button { font: inherit; cursor: pointer; }
   max-width: 680px;
   opacity: 0.92;
 }
-.v2-work-brand {
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  gap: 13px;
-  border: 1px solid rgba(97, 137, 246, 0.34);
-  border-radius: 12px;
-  padding: 11px 14px;
-  background:
-    linear-gradient(135deg, rgba(97, 137, 246, 0.13), rgba(97, 137, 246, 0.035)),
-    rgba(0,0,0,0.16);
-  box-shadow: 0 0 22px rgba(97, 137, 246, 0.08);
-}
 .v2-ieee-wordmark {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 900;
@@ -1618,7 +1647,7 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: -0.06em;
   color: #fff;
 }
-.v2-work-brand-logo {
+.v2-work-identity-logo {
   width: 54px;
   height: 54px;
   object-fit: contain;
@@ -1627,10 +1656,8 @@ button { font: inherit; cursor: pointer; }
   clip-path: inset(3% round 12px);
   flex-shrink: 0;
 }
-/* Wide banner-style logos render at natural aspect ratio without the
-   square-letterbox frame. Bound by a max-width/height so they sit cleanly
-   in the panel-aside slot. */
-.v2-work-brand-logo--wide {
+/* Wide banner-style logos: natural aspect ratio in the identity row */
+.v2-work-identity-logo--wide {
   width: auto;
   height: auto;
   max-height: 64px;
@@ -1639,23 +1666,6 @@ button { font: inherit; cursor: pointer; }
   background: transparent;
   clip-path: none;
   border-radius: 0;
-}
-.v2-work-brand span:last-child {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.v2-work-brand b {
-  color: var(--color-text);
-  font-size: 13.5px;
-  line-height: 1;
-}
-.v2-work-brand small {
-  font-family: var(--font-mono);
-  color: var(--color-accent-text);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 .v2-work-award {
   width: fit-content;
