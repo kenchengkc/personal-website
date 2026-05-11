@@ -102,7 +102,7 @@ export function Hero() {
         <h1 className="v2-hero-title">
           Hi, I&rsquo;m Ken - <br />
           I build{" "}
-          <em style={{ color: "var(--color-accent-text)" }}>rigorous</em>{" "}
+          <em className="v2-hero-accent-word">rigorous</em>{" "}
           systems for <br />
           machine learning and quant.
         </h1>
@@ -164,15 +164,7 @@ export function Hero() {
       <div className="v2-hero-track" aria-hidden>
         <div className="v2-hero-track-tags">
           <span className="v2-mono v2-mono--accent">CURRENT FOCUS</span>
-          <span
-            className="v2-pill"
-            style={{
-              borderColor: "var(--color-accent)",
-              color: "var(--color-accent-text)",
-            }}
-          >
-            ● ACTIVE
-          </span>
+          <span className="v2-pill v2-pill--focus">● ACTIVE</span>
         </div>
         <div className="v2-hero-track-line" />
         <div className="v2-hero-track-streaks">

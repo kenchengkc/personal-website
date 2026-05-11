@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Medal } from "lucide-react";
 import { SectionHead } from "./SectionHead";
@@ -331,6 +331,58 @@ const projects: Project[] = [
 
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
+  const activeIndexRef = useRef(activeIndex);
+  activeIndexRef.current = activeIndex;
+
+  const [glide, setGlide] = useState<{ y: number; h: number; ready: boolean }>({
+    y: 0,
+    h: 0,
+    ready: false,
+  });
+
+  const measureGlide = useCallback(() => {
+    const list = listRef.current;
+    const btn = tabRefs.current.get(activeIndexRef.current);
+    if (!list || !btn) return;
+    const lr = list.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    const y = br.top - lr.top;
+    const h = br.height;
+    setGlide((prev) => {
+      if (
+        prev.ready &&
+        Math.abs(prev.y - y) < 0.5 &&
+        Math.abs(prev.h - h) < 0.5
+      ) {
+        return prev;
+      }
+      return { y, h, ready: true };
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    measureGlide();
+  }, [activeIndex, measureGlide]);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const ro = new ResizeObserver(() => measureGlide());
+    ro.observe(list);
+    window.addEventListener("resize", measureGlide);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measureGlide);
+    };
+  }, [measureGlide]);
+
+  function setTabRef(index: number, el: HTMLButtonElement | null) {
+    if (el) tabRefs.current.set(index, el);
+    else tabRefs.current.delete(index);
+  }
+
   const active = projects[activeIndex];
   const mediaList = active.media
     ? Array.isArray(active.media)
@@ -347,11 +399,21 @@ export function Projects() {
       />
 
       <div className="v2-work">
-        <div className="v2-work-list" aria-label="Project selector">
+        <div className="v2-work-list" ref={listRef} aria-label="Project selector">
+          <span
+            className="v2-work-list-glide"
+            aria-hidden
+            style={{
+              opacity: glide.ready ? 1 : 0,
+              top: glide.y,
+              height: glide.h,
+            }}
+          />
           {projects.map((project, index) => (
             <button
               key={project.title}
               type="button"
+              ref={(el) => setTabRef(index, el)}
               className={`v2-work-tab ${
                 index === activeIndex ? "v2-work-tab--active" : ""
               }`}
