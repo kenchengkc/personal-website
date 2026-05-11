@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { School } from "lucide-react";
@@ -235,7 +236,15 @@ export function Hero() {
       </div>
 
       <div className="v2-hero-wordmark">
-        <span className="v2-hero-wordmark-text">Ken Cheng</span>
+        <Image
+          src="/images/logonamecolorbold.png"
+          alt="Ken Cheng"
+          width={1536}
+          height={1024}
+          className="v2-hero-wordmark-img"
+          sizes="(max-width: 720px) 90vw, 360px"
+          unoptimized
+        />
       </div>
     </section>
   );

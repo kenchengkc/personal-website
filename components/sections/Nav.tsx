@@ -73,6 +73,7 @@ export function Nav() {
               height={40}
               sizes="40px"
               priority
+              unoptimized
             />
           </span>
           <span className="v2-brand-name">
@@ -84,6 +85,7 @@ export function Nav() {
               className="v2-brand-name-img"
               sizes="220px"
               priority
+              unoptimized
             />
           </span>
         </Link>

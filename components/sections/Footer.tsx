@@ -13,6 +13,7 @@ export function Footer() {
               width={40}
               height={40}
               sizes="40px"
+              unoptimized
             />
           </span>
           <span>
@@ -24,6 +25,7 @@ export function Footer() {
                 height={561}
                 className="v2-brand-name-img"
                 sizes="200px"
+                unoptimized
               />
             </span>
             <span className="v2-footer-brand-rest">

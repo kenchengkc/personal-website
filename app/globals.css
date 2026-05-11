@@ -1111,16 +1111,12 @@ button { font: inherit; cursor: pointer; }
   width: 100%;
   padding: 0 8px;
 }
-.v2-hero-wordmark-text {
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-weight: 800;
-  font-size: clamp(26px, 4.2vw, 42px);
-  letter-spacing: -0.045em;
-  line-height: 1.05;
-  color: var(--color-accent-bright);
-  text-shadow:
-    0 0 48px color-mix(in srgb, var(--color-accent-bright) 42%, transparent),
-    0 1px 0 rgba(0, 0, 0, 0.35);
+.v2-hero-wordmark-img {
+  display: block;
+  height: clamp(30px, 5.2vw, 48px);
+  width: auto;
+  max-width: min(380px, 92vw);
+  object-fit: contain;
 }
 
 /* ============ SECTION HEAD ============ */
