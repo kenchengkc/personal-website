@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { site } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -28,7 +27,6 @@ export function Footer() {
             </span>
           </div>
         </div>
-        <span className="v2-mono v2-mono--dim">Built in New York · F1 fan</span>
       </div>
     </footer>
   );
