@@ -221,10 +221,10 @@ const projects: Project[] = [
       "Python",
       "PyTorch",
       "Scikit-learn",
-      "Graph NN",
-      "Informer",
+      "Graph Neural Network",
+      "Informer (Transformer variant)",
       "IEEE",
-      "Data pipelines",
+      "Data Pipelines",
     ],
     details: [
       "Engineered GC-INF: a hybrid 4-layer Graph ConvNet + Informer that learns spatial-temporal patterns on road graphs to predict intersection turning ratios for adaptive control, in production-quality PyTorch.",
