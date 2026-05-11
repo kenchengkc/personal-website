@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { School } from "lucide-react";
@@ -232,6 +233,17 @@ export function Hero() {
         >
           <Mail /> {site.email}
         </a>
+      </div>
+
+      <div className="v2-hero-wordmark">
+        <Image
+          src="/images/logonamecolor.png"
+          alt=""
+          width={2172}
+          height={724}
+          className="v2-hero-wordmark-img"
+          sizes="(max-width: 720px) 85vw, 320px"
+        />
       </div>
     </section>
   );

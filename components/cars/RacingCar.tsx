@@ -8,7 +8,7 @@ type Props = {
 };
 
 export function RacingCar({
-  accent = "#1f3f8b",
+  accent = "#3f59a0",
   livery = "blue",
   detailed = true,
   className = "",

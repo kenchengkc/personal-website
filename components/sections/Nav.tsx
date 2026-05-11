@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, MouseEvent } from "react";
@@ -64,10 +65,27 @@ export function Nav() {
     <header className="v2-nav">
       <div className="v2-nav-inner">
         <Link href="/#home" className="v2-brand" onClick={onBrand}>
-          <span className="v2-brand-mark" aria-hidden>
-            KC
+          <span className="v2-brand-mark">
+            <Image
+              src="/images/kclogo.png"
+              alt=""
+              width={40}
+              height={40}
+              sizes="40px"
+              priority
+            />
           </span>
-          <span className="v2-brand-name">Ken Cheng</span>
+          <span className="v2-brand-name">
+            <Image
+              src="/images/logonamewhite.png"
+              alt=""
+              width={2508}
+              height={627}
+              className="v2-brand-name-img"
+              sizes="200px"
+              priority
+            />
+          </span>
         </Link>
         <nav className="v2-nav-links">
           <div className="v2-nav-tabs">

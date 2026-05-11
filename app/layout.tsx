@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, JetBrains_Mono, Montserrat, Space_Grotesk } from "next/font/google";
+import { Archivo, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
 import { Starfield } from "@/components/sections/Starfield";
@@ -27,13 +27,6 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["700", "800"],
-  variable: "--font-brand",
-  display: "swap",
-});
-
 const isVercel = process.env.VERCEL === "1";
 
 export const metadata: Metadata = {
@@ -56,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${spaceGrotesk.variable} ${jetbrains.variable} ${montserrat.variable}`}
+      className={`${archivo.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}
     >
       <body>
         <div className="v2-bg-carbon" aria-hidden />
