@@ -16,23 +16,18 @@ export function Footer() {
               unoptimized
             />
           </span>
-          <span>
-            <span className="v2-brand-name">
-              <Image
-                src="/images/logonamewhitebold.png"
-                alt="Ken Cheng"
-                width={2804}
-                height={561}
-                className="v2-brand-name-img"
-                sizes="200px"
-                unoptimized
-              />
-            </span>
+          <div className="v2-footer-brand-line">
+            <span className="v2-brand-name">Ken Cheng</span>
             <span className="v2-footer-brand-rest">
-              {" "}
-              · {new Date().getFullYear()}
+              <span className="v2-footer-brand-sep" aria-hidden>
+                {" "}
+                ·{" "}
+              </span>
+              <span className="v2-footer-brand-year">
+                {new Date().getFullYear()}
+              </span>
             </span>
-          </span>
+          </div>
         </div>
         <span className="v2-mono v2-mono--dim">Built in New York · F1 fan</span>
       </div>

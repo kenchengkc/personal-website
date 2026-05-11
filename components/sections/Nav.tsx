@@ -76,18 +76,7 @@ export function Nav() {
               unoptimized
             />
           </span>
-          <span className="v2-brand-name">
-            <Image
-              src="/images/logonamewhitebold.png"
-              alt="Ken Cheng"
-              width={2804}
-              height={561}
-              className="v2-brand-name-img"
-              sizes="220px"
-              priority
-              unoptimized
-            />
-          </span>
+          <span className="v2-brand-name">Ken Cheng</span>
         </Link>
         <nav className="v2-nav-links">
           <div className="v2-nav-tabs">
