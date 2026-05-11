@@ -34,6 +34,10 @@ export const metadata: Metadata = {
   description:
     "Ken Cheng, Columbia CS (Egleston Scholar). Founder of Quantiv (options-implied earnings analytics, LightGBM + DuckDB at billion-row scale). IEEE-published, USACO Platinum.",
   metadataBase: new URL("https://kencheng.dev"),
+  icons: {
+    icon: [{ url: "/images/kclogo.png", type: "image/png" }],
+    apple: [{ url: "/images/kclogo.png", type: "image/png" }],
+  },
   openGraph: {
     title: site.name,
     description: site.tagline,
