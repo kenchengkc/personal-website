@@ -245,7 +245,8 @@ button { font: inherit; cursor: pointer; }
   width: 40px;
   height: 40px;
   overflow: hidden;
-  border-radius: 14px;
+  /* ~20% of edge: closer to the logo’s rounded square than a deep squircle */
+  border-radius: 8px;
 }
 .v2-brand-mark img {
   display: block;
@@ -253,7 +254,7 @@ button { font: inherit; cursor: pointer; }
   height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
-  transform: scale(1.14);
+  transform: scale(1.13);
   transform-origin: center center;
 }
 .v2-brand-name {
@@ -1169,9 +1170,9 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-hero-wordmark-img {
   display: block;
-  height: clamp(52px, 11vw, 96px);
+  height: clamp(76px, 19vw, 168px);
   width: auto;
-  max-width: min(620px, 96vw);
+  max-width: min(960px, 94vw);
   object-fit: contain;
 }
 
