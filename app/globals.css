@@ -642,8 +642,9 @@ button { font: inherit; cursor: pointer; }
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    gap: 12px;
-    padding: 12px 18px;
+    gap: 14px;
+    padding: 12px max(14px, env(safe-area-inset-right, 0px)) 12px
+      max(12px, env(safe-area-inset-left, 0px));
   }
   .v2-nav-links {
     flex: unset;
@@ -654,16 +655,16 @@ button { font: inherit; cursor: pointer; }
   .v2-nav-mnav-trigger {
     min-width: 0;
   }
-  /* Full brand (hero): shrink-wrap the mobile groups so the brand and actions
-     sit closer to the center while "Ken Cheng" is still visible. */
+  /* Full brand (hero top): span the bar so the mark + name sit left and
+     section control + résumé sit right instead of crowding the center. */
   .v2-nav:not(.v2-nav--dense) .v2-nav-inner {
-    width: fit-content;
+    width: 100%;
     max-width: 100%;
     grid-template-columns: auto auto;
-    justify-content: center;
-    padding-left: max(8px, env(safe-area-inset-left, 0px));
-    padding-right: max(8px, env(safe-area-inset-right, 0px));
-    gap: 8px;
+    justify-content: space-between;
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+    gap: 12px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand {
     gap: 8px;
@@ -677,8 +678,9 @@ button { font: inherit; cursor: pointer; }
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-links {
     width: auto;
-    justify-content: flex-start;
-    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-resume {
     margin-right: 0;
