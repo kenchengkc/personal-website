@@ -160,22 +160,26 @@ button { font: inherit; cursor: pointer; }
 .v2-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.025em;
-  line-height: 1;
-  padding: 9px 12px;
-  min-height: 38px;
-  border-radius: 10px;
-  border: 1px solid color-mix(in srgb, var(--color-accent-bright) 48%, transparent);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  padding: 9px 18px;
+  border-radius: 9px;
+  border: 1px solid rgba(118, 158, 228, 0.42);
   background:
-    linear-gradient(180deg, rgba(97, 137, 246, 0.08), transparent 70%),
-    rgba(6, 14, 32, 0.86);
-  color: #fff;
+    linear-gradient(
+      180deg,
+      rgba(38, 54, 92, 0.92) 0%,
+      rgba(18, 30, 56, 0.96) 48%,
+      rgba(8, 14, 30, 0.98) 100%
+    );
+  color: #f4f7fd;
   box-shadow:
-    0 0 0 1px rgba(97, 137, 246, 0.12) inset,
-    0 8px 18px rgba(0, 0, 0, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28);
   transition:
     border-color 0.18s ease,
     color 0.18s ease,
@@ -183,14 +187,15 @@ button { font: inherit; cursor: pointer; }
     transform 0.18s ease;
 }
 .v2-chip:hover {
-  border-color: color-mix(in srgb, var(--color-accent-bright) 72%, transparent);
-  color: color-mix(in srgb, var(--color-accent-text-strong) 86%, #fff);
+  border-color: rgba(140, 180, 255, 0.52);
+  color: #fff;
   box-shadow:
-    0 0 0 1px rgba(97, 137, 246, 0.18) inset,
-    0 10px 24px -12px var(--color-accent-glow);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    0 6px 20px rgba(0, 0, 0, 0.25);
   transform: translateY(-1px);
 }
-.v2-chips { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+.v2-chips { display: flex; flex-wrap: wrap; gap: 10px 12px; }
 
 /* ============ BUTTONS ============ */
 .v2-btn {
@@ -1882,9 +1887,6 @@ button { font: inherit; cursor: pointer; }
 .v2-work-blurb .v2-work-summary,
 .v2-work-blurb .v2-work-impact {
   margin: 0;
-}
-.v2-work-panel-page .v2-chips {
-  gap: 10px 12px;
 }
 .v2-work-title {
   font-family: var(--font-sans);
