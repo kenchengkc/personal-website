@@ -663,7 +663,7 @@ export function Projects() {
                   ))}
                 </div>
 
-                <details className="v2-work-details">
+                <details className="v2-work-details" open>
                   <summary>Implementation notes</summary>
                   <ul>
                     {active.details.map((detail) => (
