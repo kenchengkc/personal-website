@@ -300,12 +300,12 @@ button { font: inherit; cursor: pointer; }
   padding: 5px;
   border-radius: 999px;
   background:
-    linear-gradient(0deg, rgba(4, 10, 22, 0.78), rgba(4, 10, 22, 0.78)),
+    linear-gradient(0deg, rgba(4, 10, 22, 0.42), rgba(4, 10, 22, 0.42)),
     linear-gradient(
       152deg,
-      rgba(255, 255, 255, 0.14) 0%,
-      rgba(255, 255, 255, 0.05) 38%,
-      rgba(18, 32, 58, 0.55) 100%
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.08) 38%,
+      rgba(18, 32, 58, 0.38) 100%
     );
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow:
@@ -327,13 +327,13 @@ button { font: inherit; cursor: pointer; }
   pointer-events: none;
   z-index: 0;
   background:
-    linear-gradient(0deg, rgba(6, 12, 26, 0.55), rgba(6, 12, 26, 0.55)),
+    linear-gradient(0deg, rgba(6, 12, 26, 0.28), rgba(6, 12, 26, 0.28)),
     linear-gradient(
       168deg,
-      rgba(255, 255, 255, 0.32) 0%,
-      rgba(255, 255, 255, 0.1) 36%,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.12) 36%,
       rgba(97, 137, 246, 0.22) 52%,
-      rgba(24, 44, 92, 0.62) 100%
+      rgba(24, 44, 92, 0.45) 100%
     );
   border: 1px solid color-mix(in srgb, var(--color-accent-bright) 38%, rgba(255, 255, 255, 0.22));
   box-shadow:
@@ -371,7 +371,7 @@ button { font: inherit; cursor: pointer; }
   box-shadow: none;
 }
 .v2-nav-tabs .v2-nav-link {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
 /* Desktop-only pill tabs (homepage scroll spy) */
@@ -433,12 +433,12 @@ button { font: inherit; cursor: pointer; }
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background:
-    linear-gradient(0deg, rgba(4, 10, 22, 0.82), rgba(4, 10, 22, 0.82)),
+    linear-gradient(0deg, rgba(4, 10, 22, 0.45), rgba(4, 10, 22, 0.45)),
     linear-gradient(
       152deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.04) 38%,
-      rgba(18, 32, 58, 0.55) 100%
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.06) 38%,
+      rgba(18, 32, 58, 0.4) 100%
     );
   backdrop-filter: blur(22px) saturate(1.45);
   -webkit-backdrop-filter: blur(22px) saturate(1.45);
@@ -452,7 +452,7 @@ button { font: inherit; cursor: pointer; }
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 .v2-nav-mnav-trigger-label {
   flex: 1;
@@ -479,12 +479,12 @@ button { font: inherit; cursor: pointer; }
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background:
-    linear-gradient(0deg, rgba(4, 10, 22, 0.92), rgba(4, 10, 22, 0.92)),
+    linear-gradient(0deg, rgba(4, 10, 22, 0.5), rgba(4, 10, 22, 0.5)),
     linear-gradient(
       152deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.04) 38%,
-      rgba(18, 32, 58, 0.55) 100%
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.06) 38%,
+      rgba(18, 32, 58, 0.42) 100%
     );
   backdrop-filter: blur(28px) saturate(1.55);
   -webkit-backdrop-filter: blur(28px) saturate(1.55);
@@ -492,6 +492,15 @@ button { font: inherit; cursor: pointer; }
     inset 0 1px 0 rgba(255, 255, 255, 0.24),
     0 28px 56px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(97, 137, 246, 0.1);
+}
+@media (max-width: 760px) {
+  .v2-nav-mnav-panel.v2-nav-mnav-panel--dock {
+    position: fixed;
+    left: max(8px, env(safe-area-inset-left, 0px));
+    right: max(8px, env(safe-area-inset-right, 0px));
+    width: auto;
+    z-index: 100;
+  }
 }
 .v2-nav-mnav-glide {
   position: absolute;
@@ -505,13 +514,13 @@ button { font: inherit; cursor: pointer; }
   pointer-events: none;
   z-index: 0;
   background:
-    linear-gradient(0deg, rgba(8, 14, 28, 0.72), rgba(8, 14, 28, 0.72)),
+    linear-gradient(0deg, rgba(8, 14, 28, 0.32), rgba(8, 14, 28, 0.32)),
     linear-gradient(
       168deg,
-      rgba(255, 255, 255, 0.26) 0%,
-      rgba(255, 255, 255, 0.08) 38%,
-      rgba(97, 137, 246, 0.2) 52%,
-      rgba(24, 44, 92, 0.58) 100%
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.1) 38%,
+      rgba(97, 137, 246, 0.18) 52%,
+      rgba(24, 44, 92, 0.42) 100%
     );
   border: 1px solid color-mix(in srgb, var(--color-accent-bright) 32%, rgba(255, 255, 255, 0.12));
   box-shadow:
@@ -537,7 +546,7 @@ button { font: inherit; cursor: pointer; }
   font-weight: 500;
   color: color-mix(in srgb, var(--color-text) 78%, var(--color-muted));
   transition: color 0.18s ease, background 0.18s ease;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 .v2-nav-mnav-link:hover {
   color: var(--color-text);
@@ -564,8 +573,8 @@ button { font: inherit; cursor: pointer; }
   }
 }
 
-/* Resume: stronger fill on hover / press (nav only) */
-.v2-nav-resume.v2-btn--ghost:hover {
+/* Ghost résumé: shared hover / active (nav + hero) */
+.v2-btn--ghost.v2-btn-resume-accent:hover {
   color: var(--color-accent-text-strong);
   border-color: color-mix(in srgb, var(--color-accent-bright) 55%, var(--color-border-strong));
   background:
@@ -578,7 +587,7 @@ button { font: inherit; cursor: pointer; }
     0 0 0 1px color-mix(in srgb, var(--color-accent-bright) 22%, transparent) inset,
     0 8px 26px -10px var(--color-accent-glow);
 }
-.v2-nav-resume.v2-btn--ghost:active {
+.v2-btn--ghost.v2-btn-resume-accent:active {
   color: var(--color-accent-bright);
   border-color: var(--color-accent-bright);
   background:

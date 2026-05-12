@@ -32,6 +32,14 @@ export function Nav() {
   const [navDense, setNavDense] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileWrapRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const [mnavDdTop, setMnavDdTop] = useState(62);
+
+  const updateMnavDdTop = useCallback(() => {
+    const h = headerRef.current;
+    if (!h) return;
+    setMnavDdTop(Math.round(h.getBoundingClientRect().bottom + 6));
+  }, []);
 
   const tabsRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -172,6 +180,21 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome, narrow]);
 
+  useLayoutEffect(() => {
+    if (!narrow || !mobileMenuOpen) return;
+    updateMnavDdTop();
+    const h = headerRef.current;
+    const ro = h ? new ResizeObserver(updateMnavDdTop) : null;
+    if (h && ro) ro.observe(h);
+    window.addEventListener("resize", updateMnavDdTop);
+    window.addEventListener("scroll", updateMnavDdTop, { passive: true });
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", updateMnavDdTop);
+      window.removeEventListener("scroll", updateMnavDdTop);
+    };
+  }, [narrow, mobileMenuOpen, updateMnavDdTop]);
+
   useEffect(() => {
     if (!mobileMenuOpen) return;
     function onDocDown(e: Event) {
@@ -275,6 +298,7 @@ export function Nav() {
 
   return (
     <header
+      ref={headerRef}
       className={["v2-nav", navDense ? "v2-nav--dense" : ""]
         .filter(Boolean)
         .join(" ")}
@@ -392,7 +416,7 @@ export function Nav() {
             </div>
           )}
           <a
-            className="v2-btn v2-btn--ghost v2-nav-resume"
+            className="v2-btn v2-btn--ghost v2-btn-resume-accent v2-nav-resume"
             href={site.resumePath}
             download
             target="_blank"
