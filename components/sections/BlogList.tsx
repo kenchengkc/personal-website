@@ -5,6 +5,7 @@ import { site } from "@/lib/site";
 type Publication = {
   title: string;
   venue: string;
+  tag: string;
   date: string;
   citations: number;
   href: string;
@@ -15,6 +16,7 @@ const publications: Publication[] = [
     title:
       "A Need For Speed: Enhancing F1 Race Cars with a Novel Computational Fluid Dynamics and Machine Learning Method",
     venue: "Highlights in Science Engineering and Technology",
+    tag: "Highlights in Science, Eng. & Tech.",
     date: "May 2023",
     citations: 2,
     href: site.links.f1cfd,
@@ -23,6 +25,7 @@ const publications: Publication[] = [
     title:
       "GC-INF: A Novel Adaptive Traffic Control System using Machine Learning for Turning Ratio Predictions",
     venue: "IEEE Intelligent Transportation Systems Conference 2023",
+    tag: "IEEE ITSC 2023",
     date: "September 2023",
     citations: 1,
     href: site.links.gcinf,
@@ -48,7 +51,9 @@ export function BlogList() {
           >
             <div>
               <div className="v2-blog-meta">
-                <span className="v2-blog-tag">{p.venue}</span>
+                <span className="v2-blog-tag" aria-label={p.venue}>
+                  {p.tag}
+                </span>
                 <span className="v2-mono">{p.date}</span>
                 <span
                   className="v2-citations"
