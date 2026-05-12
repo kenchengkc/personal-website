@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Dancing_Script, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
 import { Starfield } from "@/components/sections/Starfield";
@@ -10,6 +10,13 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-hero-accent",
   display: "swap",
 });
 
@@ -46,7 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${jetbrains.variable}`}
+      className={`${spaceGrotesk.variable} ${jetbrains.variable} ${dancingScript.variable}`}
     >
       <body>
         <div className="v2-bg-carbon" aria-hidden />
