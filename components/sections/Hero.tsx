@@ -114,7 +114,7 @@ export function Hero() {
 
         <p className="v2-hero-sub">
           CS undergrad at <strong>Columbia</strong> (Egleston Scholar,{" "}
-          <strong>top 1% of class</strong>, GPA 3.7).{" "}
+          <strong>top 1% of class</strong>, GPA 3.7+).{" "}
           <strong>IEEE-published</strong> in deep learning,{" "}
           <strong>USACO Platinum perfect score</strong>, and currently
           shipping <strong>Quantiv</strong>: options-implied earnings analytics
@@ -145,7 +145,7 @@ export function Hero() {
           <span>
             <em>Columbia University</em>
             <b>B.S. Computer Science</b>
-            <small>Statistics minor · GPA 3.7 · Expected May 2028</small>
+            <small>Statistics minor · GPA 3.7+ · Expected May 2028</small>
           </span>
           <span>
             <em>Coursework</em>
