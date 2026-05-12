@@ -174,19 +174,19 @@ const projects: Project[] = [
         value: "Top 5",
         label: "of 172 teams",
         tone: "green",
-        count: { from: 172, to: 5, prefix: "Top ", durationMs: 650 },
+        count: { from: 172, to: 5, prefix: "Top ", durationMs: 1550 },
       },
       {
         value: "90%+",
         label: "detection accuracy",
         tone: "white",
-        count: { from: 0, to: 90, suffix: "%+", durationMs: 650 },
+        count: { from: 0, to: 90, suffix: "%+", durationMs: 1550 },
       },
       {
         value: "3",
         label: "hackathon awards",
         tone: "yellow",
-        count: { from: 0, to: 3, durationMs: 650 },
+        count: { from: 0, to: 3, durationMs: 1550 },
       },
     ],
     tags: [
@@ -277,7 +277,8 @@ const projects: Project[] = [
       "24% RMSE improvement over the prior state-of-the-art on intersection turning ratios.",
     brand: {
       label: "IEEE",
-      detail: "IEEE Intelligent Transportation Systems Conference 2023",
+      detail:
+        "IEEE Intelligent Transportation Systems Conference Proceedings 2023",
       meta: "Peer-reviewed research venue",
     },
     metrics: [
@@ -395,14 +396,14 @@ const projects: Project[] = [
         value: "15%",
         label: "C++ solver speedup",
         tone: "green",
-        count: { from: 0, to: 15, suffix: "%" },
+        count: { from: 0, to: 15, suffix: "%", durationMs: 1550 },
       },
       { value: "TB", label: "instance scale" },
       {
         value: "10k+",
         label: "SLURM cores used",
         tone: "white",
-        count: { from: 1, to: 10, suffix: "k+" },
+        count: { from: 1, to: 10, suffix: "k+", durationMs: 1550 },
       },
     ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],

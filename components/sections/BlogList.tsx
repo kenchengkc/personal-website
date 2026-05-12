@@ -24,8 +24,9 @@ const publications: Publication[] = [
   {
     title:
       "GC-INF: A Novel Adaptive Traffic Control System using Machine Learning for Turning Ratio Predictions",
-    venue: "IEEE Intelligent Transportation Systems Conference 2023",
-    tag: "IEEE ITSC 2023",
+    venue:
+      "IEEE Intelligent Transportation Systems Conference Proceedings 2023",
+    tag: "IEEE Intelligent Transportation Systems Conference Proceedings 2023",
     date: "September 2023",
     citations: 1,
     href: site.links.gcinf,
