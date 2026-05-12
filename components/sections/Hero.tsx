@@ -161,7 +161,10 @@ export function Hero() {
           <span>
             <em>Based in</em>
             <b>{site.location}</b>
-            <small>Open to internships, research, and builder teams</small>
+            <small>
+              Open to internships, research, and builder teams, including roles
+              outside the New York area.
+            </small>
           </span>
         </div>
       </div>
