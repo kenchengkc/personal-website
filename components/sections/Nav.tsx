@@ -11,6 +11,7 @@ import {
   useState,
   type MouseEvent,
 } from "react";
+import { ChevronDown } from "lucide-react";
 import { Download } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
 
@@ -27,12 +28,16 @@ export function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [active, setActive] = useState<string>("home");
+  const [narrow, setNarrow] = useState(false);
+  const [navDense, setNavDense] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileWrapRef = useRef<HTMLDivElement>(null);
+
   const tabsRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const activeRef = useRef(active);
   activeRef.current = active;
 
-  /** While set, scroll-spy must not override `active` (smooth scroll crosses many sections). */
   const programmaticScrollLockRef = useRef<string | null>(null);
   const programmaticScrollTimerRef = useRef<number | null>(null);
 
@@ -61,6 +66,20 @@ export function Nav() {
     ready: boolean;
   }>({ x: 0, w: 0, ready: false });
 
+  const ddListRef = useRef<HTMLDivElement>(null);
+  const ddLinkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const [ddGlide, setDdGlide] = useState<{
+    y: number;
+    h: number;
+    ready: boolean;
+  }>({ y: 0, h: 0, ready: false });
+
+  const ddActiveId = isHome
+    ? active
+    : pathname.startsWith("/blog")
+      ? "blog"
+      : "home";
+
   const measureGlide = useCallback((id: string) => {
     const shell = tabsRef.current;
     const link = linkRefs.current.get(id);
@@ -70,12 +89,36 @@ export function Nav() {
     const x = l.left - s.left;
     const w = l.width;
     setGlide((prev) => {
-      if (prev.ready && Math.abs(prev.x - x) < 0.5 && Math.abs(prev.w - w) < 0.5) {
+      if (
+        prev.ready &&
+        Math.abs(prev.x - x) < 0.5 &&
+        Math.abs(prev.w - w) < 0.5
+      ) {
         return prev;
       }
       return { x, w, ready: true };
     });
   }, []);
+
+  const measureDdGlide = useCallback(() => {
+    const shell = ddListRef.current;
+    const link = ddLinkRefs.current.get(ddActiveId);
+    if (!shell || !link) return;
+    const sr = shell.getBoundingClientRect();
+    const lr = link.getBoundingClientRect();
+    const y = lr.top - sr.top;
+    const h = lr.height;
+    setDdGlide((prev) => {
+      if (
+        prev.ready &&
+        Math.abs(prev.y - y) < 0.5 &&
+        Math.abs(prev.h - h) < 0.5
+      ) {
+        return prev;
+      }
+      return { y, h, ready: true };
+    });
+  }, [ddActiveId]);
 
   useLayoutEffect(() => {
     if (!isHome) {
@@ -98,6 +141,54 @@ export function Nav() {
       window.removeEventListener("resize", onResize);
     };
   }, [isHome, measureGlide]);
+
+  useLayoutEffect(() => {
+    if (!narrow || !mobileMenuOpen) return;
+    measureDdGlide();
+    const id = window.requestAnimationFrame(() => measureDdGlide());
+    return () => window.cancelAnimationFrame(id);
+  }, [narrow, mobileMenuOpen, measureDdGlide, ddActiveId]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 760px)");
+    const apply = () => setNarrow(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    if (!isHome || !narrow) {
+      setNavDense(false);
+      return;
+    }
+    const onScroll = () => {
+      const hero = document.getElementById("home");
+      if (!hero) return;
+      setNavDense(hero.getBoundingClientRect().bottom < 72);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome, narrow]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    function onDocDown(e: Event) {
+      const el = mobileWrapRef.current;
+      if (!el || el.contains(e.target as Node)) return;
+      setMobileMenuOpen(false);
+    }
+    function onKey(e: globalThis.KeyboardEvent) {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onDocDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     if (!isHome) return;
@@ -140,10 +231,15 @@ export function Nav() {
     else linkRefs.current.delete(id);
   }
 
+  function setDdLinkRef(id: string, el: HTMLAnchorElement | null) {
+    if (el) ddLinkRefs.current.set(id, el);
+    else ddLinkRefs.current.delete(id);
+  }
+
   function onNav(id: string) {
     return (e: MouseEvent<HTMLAnchorElement>) => {
       if (!isHome) {
-        // let the link navigate to /#id naturally
+        setMobileMenuOpen(false);
         return;
       }
       e.preventDefault();
@@ -153,6 +249,7 @@ export function Nav() {
         setActive(id);
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", `#${id}`);
+        setMobileMenuOpen(false);
         requestAnimationFrame(() => {
           requestAnimationFrame(() => measureGlide(id));
         });
@@ -167,13 +264,21 @@ export function Nav() {
     setActive("home");
     document.getElementById("home")?.scrollIntoView({ behavior: "smooth" });
     history.replaceState(null, "", "/");
+    setMobileMenuOpen(false);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => measureGlide("home"));
     });
   }
 
+  const currentNavLabel =
+    links.find((l) => l.id === ddActiveId)?.label ?? "About";
+
   return (
-    <header className="v2-nav">
+    <header
+      className={["v2-nav", navDense ? "v2-nav--dense" : ""]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className="v2-nav-inner">
         <Link href="/#home" className="v2-brand" onClick={onBrand}>
           <span className="v2-brand-mark">
@@ -190,34 +295,104 @@ export function Nav() {
           <span className="v2-brand-name">Ken Cheng</span>
         </Link>
         <nav className="v2-nav-links">
-          <div className="v2-nav-tabs" ref={tabsRef}>
-            {isHome ? (
-              <span
-                className="v2-nav-tabs-glide"
-                aria-hidden
-                style={{
-                  opacity: glide.ready ? 1 : 0,
-                  width: glide.w,
-                  transform: `translate3d(${glide.x}px, 0, 0)`,
-                }}
-              />
-            ) : null}
-            {links.map((l) => (
-              <Link
-                key={l.id}
-                ref={(el) => setLinkRef(l.id, el)}
-                href={`/#${l.id}`}
-                onClick={onNav(l.id)}
-                className={`v2-nav-link ${
-                  isHome && active === l.id ? "v2-nav-link--active" : ""
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
-          </div>
+          {isHome ? (
+            <>
+              <div className="v2-nav-tabs v2-nav-tabs--desktop" ref={tabsRef}>
+                <span
+                  className="v2-nav-tabs-glide"
+                  aria-hidden
+                  style={{
+                    opacity: glide.ready ? 1 : 0,
+                    width: glide.w,
+                    transform: `translate3d(${glide.x}px, 0, 0)`,
+                  }}
+                />
+                {links.map((l) => (
+                  <Link
+                    key={l.id}
+                    ref={(el) => setLinkRef(l.id, el)}
+                    href={`/#${l.id}`}
+                    onClick={onNav(l.id)}
+                    className={`v2-nav-link ${
+                      active === l.id ? "v2-nav-link--active" : ""
+                    }`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="v2-nav-mnav" ref={mobileWrapRef}>
+                <button
+                  type="button"
+                  className="v2-nav-mnav-trigger"
+                  aria-expanded={mobileMenuOpen}
+                  aria-haspopup="listbox"
+                  aria-controls="v2-nav-mnav-panel"
+                  onClick={() => setMobileMenuOpen((o) => !o)}
+                >
+                  <span className="v2-nav-mnav-trigger-label">
+                    {currentNavLabel}
+                  </span>
+                  <ChevronDown
+                    size={18}
+                    strokeWidth={2}
+                    className={
+                      mobileMenuOpen ? "v2-nav-mnav-chevron v2-nav-mnav-chevron--open" : "v2-nav-mnav-chevron"
+                    }
+                    aria-hidden
+                  />
+                </button>
+                {mobileMenuOpen ? (
+                  <div
+                    id="v2-nav-mnav-panel"
+                    className="v2-nav-mnav-panel"
+                    role="listbox"
+                    ref={ddListRef}
+                  >
+                    <span
+                      className="v2-nav-mnav-glide"
+                      aria-hidden
+                      style={{
+                        opacity: ddGlide.ready ? 1 : 0,
+                        top: ddGlide.y,
+                        height: ddGlide.h,
+                      }}
+                    />
+                    {links.map((l) => (
+                      <Link
+                        key={l.id}
+                        ref={(el) => setDdLinkRef(l.id, el)}
+                        href={`/#${l.id}`}
+                        role="option"
+                        aria-selected={ddActiveId === l.id}
+                        onClick={onNav(l.id)}
+                        className={`v2-nav-mnav-link ${
+                          ddActiveId === l.id ? "v2-nav-mnav-link--active" : ""
+                        }`}
+                      >
+                        {l.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </>
+          ) : (
+            <div className="v2-nav-tabs v2-nav-tabs--plain">
+              {links.map((l) => (
+                <Link
+                  key={l.id}
+                  href={`/#${l.id}`}
+                  className="v2-nav-link"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          )}
           <a
-            className="v2-btn v2-btn--ghost"
+            className="v2-btn v2-btn--ghost v2-nav-resume"
             href={site.resumePath}
             download
             target="_blank"

@@ -36,9 +36,14 @@ export function Hero() {
       }
 
       const rect = hero.getBoundingClientRect();
+      const narrow = window.innerWidth < 720;
+      const progressDen = Math.max(
+        narrow ? 680 : 340,
+        window.innerHeight * (narrow ? 1.2 : 0.8),
+      );
       const progress = Math.min(
         1,
-        Math.max(0, -rect.top / Math.max(340, window.innerHeight * 0.8)),
+        Math.max(0, -rect.top / progressDen),
       );
       /** Spin for the whole horizontal run: after first movement until the car reaches the far side (scroll up or down). */
       const inMotion = progress > 0 && progress < 1;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Medal } from "lucide-react";
 import { SectionHead } from "./SectionHead";
@@ -48,6 +48,14 @@ type Project = {
   links?: ProjectLink[];
   media?: ProjectMedia | ProjectMedia[];
 };
+
+type PanelTab = "overview" | "signals" | "build";
+
+const PANEL_TABS: { id: PanelTab; label: string }[] = [
+  { id: "overview", label: "Overview" },
+  { id: "signals", label: "Highlights" },
+  { id: "build", label: "Build" },
+];
 
 const projects: Project[] = [
   {
@@ -377,6 +385,63 @@ export function Projects() {
     };
   }, [measureGlide]);
 
+  const [panelTab, setPanelTab] = useState<PanelTab>("overview");
+  useEffect(() => {
+    setPanelTab("overview");
+  }, [activeIndex]);
+
+  const subTabsRef = useRef<HTMLDivElement>(null);
+  const subTabRefs = useRef<Map<PanelTab, HTMLButtonElement>>(new Map());
+  const panelTabRef = useRef(panelTab);
+  panelTabRef.current = panelTab;
+
+  const [subGlide, setSubGlide] = useState({
+    x: 0,
+    w: 0,
+    ready: false,
+  });
+
+  const measureSubGlide = useCallback(() => {
+    const shell = subTabsRef.current;
+    const btn = subTabRefs.current.get(panelTabRef.current);
+    if (!shell || !btn) return;
+    const sr = shell.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    const x = br.left - sr.left;
+    const w = br.width;
+    setSubGlide((prev) => {
+      if (
+        prev.ready &&
+        Math.abs(prev.x - x) < 0.5 &&
+        Math.abs(prev.w - w) < 0.5
+      ) {
+        return prev;
+      }
+      return { x, w, ready: true };
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    measureSubGlide();
+  }, [panelTab, activeIndex, measureSubGlide]);
+
+  useLayoutEffect(() => {
+    const shell = subTabsRef.current;
+    if (!shell) return;
+    const ro = new ResizeObserver(() => measureSubGlide());
+    ro.observe(shell);
+    window.addEventListener("resize", measureSubGlide);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measureSubGlide);
+    };
+  }, [measureSubGlide]);
+
+  function setSubTabRef(id: PanelTab, el: HTMLButtonElement | null) {
+    if (el) subTabRefs.current.set(id, el);
+    else subTabRefs.current.delete(id);
+  }
+
   function setTabRef(index: number, el: HTMLButtonElement | null) {
     if (el) tabRefs.current.set(index, el);
     else tabRefs.current.delete(index);
@@ -433,173 +498,214 @@ export function Projects() {
 
         <article className="v2-work-panel" key={active.title}>
           <div className="v2-work-panel-head">
-            <div>
-              <p className="v2-mono v2-mono--accent">{active.category}</p>
-              <h3 className="v2-work-title">{active.title}</h3>
-            </div>
+            <h3 className="v2-work-title">{active.title}</h3>
             <span className="v2-work-date">{active.dates}</span>
           </div>
 
-          {(active.role || active.brand) && (
-            <div
-              className="v2-work-identity"
-              aria-label={
-                active.brand?.detail ?? active.role?.org ?? active.title
-              }
-            >
-              {active.brand && (
-                <div className="v2-work-identity-mark">
-                  {active.brand.logo ? (
-                    <Image
-                      src={active.brand.logo.src}
-                      alt={active.brand.logo.alt}
-                      width={active.brand.logo.width ?? 92}
-                      height={active.brand.logo.height ?? 92}
-                      className={`v2-work-identity-logo ${
-                        active.brand.logo.variant === "wide"
-                          ? "v2-work-identity-logo--wide"
-                          : ""
-                      }`}
-                    />
-                  ) : (
-                    <span className="v2-ieee-wordmark">
-                      {active.brand.label}
-                    </span>
-                  )}
-                </div>
-              )}
-              <div className="v2-work-identity-body">
-                {active.role ? (
-                  <>
-                    <span className="v2-work-identity-title">
-                      {active.role.title}
-                    </span>
-                    <span className="v2-work-identity-org">
-                      {active.role.org}
-                    </span>
-                    <span className="v2-work-identity-meta">
-                      {active.role.location}
-                      {active.brand?.meta ? (
+          <div className="v2-work-subtabs" ref={subTabsRef}>
+            <span
+              className="v2-work-subtabs-glide"
+              aria-hidden
+              style={{
+                opacity: subGlide.ready ? 1 : 0,
+                width: subGlide.w,
+                transform: `translate3d(${subGlide.x}px, 0, 0)`,
+              }}
+            />
+            {PANEL_TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                ref={(el) => setSubTabRef(t.id, el)}
+                className={`v2-work-subtab ${
+                  panelTab === t.id ? "v2-work-subtab--active" : ""
+                }`}
+                onClick={() => setPanelTab(t.id)}
+                aria-pressed={panelTab === t.id}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="v2-work-panel-stage">
+            {panelTab === "overview" && (
+              <div className="v2-work-panel-page">
+                {(active.role || active.brand) && (
+                  <div
+                    className="v2-work-identity"
+                    aria-label={
+                      active.brand?.detail ?? active.role?.org ?? active.title
+                    }
+                  >
+                    {active.brand && (
+                      <div className="v2-work-identity-mark">
+                        {active.brand.logo ? (
+                          <Image
+                            src={active.brand.logo.src}
+                            alt={active.brand.logo.alt}
+                            width={active.brand.logo.width ?? 92}
+                            height={active.brand.logo.height ?? 92}
+                            className={`v2-work-identity-logo ${
+                              active.brand.logo.variant === "wide"
+                                ? "v2-work-identity-logo--wide"
+                                : ""
+                            }`}
+                          />
+                        ) : (
+                          <span className="v2-ieee-wordmark">
+                            {active.brand.label}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <div className="v2-work-identity-body">
+                      {active.role ? (
                         <>
-                          {" · "}
-                          {active.brand.meta === "usequantiv.com" ? (
-                            <a
-                              href={site.links.quantiv}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              usequantiv.com
-                            </a>
-                          ) : (
-                            active.brand.meta
-                          )}
+                          <span className="v2-work-identity-title">
+                            {active.role.title}
+                          </span>
+                          <span className="v2-work-identity-org">
+                            {active.role.org}
+                          </span>
+                          <span className="v2-work-identity-meta">
+                            {active.role.location}
+                            {active.brand?.meta ? (
+                              <>
+                                {" · "}
+                                {active.brand.meta === "usequantiv.com" ? (
+                                  <a
+                                    href={site.links.quantiv}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    usequantiv.com
+                                  </a>
+                                ) : (
+                                  active.brand.meta
+                                )}
+                              </>
+                            ) : null}
+                          </span>
+                        </>
+                      ) : active.brand ? (
+                        <>
+                          <span className="v2-work-identity-title">
+                            {active.brand.detail}
+                          </span>
+                          <span className="v2-work-identity-sub">
+                            {active.brand.meta === "usequantiv.com" ? (
+                              <a
+                                href={site.links.quantiv}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                usequantiv.com
+                              </a>
+                            ) : (
+                              active.brand.meta
+                            )}
+                          </span>
                         </>
                       ) : null}
+                    </div>
+                  </div>
+                )}
+
+                {active.award && (
+                  <div className="v2-work-award" aria-label={active.award.label}>
+                    <Medal size={22} strokeWidth={2.2} />
+                    <span>
+                      <b>{active.award.label}</b>
+                      <small>{active.award.detail}</small>
                     </span>
-                  </>
-                ) : active.brand ? (
-                  <>
-                    <span className="v2-work-identity-title">
-                      {active.brand.detail}
-                    </span>
-                    <span className="v2-work-identity-sub">
-                      {active.brand.meta === "usequantiv.com" ? (
-                        <a
-                          href={site.links.quantiv}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          usequantiv.com
-                        </a>
-                      ) : (
-                        active.brand.meta
-                      )}
-                    </span>
-                  </>
-                ) : null}
+                  </div>
+                )}
+
+                <div className="v2-work-blurb">
+                  <p className="v2-work-summary">{active.summary}</p>
+                  <p className="v2-work-impact">{active.impact}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <p className="v2-work-summary">{active.summary}</p>
-          {active.award && (
-            <div className="v2-work-award" aria-label={active.award.label}>
-              <Medal size={22} strokeWidth={2.2} />
-              <span>
-                <b>{active.award.label}</b>
-                <small>{active.award.detail}</small>
-              </span>
-            </div>
-          )}
-          <p className="v2-work-impact">{active.impact}</p>
-
-          <div className="v2-work-metrics">
-            {active.metrics.map((metric) => (
-              <div key={metric.label} className="v2-work-metric">
-                <span
-                  className={[
-                    "v2-work-metric-v",
-                    metric.tone === "gold" && "v2-work-metric-v--gold",
-                    metric.tone === "platinum" && "v2-work-metric-v--platinum",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {metric.value}
-                </span>
-                <span className="v2-work-metric-l">{metric.label}</span>
+            {panelTab === "signals" && (
+              <div className="v2-work-panel-page">
+                <div className="v2-work-metrics">
+                  {active.metrics.map((metric) => (
+                    <div key={metric.label} className="v2-work-metric">
+                      <span
+                        className={[
+                          "v2-work-metric-v",
+                          metric.tone === "gold" && "v2-work-metric-v--gold",
+                          metric.tone === "platinum" &&
+                            "v2-work-metric-v--platinum",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      >
+                        {metric.value}
+                      </span>
+                      <span className="v2-work-metric-l">{metric.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            )}
+
+            {panelTab === "build" && (
+              <div className="v2-work-panel-page">
+                <div className="v2-chips">
+                  {active.tags.map((tag) => (
+                    <span key={tag} className="v2-chip">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <details className="v2-work-details">
+                  <summary>Implementation notes</summary>
+                  <ul>
+                    {active.details.map((detail) => (
+                      <li key={detail}>{detail}</li>
+                    ))}
+                  </ul>
+                </details>
+
+                {mediaList.map((item) => (
+                  <figure key={item.src} className="v2-work-media">
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                      sizes="(max-width: 900px) 100vw, 820px"
+                      className="v2-work-media-img"
+                    />
+                    {item.caption && <figcaption>{item.caption}</figcaption>}
+                  </figure>
+                ))}
+
+                {active.links && active.links.length > 0 && (
+                  <div className="v2-work-links">
+                    {active.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download={link.download}
+                        className="v2-proj-link"
+                      >
+                        <span className="v2-proj-link-text">{link.label}</span>
+                        <Arrow size={12} />
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-
-          <div className="v2-chips">
-            {active.tags.map((tag) => (
-              <span key={tag} className="v2-chip">
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <details className="v2-work-details">
-            <summary>Implementation notes</summary>
-            <ul>
-              {active.details.map((detail) => (
-                <li key={detail}>{detail}</li>
-              ))}
-            </ul>
-          </details>
-
-          {mediaList.map((item) => (
-            <figure key={item.src} className="v2-work-media">
-              <Image
-                src={item.src}
-                alt={item.alt}
-                width={item.width}
-                height={item.height}
-                sizes="(max-width: 900px) 100vw, 820px"
-                className="v2-work-media-img"
-              />
-              {item.caption && <figcaption>{item.caption}</figcaption>}
-            </figure>
-          ))}
-
-          {active.links && active.links.length > 0 && (
-            <div className="v2-work-links">
-              {active.links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download={link.download}
-                  className="v2-proj-link"
-                >
-                  <span className="v2-proj-link-text">{link.label}</span>
-                  <Arrow size={12} />
-                </a>
-              ))}
-            </div>
-          )}
         </article>
       </div>
     </section>
