@@ -41,27 +41,25 @@ export function About() {
       <div className="v2-about">
         <div className="v2-about-copy">
           <p>
-            I&rsquo;m a Computer Science student at Columbia, focused on{" "}
+            I&rsquo;m a Computer Science student at <b>Columbia</b>, focused on{" "}
             <b>machine learning</b>, <b>quantitative finance</b>, and the
-            systems that hold them up. I like the kind of problems where the
-            math, the model, and the infra all have to agree.
+            systems that hold them up. I like problems where the math, the
+            model, and the infra all have to agree.
           </p>
           <p>
-            Right now I&rsquo;m building <b>Quantiv</b>, a platform for
-            options-implied <b>expected moves into earnings</b>, pairing
-            IV/straddle-style baselines with <b>LightGBM</b> models on
-            historical Greeks and volatility features. Datasets and scores
-            refresh on a daily cadence; the goal is calibrated forecasts and
-            reproducible pipelines at billion-row scale, not millisecond
-            quotes. Before that, I
-            published in the IEEE Intelligent Transportation Systems Conference
-            on graph-network traffic forecasting, and
-            earned USACO Platinum with a perfect score.
+            Right now I&rsquo;m building <b>Quantiv</b> &mdash; an
+            options-implied earnings-move platform pairing IV / straddle
+            baselines with <b>LightGBM</b> forecasts on historical Greeks and
+            volatility. Datasets and scores refresh daily; the goal is
+            calibrated forecasts and reproducible pipelines at billion-row
+            scale, not millisecond quotes.
           </p>
           <p>
-            When I&rsquo;m not coding, you&rsquo;ll find me watching Formula 1
-            - which, if you couldn&rsquo;t tell, inspired the look of this
-            site.
+            Before that I published single-author at the <b>IEEE ITSC</b> on
+            graph-network traffic forecasting (24% RMSE win over STGCN), earned{" "}
+            <b>USACO Platinum</b> with a perfect Gold score, and built a CFD +
+            neural-net F1 wing optimizer that won gold at the Canada-Wide
+            Science Fair.
           </p>
         </div>
         <div className="v2-about-side">

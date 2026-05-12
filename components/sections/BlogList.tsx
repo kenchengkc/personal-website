@@ -16,7 +16,7 @@ const publications: Publication[] = [
     title:
       "A Need For Speed: Enhancing F1 Race Cars with a Novel Computational Fluid Dynamics and Machine Learning Method",
     venue: "Highlights in Science Engineering and Technology",
-    tag: "Highlights in Science, Eng. & Tech.",
+    tag: "Highlights in Science Engineering and Technology",
     date: "May 2023",
     citations: 2,
     href: site.links.f1cfd,
