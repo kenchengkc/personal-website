@@ -157,7 +157,7 @@ export function Nav() {
     return () => window.cancelAnimationFrame(id);
   }, [narrow, mobileMenuOpen, measureDdGlide, ddActiveId]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mq = window.matchMedia("(max-width: 760px)");
     const apply = () => setNarrow(mq.matches);
     apply();
@@ -229,8 +229,9 @@ export function Nav() {
         if (programmaticScrollLockRef.current) {
           return;
         }
-        // Document-space tops (offsetTop is offsetParent-relative and misaligns with scrollY).
-        const y = window.scrollY + 96;
+        // Document-space section tops vs scroll position; bias uses live nav height.
+        const navH = headerRef.current?.getBoundingClientRect().height ?? 72;
+        const y = window.scrollY + navH + 28;
         let cur = "home";
         for (const id of SECTION_IDS) {
           const el = document.getElementById(id);
@@ -373,7 +374,13 @@ export function Nav() {
                 {mobileMenuOpen ? (
                   <div
                     id="v2-nav-mnav-panel"
-                    className="v2-nav-mnav-panel"
+                    className={[
+                      "v2-nav-mnav-panel",
+                      narrow ? "v2-nav-mnav-panel--dock" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    style={narrow ? { top: mnavDdTop } : undefined}
                     role="listbox"
                     ref={ddListRef}
                   >
