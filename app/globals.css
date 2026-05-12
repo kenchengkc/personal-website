@@ -2140,7 +2140,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(min(148px, 100%), 1fr));
+  grid-template-columns: repeat(3, minmax(min(156px, 100%), 1fr));
   gap: 14px 16px;
 }
 .v2-work-metric {
@@ -2166,10 +2166,10 @@ button { font: inherit; cursor: pointer; }
 .v2-work-metric-v {
   font-family: var(--font-sans);
   font-weight: 800;
-  font-size: clamp(19px, 1.85vw, 27px);
-  line-height: 1.05;
+  font-size: clamp(20px, 1.92vw, 28px);
+  line-height: 1.06;
   color: var(--color-accent-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   overflow: visible;
@@ -2275,9 +2275,9 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-metric-l {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: color-mix(in srgb, var(--color-text-dim) 88%, var(--color-muted));
-  letter-spacing: 0.06em;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
   line-height: 1.35;
 }
