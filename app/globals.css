@@ -1648,7 +1648,6 @@ button { font: inherit; cursor: pointer; }
     var(--color-surface);
   border-radius: 14px;
   padding: 26px;
-  min-height: 420px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -1731,7 +1730,7 @@ button { font: inherit; cursor: pointer; }
   color: var(--color-text);
 }
 .v2-work-panel-stage {
-  flex: 1;
+  flex: 0 1 auto;
   min-height: 0;
 }
 .v2-work-panel-page {
