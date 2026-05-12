@@ -88,9 +88,9 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "Founder and lead engineer on Quantiv: an earnings-calendar product for options-implied expected moves; Next.js and TypeScript on the web, Python FastAPI for scoring APIs, LightGBM plus DuckDB over billion-row Parquet at institution scale.",
+      "Founder and lead engineer on Quantiv: earnings-calendar product for options-implied expected moves; Next.js + TypeScript on the web, Python FastAPI for scoring, LightGBM plus DuckDB over billion-row Parquet at institution scale.",
     impact:
-      "Parquet/DuckDB analytics through GBDT forecasts to versioned artifacts and the live client. Daily refreshes and reproducible pipelines matter more than quote latency.",
+      "Daily refreshes and reproducible pipelines beat quote latency. Live and shipping.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -152,7 +152,7 @@ const projects: Project[] = [
       location: "Los Angeles, CA, USA",
     },
     summary:
-      "Embers: a React + Flask pipeline that walks a home with video, runs OpenCV + YOLOv11 detections, and turns them into an insurance-ready inventory with Gemini-grounded valuations and a voice assistant.",
+      "A platform built on a React + Flask pipeline that intakes a video of a home, runs OpenCV + YOLOv11 detections, and turns them into an insurance-ready inventory with Gemini-grounded valuations and a voice assistant.",
     impact:
       "Top 5 Finalist of 172 teams · Best Use of Google Gemini API · Best FinTech Project.",
     brand: {
@@ -328,7 +328,7 @@ const projects: Project[] = [
     summary:
       "MATLAB neural-net surrogate that replaces full CFD iteration with sub-second pressure-map predictions.",
     impact:
-      "100x faster iteration; 43% drag reduction in simulation; gold at the Canada-Wide Science Fair.",
+      "100x iteration speed-up · 43% drag reduction in simulations · CWSF gold medalist.",
     brand: {
       label: "CWSF",
       detail: "Canada-Wide Science Fair",
