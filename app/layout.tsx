@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Dancing_Script, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { DM_Serif_Display, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
 import { Starfield } from "@/components/sections/Starfield";
@@ -13,9 +13,10 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const dancingScript = Dancing_Script({
+const dmSerifDisplay = DM_Serif_Display({
   subsets: ["latin"],
-  weight: ["700"],
+  weight: "400",
+  style: "italic",
   variable: "--font-hero-accent",
   display: "swap",
 });
@@ -53,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${jetbrains.variable} ${dancingScript.variable}`}
+      className={`${spaceGrotesk.variable} ${jetbrains.variable} ${dmSerifDisplay.variable}`}
     >
       <body>
         <div className="v2-bg-carbon" aria-hidden />

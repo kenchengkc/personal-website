@@ -959,9 +959,9 @@ button { font: inherit; cursor: pointer; }
   margin: 22px 0 0;
 }
 .v2-hero-title .v2-hero-accent-word {
-  font-family: var(--font-hero-accent), "Brush Script MT", "Segoe Script", cursive;
-  font-weight: 700;
-  font-style: normal;
+  font-family: var(--font-hero-accent), "Georgia", "Times New Roman", serif;
+  font-weight: 400;
+  font-style: italic;
   font-size: 1.14em;
   letter-spacing: -0.02em;
   color: #7b96ff;
