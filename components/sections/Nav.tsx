@@ -229,11 +229,14 @@ export function Nav() {
         if (programmaticScrollLockRef.current) {
           return;
         }
-        const y = window.scrollY + 140;
+        // Document-space tops (offsetTop is offsetParent-relative and misaligns with scrollY).
+        const y = window.scrollY + 96;
         let cur = "home";
         for (const id of SECTION_IDS) {
           const el = document.getElementById(id);
-          if (el && el.offsetTop <= y) cur = id;
+          if (!el) continue;
+          const top = el.getBoundingClientRect().top + window.scrollY;
+          if (top <= y) cur = id;
         }
         if (cur !== activeRef.current) {
           setActive(cur);

@@ -626,6 +626,27 @@ export function Projects() {
                   <p className="v2-work-summary">{active.summary}</p>
                   <p className="v2-work-impact">{active.impact}</p>
                 </div>
+
+                {active.links && active.links.length > 0 && (
+                  <div className="v2-work-links">
+                    {active.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        className="v2-proj-link"
+                        {...(link.download
+                          ? { download: true }
+                          : {
+                              target: "_blank",
+                              rel: "noopener noreferrer",
+                            })}
+                      >
+                        <span className="v2-proj-link-text">{link.label}</span>
+                        <Arrow size={12} className="v2-proj-link-icon" />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -685,24 +706,6 @@ export function Projects() {
                     {item.caption && <figcaption>{item.caption}</figcaption>}
                   </figure>
                 ))}
-
-                {active.links && active.links.length > 0 && (
-                  <div className="v2-work-links">
-                    {active.links.map((link) => (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download={link.download}
-                        className="v2-proj-link"
-                      >
-                        <span className="v2-proj-link-text">{link.label}</span>
-                        <Arrow size={12} />
-                      </a>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
           </div>
