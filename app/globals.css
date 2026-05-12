@@ -574,8 +574,17 @@ button { font: inherit; cursor: pointer; }
   }
   .v2-nav-mnav {
     display: block;
-    width: 100%;
     min-width: 0;
+  }
+  .v2-nav--dense .v2-nav-mnav {
+    width: 100%;
+    flex: 1 1 0%;
+  }
+  /* Shorter labels while "Ken Cheng" shows: pill only as wide as content (+ chevron). */
+  .v2-nav:not(.v2-nav--dense) .v2-nav-mnav {
+    width: fit-content;
+    max-width: 100%;
+    flex: 0 1 auto;
   }
   .v2-nav--dense .v2-brand-name {
     display: none;
@@ -599,7 +608,7 @@ button { font: inherit; cursor: pointer; }
     min-width: 0;
   }
   /* Full brand (hero): pull logo slightly left, résumé toward the safe edge, tighten
-     padding so “About” fits without ellipsis on narrow iPhones. */
+     padding so "About" fits without ellipsis on narrow iPhones. */
   .v2-nav:not(.v2-nav--dense) .v2-nav-inner {
     padding-left: max(8px, env(safe-area-inset-left, 0px));
     padding-right: max(6px, env(safe-area-inset-right, 0px));
@@ -626,8 +635,20 @@ button { font: inherit; cursor: pointer; }
     gap: 5px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-mnav-trigger {
+    width: fit-content;
+    max-width: 100%;
     padding: 9px 11px;
     gap: 8px;
+  }
+  .v2-nav:not(.v2-nav--dense) .v2-nav-mnav-trigger-label {
+    flex: 0 1 auto;
+  }
+  .v2-nav--dense .v2-nav-mnav-trigger {
+    width: 100%;
+  }
+  .v2-nav--dense .v2-nav-mnav-trigger-label {
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
 
