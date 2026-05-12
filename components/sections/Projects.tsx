@@ -21,6 +21,27 @@ type ProjectMedia = {
   caption?: string;
 };
 
+type MetricTone = "gold" | "platinum" | "green" | "yellow" | "white";
+
+type MetricCount = {
+  from: number;
+  to: number;
+  fromSecondary?: number;
+  toSecondary?: number;
+  separator?: string;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  durationMs?: number;
+};
+
+type ProjectMetric = {
+  value: string;
+  label: string;
+  tone?: MetricTone;
+  count?: MetricCount;
+};
+
 type Project = {
   title: string;
   category: string;
@@ -29,7 +50,7 @@ type Project = {
   role?: { title: string; org: string; location: string };
   summary: string;
   impact: string;
-  metrics: { value: string; label: string; tone?: "gold" | "platinum" }[];
+  metrics: ProjectMetric[];
   award?: { label: string; detail: string };
   brand?: {
     label: string;
@@ -49,11 +70,10 @@ type Project = {
   media?: ProjectMedia | ProjectMedia[];
 };
 
-type PanelTab = "overview" | "signals" | "build";
+type PanelTab = "overview" | "build";
 
 const PANEL_TABS: { id: PanelTab; label: string }[] = [
   { id: "overview", label: "Overview" },
-  { id: "signals", label: "Highlights" },
   { id: "build", label: "Build" },
 ];
 
@@ -81,9 +101,25 @@ const projects: Project[] = [
       },
     },
     metrics: [
-      { value: "1B+", label: "option records" },
-      { value: "Daily", label: "model & data refresh" },
-      { value: "50-100", label: "tickers weekly" },
+      {
+        value: "1.04B+",
+        label: "option records",
+        tone: "white",
+        count: { from: 0, to: 1.04, decimals: 2, suffix: "B+" },
+      },
+      { value: "Daily", label: "model refresh" },
+      {
+        value: "50-100",
+        label: "tickers / week",
+        tone: "white",
+        count: {
+          from: 0,
+          to: 50,
+          fromSecondary: 0,
+          toSecondary: 100,
+          separator: "-",
+        },
+      },
     ],
     tags: [
       "TypeScript",
@@ -118,7 +154,7 @@ const projects: Project[] = [
     summary:
       "Embers: a React + Flask pipeline that walks a home with video, runs OpenCV + YOLOv11 detections, and turns them into an insurance-ready inventory with Gemini-grounded valuations and a voice assistant.",
     impact:
-      "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project, shipping a demoable dashboard plus live detection in a weekend.",
+      "Top 5 Finalist of 172 teams · Best Use of Google Gemini API · Best FinTech Project.",
     brand: {
       label: "LA Hacks",
       detail: "Google at LA Hacks (UCLA)",
@@ -134,9 +170,24 @@ const projects: Project[] = [
       detail: "LA Hacks 2025",
     },
     metrics: [
-      { value: "Top 5", label: "of 172 teams" },
-      { value: "90%+", label: "detection accuracy" },
-      { value: "3", label: "hackathon awards" },
+      {
+        value: "Top 5",
+        label: "of 172 teams",
+        tone: "green",
+        count: { from: 172, to: 5, prefix: "Top ", durationMs: 650 },
+      },
+      {
+        value: "90%+",
+        label: "detection accuracy",
+        tone: "white",
+        count: { from: 0, to: 90, suffix: "%+", durationMs: 650 },
+      },
+      {
+        value: "3",
+        label: "hackathon awards",
+        tone: "yellow",
+        count: { from: 0, to: 3, durationMs: 650 },
+      },
     ],
     tags: [
       "React",
@@ -153,7 +204,7 @@ const projects: Project[] = [
       "Led the team building Embers: a React + Flask computer vision app that hit 90%+ detection accuracy auto-inventorying household items from ~30s videos for wildfire insurance claims.",
       "YOLOv11 + OpenCV on walkthrough video to localize objects; crops feed Gemini for consistent labels and dollar estimates; dashboard totals insured value with per-item confidence (Flask + Supabase).",
       "Voice assistant: Whisper plus Gemini and ElevenLabs for hands-free asset valuation; estimated ~50% reduction in manual claim documentation time.",
-      "Top 5 finalist out of 172 teams; Best Use of Google Gemini API and Best Financial Tech Project.",
+      "Top 5 Finalist of 172 teams · Best Use of Google Gemini API · Best FinTech Project.",
     ],
     links: [
       { label: "Embers on Devpost", href: "https://devpost.com/software/insurefire" },
@@ -190,11 +241,21 @@ const projects: Project[] = [
       detail: "USA Computing Olympiad",
     },
     metrics: [
-      { value: "1000 / 1000", label: "Gold Division" },
-      { value: "Top 1%", label: "national rank" },
+      {
+        value: "1000/1000",
+        label: "Gold Division",
+        tone: "gold",
+        count: { from: 0, to: 1000, suffix: "/1000" },
+      },
+      {
+        value: "Top 1%",
+        label: "national rank",
+        tone: "green",
+        count: { from: 100, to: 1, prefix: "Top ", suffix: "%" },
+      },
       { value: "Platinum", label: "qualifier", tone: "platinum" },
     ],
-    tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
+    tags: ["C++", "Advanced DS&A", "gdb"],
     details: [
       "Competition-grade C++ across graphs, DP, segment trees, and computational geometry.",
       "gdb profiling to chase down edge cases under tight memory and runtime budgets.",
@@ -220,7 +281,12 @@ const projects: Project[] = [
       meta: "Peer-reviewed research venue",
     },
     metrics: [
-      { value: "24%", label: "RMSE improvement" },
+      {
+        value: "24%",
+        label: "RMSE improvement",
+        tone: "green",
+        count: { from: 0, to: 24, suffix: "%" },
+      },
       { value: "IEEE", label: "published" },
       { value: "1st", label: "single author" },
     ],
@@ -276,8 +342,18 @@ const projects: Project[] = [
       },
     },
     metrics: [
-      { value: "100x", label: "CFD iteration" },
-      { value: "43%", label: "drag reduction" },
+      {
+        value: "100x",
+        label: "iteration speedup",
+        tone: "white",
+        count: { from: 1, to: 100, suffix: "x" },
+      },
+      {
+        value: "43%",
+        label: "drag reduction",
+        tone: "green",
+        count: { from: 0, to: 43, suffix: "%" },
+      },
       { value: "Gold", label: "CWSF '22", tone: "gold" },
     ],
     tags: ["MATLAB", "Deep Learning Toolbox", "Feedforward", "trainlm"],
@@ -300,7 +376,7 @@ const projects: Project[] = [
     summary:
       "OR + ML research accelerating large-scale Capacitated Vehicle Routing Problem solvers: mined Column Generation patterns to prune branches faster, with SLURM-scale experiments and a JavaFX explorer for researchers.",
     impact:
-      "15% faster on TB-scale instances of an NP-hard problem; Best Paper at SSTP (<10% acceptance).",
+      "15% C++ solver speedup on TB-scale instances of an NP-hard problem; Best Paper at SSTP.",
     award: {
       label: "Best Paper Award",
       detail: "Student Science Training Program",
@@ -315,16 +391,26 @@ const projects: Project[] = [
       },
     },
     metrics: [
-      { value: "15%", label: "faster" },
+      {
+        value: "15%",
+        label: "C++ solver speedup",
+        tone: "green",
+        count: { from: 0, to: 15, suffix: "%" },
+      },
       { value: "TB", label: "instance scale" },
-      { value: "<10%", label: "SSTP acceptance" },
+      {
+        value: "10k+",
+        label: "SLURM cores used",
+        tone: "white",
+        count: { from: 1, to: 10, suffix: "k+" },
+      },
     ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],
     details: [
-      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early (15% faster on TB-scale instances).",
+      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early (15% C++ solver speedup on TB-scale instances).",
       "Ran simulations on the UF HiPerGator supercomputer (SLURM batch jobs across tens of thousands of cores).",
       "Built a JavaFX route-visualization tool so OR researchers could step through solver decisions interactively (screenshot below).",
-      "Best Paper Award at SSTP (Student Science Training Program, under 10% acceptance).",
+      "Best Paper Award at SSTP (Student Science Training Program).",
     ],
     media: {
       src: "/media/cvrp-visualizer.png",
@@ -335,6 +421,102 @@ const projects: Project[] = [
     },
   },
 ];
+
+function formatCountPart(value: number, count: MetricCount) {
+  return count.decimals != null
+    ? value.toFixed(count.decimals)
+    : String(Math.round(value));
+}
+
+function formatCountValue(
+  value: number,
+  count: MetricCount,
+  secondaryValue?: number,
+) {
+  const formatted =
+    count.toSecondary != null && secondaryValue != null
+      ? [
+          formatCountPart(value, count),
+          formatCountPart(secondaryValue, count),
+        ].join(count.separator ?? "-")
+      : formatCountPart(value, count);
+  return `${count.prefix ?? ""}${formatted}${count.suffix ?? ""}`;
+}
+
+function AnimatedMetricValue({ metric }: { metric: ProjectMetric }) {
+  const [displayValue, setDisplayValue] = useState(metric.count?.from);
+  const [displaySecondaryValue, setDisplaySecondaryValue] = useState(
+    metric.count?.fromSecondary,
+  );
+
+  useEffect(() => {
+    const count = metric.count;
+    if (!count) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduceMotion) {
+      setDisplayValue(count.to);
+      setDisplaySecondaryValue(count.toSecondary);
+      return;
+    }
+
+    let frame = 0;
+    let startedAt = 0;
+    const duration = count.durationMs ?? 850;
+    setDisplayValue(count.from);
+    setDisplaySecondaryValue(count.fromSecondary);
+
+    const step = (now: number) => {
+      if (!startedAt) startedAt = now;
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayValue(count.from + (count.to - count.from) * eased);
+      if (count.fromSecondary != null && count.toSecondary != null) {
+        setDisplaySecondaryValue(
+          count.fromSecondary +
+            (count.toSecondary - count.fromSecondary) * eased,
+        );
+      }
+      if (progress < 1) {
+        frame = window.requestAnimationFrame(step);
+      }
+    };
+
+    frame = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(frame);
+  }, [
+    metric.count?.decimals,
+    metric.count?.durationMs,
+    metric.count?.from,
+    metric.count?.fromSecondary,
+    metric.count?.prefix,
+    metric.count?.separator,
+    metric.count?.suffix,
+    metric.count?.to,
+    metric.count?.toSecondary,
+  ]);
+
+  const classes = [
+    "v2-work-metric-v",
+    metric.tone === "gold" && "v2-work-metric-v--gold",
+    metric.tone === "platinum" && "v2-work-metric-v--platinum",
+    metric.tone === "green" && "v2-work-metric-v--green",
+    metric.tone === "yellow" && "v2-work-metric-v--yellow",
+    metric.tone === "white" && "v2-work-metric-v--white",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <span className={classes} aria-label={`${metric.value} ${metric.label}`}>
+      {metric.count && displayValue != null
+        ? formatCountValue(displayValue, metric.count, displaySecondaryValue)
+        : metric.value}
+    </span>
+  );
+}
 
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -627,6 +809,15 @@ export function Projects() {
                   <p className="v2-work-impact">{active.impact}</p>
                 </div>
 
+                <div className="v2-work-metrics">
+                  {active.metrics.map((metric) => (
+                    <div key={metric.label} className="v2-work-metric">
+                      <AnimatedMetricValue metric={metric} />
+                      <span className="v2-work-metric-l">{metric.label}</span>
+                    </div>
+                  ))}
+                </div>
+
                 {active.links && active.links.length > 0 && (
                   <div className="v2-work-links">
                     {active.links.map((link) => (
@@ -647,30 +838,6 @@ export function Projects() {
                     ))}
                   </div>
                 )}
-              </div>
-            )}
-
-            {panelTab === "signals" && (
-              <div className="v2-work-panel-page">
-                <div className="v2-work-metrics">
-                  {active.metrics.map((metric) => (
-                    <div key={metric.label} className="v2-work-metric">
-                      <span
-                        className={[
-                          "v2-work-metric-v",
-                          metric.tone === "gold" && "v2-work-metric-v--gold",
-                          metric.tone === "platinum" &&
-                            "v2-work-metric-v--platinum",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                      >
-                        {metric.value}
-                      </span>
-                      <span className="v2-work-metric-l">{metric.label}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
 

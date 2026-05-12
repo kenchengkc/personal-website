@@ -161,18 +161,21 @@ button { font: inherit; cursor: pointer; }
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.015em;
-  padding: 7px 11px;
-  border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--color-accent-bright) 42%, transparent);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+  line-height: 1;
+  padding: 15px 20px;
+  min-height: 62px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--color-accent-bright) 48%, transparent);
   background:
-    linear-gradient(155deg, color-mix(in srgb, var(--color-accent) 35%, transparent), rgba(6, 12, 26, 0.94));
-  color: var(--color-accent-text-strong);
+    linear-gradient(180deg, rgba(97, 137, 246, 0.08), transparent 70%),
+    rgba(6, 14, 32, 0.86);
+  color: #fff;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
-    0 10px 26px -14px var(--color-accent-glow);
+    0 0 0 1px rgba(97, 137, 246, 0.12) inset,
+    0 12px 26px rgba(0, 0, 0, 0.2);
   transition:
     border-color 0.18s ease,
     color 0.18s ease,
@@ -181,13 +184,13 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-chip:hover {
   border-color: color-mix(in srgb, var(--color-accent-bright) 72%, transparent);
-  color: var(--color-accent-bright);
+  color: color-mix(in srgb, var(--color-accent-text-strong) 86%, #fff);
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.25) inset,
-    0 12px 28px -12px var(--color-accent-glow);
+    0 0 0 1px rgba(97, 137, 246, 0.18) inset,
+    0 14px 30px -10px var(--color-accent-glow);
   transform: translateY(-1px);
 }
-.v2-chips { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+.v2-chips { display: flex; flex-wrap: wrap; gap: 14px; }
 
 /* ============ BUTTONS ============ */
 .v2-btn {
@@ -1541,7 +1544,7 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: 0.04em;
   font-weight: 500;
 }
-.v2-skill-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.v2-skill-chips { display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* ============ EXPERIENCE ============ */
 .v2-exp-list { display: flex; flex-direction: column; }
@@ -2088,27 +2091,47 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-metrics {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  overflow: hidden;
-  background: rgba(0,0,0,0.14);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 12px;
 }
 .v2-work-metric {
-  padding: 16px;
-  border-right: 1px solid var(--color-border);
+  min-width: 0;
+  min-height: 112px;
+  padding: 18px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-bright) 34%, var(--color-border));
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(97, 137, 246, 0.08), transparent 58%),
+    rgba(5, 13, 30, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.025) inset,
+    0 14px 30px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  gap: 10px;
 }
-.v2-work-metric:last-child { border-right: none; }
 .v2-work-metric-v {
   font-family: var(--font-sans);
   font-weight: 800;
-  font-size: 28px;
+  font-size: clamp(30px, 4vw, 48px);
   line-height: 1;
   color: var(--color-accent-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.v2-work-metric-v--white {
+  color: #fff;
+}
+.v2-work-metric-v--green {
+  color: #12d973;
+  text-shadow: 0 0 18px rgba(18, 217, 115, 0.24);
+}
+.v2-work-metric-v--yellow {
+  color: #ffd10a;
+  text-shadow: 0 0 18px rgba(255, 209, 10, 0.28);
 }
 /* Metallic gold shine for medal-grade callouts. Gradient is wider than the
    element and animated so the highlight band sweeps across the letters
@@ -2197,9 +2220,10 @@ button { font: inherit; cursor: pointer; }
 .v2-work-metric-l {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--color-muted);
+  color: color-mix(in srgb, var(--color-text-dim) 88%, var(--color-muted));
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  line-height: 1.35;
 }
 .v2-work-details {
   border-top: 1px solid var(--color-border);
@@ -2339,10 +2363,8 @@ button { font: inherit; cursor: pointer; }
   .v2-work-panel-aside { align-items: flex-start; }
   .v2-work-metrics { grid-template-columns: 1fr; }
   .v2-work-metric {
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    min-height: 96px;
   }
-  .v2-work-metric:last-child { border-bottom: none; }
 }
 
 /* ============ BLOG ============ */
