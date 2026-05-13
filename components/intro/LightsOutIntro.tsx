@@ -32,6 +32,62 @@ export function LightsOutIntro() {
     }
   }, []);
 
+  const overlayActive = phase !== "done";
+
+  useLayoutEffect(() => {
+    if (!overlayActive || typeof document === "undefined") return;
+
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollY = window.scrollY;
+
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyLeft = body.style.left;
+    const prevBodyRight = body.style.right;
+    const prevBodyWidth = body.style.width;
+    const prevBodyTouchAction = body.style.touchAction;
+    const prevHtmlOverscroll = html.style.overscrollBehavior;
+
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.touchAction = "none";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
+    const preventWheel = (e: WheelEvent) => {
+      e.preventDefault();
+    };
+    const preventTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("wheel", preventWheel, { passive: false });
+    document.addEventListener("touchmove", preventTouchMove, {
+      passive: false,
+    });
+
+    return () => {
+      window.removeEventListener("wheel", preventWheel);
+      document.removeEventListener("touchmove", preventTouchMove);
+      html.style.overflow = prevHtmlOverflow;
+      html.style.overscrollBehavior = prevHtmlOverscroll;
+      body.style.overflow = prevBodyOverflow;
+      body.style.touchAction = prevBodyTouchAction;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.left = prevBodyLeft;
+      body.style.right = prevBodyRight;
+      body.style.width = prevBodyWidth;
+      window.scrollTo(0, scrollY);
+    };
+  }, [overlayActive]);
+
   useEffect(() => {
     if (introFinished()) return;
 
