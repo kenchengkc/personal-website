@@ -663,11 +663,11 @@ button { font: inherit; cursor: pointer; }
     font-weight: 600;
     gap: 5px;
     position: relative;
-    left: -2px;
+    left: -3px;
   }
   .v2-nav--dense .v2-nav-mnav {
     position: relative;
-    left: 2px;
+    left: 1px;
   }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
