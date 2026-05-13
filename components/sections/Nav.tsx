@@ -24,6 +24,21 @@ const links = [
 
 const SECTION_IDS = ["home", "projects", "blog", "contact"];
 
+/** Narrow home: hysteresis so dense ↔ full nav doesn’t flip in one scroll band
+ *  (avoids a frame where the grid squeezes and “Ken Cheng” wraps). */
+const MOBILE_NAV_DENSE_ENTER = 66;
+const MOBILE_NAV_DENSE_LEAVE = 78;
+
+function mobileNavDenseFromHeroBottom(
+  heroBottom: number,
+  wasDense: boolean,
+): boolean {
+  if (wasDense) {
+    return heroBottom < MOBILE_NAV_DENSE_LEAVE;
+  }
+  return heroBottom < MOBILE_NAV_DENSE_ENTER;
+}
+
 export function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
@@ -59,7 +74,12 @@ export function Nav() {
       window.requestAnimationFrame(() => {
         const hero = document.getElementById("home");
         if (!hero) return;
-        setNavDense(hero.getBoundingClientRect().bottom < 72);
+        setNavDense((dense) =>
+          mobileNavDenseFromHeroBottom(
+            hero.getBoundingClientRect().bottom,
+            dense,
+          ),
+        );
       });
     }
   }
@@ -185,7 +205,12 @@ export function Nav() {
       }
       const hero = document.getElementById("home");
       if (!hero) return;
-      setNavDense(hero.getBoundingClientRect().bottom < 72);
+      setNavDense((dense) =>
+        mobileNavDenseFromHeroBottom(
+          hero.getBoundingClientRect().bottom,
+          dense,
+        ),
+      );
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });

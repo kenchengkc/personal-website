@@ -313,6 +313,7 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: -0.04em;
   line-height: 1;
   color: #f6f7fb;
+  white-space: nowrap;
 }
 .v2-footer-brand-line {
   display: inline-flex;
@@ -666,7 +667,9 @@ button { font: inherit; cursor: pointer; }
   .v2-nav:not(.v2-nav--dense) .v2-nav-inner {
     width: 100%;
     max-width: 100%;
-    grid-template-columns: 1fr auto;
+    /* min-content keeps the first track from squeezing to 0 for a frame when
+       the name un-hides (avoids “Ken” / “Cheng” wrap flash vs dense → full). */
+    grid-template-columns: minmax(min-content, 1fr) auto;
     justify-content: stretch;
     padding-left: max(10px, env(safe-area-inset-left, 0px));
     padding-right: max(12px, env(safe-area-inset-right, 0px));
@@ -675,6 +678,8 @@ button { font: inherit; cursor: pointer; }
   .v2-nav:not(.v2-nav--dense) .v2-brand {
     gap: 8px;
     justify-self: end;
+    width: max-content;
+    max-width: 100%;
     /* Pull back from the actions column so the mark doesn’t sit flush in the gap. */
     margin-right: 28px;
   }
