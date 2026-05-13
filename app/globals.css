@@ -682,6 +682,8 @@ button { font: inherit; cursor: pointer; }
     max-width: 100%;
     /* Pull back from the actions column so the mark doesn’t sit flush in the gap. */
     margin-right: 28px;
+    position: relative;
+    left: 3px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand-mark {
     margin-left: 0;
@@ -695,6 +697,8 @@ button { font: inherit; cursor: pointer; }
     justify-content: flex-end;
     align-items: center;
     gap: 10px;
+    position: relative;
+    left: -3px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-resume {
     margin-right: 0;
