@@ -636,6 +636,10 @@ button { font: inherit; cursor: pointer; }
   .v2-nav--dense .v2-brand-name {
     display: none;
   }
+  /* Scrolled home: nudge the mark from the screen edge without changing link column layout. */
+  .v2-nav--dense .v2-brand {
+    margin-left: 18px;
+  }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
   .v2-nav-inner {
@@ -655,19 +659,21 @@ button { font: inherit; cursor: pointer; }
   .v2-nav-mnav-trigger {
     min-width: 0;
   }
-  /* Full brand (hero top): span the bar so the mark + name sit left and
-     section control + résumé sit right instead of crowding the center. */
+  /* Full brand (hero top) + blog: flexible space on the left, brand aligned to
+     its trailing edge so the mark sits nearer the actions; column 2 stays
+     intrinsic width so About + Résumé stay flush right. */
   .v2-nav:not(.v2-nav--dense) .v2-nav-inner {
     width: 100%;
     max-width: 100%;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
+    grid-template-columns: 1fr auto;
+    justify-content: stretch;
     padding-left: max(10px, env(safe-area-inset-left, 0px));
     padding-right: max(12px, env(safe-area-inset-right, 0px));
     gap: 12px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand {
     gap: 8px;
+    justify-self: end;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand-mark {
     margin-left: 0;
