@@ -662,11 +662,12 @@ button { font: inherit; cursor: pointer; }
     font-size: 12.5px;
     font-weight: 600;
     gap: 5px;
-  }
-  /* Scrolled past hero: nudge section dropdown + résumé a few px left together. */
-  .v2-nav--dense .v2-nav-links {
     position: relative;
-    left: -5px;
+    left: -2px;
+  }
+  .v2-nav--dense .v2-nav-mnav {
+    position: relative;
+    left: 2px;
   }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
