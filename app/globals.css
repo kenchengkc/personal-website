@@ -345,6 +345,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-nav-resume {
   flex-shrink: 0;
+  padding-inline: 22px;
 }
 .v2-nav-tabs {
   position: relative;
@@ -692,7 +693,7 @@ button { font: inherit; cursor: pointer; }
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-resume {
     margin-right: 0;
-    padding: 8px 10px;
+    padding: 9px 17px;
     font-size: 12.5px;
     font-weight: 600;
     gap: 5px;
