@@ -638,7 +638,7 @@ button { font: inherit; cursor: pointer; }
   }
   /* Scrolled home: nudge the mark from the screen edge without changing link column layout. */
   .v2-nav--dense .v2-brand {
-    margin-left: 18px;
+    margin-left: 10px;
   }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
@@ -674,6 +674,8 @@ button { font: inherit; cursor: pointer; }
   .v2-nav:not(.v2-nav--dense) .v2-brand {
     gap: 8px;
     justify-self: end;
+    /* Pull back from the actions column so the mark doesn’t sit flush in the gap. */
+    margin-right: 28px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand-mark {
     margin-left: 0;
