@@ -348,6 +348,18 @@ button { font: inherit; cursor: pointer; }
   flex-shrink: 0;
   padding-inline: 22px;
 }
+/* .v2-btn uses transition: all — dense ↔ full nav changes padding/font and
+   animates for ~180ms, reflowing the grid so the brand jitters. Only ease
+   properties that don’t affect width. */
+.v2-nav .v2-btn {
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
 .v2-nav-tabs {
   position: relative;
   display: inline-flex;
@@ -643,6 +655,14 @@ button { font: inherit; cursor: pointer; }
   .v2-nav--dense .v2-brand {
     margin-left: 10px;
   }
+  /* Match scrolled (dense) résumé pill to full-brand sizing so the actions
+     cluster width doesn’t pulse when toggling layout. */
+  .v2-nav--dense .v2-nav-resume {
+    padding: 9px 17px;
+    font-size: 12.5px;
+    font-weight: 600;
+    gap: 5px;
+  }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
   .v2-nav-inner {
@@ -650,8 +670,8 @@ button { font: inherit; cursor: pointer; }
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: 14px;
-    padding: 12px max(18px, env(safe-area-inset-right, 0px)) 12px
-      max(16px, env(safe-area-inset-left, 0px));
+    padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px
+      max(14px, env(safe-area-inset-left, 0px));
   }
   .v2-nav-links {
     flex: unset;
@@ -661,6 +681,13 @@ button { font: inherit; cursor: pointer; }
   }
   .v2-nav-mnav-trigger {
     min-width: 0;
+    padding: 9px 11px;
+    gap: 8px;
+    transition:
+      color 0.18s ease,
+      border-color 0.18s ease,
+      background 0.18s ease,
+      box-shadow 0.18s ease;
   }
   /* Full brand (hero top) + blog: flexible space on the left, brand aligned to
      its trailing edge so the mark sits nearer the actions; column 2 stays
@@ -672,8 +699,8 @@ button { font: inherit; cursor: pointer; }
        the name un-hides (avoids “Ken” / “Cheng” wrap flash vs dense → full). */
     grid-template-columns: minmax(min-content, 1fr) auto;
     justify-content: stretch;
-    padding-left: max(14px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
     gap: 12px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand {
@@ -682,9 +709,9 @@ button { font: inherit; cursor: pointer; }
     width: max-content;
     max-width: 100%;
     /* Pull back from the actions column so the mark doesn’t sit flush in the gap. */
-    margin-right: 18px;
+    margin-right: 22px;
     position: relative;
-    left: 7px;
+    left: 5px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-brand-mark {
     margin-left: 0;
@@ -699,7 +726,7 @@ button { font: inherit; cursor: pointer; }
     align-items: center;
     gap: 10px;
     position: relative;
-    left: -7px;
+    left: -5px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-resume {
     margin-right: 0;
@@ -712,8 +739,6 @@ button { font: inherit; cursor: pointer; }
     width: fit-content;
     max-width: 100%;
     min-width: min-content;
-    padding: 9px 11px;
-    gap: 8px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-mnav-trigger-label {
     flex: 0 0 auto;
