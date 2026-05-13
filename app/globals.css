@@ -634,6 +634,7 @@ button { font: inherit; cursor: pointer; }
     width: fit-content;
     max-width: 100%;
     flex: 0 1 auto;
+    min-width: min-content;
   }
   .v2-nav--dense .v2-brand-name {
     display: none;
@@ -710,11 +711,15 @@ button { font: inherit; cursor: pointer; }
   .v2-nav:not(.v2-nav--dense) .v2-nav-mnav-trigger {
     width: fit-content;
     max-width: 100%;
+    min-width: min-content;
     padding: 9px 11px;
     gap: 8px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-mnav-trigger-label {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
+    min-width: min-content;
+    overflow: visible;
+    text-overflow: clip;
   }
   .v2-nav--dense .v2-nav-mnav-trigger {
     width: 100%;
