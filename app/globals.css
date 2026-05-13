@@ -640,6 +640,8 @@ button { font: inherit; cursor: pointer; }
   .v2-nav--dense .v2-nav-mnav {
     width: 100%;
     flex: 1 1 0%;
+    position: relative;
+    left: -1px;
   }
   /* Shorter labels while "Ken Cheng" shows: pill only as wide as content (+ chevron). */
   .v2-nav:not(.v2-nav--dense) .v2-nav-mnav {
@@ -664,10 +666,6 @@ button { font: inherit; cursor: pointer; }
     gap: 5px;
     position: relative;
     left: -3px;
-  }
-  .v2-nav--dense .v2-nav-mnav {
-    position: relative;
-    left: 0;
   }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
