@@ -3,8 +3,8 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 
 const STORAGE_KEY = "intro-played";
-/** Delay between each of the 5 lights (0.3s); fifth at 1.5s total. */
-const LIGHT_INTERVAL = 300;
+/** Delay between each of the 5 lights (0.4s); fifth at 2s total. */
+const LIGHT_INTERVAL = 400;
 /** After all five lights are on, brief pause before lights out (was ~400–1100ms). */
 const HOLD_MS_MIN = 90;
 const HOLD_MS_RANDOM = 160;

@@ -198,11 +198,6 @@ export function Nav() {
       return;
     }
     const onScroll = () => {
-      const lockedTarget = programmaticScrollLockRef.current;
-      if (lockedTarget) {
-        setNavDense(lockedTarget !== "home");
-        return;
-      }
       const hero = document.getElementById("home");
       if (!hero) return;
       setNavDense((dense) =>
@@ -311,9 +306,6 @@ export function Nav() {
       if (el) {
         armProgrammaticScrollLock(id);
         setActive(id);
-        if (narrow) {
-          setNavDense(id !== "home");
-        }
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", `#${id}`);
         setMobileMenuOpen(false);
@@ -329,9 +321,6 @@ export function Nav() {
     e.preventDefault();
     armProgrammaticScrollLock("home");
     setActive("home");
-    if (narrow) {
-      setNavDense(false);
-    }
     document.getElementById("home")?.scrollIntoView({ behavior: "smooth" });
     history.replaceState(null, "", "/");
     setMobileMenuOpen(false);
