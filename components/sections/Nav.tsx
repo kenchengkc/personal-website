@@ -248,7 +248,14 @@ export function Nav() {
   useEffect(() => {
     if (!isHome) return;
     const onScrollEnd = () => {
-      releaseProgrammaticScrollLock();
+      // Delay lock release by 2 frames so any pending scroll-handler
+      // rAFs run while the lock is still set, preventing a one-frame
+      // glide jitter when the observer briefly detects the wrong section.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          releaseProgrammaticScrollLock();
+        });
+      });
     };
     window.addEventListener("scrollend", onScrollEnd);
 

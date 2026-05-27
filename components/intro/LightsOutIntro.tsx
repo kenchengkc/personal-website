@@ -98,38 +98,49 @@ export function LightsOutIntro() {
       fn();
     };
 
-    for (let i = 1; i <= 5; i++) {
+    function startSequence() {
+      for (let i = 1; i <= 5; i++) {
+        timers.push(
+          setTimeout(() => guard(() => setLitCount(i)), i * LIGHT_INTERVAL),
+        );
+      }
+      const onAt = 5 * LIGHT_INTERVAL;
+      const holdMs = HOLD_MS_MIN + Math.floor(Math.random() * HOLD_MS_RANDOM);
       timers.push(
-        setTimeout(() => guard(() => setLitCount(i)), i * LIGHT_INTERVAL),
+        setTimeout(() => guard(() => setPhase("hold")), onAt),
+      );
+      timers.push(
+        setTimeout(
+          () =>
+            guard(() => {
+              setLitCount(0);
+              setPhase("out");
+            }),
+          onAt + holdMs,
+        ),
+      );
+      timers.push(
+        setTimeout(
+          () =>
+            guard(() => {
+              sessionStorage.setItem(STORAGE_KEY, "1");
+              setPhase("done");
+            }),
+          onAt + holdMs + GO_PHASE_MS,
+        ),
       );
     }
-    const onAt = 5 * LIGHT_INTERVAL;
-    const holdMs = HOLD_MS_MIN + Math.floor(Math.random() * HOLD_MS_RANDOM);
-    timers.push(
-      setTimeout(() => guard(() => setPhase("hold")), onAt),
-    );
-    timers.push(
-      setTimeout(
-        () =>
-          guard(() => {
-            setLitCount(0);
-            setPhase("out");
-          }),
-        onAt + holdMs,
-      ),
-    );
-    timers.push(
-      setTimeout(
-        () =>
-          guard(() => {
-            sessionStorage.setItem(STORAGE_KEY, "1");
-            setPhase("done");
-          }),
-        onAt + holdMs + GO_PHASE_MS,
-      ),
-    );
 
-    return () => timers.forEach(clearTimeout);
+    if (document.readyState === "complete") {
+      startSequence();
+    } else {
+      window.addEventListener("load", startSequence);
+    }
+
+    return () => {
+      window.removeEventListener("load", startSequence);
+      timers.forEach(clearTimeout);
+    };
   }, []);
 
   function skip() {
