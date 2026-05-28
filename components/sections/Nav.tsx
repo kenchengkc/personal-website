@@ -64,8 +64,15 @@ export function Nav() {
   const programmaticScrollLockRef = useRef<string | null>(null);
   const programmaticScrollTimerRef = useRef<number | null>(null);
 
+  /** While a click-driven smooth scroll is in flight, the glide snaps to its
+   *  target instead of sliding. Animating the glide's transform *while* the
+   *  page scrolls behind it makes its backdrop-filter layer desync for a frame
+   *  (the "jitter"). A stationary glide re-sampling scrolling content is fine. */
+  const [glideSnap, setGlideSnap] = useState(false);
+
   function releaseProgrammaticScrollLock() {
     programmaticScrollLockRef.current = null;
+    setGlideSnap(false);
     if (programmaticScrollTimerRef.current != null) {
       window.clearTimeout(programmaticScrollTimerRef.current);
       programmaticScrollTimerRef.current = null;
@@ -89,6 +96,7 @@ export function Nav() {
       window.clearTimeout(programmaticScrollTimerRef.current);
     }
     programmaticScrollLockRef.current = targetId;
+    setGlideSnap(true);
     programmaticScrollTimerRef.current = window.setTimeout(
       releaseProgrammaticScrollLock,
       1200,
@@ -372,6 +380,9 @@ export function Nav() {
                     opacity: glide.ready ? 1 : 0,
                     width: glide.w,
                     transform: `translate3d(${glide.x}px, 0, 0)`,
+                    ...(glideSnap
+                      ? { transition: "opacity 0.22s ease" }
+                      : null),
                   }}
                 />
                 {links.map((l) => (
