@@ -243,7 +243,6 @@ export function Hero() {
           height={1024}
           className="v2-hero-wordmark-img"
           sizes="(max-width: 720px) 96vw, 1120px"
-          unoptimized
         />
       </div>
     </section>

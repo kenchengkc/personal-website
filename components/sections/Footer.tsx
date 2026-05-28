@@ -12,7 +12,6 @@ export function Footer() {
               width={40}
               height={40}
               sizes="40px"
-              unoptimized
             />
           </span>
           <div className="v2-footer-brand-line">

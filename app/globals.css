@@ -409,13 +409,16 @@ button { font: inherit; cursor: pointer; }
     inset 0 -1px 0 rgba(0, 0, 0, 0.28),
     0 4px 18px rgba(97, 137, 246, 0.22),
     0 0 0 1px rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(14px) saturate(1.35);
-  -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  /* No backdrop-filter here on purpose: the parent .v2-nav-tabs already blurs
+     the page behind this pill, so a second blur is visually redundant — and a
+     backdrop-filter element that animates its transform leaves a one-frame
+     ghost at its old position on Chromium (the "slides left then back" jitter).
+     No will-change either: pre-promoting the layer triggers a settle-flick when
+     the transform transition ends. */
   transition:
     transform 0.38s cubic-bezier(0.22, 0.82, 0.28, 1),
     width 0.38s cubic-bezier(0.22, 0.82, 0.28, 1),
     opacity 0.22s ease;
-  will-change: transform, width;
 }
 .v2-nav-link {
   position: relative;
