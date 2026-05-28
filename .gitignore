@@ -58,3 +58,10 @@ Thumbs.db
 
 # Package artifacts
 *.tgz
+
+# Unused logo variants — kept locally, excluded from repo + deploy.
+# Listed explicitly so logonamecolorbold.png (used in the hero) stays tracked.
+/public/images/logonameblackbold.png
+/public/images/logonamecolor.png
+/public/images/logonamewhite.png
+/public/images/logonamewhitebold.png
