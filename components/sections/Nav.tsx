@@ -370,7 +370,7 @@ export function Nav() {
                   style={{
                     opacity: glide.ready ? 1 : 0,
                     width: glide.w,
-                    transform: `translate3d(${glide.x}px, 0, 0)`,
+                    left: glide.x,
                   }}
                 />
                 {links.map((l) => (
