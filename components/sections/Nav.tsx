@@ -89,9 +89,14 @@ export function Nav() {
       window.clearTimeout(programmaticScrollTimerRef.current);
     }
     programmaticScrollLockRef.current = targetId;
+    // Fallback only — `scrollend` is the real release. This MUST outlast the
+    // longest smooth scroll (top→Contact runs ~1.6s on Chromium): a timer
+    // shorter than the scroll releases the lock mid-scroll, letting the
+    // scroll-spy briefly snap the pill to an intermediate section and back
+    // (the Chromium "jump"; Safari's smooth scroll is short enough to dodge it).
     programmaticScrollTimerRef.current = window.setTimeout(
       releaseProgrammaticScrollLock,
-      1200,
+      3000,
     );
   }
 
@@ -370,7 +375,7 @@ export function Nav() {
                   style={{
                     opacity: glide.ready ? 1 : 0,
                     width: glide.w,
-                    left: glide.x,
+                    transform: `translate3d(${glide.x}px, 0, 0)`,
                   }}
                 />
                 {links.map((l) => (

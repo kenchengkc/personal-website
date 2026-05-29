@@ -409,15 +409,12 @@ button { font: inherit; cursor: pointer; }
     inset 0 -1px 0 rgba(0, 0, 0, 0.28),
     0 4px 18px rgba(97, 137, 246, 0.22),
     0 0 0 1px rgba(255, 255, 255, 0.06);
-  /* Animate `left` (not transform) and no backdrop-filter/will-change, so this
-     pill is NOT promoted to its own GPU layer. It paints into the parent
-     .v2-nav-tabs layer (which owns the backdrop blur) in lockstep. A composited
-     layer that moves via transform over a backdrop-filtered region desyncs from
-     the backdrop snapshot for one frame on Chromium — the "slides left then
-     back" ghost. Painting in the parent's layer removes that separate layer
-     entirely. (left:0 base below is overridden by the inline left.) */
+  /* No backdrop-filter here: the parent .v2-nav-tabs already blurs the page
+     behind this pill, so a second blur is redundant. (The "slides left then
+     back" flick was never a paint issue — it was the scroll-spy lock releasing
+     mid-scroll in Nav.tsx; fixed there.) */
   transition:
-    left 0.38s cubic-bezier(0.22, 0.82, 0.28, 1),
+    transform 0.38s cubic-bezier(0.22, 0.82, 0.28, 1),
     width 0.38s cubic-bezier(0.22, 0.82, 0.28, 1),
     opacity 0.22s ease;
 }
