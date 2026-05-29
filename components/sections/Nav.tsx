@@ -318,7 +318,13 @@ export function Nav() {
       if (el) {
         armProgrammaticScrollLock(id);
         setActive(id);
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        // The hero is the first section; scroll-margin-top would otherwise park
+        // it ~90px below the viewport, so send it to the true top instead.
+        if (id === "home") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
         history.replaceState(null, "", `#${id}`);
         setMobileMenuOpen(false);
         requestAnimationFrame(() => {
@@ -333,7 +339,7 @@ export function Nav() {
     e.preventDefault();
     armProgrammaticScrollLock("home");
     setActive("home");
-    document.getElementById("home")?.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     history.replaceState(null, "", "/");
     setMobileMenuOpen(false);
     requestAnimationFrame(() => {
