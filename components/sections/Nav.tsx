@@ -59,12 +59,14 @@ export function Nav() {
   const tabsRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const activeRef = useRef(active);
-  activeRef.current = active;
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   const programmaticScrollLockRef = useRef<string | null>(null);
   const programmaticScrollTimerRef = useRef<number | null>(null);
 
-  function releaseProgrammaticScrollLock() {
+  const releaseProgrammaticScrollLock = useCallback(() => {
     programmaticScrollLockRef.current = null;
     if (programmaticScrollTimerRef.current != null) {
       window.clearTimeout(programmaticScrollTimerRef.current);
@@ -82,9 +84,9 @@ export function Nav() {
         );
       });
     }
-  }
+  }, [isHome, narrow]);
 
-  function armProgrammaticScrollLock(targetId: string) {
+  const armProgrammaticScrollLock = useCallback((targetId: string) => {
     if (programmaticScrollTimerRef.current != null) {
       window.clearTimeout(programmaticScrollTimerRef.current);
     }
@@ -98,7 +100,7 @@ export function Nav() {
       releaseProgrammaticScrollLock,
       3000,
     );
-  }
+  }, [releaseProgrammaticScrollLock]);
 
   const [glide, setGlide] = useState<{
     x: number;
@@ -162,8 +164,10 @@ export function Nav() {
 
   useLayoutEffect(() => {
     if (!isHome) {
-      setGlide({ x: 0, w: 0, ready: false });
-      return;
+      const frame = window.requestAnimationFrame(() => {
+        setGlide({ x: 0, w: 0, ready: false });
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
     measureGlide(active);
   }, [active, isHome, measureGlide]);
@@ -199,8 +203,8 @@ export function Nav() {
 
   useEffect(() => {
     if (!isHome || !narrow) {
-      setNavDense(false);
-      return;
+      const frame = window.requestAnimationFrame(() => setNavDense(false));
+      return () => window.cancelAnimationFrame(frame);
     }
     const onScroll = () => {
       const hero = document.getElementById("home");
@@ -295,7 +299,7 @@ export function Nav() {
       window.removeEventListener("scrollend", onScrollEnd);
       releaseProgrammaticScrollLock();
     };
-  }, [isHome]);
+  }, [isHome, releaseProgrammaticScrollLock]);
 
   function setLinkRef(id: string, el: HTMLAnchorElement | null) {
     if (el) linkRefs.current.set(id, el);

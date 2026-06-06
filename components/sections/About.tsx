@@ -1,3 +1,4 @@
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { SectionHead } from "./SectionHead";
 
 const skills = [
@@ -40,34 +41,39 @@ export function About() {
       <SectionHead eyebrow="About" title="A bit about me" />
       <div className="v2-about">
         <div className="v2-about-copy">
-          <p>
+          <ScrollReveal as="p" delay={0.02}>
             I&rsquo;m a Computer Science student at <b>Columbia</b>, focused on{" "}
             <b>machine learning</b>, <b>quantitative finance</b>, and the
             systems that hold them up. I like problems where the math, the
             model, and the infra all have to agree.
-          </p>
-          <p>
-            Right now I&rsquo;m building <b>Quantiv</b> &mdash; an
-            options-implied earnings-move platform pairing IV / straddle
-            baselines with <b>LightGBM</b> forecasts on historical Greeks and
-            volatility. Datasets and scores refresh daily; the goal is
-            calibrated forecasts and reproducible pipelines at billion-row
-            scale, not millisecond quotes.
-          </p>
-          <p>
+          </ScrollReveal>
+          <ScrollReveal as="p" delay={0.08}>
+            This summer I&rsquo;m a{" "}
+            <b>Software Development Engineer (SDE) intern at Amazon</b>, on the
+            Long-Term Planning and Forecasting (LTPF) team in Supply Chain
+            Optimization Technologies (SCOT). Alongside that I build{" "}
+            <b>Quantiv</b> &mdash; an options-implied earnings-move platform
+            pairing IV / straddle baselines with <b>LightGBM</b> forecasts,
+            refreshed daily at billion-row scale.
+          </ScrollReveal>
+          <ScrollReveal as="p" delay={0.14}>
             Before that I published single-author at the <b>IEEE ITSC</b> on
             graph-network traffic forecasting (24% RMSE win over STGCN), earned{" "}
             <b>USACO Platinum</b> with a perfect Gold score, and built a CFD +
-            neural-net F1 wing optimizer that won gold at the Canada-Wide
-            Science Fair.
-          </p>
+            neural-net F1 wing optimizer.
+          </ScrollReveal>
         </div>
         <div className="v2-about-side">
-          <div className="v2-skills-card">
+          <ScrollReveal className="v2-skills-card" variant="panel" delay={0.08}>
             <div className="v2-mono v2-mono--accent">Toolbox</div>
             <div className="v2-skills">
-              {skills.map((g) => (
-                <div key={g.label} className="v2-skill-group">
+              {skills.map((g, index) => (
+                <ScrollReveal
+                  key={g.label}
+                  className="v2-skill-group"
+                  delay={0.14 + index * 0.05}
+                  y={14}
+                >
                   <span className="v2-skill-label">{g.label}</span>
                   <div className="v2-skill-chips">
                     {g.items.map((s) => (
@@ -76,10 +82,10 @@ export function About() {
                       </span>
                     ))}
                   </div>
-                </div>
+                </ScrollReveal>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

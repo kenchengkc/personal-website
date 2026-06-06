@@ -3,12 +3,13 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 
 const STORAGE_KEY = "intro-played";
-/** Delay between each of the 5 lights (0.4s); fifth at 2s total. */
+/** Delay between each of the 5 lights (0.4s); fifth at 2s total. Kept long so
+ *  the blocking overlay outlasts the homepage scroll-reveals behind it. */
 const LIGHT_INTERVAL = 400;
 /** After all five lights are on, brief pause before lights out (was ~400–1100ms). */
 const HOLD_MS_MIN = 90;
 const HOLD_MS_RANDOM = 160;
-/** How long "GO GO GO" / flash stay visible before the overlay is dismissed (was 1100ms). */
+/** How long "GO GO GO" / flash stay visible before the overlay is dismissed. */
 const GO_PHASE_MS = 520;
 
 type Phase = "lighting" | "hold" | "out" | "done";

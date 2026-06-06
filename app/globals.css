@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 :root {
+  /* JetBrains Mono dropped: the tracked uppercase labels now render in the
+     sans (Libre Franklin), keeping the type system to two families. */
+  --font-mono: var(--font-sans), system-ui, sans-serif;
   --color-bg: #020713;
   --color-bg-2: #071a38;
   --color-sky-deep: #020713;
@@ -149,10 +152,10 @@ button { font: inherit; cursor: pointer; }
 .v2-mono {
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.11em;
   color: var(--color-muted);
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
 }
 .v2-mono--accent { color: var(--color-accent-text); }
 .v2-mono--dim { color: var(--color-muted); opacity: 0.7; }
@@ -163,7 +166,7 @@ button { font: inherit; cursor: pointer; }
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.2;
@@ -307,10 +310,10 @@ button { font: inherit; cursor: pointer; }
 .v2-brand-name {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: -0.04em;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
   line-height: 1;
   color: #f6f7fb;
   white-space: nowrap;
@@ -324,10 +327,10 @@ button { font: inherit; cursor: pointer; }
 .v2-footer-brand-rest {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 17px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   line-height: 1;
   color: var(--color-text-dim);
 }
@@ -478,7 +481,7 @@ button { font: inherit; cursor: pointer; }
     white-space: normal;
     line-height: 1.25;
     padding: 8px 6px;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 600;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
   }
@@ -662,7 +665,7 @@ button { font: inherit; cursor: pointer; }
      cluster width doesn’t pulse when toggling layout. */
   .v2-nav--dense .v2-nav-resume {
     padding: 9px 17px;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 600;
     gap: 5px;
     position: relative;
@@ -736,7 +739,7 @@ button { font: inherit; cursor: pointer; }
   .v2-nav:not(.v2-nav--dense) .v2-nav-resume {
     margin-right: 0;
     padding: 9px 17px;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 600;
     gap: 5px;
   }
@@ -1005,15 +1008,15 @@ button { font: inherit; cursor: pointer; }
 
 .v2-hero-title {
   font-family: var(--font-sans);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(36px, 5.5vw, 64px);
   line-height: 1.05;
   letter-spacing: -0.025em;
   margin: 22px 0 0;
 }
 .v2-hero-title .v2-hero-accent-word {
-  font-family: var(--font-hero-accent), "Georgia", "Times New Roman", serif;
-  font-weight: 400;
+  font-family: var(--font-display), "Georgia", "Times New Roman", serif;
+  font-weight: 600;
   font-style: italic;
   font-size: 1.14em;
   letter-spacing: -0.02em;
@@ -1062,7 +1065,7 @@ button { font: inherit; cursor: pointer; }
   display: block;
   font-family: var(--font-mono);
   font-style: normal;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent-text);
@@ -1072,7 +1075,7 @@ button { font: inherit; cursor: pointer; }
   display: block;
   color: #fff;
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.2;
   font-weight: 700;
 }
@@ -1080,7 +1083,7 @@ button { font: inherit; cursor: pointer; }
   display: block;
   margin-top: 5px;
   color: var(--color-text-dim);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.35;
 }
 @media (max-width: 860px) {
@@ -1089,7 +1092,7 @@ button { font: inherit; cursor: pointer; }
 
 .v2-pill {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 4px 10px;
@@ -1605,7 +1608,7 @@ button { font: inherit; cursor: pointer; }
 .v2-sec-sub {
   margin: 12px 0 0; max-width: 560px;
   color: var(--color-text);
-  font-size: 15.5px;
+  font-size: 16px;
 }
 
 /* ============ ABOUT ============ */
@@ -1699,7 +1702,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-exp-role {
   font-family: var(--font-sans);
-  font-weight: 700; font-size: 19px;
+  font-weight: 700; font-size: 18px;
   margin: 0; letter-spacing: -0.01em;
 }
 .v2-exp-org {
@@ -1707,14 +1710,14 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-exp-org span { color: var(--color-muted); }
 .v2-exp-dates {
-  font-family: var(--font-mono); font-size: 11.5px;
+  font-family: var(--font-mono); font-size: 11px;
   color: var(--color-muted); letter-spacing: 0.06em;
 }
 .v2-exp-summary { margin: 8px 0 10px; font-size: 16px; color: var(--color-text); font-weight: 500; line-height: 1.55; }
 .v2-exp-bullets { list-style: none; padding: 0; margin: 0 0 14px; display: flex; flex-direction: column; gap: 6px; }
 .v2-exp-bullets li {
   position: relative; padding-left: 18px;
-  font-size: 14.5px; color: var(--color-text); line-height: 1.6;
+  font-size: 14px; color: var(--color-text); line-height: 1.6;
 }
 .v2-exp-bullets li::before {
   content: ''; position: absolute; left: 0; top: 9px;
@@ -1807,7 +1810,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-tab-title {
   font-family: var(--font-sans);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -1819,7 +1822,7 @@ button { font: inherit; cursor: pointer; }
 .v2-work-tab-date {
   grid-column: 2;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--color-muted);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1987,7 +1990,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-title {
   font-family: var(--font-sans);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(30px, 4vw, 44px);
   line-height: 1;
   letter-spacing: -0.025em;
@@ -1996,7 +1999,7 @@ button { font: inherit; cursor: pointer; }
 .v2-work-date {
   font-family: var(--font-mono);
   color: var(--color-muted);
-  font-size: 11.5px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -2032,7 +2035,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-identity-title {
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.25;
   color: var(--color-text);
 }
@@ -2043,7 +2046,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-identity-meta {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent-text);
@@ -2059,7 +2062,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-identity-sub {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-accent-text);
@@ -2124,14 +2127,14 @@ button { font: inherit; cursor: pointer; }
 .v2-work-impact {
   margin: 2px 0 0;
   color: var(--color-text);
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   max-width: 680px;
   opacity: 0.92;
 }
 .v2-ieee-wordmark {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-weight: 900;
+  font-weight: 700;
   font-size: 24px;
   line-height: 1;
   letter-spacing: -0.06em;
@@ -2181,13 +2184,13 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-award b {
   color: #ffe3a1;
-  font-size: 13.5px;
+  font-size: 13px;
   line-height: 1;
 }
 .v2-work-award small {
   font-family: var(--font-mono);
   color: rgba(255, 227, 161, 0.72);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -2218,7 +2221,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-metric-v {
   font-family: var(--font-sans);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(20px, 1.92vw, 28px);
   line-height: 1.06;
   color: var(--color-accent-text);
@@ -2328,7 +2331,7 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-work-metric-l {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   color: color-mix(in srgb, var(--color-text-dim) 88%, var(--color-muted));
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -2359,7 +2362,7 @@ button { font: inherit; cursor: pointer; }
 .v2-work-details li {
   position: relative;
   padding-left: 26px;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--color-text);
 }
@@ -2504,7 +2507,7 @@ button { font: inherit; cursor: pointer; }
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-  font-family: var(--font-mono); font-size: 10.5px;
+  font-family: var(--font-mono); font-size: 11px;
   letter-spacing: 0.14em; text-transform: uppercase;
   line-height: 1.25;
   text-align: center;
@@ -2547,15 +2550,15 @@ button { font: inherit; cursor: pointer; }
 }
 .v2-citations strong {
   font-family: var(--font-sans);
-  font-weight: 800;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 16px;
   letter-spacing: -0.01em;
   color: #fff;
   line-height: 1;
 }
 .v2-citations span {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -2682,14 +2685,587 @@ button { font: inherit; cursor: pointer; }
   padding: 24px 28px;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   flex-wrap: wrap;
-  font-size: 13.5px; color: var(--color-muted);
+  font-size: 13px; color: var(--color-muted);
 }
 .v2-footer-brand {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  font-size: 17px;
+  font-size: 16px;
   color: var(--color-text);
+}
+
+/* ============ VISUAL REFINEMENT ============ */
+.v2-scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y, 24px), 0);
+  transition:
+    opacity var(--reveal-duration, 0.58s) cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
+    transform var(--reveal-duration, 0.58s) cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+.v2-scroll-reveal.v2-work-panel {
+  animation: none;
+}
+.v2-scroll-reveal[data-reveal-variant="fade"] {
+  transform: none;
+}
+.v2-scroll-reveal[data-reveal-variant="panel"] {
+  transform: translate3d(0, var(--reveal-y, 24px), 0) scale(0.985);
+}
+.v2-scroll-reveal[data-reveal-variant="scale"] {
+  transform: scale(0.96);
+}
+.v2-scroll-reveal[data-reveal-variant="line"] {
+  transform: translate3d(-18px, 0, 0);
+}
+.v2-scroll-reveal[data-reveal-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2-scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}
+
+:root {
+  --color-bg: #06070a;
+  --color-bg-2: #0c1018;
+  --color-sky-deep: #06070a;
+  --color-sky-mid: #101725;
+  --color-sky-blue: #17223a;
+  --color-surface: rgba(13, 17, 25, 0.94);
+  --color-surface-2: rgba(20, 26, 38, 0.96);
+  --color-accent: #5875f7;
+  --color-accent-bright: #7891ff;
+  --color-accent-text: #9badff;
+  --color-accent-text-strong: #cbd4ff;
+  --color-accent-glow: rgba(88, 117, 247, 0.28);
+  --color-accent-tint: rgba(88, 117, 247, 0.12);
+  --color-status: #36d6ad;
+  --color-award: #f0b44f;
+  --color-text: #f7f8fb;
+  --color-text-dim: #b6bdca;
+  --color-muted: #778195;
+  --color-border: rgba(194, 205, 230, 0.13);
+  --color-border-strong: rgba(194, 205, 230, 0.24);
+  --carbon-opacity: 0.13;
+}
+
+body {
+  background:
+    linear-gradient(120deg, rgba(58, 82, 190, 0.2) 0%, transparent 34%),
+    linear-gradient(245deg, rgba(176, 76, 50, 0.08) 0%, transparent 34%),
+    linear-gradient(180deg, #121827 0%, #080a0f 46%, #040507 100%);
+  letter-spacing: 0;
+}
+
+.v2-bg-carbon {
+  opacity: var(--carbon-opacity);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.026) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+
+.v2-bg-glow {
+  background:
+    linear-gradient(135deg, rgba(88, 117, 247, 0.1) 0%, transparent 42%),
+    linear-gradient(315deg, rgba(54, 214, 173, 0.035) 0%, transparent 38%),
+    linear-gradient(180deg, rgba(8, 10, 16, 0.08) 0%, rgba(2, 3, 6, 0.7) 100%);
+}
+.v2-bg-glow::before,
+.v2-bg-glow::after {
+  opacity: 0.12;
+}
+.v2-stars--page {
+  opacity: 0.32;
+}
+
+.v2-brand-name,
+.v2-footer-brand-rest,
+.v2-hero-title,
+.v2-hero-title .v2-hero-accent-word,
+.v2-work-title,
+.v2-sec-title,
+.v2-work-tab-title,
+.v2-proj-link,
+.v2-contact-direct-v,
+.v2-contact-loc-v,
+.v2-blog-title {
+  letter-spacing: 0;
+}
+
+.v2-nav {
+  background: rgba(5, 8, 13, 0.86);
+  border-bottom-color: rgba(220, 228, 240, 0.09);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+.v2-nav-tabs,
+.v2-nav-mnav-trigger,
+.v2-nav-mnav-panel {
+  border-radius: 8px;
+  background: rgba(8, 12, 18, 0.86);
+  border-color: var(--color-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+}
+/* Liquid-glass pill for the nav slider, matching the Projects sliders. */
+.v2-nav-tabs-glide,
+.v2-nav-mnav-glide {
+  border-radius: 999px;
+  background:
+    linear-gradient(0deg, rgba(6, 12, 26, 0.24), rgba(6, 12, 26, 0.24)),
+    linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.12) 36%,
+      rgba(97, 137, 246, 0.22) 52%,
+      rgba(24, 44, 92, 0.45) 100%
+    );
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-bright) 38%, rgba(255, 255, 255, 0.22));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    0 4px 18px rgba(97, 137, 246, 0.22);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+}
+.v2-nav-link,
+.v2-nav-mnav-link {
+  border-radius: 999px;
+}
+/* Round the segmented-control shells so the rounded glide sits flush. */
+.v2-nav-tabs,
+.v2-nav-mnav-trigger {
+  border-radius: 999px;
+}
+
+.v2-main {
+  padding-top: 50px;
+}
+.v2-section {
+  margin-top: 112px;
+}
+
+.v2-btn,
+.v2-chip,
+.v2-pill,
+.v2-eyebrow,
+.v2-blog-tag,
+.v2-citations,
+.v2-proj-link {
+  border-radius: 8px;
+}
+.v2-btn {
+  padding: 10px 16px;
+  border-color: var(--color-border-strong);
+  background: rgba(11, 16, 23, 0.72);
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+.v2-btn--primary {
+  background: #5875f7;
+  border-color: #7891ff;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.24),
+    0 0 24px -10px var(--color-accent-glow);
+}
+.v2-btn--primary:hover {
+  background: #6a84ff;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.3),
+    0 0 30px -8px var(--color-accent-glow);
+}
+.v2-btn--ghost,
+.v2-btn--ghost.v2-btn-resume-accent:hover,
+.v2-btn--ghost.v2-btn-resume-accent:active {
+  background: rgba(10, 15, 22, 0.68);
+  box-shadow: none;
+}
+
+.v2-hero-bg {
+  opacity: 0.34;
+  filter: saturate(0.82) contrast(0.96);
+}
+.v2-eyebrow {
+  padding: 8px 12px;
+  background: rgba(12, 18, 26, 0.82);
+  border-color: rgba(154, 178, 218, 0.3);
+  color: var(--color-accent-text-strong);
+  box-shadow: none;
+}
+.v2-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--color-status);
+  animation: none;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-status) 42%, transparent);
+}
+/* Clean, contemporary display serif on the primary headings (Lora). Low, even
+   contrast so it reads modern rather than ornate. Body, nav, metrics and other
+   UI stay in the sans for readability. */
+.v2-hero-title,
+.v2-sec-title,
+.v2-work-title {
+  font-family: var(--font-display), "Lora", Georgia, serif;
+  letter-spacing: -0.01em;
+}
+.v2-hero-title {
+  max-width: 1000px;
+  font-weight: 600;
+  font-size: clamp(34px, 4.6vw, 58px);
+  line-height: 1.14;
+  text-wrap: balance;
+}
+.v2-sec-title {
+  font-size: clamp(29px, 3.5vw, 42px);
+}
+.v2-work-title {
+  font-weight: 600;
+  font-size: clamp(31px, 4vw, 45px);
+}
+/* Flash accent em-dash in the hero headline. */
+.v2-hero-title .v2-hero-dash {
+  font-weight: 500;
+  font-style: italic;
+  background: linear-gradient(
+    100deg,
+    var(--color-accent-bright) 0%,
+    var(--color-accent-text-strong) 55%,
+    #ffffff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(120, 145, 255, 0.45));
+  padding: 0 0.06em;
+}
+.v2-hero-title .v2-hero-accent-word {
+  color: #9eafff;
+  text-shadow: 0 0 24px rgba(88, 117, 247, 0.18);
+}
+.v2-hero-sub {
+  max-width: 700px;
+  color: var(--color-text-dim);
+}
+.v2-hero-sub strong,
+.v2-about-copy b {
+  color: var(--color-text);
+  text-shadow: none;
+}
+.v2-about-copy b {
+  background: none;
+  padding: 0;
+}
+.v2-hero-meta span,
+.v2-skills-card,
+.v2-work-list,
+.v2-work-panel,
+.v2-blog,
+.v2-form,
+.v2-contact-direct,
+.v2-contact-links,
+.v2-contact-loc {
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(88, 117, 247, 0.045), transparent 62%),
+    var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+.v2-hero-meta span {
+  padding: 15px 16px;
+}
+
+.v2-hero-track {
+  height: 118px;
+  opacity: 0.78;
+}
+.v2-hero-track::before,
+.v2-hero-track-streaks,
+.v2-hero-track-line::after {
+  opacity: 0.28;
+}
+.v2-hero-track-car {
+  width: 470px;
+  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.66));
+}
+.v2-pill--focus {
+  color: var(--color-status);
+  border-color: color-mix(in srgb, var(--color-status) 36%, transparent);
+  background: color-mix(in srgb, var(--color-status) 6%, transparent);
+}
+.v2-hero-socials {
+  justify-content: flex-start;
+  gap: 12px 22px;
+}
+.v2-hero-wordmark-img {
+  height: clamp(76px, 18vw, 154px);
+  opacity: 0.72;
+  filter: saturate(0.78) contrast(0.96);
+}
+
+/* ---- Scroll parallax (driven by --hero-shift set in Hero.tsx) ---- */
+.v2-hero-bg {
+  transform: translate3d(0, calc(var(--hero-shift, 0) * 0.16px), 0);
+  will-change: transform;
+}
+.v2-hero-wordmark-img {
+  transform: translate3d(0, calc(var(--hero-shift, 0) * -0.05px), 0);
+  will-change: transform;
+}
+.v2-hero-track {
+  transform: translate3d(0, calc(var(--hero-shift, 0) * -0.06px), 0);
+}
+
+/* ---- Sticky project tab-rail: pins the selector while the taller detail
+   panel scrolls past it. Desktop two-column layout only. ---- */
+@media (min-width: 901px) {
+  .v2-work-list {
+    position: sticky;
+    top: 84px;
+    align-self: start;
+    z-index: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-hero-bg,
+  .v2-hero-wordmark-img,
+  .v2-hero-track {
+    transform: none;
+  }
+  .v2-work-list {
+    position: static;
+  }
+}
+
+.v2-sec-eyebrow-bar {
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+}
+.v2-sec-title {
+  font-weight: 600;
+}
+.v2-sec-sub {
+  color: var(--color-text-dim);
+}
+
+.v2-chip {
+  padding: 7px 10px;
+  border-color: rgba(220, 228, 240, 0.12);
+  color: var(--color-text-dim);
+  background: rgba(5, 8, 13, 0.62);
+  background-image: none;
+  box-shadow: none;
+}
+.v2-chip:hover {
+  border-color: color-mix(in srgb, var(--color-accent-bright) 34%, transparent);
+  color: var(--color-text);
+  background-position: initial;
+  box-shadow: none;
+}
+
+.v2-work {
+  gap: 18px;
+}
+/* Liquid-glass pill, same family as the nav top-bar slider. */
+.v2-work-list-glide {
+  border-radius: 7px;
+  background:
+    linear-gradient(0deg, rgba(6, 12, 26, 0.24), rgba(6, 12, 26, 0.24)),
+    linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.1) 36%,
+      rgba(97, 137, 246, 0.2) 52%,
+      rgba(24, 44, 92, 0.42) 100%
+    );
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-bright) 34%, rgba(255, 255, 255, 0.2));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+    0 4px 16px rgba(97, 137, 246, 0.2);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+}
+.v2-work-tab {
+  border-radius: 6px;
+}
+.v2-work-tab:hover {
+  background: rgba(255,255,255,0.022);
+}
+.v2-work-panel {
+  gap: 18px;
+}
+.v2-work-subtabs {
+  border-radius: 8px;
+  background: rgba(3, 5, 8, 0.28);
+}
+.v2-work-subtabs-glide {
+  border-radius: 7px;
+  background:
+    linear-gradient(0deg, rgba(6, 12, 26, 0.22), rgba(6, 12, 26, 0.22)),
+    linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.1) 36%,
+      rgba(97, 137, 246, 0.2) 52%,
+      rgba(24, 44, 92, 0.42) 100%
+    );
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-bright) 32%, rgba(255, 255, 255, 0.18));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    0 3px 12px rgba(97, 137, 246, 0.18);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+}
+.v2-work-subtab {
+  border-radius: 6px;
+}
+.v2-work-identity,
+.v2-work-award,
+.v2-work-metric,
+.v2-work-media {
+  border-radius: 8px;
+  background: rgba(7, 10, 16, 0.72);
+  box-shadow: none;
+}
+.v2-work-identity {
+  border-color: rgba(220, 228, 240, 0.12);
+}
+.v2-work-award {
+  border-color: color-mix(in srgb, var(--color-award) 36%, transparent);
+  color: var(--color-award);
+}
+.v2-work-metric {
+  border-color: rgba(220, 228, 240, 0.12);
+}
+/* Metric values keep their original vivid treatment: bright green
+   accomplishments (#12d973) and the animated metallic gold / platinum shine.
+   The base rules above own these — no flattening override here. */
+.v2-work-details li::before {
+  background: var(--color-accent);
+  box-shadow: none;
+}
+.v2-proj-link {
+  background: rgba(10, 15, 22, 0.72);
+  border-color: var(--color-border-strong);
+  box-shadow: none;
+  text-shadow: none;
+}
+.v2-proj-link:hover {
+  background: rgba(17, 25, 36, 0.9);
+  border-color: color-mix(in srgb, var(--color-accent-bright) 36%, transparent);
+  box-shadow: none;
+}
+.v2-proj-link-icon {
+  color: var(--color-accent-bright);
+}
+
+.v2-blog-row {
+  background: rgba(5, 8, 13, 0.2);
+}
+.v2-blog-row:hover {
+  background: rgba(255, 255, 255, 0.026);
+}
+/* Citations read as a quiet inline label, not a boxed accent chip, set off
+   from the date by a middot separator. */
+.v2-citations {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  gap: 0;
+  /* The row's 12px flex gap sits before the middot; trim it so the middot has
+     even space on both sides. */
+  margin-left: -4px;
+  color: var(--color-muted);
+}
+.v2-citations::before {
+  content: "·";
+  margin: 0 8px 0 0;
+  color: var(--color-muted);
+}
+.v2-citations strong {
+  margin-right: 6px;
+}
+.v2-citations strong {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text-dim);
+}
+.v2-citations span {
+  color: var(--color-muted);
+}
+/* Venue labels (Highlights in Science…, IEEE ITSC…) in the blue-purple accent. */
+.v2-blog-tag {
+  color: var(--color-accent-text);
+  border-color: color-mix(in srgb, var(--color-accent-bright) 50%, transparent);
+  background: color-mix(in srgb, var(--color-accent-bright) 14%, rgba(5, 14, 32, 0.82));
+  box-shadow: none;
+}
+.v2-blog-row:hover > svg {
+  color: var(--color-accent-bright);
+}
+.v2-blog-row:hover .v2-blog-title {
+  text-decoration-color: var(--color-accent-bright);
+}
+
+.v2-field input,
+.v2-field textarea {
+  border-radius: 6px;
+  background: rgba(3, 5, 8, 0.46);
+}
+.v2-field input:focus,
+.v2-field textarea:focus {
+  border-color: color-mix(in srgb, var(--color-accent-bright) 54%, transparent);
+}
+.v2-contact-link svg {
+  color: var(--color-accent-bright);
+}
+/* External-link arrow: pinned to the right edge, lifts toward top-right on hover. */
+.v2-contact-link .v2-contact-link-ext {
+  margin-left: auto;
+  color: var(--color-muted);
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+.v2-contact-link:hover .v2-contact-link-ext {
+  color: var(--color-accent-bright);
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 720px) {
+  .v2-section {
+    margin-top: 86px;
+  }
+  .v2-hero-track {
+    height: 98px;
+  }
+  .v2-hero-track-car {
+    width: 82%;
+  }
+  .v2-hero-wordmark-img {
+    height: clamp(72px, 25vw, 112px);
+  }
 }
 
 /* ============ INTRO ============ */
@@ -2779,8 +3355,8 @@ button { font: inherit; cursor: pointer; }
   border-radius: 8px;
 }
 .intro-readout-row { display: contents; }
-.intro-readout-k { font-size: 10px; letter-spacing: 0.16em; color: var(--color-muted); text-transform: uppercase; align-self: center; }
-.intro-readout-v { font-size: 12px; letter-spacing: 0.06em; color: var(--color-text); text-transform: uppercase; font-weight: 600; }
+.intro-readout-k { font-size: 11px; letter-spacing: 0.16em; color: var(--color-muted); text-transform: uppercase; align-self: center; }
+.intro-readout-v { font-size: 13px; letter-spacing: 0.06em; color: var(--color-text); text-transform: uppercase; font-weight: 600; }
 .intro-readout-v--accent { color: var(--color-accent-text); animation: v2pulse 0.6s ease infinite; }
 .intro-skip {
   position: absolute;
@@ -2797,7 +3373,7 @@ button { font: inherit; cursor: pointer; }
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   font-family: var(--font-mono);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;

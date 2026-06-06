@@ -1,3 +1,5 @@
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
+
 type Props = {
   eyebrow: string;
   title: string;
@@ -6,13 +8,13 @@ type Props = {
 
 export function SectionHead({ eyebrow, title, sub }: Props) {
   return (
-    <div className="v2-sec-head">
+    <ScrollReveal className="v2-sec-head" variant="line" y={0}>
       <div className="v2-sec-eyebrow">
         <span className="v2-sec-eyebrow-bar" />
         <span className="v2-mono v2-mono--accent">{eyebrow}</span>
       </div>
       <h2 className="v2-sec-title">{title}</h2>
       {sub && <p className="v2-sec-sub">{sub}</p>}
-    </div>
+    </ScrollReveal>
   );
 }

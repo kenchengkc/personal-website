@@ -1,5 +1,6 @@
 import { SectionHead } from "./SectionHead";
 import { Arrow } from "@/components/icons/Icons";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { site } from "@/lib/site";
 
 type Publication = {
@@ -42,13 +43,16 @@ export function BlogList() {
         sub="Peer-reviewed and competition-published research."
       />
       <div className="v2-blog">
-        {publications.map((p) => (
-          <a
+        {publications.map((p, index) => (
+          <ScrollReveal
+            as="a"
             key={p.href}
             href={p.href}
             target="_blank"
             rel="noopener noreferrer"
             className="v2-blog-row"
+            delay={index * 0.06}
+            variant="panel"
           >
             <div>
               <div className="v2-blog-meta">
@@ -67,7 +71,7 @@ export function BlogList() {
               <h3 className="v2-blog-title">{p.title}</h3>
             </div>
             <Arrow size={16} />
-          </a>
+          </ScrollReveal>
         ))}
       </div>
     </section>

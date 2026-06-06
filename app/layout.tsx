@@ -1,32 +1,27 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Libre_Franklin, Lora } from "next/font/google";
 import "./globals.css";
 import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
+import { ScrollRevealController } from "@/components/motion/ScrollRevealController";
 import { Starfield } from "@/components/sections/Starfield";
 import { site } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
 
-const spaceGrotesk = Space_Grotesk({
+const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const dmSerifDisplay = DM_Serif_Display({
+const lora = Lora({
   subsets: ["latin"],
-  weight: "400",
-  style: "italic",
-  variable: "--font-hero-accent",
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-mono",
-  display: "swap",
-});
 
 const isVercel = process.env.VERCEL === "1";
 
@@ -54,13 +49,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${jetbrains.variable} ${dmSerifDisplay.variable}`}
+      className={`${libreFranklin.variable} ${lora.variable}`}
     >
-      <body>
+      <body suppressHydrationWarning>
         <div className="v2-bg-carbon" aria-hidden />
         <div className="v2-bg-glow" aria-hidden />
         <Starfield className="v2-stars--page" />
         <LightsOutIntro />
+        <ScrollRevealController />
         {children}
         {isVercel ? <Analytics /> : null}
       </body>

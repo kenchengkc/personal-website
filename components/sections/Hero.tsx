@@ -13,6 +13,7 @@ import {
   Scholar,
 } from "@/components/icons/Icons";
 import { CarSilhouette } from "@/components/cars/CarSilhouette";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -69,6 +70,12 @@ export function Hero() {
         "--hero-wheel-state",
         inMotion ? "running" : "paused",
       );
+
+      // Parallax: how far the hero has scrolled up past the viewport top.
+      // CSS layers multiply this by their own (small) factor so the backdrop
+      // drifts slower than the copy and the wordmark lifts gently.
+      const scrolled = Math.max(0, -rect.top);
+      hero.style.setProperty("--hero-shift", String(scrolled));
     }
 
     updateHeroCar();
@@ -104,26 +111,30 @@ export function Hero() {
           Available for Summer 2027 internships
         </div>
 
-        <h1 className="v2-hero-title">
-          Hi, I&rsquo;m Ken - <br />
-          I build{" "}
+        <ScrollReveal as="h1" className="v2-hero-title" delay={0.05} y={20}>
+          Hi, I&rsquo;m Ken{" "}
+          <span className="v2-hero-dash" aria-hidden>
+            &mdash;
+          </span>
+          <br />I build{" "}
           <em className="v2-hero-accent-word">rigorous</em>{" "}
           systems for <br />
           machine learning and quant.
-        </h1>
+        </ScrollReveal>
 
-        <p className="v2-hero-sub">
+        <ScrollReveal as="p" className="v2-hero-sub" delay={0.09} y={22}>
           CS undergrad at <strong>Columbia</strong> (Egleston Scholar,{" "}
-          <strong>top 1% of class</strong>, GPA 3.7+).{" "}
+          <strong>top 1% of class</strong>, GPA 3.76).{" "}
           <strong>IEEE-published</strong> in deep learning,{" "}
-          <strong>USACO Platinum perfect score</strong>, and currently
-          shipping <strong>Quantiv</strong>: options-implied earnings analytics
-          and LightGBM forecasts over <strong>billion-row</strong> chain and
-          vol history. Fluent in{" "}
+          <strong>USACO Platinum perfect score</strong>, and currently a{" "}
+          <strong>Software Development Engineer intern at Amazon</strong> (SCOT),
+          building a centralized business config service for the teams behind{" "}
+          <strong>MOSAIC</strong> &mdash; Amazon&rsquo;s unified topline, cube
+          demand forecast, and related forecasting services. Fluent in{" "}
           <strong>Python and C++</strong>; love tough puzzles.
-        </p>
+        </ScrollReveal>
 
-        <div className="v2-hero-actions">
+        <ScrollReveal className="v2-hero-actions" delay={0.13} y={20}>
           <button
             className="v2-btn v2-btn--primary"
             onClick={scrollTo("projects")}
@@ -139,15 +150,15 @@ export function Hero() {
           >
             <Download /> Download résumé
           </a>
-        </div>
+        </ScrollReveal>
 
         <div className="v2-hero-meta">
-          <span>
+          <ScrollReveal as="span" delay={0.15} variant="panel" y={18}>
             <em>Columbia University</em>
             <b>B.S. Computer Science</b>
-            <small>Statistics minor · GPA 3.7+ · Expected May 2028</small>
-          </span>
-          <span>
+            <small>Statistics minor · GPA 3.76 · Expected May 2028</small>
+          </ScrollReveal>
+          <ScrollReveal as="span" delay={0.19} variant="panel" y={18}>
             <em>Coursework</em>
             <b>
               Data Structures and Algorithms · Artificial Intelligence · Advanced
@@ -157,19 +168,19 @@ export function Hero() {
               Linear Algebra · Probability Theory · Linear Regression ·
               Multivariable Calculus
             </small>
-          </span>
-          <span>
+          </ScrollReveal>
+          <ScrollReveal as="span" delay={0.23} variant="panel" y={18}>
             <em>Based in</em>
             <b>{site.location}</b>
             <small>
               Open to internships, research, and builder teams, including roles
               outside the New York area.
             </small>
-          </span>
+          </ScrollReveal>
         </div>
       </div>
 
-      <div className="v2-hero-track" aria-hidden>
+      <ScrollReveal className="v2-hero-track" aria-hidden delay={0.16} y={18}>
         <div className="v2-hero-track-tags">
           <span className="v2-mono v2-mono--accent">CURRENT FOCUS</span>
           <span className="v2-pill v2-pill--focus">● ACTIVE</span>
@@ -187,9 +198,9 @@ export function Hero() {
           fill="var(--color-text)"
         />
         <div className="v2-hero-track-ground" />
-      </div>
+      </ScrollReveal>
 
-      <div className="v2-hero-socials">
+      <ScrollReveal className="v2-hero-socials" delay={0.2} y={16}>
         <Link
           href={site.socials.github}
           className="v2-social"
@@ -233,9 +244,9 @@ export function Hero() {
         >
           <Mail /> {site.email}
         </a>
-      </div>
+      </ScrollReveal>
 
-      <div className="v2-hero-wordmark">
+      <ScrollReveal className="v2-hero-wordmark" delay={0.24} variant="fade">
         <Image
           src="/images/logonamecolorbold.png"
           alt="Ken Cheng"
@@ -244,7 +255,7 @@ export function Hero() {
           className="v2-hero-wordmark-img"
           sizes="(max-width: 720px) 96vw, 1120px"
         />
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

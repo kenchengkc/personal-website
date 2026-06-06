@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Medal } from "lucide-react";
 import { SectionHead } from "./SectionHead";
 import { Arrow } from "@/components/icons/Icons";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { site } from "@/lib/site";
 
 type ProjectLink = {
@@ -185,7 +186,7 @@ const projects: Project[] = [
       {
         value: "3",
         label: "hackathon awards",
-        tone: "yellow",
+        tone: "gold",
         count: { from: 0, to: 3, durationMs: 1550 },
       },
     ],
@@ -245,17 +246,17 @@ const projects: Project[] = [
         value: "1000/1000",
         label: "Gold Division",
         tone: "gold",
-        count: { from: 0, to: 1000, suffix: "/1000" },
+        count: { from: 0, to: 1000, suffix: "/1000", durationMs: 1700 },
       },
       {
         value: "Top 1%",
         label: "national rank",
         tone: "green",
-        count: { from: 100, to: 1, prefix: "Top ", suffix: "%" },
+        count: { from: 100, to: 1, prefix: "Top ", suffix: "%", durationMs: 1700 },
       },
       { value: "Platinum", label: "qualifier", tone: "platinum" },
     ],
-    tags: ["C++", "Advanced DS&A", "gdb"],
+    tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
     details: [
       "Competition-grade C++ across graphs, DP, segment trees, and computational geometry.",
       "gdb profiling to chase down edge cases under tight memory and runtime budgets.",
@@ -286,7 +287,7 @@ const projects: Project[] = [
         value: "24%",
         label: "RMSE improvement",
         tone: "green",
-        count: { from: 0, to: 24, suffix: "%" },
+        count: { from: 0, to: 24, suffix: "%", durationMs: 2600 },
       },
       { value: "IEEE", label: "published" },
       { value: "1st", label: "single author" },
@@ -347,17 +348,27 @@ const projects: Project[] = [
         value: "100x",
         label: "iteration speedup",
         tone: "white",
-        count: { from: 1, to: 100, suffix: "x" },
+        count: { from: 1, to: 100, suffix: "x", durationMs: 2600 },
       },
       {
         value: "43%",
         label: "drag reduction",
         tone: "green",
-        count: { from: 0, to: 43, suffix: "%" },
+        count: { from: 0, to: 43, suffix: "%", durationMs: 2600 },
       },
       { value: "Gold", label: "CWSF '22", tone: "gold" },
     ],
-    tags: ["MATLAB", "Deep Learning Toolbox", "Feedforward", "trainlm"],
+    tags: [
+      "MATLAB",
+      "Deep Learning Toolbox",
+      "Feedforward",
+      "trainlm",
+      "CFD",
+      "Surrogate Modeling",
+      "Neural Networks",
+      "Supervised Learning",
+      "Backpropagation",
+    ],
     details: [
       "MATLAB backpropagation feed-forward network trained to generate predicted pressure maps.",
       "Embedded the ANN in an end-to-end aero-analytics stack to drive wing geometry choices.",
@@ -396,14 +407,14 @@ const projects: Project[] = [
         value: "15%",
         label: "C++ solver speedup",
         tone: "green",
-        count: { from: 0, to: 15, suffix: "%", durationMs: 1550 },
+        count: { from: 0, to: 15, suffix: "%", durationMs: 2600 },
       },
       { value: "TB", label: "instance scale" },
       {
         value: "10k+",
         label: "SLURM cores used",
         tone: "white",
-        count: { from: 1, to: 10, suffix: "k+", durationMs: 1550 },
+        count: { from: 1, to: 10, suffix: "k+", durationMs: 2600 },
       },
     ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],
@@ -445,29 +456,22 @@ function formatCountValue(
 }
 
 function AnimatedMetricValue({ metric }: { metric: ProjectMetric }) {
+  const count = metric.count;
   const [displayValue, setDisplayValue] = useState(metric.count?.from);
   const [displaySecondaryValue, setDisplaySecondaryValue] = useState(
     metric.count?.fromSecondary,
   );
 
   useEffect(() => {
-    const count = metric.count;
     if (!count) return;
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reduceMotion) {
-      setDisplayValue(count.to);
-      setDisplaySecondaryValue(count.toSecondary);
-      return;
-    }
 
     let frame = 0;
     let startedAt = 0;
     const duration = count.durationMs ?? 850;
-    setDisplayValue(count.from);
-    setDisplaySecondaryValue(count.fromSecondary);
 
     const step = (now: number) => {
       if (!startedAt) startedAt = now;
@@ -485,19 +489,19 @@ function AnimatedMetricValue({ metric }: { metric: ProjectMetric }) {
       }
     };
 
-    frame = window.requestAnimationFrame(step);
+    frame = window.requestAnimationFrame(() => {
+      if (reduceMotion) {
+        setDisplayValue(count.to);
+        setDisplaySecondaryValue(count.toSecondary);
+        return;
+      }
+
+      setDisplayValue(count.from);
+      setDisplaySecondaryValue(count.fromSecondary);
+      frame = window.requestAnimationFrame(step);
+    });
     return () => window.cancelAnimationFrame(frame);
-  }, [
-    metric.count?.decimals,
-    metric.count?.durationMs,
-    metric.count?.from,
-    metric.count?.fromSecondary,
-    metric.count?.prefix,
-    metric.count?.separator,
-    metric.count?.suffix,
-    metric.count?.to,
-    metric.count?.toSecondary,
-  ]);
+  }, [count]);
 
   const classes = [
     "v2-work-metric-v",
@@ -523,8 +527,6 @@ export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
-  const activeIndexRef = useRef(activeIndex);
-  activeIndexRef.current = activeIndex;
 
   const [glide, setGlide] = useState<{ y: number; h: number; ready: boolean }>({
     y: 0,
@@ -534,7 +536,7 @@ export function Projects() {
 
   const measureGlide = useCallback(() => {
     const list = listRef.current;
-    const btn = tabRefs.current.get(activeIndexRef.current);
+    const btn = tabRefs.current.get(activeIndex);
     if (!list || !btn) return;
     const lr = list.getBoundingClientRect();
     const br = btn.getBoundingClientRect();
@@ -550,7 +552,7 @@ export function Projects() {
       }
       return { y, h, ready: true };
     });
-  }, []);
+  }, [activeIndex]);
 
   useLayoutEffect(() => {
     measureGlide();
@@ -569,14 +571,9 @@ export function Projects() {
   }, [measureGlide]);
 
   const [panelTab, setPanelTab] = useState<PanelTab>("overview");
-  useEffect(() => {
-    setPanelTab("overview");
-  }, [activeIndex]);
 
   const subTabsRef = useRef<HTMLDivElement>(null);
   const subTabRefs = useRef<Map<PanelTab, HTMLButtonElement>>(new Map());
-  const panelTabRef = useRef(panelTab);
-  panelTabRef.current = panelTab;
 
   const [subGlide, setSubGlide] = useState({
     x: 0,
@@ -586,7 +583,7 @@ export function Projects() {
 
   const measureSubGlide = useCallback(() => {
     const shell = subTabsRef.current;
-    const btn = subTabRefs.current.get(panelTabRef.current);
+    const btn = subTabRefs.current.get(panelTab);
     if (!shell || !btn) return;
     const sr = shell.getBoundingClientRect();
     const br = btn.getBoundingClientRect();
@@ -602,7 +599,7 @@ export function Projects() {
       }
       return { x, w, ready: true };
     });
-  }, []);
+  }, [panelTab]);
 
   useLayoutEffect(() => {
     measureSubGlide();
@@ -646,7 +643,13 @@ export function Projects() {
       />
 
       <div className="v2-work">
-        <div className="v2-work-list" ref={listRef} aria-label="Project selector">
+        <ScrollReveal
+          className="v2-work-list"
+          ref={listRef}
+          aria-label="Project selector"
+          variant="panel"
+          y={20}
+        >
           <span
             className="v2-work-list-glide"
             aria-hidden
@@ -664,7 +667,10 @@ export function Projects() {
               className={`v2-work-tab ${
                 index === activeIndex ? "v2-work-tab--active" : ""
               }`}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                setActiveIndex(index);
+                setPanelTab("overview");
+              }}
               aria-pressed={index === activeIndex}
             >
               <span className="v2-work-tab-index">
@@ -677,9 +683,17 @@ export function Projects() {
               <span className="v2-work-tab-date">{project.dates}</span>
             </button>
           ))}
-        </div>
+        </ScrollReveal>
 
-        <article className="v2-work-panel" key={active.title}>
+        <ScrollReveal
+          as="article"
+          className="v2-work-panel"
+          key={active.title}
+          variant="panel"
+          delay={0.08}
+          once={false}
+          y={22}
+        >
           <div className="v2-work-panel-head">
             <h3 className="v2-work-title">{active.title}</h3>
             <span className="v2-work-date">{active.dates}</span>
@@ -811,21 +825,30 @@ export function Projects() {
                 </div>
 
                 <div className="v2-work-metrics">
-                  {active.metrics.map((metric) => (
-                    <div key={metric.label} className="v2-work-metric">
+                  {active.metrics.map((metric, index) => (
+                    <ScrollReveal
+                      key={metric.label}
+                      className="v2-work-metric"
+                      variant="scale"
+                      delay={0.08 + index * 0.04}
+                      once={false}
+                    >
                       <AnimatedMetricValue metric={metric} />
                       <span className="v2-work-metric-l">{metric.label}</span>
-                    </div>
+                    </ScrollReveal>
                   ))}
                 </div>
 
                 {active.links && active.links.length > 0 && (
                   <div className="v2-work-links">
-                    {active.links.map((link) => (
-                      <a
+                    {active.links.map((link, index) => (
+                      <ScrollReveal
+                        as="a"
                         key={link.href}
                         href={link.href}
                         className="v2-proj-link"
+                        delay={0.1 + index * 0.04}
+                        once={false}
                         {...(link.download
                           ? { download: true }
                           : {
@@ -835,7 +858,7 @@ export function Projects() {
                       >
                         <span className="v2-proj-link-text">{link.label}</span>
                         <Arrow size={12} className="v2-proj-link-icon" />
-                      </a>
+                      </ScrollReveal>
                     ))}
                   </div>
                 )}
@@ -845,10 +868,17 @@ export function Projects() {
             {panelTab === "build" && (
               <div className="v2-work-panel-page">
                 <div className="v2-chips">
-                  {active.tags.map((tag) => (
-                    <span key={tag} className="v2-chip">
+                  {active.tags.map((tag, index) => (
+                    <ScrollReveal
+                      as="span"
+                      key={tag}
+                      className="v2-chip"
+                      delay={index * 0.025}
+                      once={false}
+                      y={12}
+                    >
                       {tag}
-                    </span>
+                    </ScrollReveal>
                   ))}
                 </div>
 
@@ -861,23 +891,31 @@ export function Projects() {
                   </ul>
                 </details>
 
-                {mediaList.map((item) => (
-                  <figure key={item.src} className="v2-work-media">
-                    <Image
-                      src={item.src}
-                      alt={item.alt}
-                      width={item.width}
-                      height={item.height}
-                      sizes="(max-width: 900px) 100vw, 820px"
-                      className="v2-work-media-img"
-                    />
-                    {item.caption && <figcaption>{item.caption}</figcaption>}
-                  </figure>
+                {mediaList.map((item, index) => (
+                  <ScrollReveal
+                    key={item.src}
+                    variant="panel"
+                    delay={0.06 + index * 0.04}
+                    once={false}
+                    y={18}
+                  >
+                    <figure className="v2-work-media">
+                      <Image
+                        src={item.src}
+                        alt={item.alt}
+                        width={item.width}
+                        height={item.height}
+                        sizes="(max-width: 900px) 100vw, 820px"
+                        className="v2-work-media-img"
+                      />
+                      {item.caption && <figcaption>{item.caption}</figcaption>}
+                    </figure>
+                  </ScrollReveal>
                 ))}
               </div>
             )}
           </div>
-        </article>
+        </ScrollReveal>
       </div>
     </section>
   );
