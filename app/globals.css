@@ -3193,15 +3193,20 @@ body {
   box-shadow: none;
   padding: 0;
   gap: 0;
-  /* The row's 12px flex gap sits before the middot; trim it so the middot has
-     even space on both sides. */
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  /* The row's 12px flex gap sits before the separator; trim it so spacing is even. */
   margin-left: -4px;
   color: var(--color-muted);
 }
 .v2-citations::before {
-  content: "·";
-  margin: 0 8px 0 0;
-  color: var(--color-muted);
+  content: "";
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  margin-right: 8px;
+  background: var(--color-muted);
 }
 .v2-citations strong {
   margin-right: 6px;
