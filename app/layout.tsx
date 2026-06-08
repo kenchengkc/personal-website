@@ -28,7 +28,7 @@ const isVercel = process.env.VERCEL === "1";
 export const metadata: Metadata = {
   title: `${site.name} - CS @ Columbia`,
   description:
-    "Ken Cheng, Columbia CS (Egleston Scholar). Founder of Quantiv (options-implied earnings analytics, LightGBM + DuckDB at billion-row scale). IEEE-published, USACO Platinum.",
+    "Ken Cheng, Columbia CS (Egleston Scholar). Founder of Quantiv (options-implied earnings moves on Vercel, DuckDB + LightGBM pipeline, live quotes). IEEE-published, USACO Platinum.",
   metadataBase: new URL("https://kencheng.dev"),
   icons: {
     icon: [{ url: "/images/kclogo.png", type: "image/png" }],

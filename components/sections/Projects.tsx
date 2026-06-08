@@ -81,7 +81,7 @@ const PANEL_TABS: { id: PanelTab; label: string }[] = [
 const projects: Project[] = [
   {
     title: "Quantiv",
-    category: "Earnings · options-implied analytics",
+    category: "Earnings · options-implied expected moves",
     dates: "Jul 2025 - Present",
     role: {
       title: "Founder and Lead Software Engineer",
@@ -89,9 +89,9 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "Founder and lead engineer on Quantiv: earnings-calendar product for options-implied expected moves; Next.js + TypeScript on the web, Python FastAPI for scoring, LightGBM plus DuckDB over billion-row Parquet at institution scale.",
+      "Founder and lead engineer on Quantiv: a Next.js dashboard for options-implied expected moves around earnings (multi-week calendar, screener, symbol detail, Clerk watchlist). The UI ships on Vercel from prebuilt JSON; a Python pipeline (DoltHub + Finnhub/FMP earnings, DuckDB over Parquet, LightGBM v3) refreshes nightly via GitHub Actions.",
     impact:
-      "Daily refreshes and reproducible pipelines beat quote latency. Live and shipping.",
+      "Live on usequantiv.com with nightly CI data refresh, Finnhub/Alpaca/Polygon quote overlay, and optional Railway FastAPI for live ML re-inference.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -108,19 +108,8 @@ const projects: Project[] = [
         tone: "white",
         count: { from: 0, to: 1.04, decimals: 2, suffix: "B+" },
       },
-      { value: "Daily", label: "model refresh" },
-      {
-        value: "50-100",
-        label: "tickers / week",
-        tone: "white",
-        count: {
-          from: 0,
-          to: 50,
-          fromSecondary: 0,
-          toSecondary: 100,
-          separator: "-",
-        },
-      },
+      { value: "Daily", label: "nightly pipeline" },
+      { value: "Live", label: "quote overlay", tone: "green" },
     ],
     tags: [
       "TypeScript",
@@ -130,16 +119,18 @@ const projects: Project[] = [
       "LightGBM",
       "DuckDB",
       "Parquet",
+      "PostgreSQL",
       "Redis",
-      "Docker",
-      "AWS EC2",
+      "Clerk",
+      "Vercel",
+      "Railway",
     ],
     details: [
-      "Shipped a Next.js + FastAPI product covering ~50–100 liquid names weekly: options-implied baselines plus multi-horizon LightGBM forecasts trained on historical Greeks, IV context, and volatility features.",
-      "LightGBM on options-implied baselines: IV surface, straddle-implied moves, Greeks and vol-derived features.",
-      "DuckDB over partitioned Parquet for full chain and volatility history; batch scoring writes versioned artifacts for the Next.js client.",
-      "Production Docker on AWS EC2 with Redis for caching and sessions; reproducible daily scoring runs and atomic dataset releases instead of optimizing for quote latency.",
-      "Cut large-dataset refresh overhead ~90% via atomic directory swaps and rsync staging on EC2 so revised chain snapshots publish without taking the app offline.",
+      "Shipped calendar, screener, symbol, and watchlist routes: straddle vs IV-based expected moves, per-expiry context when data exists, and live batch quotes via Upstash with Finnhub, Alpaca, and Polygon refresh paths.",
+      "Browsing uses static JSON from tools/build_frontend_data.py (no FastAPI on every navigation); optional Railway FastAPI adds live LightGBM predict through an HMAC-signed Vercel proxy, with nightly JSON fallback.",
+      "Nightly GitHub Actions pipeline: DoltHub sync, Finnhub/FMP earnings overlays, integrity gate, DuckDB views over Parquet, daily_score, Neon Postgres import, then commit apps/frontend/public/ for Vercel redeploy.",
+      "Clerk-authenticated watchlist on Neon Postgres with drag-reorder, live prices, and batch ML; Cloudflare R2 stores Parquet and model artifacts outside git.",
+      "Optional Railway quote worker (Finnhub WebSocket + REST) and Vercel cron fallbacks share Upstash quote:{symbol} keys with interest-ranked prioritization from batch-price reads.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },

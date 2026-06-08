@@ -52,9 +52,11 @@ export function About() {
             <b>Software Development Engineer (SDE) intern at Amazon</b>, on the
             Long-Term Planning and Forecasting (LTPF) team in Supply Chain
             Optimization Technologies (SCOT). Alongside that I build{" "}
-            <b>Quantiv</b> &mdash; an options-implied earnings-move platform
-            pairing IV / straddle baselines with <b>LightGBM</b> forecasts,
-            refreshed daily at billion-row scale.
+            <b>Quantiv</b>, an options-implied earnings platform on{" "}
+            <b>Vercel</b>: multi-week calendar, screener, symbol pages, and a{" "}
+            <b>Clerk</b> watchlist over nightly JSON, with <b>LightGBM</b>{" "}
+            scoring on <b>DuckDB</b> / Parquet and live quotes through{" "}
+            <b>Upstash</b>.
           </ScrollReveal>
           <ScrollReveal as="p" delay={0.14}>
             Before that I published single-author at the <b>IEEE ITSC</b> on
