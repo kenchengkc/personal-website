@@ -3186,7 +3186,7 @@ body {
   background: rgba(255, 255, 255, 0.026);
 }
 /* Citations read as a quiet inline label, not a boxed accent chip, set off
-   from the date by a middot separator. */
+   from the date by a small circular separator. */
 .v2-citations {
   border: none;
   background: transparent;
@@ -3203,9 +3203,10 @@ body {
 .v2-citations::before {
   content: "";
   flex-shrink: 0;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   margin-right: 8px;
+  border-radius: 50%;
   background: var(--color-muted);
 }
 .v2-citations strong {
