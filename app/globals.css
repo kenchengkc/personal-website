@@ -2502,7 +2502,7 @@ button { font: inherit; cursor: pointer; }
 .v2-blog-row:hover { background: rgba(255,255,255,0.02); }
 .v2-blog-row > svg { color: var(--color-muted); transition: color 0.18s ease, transform 0.18s ease; }
 .v2-blog-row:hover > svg { color: var(--color-accent-text); transform: translateX(4px); }
-.v2-blog-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+.v2-blog-meta { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
 .v2-blog-tag {
   display: inline-flex;
   align-items: center;
