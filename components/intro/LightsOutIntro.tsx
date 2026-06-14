@@ -190,7 +190,7 @@ export function LightsOutIntro() {
         <div className="intro-readout">
           <div className="intro-readout-row">
             <span className="intro-readout-k">SESSION</span>
-            <span className="intro-readout-v">RACE · LAP 01/56</span>
+            <span className="intro-readout-v">FORMATION · LAP 01</span>
           </div>
           <div className="intro-readout-row">
             <span className="intro-readout-k">DRIVER</span>
