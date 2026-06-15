@@ -148,7 +148,7 @@ export function Hero() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Download /> Download résumé
+            <Download /> Download resume
           </a>
         </ScrollReveal>
 

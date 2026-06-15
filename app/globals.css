@@ -661,7 +661,7 @@ button { font: inherit; cursor: pointer; }
   .v2-nav--dense .v2-brand {
     margin-left: 10px;
   }
-  /* Match scrolled (dense) résumé pill to full-brand sizing so the actions
+  /* Match scrolled (dense) resume pill to full-brand sizing so the actions
      cluster width doesn’t pulse when toggling layout. */
   .v2-nav--dense .v2-nav-resume {
     padding: 9px 17px;
@@ -699,7 +699,7 @@ button { font: inherit; cursor: pointer; }
   }
   /* Full brand (hero top) + blog: flexible space on the left, brand aligned to
      its trailing edge so the mark sits nearer the actions; column 2 stays
-     intrinsic width so About + Résumé stay flush right. */
+     intrinsic width so About + Resume stay flush right. */
   .v2-nav:not(.v2-nav--dense) .v2-nav-inner {
     width: 100%;
     max-width: 100%;
@@ -763,7 +763,7 @@ button { font: inherit; cursor: pointer; }
   }
 }
 
-/* Ghost résumé: neutral hover (no accent tint) in nav + hero */
+/* Ghost resume: neutral hover (no accent tint) in nav + hero */
 .v2-btn--ghost.v2-btn-resume:hover {
   color: var(--color-text);
   border-color: color-mix(in srgb, var(--color-border-strong) 88%, #fff);
@@ -811,8 +811,14 @@ button { font: inherit; cursor: pointer; }
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.44;
+  /* Solid base + dark scrim keep the photo opaque to the starfield behind it
+     (was opacity: 0.44, which let stars bleed through the library). The scrim
+     reproduces the old dimming; masks still fade the edges so stars return
+     gradually outside the photo. */
+  opacity: 1;
+  background-color: var(--color-bg);
   background-image:
+    linear-gradient(0deg, rgba(3,9,20,0.56), rgba(3,9,20,0.56)),
     linear-gradient(90deg, var(--color-bg) 0%, rgba(3,9,20,0.72) 30%, rgba(3,9,20,0.22) 66%, rgba(3,9,20,0.03) 100%),
     linear-gradient(180deg, rgba(3,9,20,0.08) 0%, rgba(3,9,20,0.42) 66%, var(--color-bg) 100%),
     url("/images/butler-library.jpg");
