@@ -479,7 +479,7 @@ export function Nav() {
             </div>
           )}
           <a
-            className="v2-btn v2-btn--ghost v2-btn-resume-accent v2-nav-resume"
+            className="v2-btn v2-btn--ghost v2-btn-resume v2-nav-resume"
             href={site.resumePath}
             download
             target="_blank"

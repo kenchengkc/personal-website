@@ -256,29 +256,45 @@ export function Starfield({ className }: { className?: string }) {
         const tone = TONES[s.tone ?? "white"];
         const isSparkle = sparkleIndex === i;
         const twinkleOn = Boolean(s.twinkle) && !isSparkle;
+        const half = s.size / 2;
         return (
           <span
             key={i}
-            className={`v2-star ${twinkleOn ? "v2-star--twinkle" : ""} ${
-              isSparkle ? "v2-star--sparkle" : ""
-            }`}
+            className="v2-star-anchor"
             style={{
               left: `${s.x}%`,
               top: `${s.y}%`,
-              width: `${s.size}px`,
-              height: `${s.size}px`,
-              opacity: s.opacity,
-              background: tone.core,
-              boxShadow: `0 0 6px ${tone.halo}`,
-              ["--star-opacity" as string]: String(s.opacity),
-              ...(s.twinkle && !isSparkle
-                ? {
-                    animationDuration: `${s.twinkle}s`,
-                    animationDelay: `${s.delay ?? 0}s`,
-                  }
-                : {}),
+              ["--star-half" as string]: `${half}px`,
+              ["--ray-core" as string]: tone.core,
+              ["--ray-halo" as string]: tone.halo,
             }}
-          />
+          >
+            {isSparkle ? (
+              <span
+                className="v2-star-rays"
+                style={{ ["--star-opacity" as string]: String(s.opacity) }}
+              />
+            ) : null}
+            <span
+              className={`v2-star ${twinkleOn ? "v2-star--twinkle" : ""} ${
+                isSparkle ? "v2-star--sparkle" : ""
+              }`}
+              style={{
+                width: `${s.size}px`,
+                height: `${s.size}px`,
+                opacity: s.opacity,
+                background: tone.core,
+                boxShadow: `0 0 6px ${tone.halo}`,
+                ["--star-opacity" as string]: String(s.opacity),
+                ...(s.twinkle && !isSparkle
+                  ? {
+                      animationDuration: `${s.twinkle}s`,
+                      animationDelay: `${s.delay ?? 0}s`,
+                    }
+                  : {}),
+              }}
+            />
+          </span>
         );
       })}
     </div>

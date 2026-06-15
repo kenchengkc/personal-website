@@ -142,7 +142,7 @@ export function Hero() {
             See my work <Arrow />
           </button>
           <a
-            className="v2-btn v2-btn--ghost v2-btn-resume-accent"
+            className="v2-btn v2-btn--ghost v2-btn-resume"
             href={site.resumePath}
             download
             target="_blank"
