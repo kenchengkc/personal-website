@@ -204,6 +204,9 @@ const stars: Star[] = [
   { x: 88, y: 64, size: 1.2, opacity: 0.6 },
 ];
 
+/** Scales every resting/twinkling star a touch larger (sparkle rays follow). */
+const STAR_SIZE_SCALE = 1.3;
+
 /** Match `.v2-hero-bg` horizontal mask fade: margin bands vs central content. */
 const SPARKLE_EDGE_LEFT_MAX = 13;
 const SPARKLE_EDGE_RIGHT_MIN = 82;
@@ -256,7 +259,8 @@ export function Starfield({ className }: { className?: string }) {
         const tone = TONES[s.tone ?? "white"];
         const isSparkle = sparkleIndex === i;
         const twinkleOn = Boolean(s.twinkle) && !isSparkle;
-        const half = s.size / 2;
+        const renderSize = s.size * STAR_SIZE_SCALE;
+        const half = renderSize / 2;
         return (
           <span
             key={i}
@@ -280,8 +284,8 @@ export function Starfield({ className }: { className?: string }) {
                 isSparkle ? "v2-star--sparkle" : ""
               }`}
               style={{
-                width: `${s.size}px`,
-                height: `${s.size}px`,
+                width: `${renderSize}px`,
+                height: `${renderSize}px`,
                 opacity: s.opacity,
                 background: tone.core,
                 boxShadow: `0 0 6px ${tone.halo}`,
