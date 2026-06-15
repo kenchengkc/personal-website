@@ -135,6 +135,65 @@ const projects: Project[] = [
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },
   {
+    title: "FDRE",
+    category: "SEC filing retrieval · citation-verified RAG",
+    dates: "2026 - Present",
+    role: {
+      title: "Creator and Lead Engineer",
+      org: "FDRE · Financial Document Retrieval Engine",
+      location: "New York, NY, USA",
+    },
+    summary:
+      "Research infrastructure that turns SEC filings into auditable retrieval results, structured financial facts, and point-in-time research panels: hybrid PostgreSQL full-text plus pgvector search, citation-verified answers with deliberate abstention, a FastAPI backend, and a Next.js research UI.",
+    impact:
+      "Live at thefdre.com over an S&P 500 corpus: 997 SEC filings parsed into ~1.07M chunks, embedded with Voyage voyage-4-large. FastAPI on Railway, frontend on Vercel.",
+    brand: {
+      label: "FDRE",
+      detail: "Financial Document Retrieval Engine",
+      meta: "thefdre.com",
+    },
+    metrics: [
+      {
+        value: "1.07M",
+        label: "parsed chunks",
+        tone: "white",
+        count: { from: 0, to: 1.07, decimals: 2, suffix: "M" },
+      },
+      {
+        value: "997",
+        label: "SEC filings",
+        tone: "white",
+        count: { from: 0, to: 997 },
+      },
+      { value: "Live", label: "S&P 500 corpus", tone: "green" },
+    ],
+    tags: [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "pgvector",
+      "LangGraph",
+      "Voyage AI",
+      "Next.js",
+      "TypeScript",
+      "Alembic",
+      "Docker",
+      "Railway",
+      "Vercel",
+    ],
+    details: [
+      "Hybrid retrieval in PostgreSQL: GIN full-text plus pgvector HNSW over Voyage voyage-4-large embeddings (512-dim), with exact company resolution and SEC acceptance-time filtering for point-in-time correctness.",
+      "Bounded LangGraph answer workflow: resolve entities and filters, retrieve text / tables / facts, rerank, evidence-gate, extract supported claims, and verify citations, abstaining when evidence is weak or unsupported.",
+      "Typed Company Facts queries and point-in-time issuer-period panels exported as JSON, CSV, or Parquet; provider-neutral filing event studies with leakage checks and persisted experiment manifests.",
+      "A single PostgreSQL store owns metadata, lexical and vector retrieval, facts, traces, ingestion manifests, and experiments, avoiding separate search, vector, queue, and analytics services.",
+      "Incremental ingestion with provider backoff and resumable stage manifests via GitHub Actions; FastAPI on Railway (Alembic pre-deploy) with a Next.js research UI on Vercel.",
+    ],
+    links: [
+      { label: "Visit thefdre.com", href: site.links.fdre },
+      { label: "View on GitHub", href: site.links.fdreRepo },
+    ],
+  },
+  {
     title: "Embers",
     category: "LA Hacks · wildfire insurance + computer vision",
     dates: "Apr 2025",

@@ -14,6 +14,8 @@ export const site = {
   },
   links: {
     quantiv: "https://usequantiv.com",
+    fdre: "https://thefdre.com",
+    fdreRepo: "https://github.com/kenchengkc/the-financial-document-retrieval-engine",
     gcinf:
       "https://www.researchgate.net/publication/378189206_GC-INF_A_Novel_Adaptive_Traffic_Control_System_using_Machine_Learning_for_Turning_Ratio_Predictions",
     f1cfd:
