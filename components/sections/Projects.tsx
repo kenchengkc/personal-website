@@ -34,6 +34,8 @@ type MetricCount = {
   prefix?: string;
   suffix?: string;
   durationMs?: number;
+  /** Render the integer with thousands separators (e.g. 2,749). */
+  thousands?: boolean;
 };
 
 type ProjectMetric = {
@@ -91,7 +93,7 @@ const projects: Project[] = [
     summary:
       "Founder and lead engineer on Quantiv: a Next.js dashboard for options-implied expected moves around earnings (multi-week calendar, screener, symbol detail, Clerk watchlist). The UI ships on Vercel from prebuilt JSON; a Python pipeline (DoltHub + Finnhub/FMP earnings, DuckDB over Parquet, LightGBM v3) refreshes nightly via GitHub Actions.",
     impact:
-      "Live on usequantiv.com with nightly CI data refresh, Finnhub/Alpaca/Polygon quote overlay, and optional Railway FastAPI for live ML re-inference.",
+      "Live on usequantiv.com, averaging ~50 monthly active users over a 1.04B+ option-record dataset; nightly CI data refresh, multi-provider quote overlay (Finnhub/Alpaca/Polygon), and optional Railway FastAPI for live ML re-inference.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -108,8 +110,24 @@ const projects: Project[] = [
         tone: "white",
         count: { from: 0, to: 1.04, decimals: 2, suffix: "B+" },
       },
-      { value: "Daily", label: "nightly pipeline" },
-      { value: "Live", label: "quote overlay", tone: "green" },
+      {
+        value: "~50",
+        label: "monthly active users",
+        tone: "green",
+        count: { from: 0, to: 50, prefix: "~" },
+      },
+      {
+        value: "50-100",
+        label: "tickers / week",
+        tone: "white",
+        count: {
+          from: 0,
+          to: 50,
+          fromSecondary: 0,
+          toSecondary: 100,
+          separator: "-",
+        },
+      },
     ],
     tags: [
       "TypeScript",
@@ -126,11 +144,11 @@ const projects: Project[] = [
       "Railway",
     ],
     details: [
-      "Shipped calendar, screener, symbol, and watchlist routes: straddle vs IV-based expected moves, per-expiry context when data exists, and live batch quotes via Upstash with Finnhub, Alpaca, and Polygon refresh paths.",
-      "Browsing uses static JSON from tools/build_frontend_data.py (no FastAPI on every navigation); optional Railway FastAPI adds live LightGBM predict through an HMAC-signed Vercel proxy, with nightly JSON fallback.",
-      "Nightly GitHub Actions pipeline: DoltHub sync, Finnhub/FMP earnings overlays, integrity gate, DuckDB views over Parquet, daily_score, Neon Postgres import, then commit apps/frontend/public/ for Vercel redeploy.",
-      "Clerk-authenticated watchlist on Neon Postgres with drag-reorder, live prices, and batch ML; Cloudflare R2 stores Parquet and model artifacts outside git.",
-      "Optional Railway quote worker (Finnhub WebSocket + REST) and Vercel cron fallbacks share Upstash quote:{symbol} keys with interest-ranked prioritization from batch-price reads.",
+      "Shipped a production options-research workflow, measured by ~50 monthly active users and 50-100 ticker analyses per week, by building calendar, screener, symbol, and watchlist routes with expected moves, per-expiry context, and live batch quotes.",
+      "Kept browsing fast and resilient, measured by static JSON navigation without FastAPI on every page load, by generating frontend data with tools/build_frontend_data.py and reserving Railway FastAPI for HMAC-signed live LightGBM inference.",
+      "Automated daily data refreshes, measured by a 1.04B+ option-record dataset redeployed nightly, by orchestrating DoltHub sync, Finnhub/FMP earnings overlays, integrity gates, DuckDB/Parquet views, daily_score, Neon import, and Vercel public-data commits.",
+      "Added authenticated portfolio tracking, measured by drag-reorder watchlists with live prices and batch ML, by storing user state in Neon Postgres via Clerk and keeping Parquet/model artifacts in Cloudflare R2 outside git.",
+      "Improved quote freshness for high-interest symbols, measured by shared Upstash quote:{symbol} cache reads across web and worker paths, by combining a Railway Finnhub WebSocket/REST worker with Vercel cron fallbacks and interest-ranked refreshes.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },
@@ -144,28 +162,39 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "Research infrastructure that turns SEC filings into auditable retrieval results, structured financial facts, and point-in-time research panels: hybrid PostgreSQL full-text plus pgvector search, citation-verified answers with deliberate abstention, a FastAPI backend, and a Next.js research UI.",
+      "FDRE is a citation-verified RAG system for SEC filings. A LangGraph research agent resolves issuers and dates, retrieves and reranks 10-K/10-Q evidence, gates unsupported claims, and returns auditable answers with source citations.",
     impact:
-      "Live at thefdre.com over an S&P 500 corpus: 997 SEC filings parsed into ~1.07M chunks, embedded with Voyage voyage-4-large. FastAPI on Railway, frontend on Vercel.",
+      "Live at thefdre.com over an S&P 500 corpus with multi-class issuers normalized to one company record (~5 years each): 2,749 SEC 10-K/10-Q filings parsed into ~2.69M chunks, embedded with Voyage voyage-4-large. FastAPI on Railway, frontend on Vercel.",
     brand: {
       label: "FDRE",
       detail: "Financial Document Retrieval Engine",
       meta: "thefdre.com",
+      logo: {
+        src: "/images/fdre/fdre-wordmark.png",
+        alt: "FDRE — Financial Document Retrieval Engine wordmark",
+        variant: "wide",
+        width: 638,
+        height: 236,
+      },
     },
     metrics: [
       {
-        value: "1.07M",
+        value: "2.69M",
         label: "parsed chunks",
         tone: "white",
-        count: { from: 0, to: 1.07, decimals: 2, suffix: "M" },
+        count: { from: 0, to: 2.69, decimals: 2, suffix: "M", durationMs: 2600 },
       },
       {
-        value: "997",
+        value: "2,749",
         label: "SEC filings",
         tone: "white",
-        count: { from: 0, to: 997 },
+        count: { from: 0, to: 2749, thousands: true, durationMs: 2600 },
       },
-      { value: "Live", label: "S&P 500 corpus", tone: "green" },
+      {
+        value: "S&P 500",
+        label: "issuer universe",
+        tone: "green",
+      },
     ],
     tags: [
       "Python",
@@ -182,16 +211,24 @@ const projects: Project[] = [
       "Vercel",
     ],
     details: [
-      "Hybrid retrieval in PostgreSQL: GIN full-text plus pgvector HNSW over Voyage voyage-4-large embeddings (512-dim), with exact company resolution and SEC acceptance-time filtering for point-in-time correctness.",
-      "Bounded LangGraph answer workflow: resolve entities and filters, retrieve text / tables / facts, rerank, evidence-gate, extract supported claims, and verify citations, abstaining when evidence is weak or unsupported.",
-      "Typed Company Facts queries and point-in-time issuer-period panels exported as JSON, CSV, or Parquet; provider-neutral filing event studies with leakage checks and persisted experiment manifests.",
-      "A single PostgreSQL store owns metadata, lexical and vector retrieval, facts, traces, ingestion manifests, and experiments, avoiding separate search, vector, queue, and analytics services.",
-      "Incremental ingestion with provider backoff and resumable stage manifests via GitHub Actions; FastAPI on Railway (Alembic pre-deploy) with a Next.js research UI on Vercel.",
+      "Made SEC filing search point-in-time and source-grounded, measured by 2.69M parsed chunks from 2,749 10-K/10-Q filings, by combining PostgreSQL GIN full-text BM25, pgvector HNSW halfvec Voyage embeddings, exact company resolution, query expansion, and SEC acceptance-time filters.",
+      "Reduced unsupported generation in research answers, measured by citation-verified responses and deliberate abstention, by running a bounded LangGraph workflow that resolves filters, retrieves text/tables/facts, reranks evidence, gates claims, and verifies citations.",
+      "Turned filings into reusable research datasets, measured by JSON, CSV, and Parquet exports for point-in-time issuer-period panels, by adding typed Company Facts queries and provider-neutral filing event studies with leakage checks and persisted manifests.",
+      "Simplified the retrieval stack, measured by one PostgreSQL system of record instead of separate search, vector, queue, and analytics services, by storing metadata, lexical/vector indexes, facts, traces, ingestion manifests, and experiments together.",
+      "Kept ingestion resumable and deployable, measured by staged GitHub Actions runs and Railway pre-deploy migrations, by adding provider backoff, stage manifests, Alembic, FastAPI, and a Vercel-hosted Next.js UI.",
     ],
     links: [
       { label: "Visit thefdre.com", href: site.links.fdre },
       { label: "View on GitHub", href: site.links.fdreRepo },
     ],
+    media: {
+      src: "/media/fdre-research-answer.png",
+      alt: "FDRE research answer for META data-center capex commitments: a citation-verified figure with retrieval-confidence score, evidence gate, hybrid dense/sparse/rerank breakdown, and the exact cited 10-Q passage.",
+      width: 1427,
+      height: 871,
+      caption:
+        "Cited answer view: a citation-verified figure pulled from META's 10-Q, with retrieval-confidence scoring, evidence gate, hybrid dense/sparse/rerank scores, and the exact supporting passage.",
+    },
   },
   {
     title: "Embers",
@@ -225,19 +262,19 @@ const projects: Project[] = [
         value: "Top 5",
         label: "of 172 teams",
         tone: "green",
-        count: { from: 172, to: 5, prefix: "Top ", durationMs: 1550 },
+        count: { from: 172, to: 5, prefix: "Top ", durationMs: 2600 },
       },
       {
         value: "90%+",
         label: "detection accuracy",
         tone: "white",
-        count: { from: 0, to: 90, suffix: "%+", durationMs: 1550 },
+        count: { from: 0, to: 90, suffix: "%+", durationMs: 2600 },
       },
       {
         value: "3",
         label: "hackathon awards",
         tone: "gold",
-        count: { from: 0, to: 3, durationMs: 1550 },
+        count: { from: 0, to: 3, durationMs: 2600 },
       },
     ],
     tags: [
@@ -252,10 +289,10 @@ const projects: Project[] = [
       "APIs",
     ],
     details: [
-      "Led the team building Embers: a React + Flask computer vision app that hit 90%+ detection accuracy auto-inventorying household items from ~30s videos for wildfire insurance claims.",
-      "YOLOv11 + OpenCV on walkthrough video to localize objects; crops feed Gemini for consistent labels and dollar estimates; dashboard totals insured value with per-item confidence (Flask + Supabase).",
-      "Voice assistant: Whisper plus Gemini and ElevenLabs for hands-free asset valuation; estimated ~50% reduction in manual claim documentation time.",
-      "Top 5 Finalist of 172 teams · Best Use of Google Gemini API · Best FinTech Project.",
+      "Led Embers to hackathon finals and awards, measured by Top 5 of 172 teams, Best Use of Google Gemini API, and Best FinTech Project, by building a React + Flask app that auto-inventoried household items from ~30s wildfire-claim videos.",
+      "Automated insurance inventory valuation, measured by 90%+ detection accuracy and per-item confidence/value outputs, by localizing objects with YOLOv11 and OpenCV, sending crops to Gemini, and storing dashboard results in Flask and Supabase.",
+      "Reduced manual claim documentation effort, measured by an estimated ~50% time savings, by adding a voice assistant with Whisper, Gemini, and ElevenLabs for hands-free asset valuation.",
+      "Presented a complete claim workflow under hackathon constraints, measured by three LA Hacks awards, by integrating video capture, detection overlays, inventory totals, valuation, and conversational assistance into one demo.",
     ],
     links: [
       { label: "Embers on Devpost", href: "https://devpost.com/software/insurefire" },
@@ -308,9 +345,9 @@ const projects: Project[] = [
     ],
     tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
     details: [
-      "Competition-grade C++ across graphs, DP, segment trees, and computational geometry.",
-      "gdb profiling to chase down edge cases under tight memory and runtime budgets.",
-      "Platinum is the top of the four-division ladder; Bronze → Silver → Gold → Platinum.",
+      "Reached USACO Platinum, measured by a perfect 1000/1000 Gold Division contest score, by solving competition-grade C++ problems across graphs, dynamic programming, segment trees, and computational geometry.",
+      "Improved contest reliability under hard limits, measured by accepted solutions within tight memory and runtime budgets, by using gdb profiling to isolate edge cases and performance bottlenecks.",
+      "Advanced to the top USACO division, measured by Bronze to Silver to Gold to Platinum progression, by consistently solving higher-difficulty algorithmic contest sets.",
     ],
   },
   {
@@ -331,6 +368,12 @@ const projects: Project[] = [
       detail:
         "IEEE Intelligent Transportation Systems Conference Proceedings 2023",
       meta: "Peer-reviewed research venue",
+      logo: {
+        src: "/images/gc-inf/ieee-logo.png",
+        alt: "IEEE logo",
+        width: 1000,
+        height: 1083,
+      },
     },
     metrics: [
       {
@@ -339,8 +382,13 @@ const projects: Project[] = [
         tone: "green",
         count: { from: 0, to: 24, suffix: "%", durationMs: 2600 },
       },
-      { value: "IEEE", label: "published" },
-      { value: "1st", label: "single author" },
+      {
+        value: "Top 30",
+        label: "Team Canada · ISEF",
+        tone: "white",
+        count: { from: 0, to: 30, prefix: "Top ", durationMs: 2600 },
+      },
+      { value: "1st", label: "sole-author IEEE paper", tone: "white" },
     ],
     tags: [
       "Python",
@@ -352,10 +400,10 @@ const projects: Project[] = [
       "Data Pipelines",
     ],
     details: [
-      "Engineered GC-INF: a hybrid 4-layer Graph ConvNet + Informer that learns spatial-temporal patterns on road graphs to predict intersection turning ratios for adaptive control, in production-quality PyTorch.",
-      "Chebyshev graph convolutions on the road network feed Informer's ProbSparse attention; Adam + cosine decay on raw turning-ratio series.",
-      "Cut 15-minute turning-ratio forecast error by 24% RMSE vs STGCN (IJCAI '17).",
-      "Single-author paper and session chair for Simulation and Control at IEEE ITSC 2023; Team Canada–ISEF finalist (top 30 Canada).",
+      "Improved traffic turning-ratio forecasting, measured by 24% lower RMSE than STGCN, by engineering GC-INF as a 4-layer Graph ConvNet + Informer model that learns spatial-temporal road-graph patterns in PyTorch.",
+      "Captured long-range traffic dependencies efficiently, measured by stable 15-minute turning-ratio forecasts, by feeding Chebyshev graph-convolution outputs into Informer's ProbSparse attention with Adam and cosine decay on raw series.",
+      "Validated the model against a prior benchmark, measured by 24% RMSE improvement over STGCN (IJCAI '17), by comparing GC-INF on intersection turning-ratio prediction tasks.",
+      "Earned peer-reviewed visibility for independent research, measured by a single-author IEEE ITSC 2023 paper, Simulation and Control session chair role, and Team Canada ISEF finalist status, by writing, presenting, and defending the GC-INF work.",
     ],
     links: [
       { label: "Read paper", href: site.links.gcinf },
@@ -420,9 +468,9 @@ const projects: Project[] = [
       "Backpropagation",
     ],
     details: [
-      "MATLAB backpropagation feed-forward network trained to generate predicted pressure maps.",
-      "Embedded the ANN in an end-to-end aero-analytics stack to drive wing geometry choices.",
-      "Single-author publication in Highlights in Science Engineering and Technology.",
+      "Made aerodynamic iteration faster, measured by sub-second pressure-map predictions, by training a MATLAB backpropagation feed-forward neural network as a CFD surrogate.",
+      "Reduced simulated drag while exploring wing designs, measured by 43% drag reduction and 100x iteration speedup, by embedding the ANN in an end-to-end aero-analytics stack for geometry decisions.",
+      "Published the single-author research outcome, measured by a Highlights in Science Engineering and Technology paper and CWSF gold medal, by documenting the CFD, surrogate-model, and optimization workflow.",
     ],
     links: [{ label: "Read paper", href: site.links.f1cfd }],
   },
@@ -438,7 +486,7 @@ const projects: Project[] = [
     summary:
       "OR + ML research accelerating large-scale Capacitated Vehicle Routing Problem solvers: mined Column Generation patterns to prune branches faster, with SLURM-scale experiments and a JavaFX explorer for researchers.",
     impact:
-      "15% C++ solver speedup on TB-scale instances of an NP-hard problem; Best Paper at SSTP.",
+      "15% C++ solver speedup on large CVRP instances (1,000+ nodes, 40+ vehicles) of an NP-hard problem; Best Paper at SSTP.",
     award: {
       label: "Best Paper Award",
       detail: "Student Science Training Program",
@@ -459,7 +507,12 @@ const projects: Project[] = [
         tone: "green",
         count: { from: 0, to: 15, suffix: "%", durationMs: 2600 },
       },
-      { value: "TB", label: "instance scale" },
+      {
+        value: "1,000+",
+        label: "nodes solved with 40+ vehicles",
+        tone: "white",
+        count: { from: 0, to: 1000, suffix: "+", thousands: true, durationMs: 2600 },
+      },
       {
         value: "10k+",
         label: "SLURM cores used",
@@ -469,10 +522,10 @@ const projects: Project[] = [
     ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],
     details: [
-      "Trained ML on dual-value and variable patterns from Column Generation pricing problems to recognize unproductive branches early (15% C++ solver speedup on TB-scale instances).",
-      "Ran simulations on the UF HiPerGator supercomputer (SLURM batch jobs across tens of thousands of cores).",
-      "Built a JavaFX route-visualization tool so OR researchers could step through solver decisions interactively (screenshot below).",
-      "Best Paper Award at SSTP (Student Science Training Program).",
+      "Accelerated large CVRP solving, measured by a 15% C++ solver speedup on 1,000+ node instances with 40+ vehicles, by training ML on dual-value and variable patterns from Column Generation pricing problems to prune unproductive branches earlier.",
+      "Scaled experiments across university HPC resources, measured by SLURM runs across tens of thousands of cores on UF HiPerGator, by batching solver simulations and collecting performance traces.",
+      "Improved researcher inspection of solver behavior, measured by an interactive route exploration workflow, by building a JavaFX visualizer for stepping through generated CVRP solutions.",
+      "Converted the internship research into a recognized paper, measured by Best Paper Award at SSTP, by presenting the ML-guided branch-pruning approach and experimental results.",
     ],
     media: {
       src: "/media/cvrp-visualizer.png",
@@ -485,9 +538,9 @@ const projects: Project[] = [
 ];
 
 function formatCountPart(value: number, count: MetricCount) {
-  return count.decimals != null
-    ? value.toFixed(count.decimals)
-    : String(Math.round(value));
+  if (count.decimals != null) return value.toFixed(count.decimals);
+  const rounded = Math.round(value);
+  return count.thousands ? rounded.toLocaleString("en-US") : String(rounded);
 }
 
 function formatCountValue(
