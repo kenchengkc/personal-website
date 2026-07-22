@@ -386,7 +386,7 @@ const projects: Project[] = [
         value: "Top 30",
         label: "Team Canada · ISEF",
         tone: "white",
-        count: { from: 0, to: 30, prefix: "Top ", durationMs: 2600 },
+        count: { from: 200, to: 30, prefix: "Top ", durationMs: 2600 },
       },
       { value: "1st", label: "sole-author IEEE paper", tone: "white" },
     ],
