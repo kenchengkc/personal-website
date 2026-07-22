@@ -108,13 +108,13 @@ const projects: Project[] = [
         value: "1.04B+",
         label: "option records",
         tone: "white",
-        count: { from: 0, to: 1.04, decimals: 2, suffix: "B+" },
+        count: { from: 0, to: 1.04, decimals: 2, suffix: "B+", durationMs: 2600 },
       },
       {
         value: "~50",
         label: "monthly active users",
         tone: "green",
-        count: { from: 0, to: 50, prefix: "~" },
+        count: { from: 0, to: 50, prefix: "~", durationMs: 2600 },
       },
       {
         value: "50-100",
@@ -126,6 +126,7 @@ const projects: Project[] = [
           fromSecondary: 0,
           toSecondary: 100,
           separator: "-",
+          durationMs: 2600,
         },
       },
     ],
