@@ -82,6 +82,53 @@ const PANEL_TABS: { id: PanelTab; label: string }[] = [
 
 const projects: Project[] = [
   {
+    title: "Amazon",
+    category: "SCOT · supply-chain forecasting infrastructure",
+    dates: "Summer 2026",
+    role: {
+      title: "Software Development Engineer Intern",
+      org: "Amazon · Long-Term Planning and Forecasting (LTPF)",
+      location: "Supply Chain Optimization Technologies (SCOT)",
+    },
+    summary:
+      "Built a centralized business configuration service and monorepo for the teams behind MOSAIC, Amazon's unified topline and cube-demand forecasting platform, and related forecasting services.",
+    impact:
+      "Adopted by all 12 engineers on the team, with two delivery paths in production: services either import the config package at runtime or read versioned artifacts from the S3 path published by its CDK deployment.",
+    metrics: [
+      {
+        value: "12",
+        label: "engineers on the service",
+        tone: "green",
+        count: { from: 0, to: 12, durationMs: 2600 },
+      },
+      {
+        value: "2",
+        label: "config delivery paths",
+        tone: "white",
+        count: { from: 0, to: 2, durationMs: 1800 },
+      },
+      {
+        value: "SCOT",
+        label: "forecasting infrastructure",
+        tone: "white",
+      },
+    ],
+    tags: [
+      "AWS CDK",
+      "Amazon S3",
+      "Monorepo",
+      "Configuration Management",
+      "Service Architecture",
+      "Developer Experience",
+      "Supply Chain Forecasting",
+    ],
+    details: [
+      "Gave forecasting services one reviewable source of truth for business configuration, measured by adoption across all 12 engineers on the team, by building a centralized config service and monorepo for MOSAIC, Amazon's unified topline and cube-demand forecasting platform, and related services.",
+      "Let each consuming service integrate the way that suited it, measured by two supported delivery paths, by shipping configuration both as a package imported directly at runtime and as versioned artifacts read from a published S3 path.",
+      "Made configuration releases repeatable and auditable, measured by versioned artifacts landing in S3 on every release, by packaging the config repo with AWS CDK and deploying it to S3 buckets.",
+    ],
+  },
+  {
     title: "Quantiv",
     category: "Earnings · options-implied expected moves",
     dates: "Jul 2025 - Present",

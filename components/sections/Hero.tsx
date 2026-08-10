@@ -124,14 +124,11 @@ export function Hero() {
 
         <ScrollReveal as="p" className="v2-hero-sub" delay={0.09} y={22}>
           CS undergrad at <strong>Columbia</strong> (Egleston Scholar,{" "}
-          <strong>top 1% of class</strong>, GPA 3.76).{" "}
+          <strong>top 1% of class</strong>, GPA 3.8).{" "}
           <strong>IEEE-published</strong> in deep learning,{" "}
           <strong>USACO Platinum perfect score</strong>, and currently a{" "}
-          <strong>Software Development Engineer intern at Amazon</strong> (SCOT),
-          building a centralized business config service for the teams behind{" "}
-          <strong>MOSAIC</strong> &mdash; Amazon&rsquo;s unified topline, cube
-          demand forecast, and related forecasting services. Fluent in{" "}
-          <strong>Python and C++</strong>; love tough puzzles.
+          <strong>Software Development Engineer intern at Amazon</strong>.
+          Fluent in <strong>Python and C++</strong>; love tough puzzles.
         </ScrollReveal>
 
         <ScrollReveal className="v2-hero-actions" delay={0.13} y={20}>
@@ -156,7 +153,7 @@ export function Hero() {
           <ScrollReveal as="span" delay={0.15} variant="panel" y={18}>
             <em>Columbia University</em>
             <b>B.S. Computer Science</b>
-            <small>Statistics minor · GPA 3.76 · Expected May 2028</small>
+            <small>Statistics minor · GPA 3.8 · Expected May 2028</small>
           </ScrollReveal>
           <ScrollReveal as="span" delay={0.19} variant="panel" y={18}>
             <em>Coursework</em>

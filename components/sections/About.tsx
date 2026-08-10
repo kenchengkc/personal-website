@@ -25,7 +25,7 @@ const skills = [
   {
     label: "Cloud / Infra",
     items: [
-      "AWS (EC2, S3)",
+      "AWS (EC2, S3, CDK)",
       "Docker",
       "Kubernetes",
       "Terraform",
@@ -42,27 +42,28 @@ export function About() {
       <div className="v2-about">
         <div className="v2-about-copy">
           <ScrollReveal as="p" delay={0.02}>
-            I&rsquo;m a Computer Science student at <b>Columbia</b>, focused on{" "}
-            <b>machine learning</b>, <b>quantitative finance</b>, and the
-            systems that hold them up. I like problems where the math, the
-            model, and the infra all have to agree.
+            I work on <b>machine learning</b>, <b>quantitative finance</b>, and
+            the systems that hold them up. The problems I like are the ones
+            where the math, the model, and the infra all have to agree.
           </ScrollReveal>
           <ScrollReveal as="p" delay={0.08}>
-            This summer I&rsquo;m a{" "}
-            <b>Software Development Engineer (SDE) intern at Amazon</b>, on the
-            Long-Term Planning and Forecasting (LTPF) team in Supply Chain
-            Optimization Technologies (SCOT). Alongside that I build{" "}
-            <b>Quantiv</b>, an options-implied earnings platform on{" "}
-            <b>Vercel</b>: multi-week calendar, screener, symbol pages, and a{" "}
-            <b>Clerk</b> watchlist over nightly JSON, with <b>LightGBM</b>{" "}
-            scoring on <b>DuckDB</b> / Parquet and live quotes through{" "}
-            <b>Upstash</b>.
+            At Amazon this summer I&rsquo;m on the Long-Term Planning and
+            Forecasting (LTPF) team in Supply Chain Optimization Technologies
+            (SCOT), where I built a centralized business configuration service
+            for <b>MOSAIC</b>, the unified topline and cube-demand forecasting
+            platform, and the services around it.{" "}
+            <b>All 12 engineers on the team</b> use it, either importing the
+            config package at runtime or reading versioned artifacts my{" "}
+            <b>CDK</b> deployment publishes to <b>S3</b>.
           </ScrollReveal>
           <ScrollReveal as="p" delay={0.14}>
-            Before that I published single-author at the <b>IEEE ITSC</b> on
-            graph-network traffic forecasting (24% RMSE win over STGCN), earned{" "}
-            <b>USACO Platinum</b> with a perfect Gold score, and built a CFD +
-            neural-net F1 wing optimizer.
+            Alongside that I build <b>Quantiv</b>, an options-implied earnings
+            platform on <b>Vercel</b>: multi-week calendar, screener, symbol
+            pages, and a <b>Clerk</b> watchlist over nightly JSON, with{" "}
+            <b>LightGBM</b> scoring on <b>DuckDB</b> / Parquet and live quotes
+            through <b>Upstash</b>. Before Columbia I published single-author at
+            the <b>IEEE ITSC</b> on graph-network traffic forecasting (24% RMSE
+            win over STGCN) and built a CFD + neural-net F1 wing optimizer.
           </ScrollReveal>
         </div>
         <div className="v2-about-side">
