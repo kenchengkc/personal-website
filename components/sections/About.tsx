@@ -25,7 +25,7 @@ const skills = [
   {
     label: "Cloud / Infra",
     items: [
-      "AWS (EC2, S3, CDK)",
+      "AWS (EC2, S3, Lambda, CDK)",
       "Docker",
       "Kubernetes",
       "Terraform",
@@ -48,13 +48,10 @@ export function About() {
           </ScrollReveal>
           <ScrollReveal as="p" delay={0.08}>
             At Amazon this summer I&rsquo;m on the Long-Term Planning and
-            Forecasting (LTPF) team in Supply Chain Optimization Technologies
-            (SCOT), where I built a centralized business configuration service
-            for <b>MOSAIC</b>, the unified topline and cube-demand forecasting
-            platform, and the services around it.{" "}
-            <b>All 12 engineers on the team</b> use it, either importing the
-            config package at runtime or reading versioned artifacts my{" "}
-            <b>CDK</b> deployment publishes to <b>S3</b>.
+            Forecasting team in Supply Chain Optimization Technologies (SCOT),
+            building the centralized <b>Config package</b> that all 13 engineers
+            use to drive <b>MOSAIC</b>, our long-term revenue and inventory
+            forecasting platform.
           </ScrollReveal>
           <ScrollReveal as="p" delay={0.14}>
             Alongside that I build <b>Quantiv</b>, an options-implied earnings

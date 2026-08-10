@@ -83,49 +83,51 @@ const PANEL_TABS: { id: PanelTab; label: string }[] = [
 const projects: Project[] = [
   {
     title: "Amazon",
-    category: "SCOT · supply-chain forecasting infrastructure",
-    dates: "Summer 2026",
+    category: "SCOT · long-term planning configuration",
+    dates: "Jun 2026 - Present",
     role: {
       title: "Software Development Engineer Intern",
       org: "Amazon · Long-Term Planning and Forecasting (LTPF)",
       location: "Supply Chain Optimization Technologies (SCOT)",
     },
     summary:
-      "Built a centralized business configuration service and monorepo for the teams behind MOSAIC, Amazon's unified topline and cube-demand forecasting platform, and related forecasting services.",
+      "Building a centralized Config package for MOSAIC, Amazon SCOT's long-term planning platform for revenue forecasts and inventory estimates, replacing legacy per-service setups with version-controlled JSON shared across 17 interconnected packages and services.",
     impact:
-      "Adopted by all 12 engineers on the team, with two delivery paths in production: services either import the config package at runtime or read versioned artifacts from the S3 path published by its CDK deployment.",
+      "Used by all 13 engineers on the team, with automated cross-config dependency tracking that cut manual comparison time by roughly 90%, and cross-lane delivery through Python Lambda publish/retrieve in S3 and Amazon Coral APIs.",
     metrics: [
       {
-        value: "12",
+        value: "17",
+        label: "packages and services",
+        tone: "white",
+        count: { from: 0, to: 17, durationMs: 2600 },
+      },
+      {
+        value: "13",
         label: "engineers on the service",
         tone: "green",
-        count: { from: 0, to: 12, durationMs: 2600 },
+        count: { from: 0, to: 13, durationMs: 2600 },
       },
       {
-        value: "2",
-        label: "config delivery paths",
-        tone: "white",
-        count: { from: 0, to: 2, durationMs: 1800 },
-      },
-      {
-        value: "SCOT",
-        label: "forecasting infrastructure",
-        tone: "white",
+        value: "~90%",
+        label: "less manual comparison",
+        tone: "green",
+        count: { from: 0, to: 90, prefix: "~", suffix: "%", durationMs: 2600 },
       },
     ],
     tags: [
+      "Python",
+      "TypeScript",
       "AWS CDK",
+      "AWS Lambda",
       "Amazon S3",
-      "Monorepo",
+      "AWS Glue",
+      "Amazon Coral",
       "Configuration Management",
-      "Service Architecture",
-      "Developer Experience",
-      "Supply Chain Forecasting",
     ],
     details: [
-      "Gave forecasting services one reviewable source of truth for business configuration, measured by adoption across all 12 engineers on the team, by building a centralized config service and monorepo for MOSAIC, Amazon's unified topline and cube-demand forecasting platform, and related services.",
-      "Let each consuming service integrate the way that suited it, measured by two supported delivery paths, by shipping configuration both as a package imported directly at runtime and as versioned artifacts read from a published S3 path.",
-      "Made configuration releases repeatable and auditable, measured by versioned artifacts landing in S3 on every release, by packaging the config repo with AWS CDK and deploying it to S3 buckets.",
+      "Replaced legacy per-service configuration with one version-controlled source of truth, measured by shared JSON config across 17 interconnected packages and services used by all 13 engineers on the team, by building a centralized Config package for MOSAIC and the forecasting services around it.",
+      "Cut the manual work of reconciling configuration changes, measured by roughly 90% less manual comparison time, by automating cross-config dependency tracking from Research Scientists' model outputs through to downstream Business Intelligence Engineer configurations.",
+      "Let services consume configuration across lanes, measured by working publish and retrieve paths in production, by adding Python Lambda functions that write and read configs in S3, exposing them through Amazon Coral APIs, and provisioning the infrastructure with TypeScript AWS CDK.",
     ],
   },
   {
