@@ -2,25 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
-import {
-  ArrowRight,
-  Box,
-  BrainCircuit,
-  ChartLine,
-  Database,
-  FileText,
-  Gauge,
-  GitBranch,
-  Medal,
-  Network,
-  Route,
-  Search,
-  Trophy,
-  Users,
-  Video,
-  Wind,
-  type LucideIcon,
-} from "lucide-react";
+import { Medal } from "lucide-react";
 import { SectionHead } from "./SectionHead";
 import { Arrow } from "@/components/icons/Icons";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
@@ -63,12 +45,6 @@ type ProjectMetric = {
   count?: MetricCount;
 };
 
-type ProjectDiagram = {
-  label: string;
-  nodes: { label: string; icon: LucideIcon }[];
-  outcome: string;
-};
-
 type Project = {
   title: string;
   category: string;
@@ -76,7 +52,6 @@ type Project = {
   /** Former “Experience” row merged into this project */
   role?: { title: string; org: string; location: string };
   summary: string;
-  diagram: ProjectDiagram;
   metrics: ProjectMetric[];
   award?: { label: string; detail: string };
   brand?: {
@@ -88,6 +63,7 @@ type Project = {
       alt: string;
       variant?: "wide" | "square";
       lightBackground?: boolean;
+      compact?: boolean;
       width?: number;
       height?: number;
     };
@@ -102,7 +78,7 @@ type PanelTab = "overview" | "build";
 
 const PANEL_TABS: { id: PanelTab; label: string }[] = [
   { id: "overview", label: "Overview" },
-  { id: "build", label: "Build" },
+  { id: "build", label: "Details" },
 ];
 
 const projects: Project[] = [
@@ -117,15 +93,6 @@ const projects: Project[] = [
     },
     summary:
       "Centralizing MOSAIC configuration for Amazon SCOT's revenue and inventory forecasts.",
-    diagram: {
-      label: "Amazon configuration flow",
-      nodes: [
-        { label: "Central config", icon: GitBranch },
-        { label: "17 services", icon: Box },
-        { label: "13 engineers", icon: Users },
-      ],
-      outcome: "~90% less manual comparison",
-    },
     brand: {
       label: "Amazon",
       detail: "Amazon",
@@ -135,6 +102,7 @@ const projects: Project[] = [
         alt: "Amazon logo",
         variant: "wide",
         lightBackground: true,
+        compact: true,
         width: 840,
         height: 300,
       },
@@ -186,15 +154,6 @@ const projects: Project[] = [
     },
     summary:
       "Options-implied earnings analytics for calendars, screeners, symbol research, and watchlists.",
-    diagram: {
-      label: "Quantiv research flow",
-      nodes: [
-        { label: "1.04B+ records", icon: Database },
-        { label: "Earnings signals", icon: ChartLine },
-        { label: "70+ MAU", icon: Users },
-      ],
-      outcome: "Nightly data refreshes",
-    },
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -265,15 +224,6 @@ const projects: Project[] = [
     },
     summary:
       "Citation-verified SEC filing research that retrieves evidence and cites every answer.",
-    diagram: {
-      label: "FDRE research flow",
-      nodes: [
-        { label: "2,749 filings", icon: FileText },
-        { label: "Evidence agent", icon: Search },
-        { label: "Cited answers", icon: FileText },
-      ],
-      outcome: "50+ MAU · 2.69M chunks",
-    },
     brand: {
       label: "FDRE",
       detail: "Financial Document Retrieval Engine",
@@ -351,15 +301,6 @@ const projects: Project[] = [
     },
     summary:
       "Turns a home walkthrough video into an insurance-ready inventory with computer vision and Gemini valuations.",
-    diagram: {
-      label: "Embers claim workflow",
-      nodes: [
-        { label: "Home video", icon: Video },
-        { label: "YOLO + Gemini", icon: Search },
-        { label: "Claim inventory", icon: Box },
-      ],
-      outcome: "Top 5 of 172 teams",
-    },
     brand: {
       label: "LA Hacks",
       detail: "Google at LA Hacks (UCLA)",
@@ -439,15 +380,6 @@ const projects: Project[] = [
     dates: "Dec 2023",
     summary:
       "Reached Platinum, USACO's highest division.",
-    diagram: {
-      label: "USACO progression",
-      nodes: [
-        { label: "Gold contest", icon: Trophy },
-        { label: "1000 / 1000", icon: Medal },
-        { label: "Platinum", icon: Trophy },
-      ],
-      outcome: "Top 1% nationally",
-    },
     award: {
       label: "Gold → Platinum, perfect score",
       detail: "USA Computing Olympiad",
@@ -485,15 +417,6 @@ const projects: Project[] = [
     },
     summary:
       "Single-author IEEE research on graph-and-transformer traffic forecasting for adaptive signals.",
-    diagram: {
-      label: "GC-INF forecasting flow",
-      nodes: [
-        { label: "Road graph", icon: Network },
-        { label: "GCN + Informer", icon: BrainCircuit },
-        { label: "Signal forecast", icon: ChartLine },
-      ],
-      outcome: "24% lower RMSE",
-    },
     brand: {
       label: "IEEE",
       detail:
@@ -558,15 +481,6 @@ const projects: Project[] = [
     dates: "2021 - 2022",
     summary:
       "A MATLAB neural-network surrogate for near-instant F1 aerodynamic pressure-map predictions.",
-    diagram: {
-      label: "Aerodynamics workflow",
-      nodes: [
-        { label: "CFD data", icon: Wind },
-        { label: "Neural surrogate", icon: BrainCircuit },
-        { label: "Pressure map", icon: Gauge },
-      ],
-      outcome: "100x faster iteration · 43% less drag",
-    },
     brand: {
       label: "CWSF",
       detail: "Canada-Wide Science Fair",
@@ -623,15 +537,6 @@ const projects: Project[] = [
     },
     summary:
       "ML-guided branch pruning for large capacitated vehicle-routing solvers.",
-    diagram: {
-      label: "CVRP solver flow",
-      nodes: [
-        { label: "Solver traces", icon: Database },
-        { label: "ML pruning", icon: GitBranch },
-        { label: "Route solver", icon: Route },
-      ],
-      outcome: "15% faster C++ solver",
-    },
     award: {
       label: "Best Paper Award",
       detail: "Student Science Training Program",
@@ -701,40 +606,6 @@ function formatCountValue(
         ].join(count.separator ?? "-")
       : formatCountPart(value, count);
   return `${count.prefix ?? ""}${formatted}${count.suffix ?? ""}`;
-}
-
-function ProjectFlow({ diagram }: { diagram: ProjectDiagram }) {
-  return (
-    <div className="v2-work-flow" aria-label={diagram.label}>
-      <div className="v2-work-flow-track">
-        {diagram.nodes.map((node, index) => {
-          const Icon = node.icon;
-          const isLast = index === diagram.nodes.length - 1;
-
-          return (
-            <div className="v2-work-flow-part" key={node.label}>
-              <div className="v2-work-flow-step">
-                <Icon aria-hidden size={18} strokeWidth={1.8} />
-                <span>{node.label}</span>
-              </div>
-              {!isLast && (
-                <ArrowRight
-                  className="v2-work-flow-arrow"
-                  aria-hidden
-                  size={16}
-                  strokeWidth={1.8}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-      <div className="v2-work-flow-outcome">
-        <span>Outcome</span>
-        <b>{diagram.outcome}</b>
-      </div>
-    </div>
-  );
 }
 
 function AnimatedMetricValue({ metric }: { metric: ProjectMetric }) {
@@ -1033,6 +904,10 @@ export function Projects() {
                               active.brand.logo.lightBackground
                                 ? "v2-work-identity-logo--on-light"
                                 : ""
+                            } ${
+                              active.brand.logo.compact
+                                ? "v2-work-identity-logo--compact"
+                                : ""
                             }`}
                           />
                         ) : (
@@ -1107,7 +982,6 @@ export function Projects() {
 
                 <div className="v2-work-blurb">
                   <p className="v2-work-summary">{active.summary}</p>
-                  <ProjectFlow diagram={active.diagram} />
                 </div>
 
                 <div className="v2-work-metrics">
