@@ -92,7 +92,7 @@ const projects: Project[] = [
       location: "Supply Chain Optimization Technologies (SCOT)",
     },
     summary:
-      "Centralizing MOSAIC configuration for Amazon SCOT's revenue and inventory forecasts.",
+      "Building the shared, version-controlled configuration layer behind Amazon SCOT's long-term revenue and inventory forecasts, replacing scattered service setups with one reliable source of truth.",
     brand: {
       label: "Amazon",
       detail: "Amazon",
@@ -153,7 +153,7 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "Options-implied earnings analytics for calendars, screeners, symbol research, and watchlists.",
+      "I founded Quantiv, a production platform that turns options data and earnings calendars into fast, research-ready expected-move insights for active investors.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -223,7 +223,7 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "Citation-verified SEC filing research that retrieves evidence and cites every answer.",
+      "FDRE pairs agentic retrieval with citation verification so financial research questions lead to precise, source-grounded answers from SEC filings.",
     brand: {
       label: "FDRE",
       detail: "Financial Document Retrieval Engine",
@@ -300,7 +300,7 @@ const projects: Project[] = [
       location: "Los Angeles, CA, USA",
     },
     summary:
-      "Turns a home walkthrough video into an insurance-ready inventory with computer vision and Gemini valuations.",
+      "Embers turns a quick home walkthrough into a claims-ready inventory with real-time object detection, Gemini-backed valuations, and a hands-free voice assistant.",
     brand: {
       label: "LA Hacks",
       detail: "Google at LA Hacks (UCLA)",
@@ -379,7 +379,7 @@ const projects: Project[] = [
     category: "Competitive programming · USA Computing Olympiad",
     dates: "Dec 2023",
     summary:
-      "Reached Platinum, USACO's highest division.",
+      "I reached USACO Platinum by solving the contest's hardest algorithmic problems under pressure, capped by a perfect Gold Division score.",
     award: {
       label: "Gold → Platinum, perfect score",
       detail: "USA Computing Olympiad",
@@ -416,7 +416,7 @@ const projects: Project[] = [
       location: "Bilbao, Biscay, Spain",
     },
     summary:
-      "Single-author IEEE research on graph-and-transformer traffic forecasting for adaptive signals.",
+      "I authored and published a hybrid Graph ConvNet–Informer model that forecasts intersection turning ratios for more adaptive traffic signals.",
     brand: {
       label: "IEEE",
       detail:
@@ -480,7 +480,7 @@ const projects: Project[] = [
     category: "F1 aerodynamics surrogate model · CFD + ML",
     dates: "2021 - 2022",
     summary:
-      "A MATLAB neural-network surrogate for near-instant F1 aerodynamic pressure-map predictions.",
+      "I built a MATLAB neural surrogate that turns computationally expensive F1 CFD studies into near-instant pressure-map predictions for faster aerodynamic design.",
     brand: {
       label: "CWSF",
       detail: "Canada-Wide Science Fair",
@@ -536,7 +536,7 @@ const projects: Project[] = [
       location: "Gainesville, FL, USA",
     },
     summary:
-      "ML-guided branch pruning for large capacitated vehicle-routing solvers.",
+      "At UF, I developed an ML-guided branch-pruning approach that helps large vehicle-routing solvers reach good routes faster at HPC scale.",
     award: {
       label: "Best Paper Award",
       detail: "Student Science Training Program",
