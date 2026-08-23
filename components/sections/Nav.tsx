@@ -12,8 +12,6 @@ import {
   type MouseEvent,
 } from "react";
 import { ChevronDown } from "lucide-react";
-import { Download } from "@/components/icons/Icons";
-import { site } from "@/lib/site";
 
 const links = [
   { id: "home", label: "About" },
@@ -478,15 +476,6 @@ export function Nav() {
               ))}
             </div>
           )}
-          <a
-            className="v2-btn v2-btn--ghost v2-btn-resume v2-nav-resume"
-            href={site.resumePath}
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Download size={13} /> Resume
-          </a>
         </nav>
       </div>
     </header>

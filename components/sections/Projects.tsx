@@ -94,6 +94,18 @@ const projects: Project[] = [
       "Building a centralized Config package for MOSAIC, Amazon SCOT's long-term planning platform for revenue forecasts and inventory estimates, replacing legacy per-service setups with version-controlled JSON shared across 17 interconnected packages and services.",
     impact:
       "Used by all 13 engineers on the team, with automated cross-config dependency tracking that cut manual comparison time by roughly 90%, and cross-lane delivery through Python Lambda publish/retrieve in S3 and Amazon Coral APIs.",
+    brand: {
+      label: "Amazon",
+      detail: "Amazon",
+      meta: "",
+      logo: {
+        src: "/images/amazon/amazon-logo.svg",
+        alt: "Amazon logo",
+        variant: "wide",
+        width: 512,
+        height: 160,
+      },
+    },
     metrics: [
       {
         value: "17",
@@ -142,7 +154,7 @@ const projects: Project[] = [
     summary:
       "Founder and lead engineer on Quantiv: a Next.js dashboard for options-implied expected moves around earnings (multi-week calendar, screener, symbol detail, Clerk watchlist). The UI ships on Vercel from prebuilt JSON; a Python pipeline (DoltHub + Finnhub/FMP earnings, DuckDB over Parquet, LightGBM v3) refreshes nightly via GitHub Actions.",
     impact:
-      "Live on usequantiv.com, averaging ~50 monthly active users over a 1.04B+ option-record dataset; nightly CI data refresh, multi-provider quote overlay (Finnhub/Alpaca/Polygon), and optional Railway FastAPI for live ML re-inference.",
+      "Live on usequantiv.com with 70+ monthly active users (MAU) over a 1.04B+ option-record dataset; nightly CI data refresh, multi-provider quote overlay (Finnhub/Alpaca/Polygon), and optional Railway FastAPI for live ML re-inference.",
     brand: {
       label: "Quantiv",
       detail: "Quantiv",
@@ -160,10 +172,10 @@ const projects: Project[] = [
         count: { from: 0, to: 1.04, decimals: 2, suffix: "B+", durationMs: 2600 },
       },
       {
-        value: "~50",
-        label: "monthly active users",
+        value: "70+",
+        label: "Monthly Active Users (MAU)",
         tone: "green",
-        count: { from: 0, to: 50, prefix: "~", durationMs: 2600 },
+        count: { from: 0, to: 70, suffix: "+", durationMs: 2600 },
       },
       {
         value: "50-100",
@@ -194,7 +206,7 @@ const projects: Project[] = [
       "Railway",
     ],
     details: [
-      "Shipped a production options-research workflow, measured by ~50 monthly active users and 50-100 ticker analyses per week, by building calendar, screener, symbol, and watchlist routes with expected moves, per-expiry context, and live batch quotes.",
+      "Shipped a production options-research workflow, measured by 70+ monthly active users (MAU) and 50-100 ticker analyses per week, by building calendar, screener, symbol, and watchlist routes with expected moves, per-expiry context, and live batch quotes.",
       "Kept browsing fast and resilient, measured by static JSON navigation without FastAPI on every page load, by generating frontend data with tools/build_frontend_data.py and reserving Railway FastAPI for HMAC-signed live LightGBM inference.",
       "Automated daily data refreshes, measured by a 1.04B+ option-record dataset redeployed nightly, by orchestrating DoltHub sync, Finnhub/FMP earnings overlays, integrity gates, DuckDB/Parquet views, daily_score, Neon import, and Vercel public-data commits.",
       "Added authenticated portfolio tracking, measured by drag-reorder watchlists with live prices and batch ML, by storing user state in Neon Postgres via Clerk and keeping Parquet/model artifacts in Cloudflare R2 outside git.",
@@ -214,7 +226,7 @@ const projects: Project[] = [
     summary:
       "FDRE is a citation-verified RAG system for SEC filings. A LangGraph research agent resolves issuers and dates, retrieves and reranks 10-K/10-Q evidence, gates unsupported claims, and returns auditable answers with source citations.",
     impact:
-      "Live at thefdre.com over an S&P 500 corpus with multi-class issuers normalized to one company record (~5 years each): 2,749 SEC 10-K/10-Q filings parsed into ~2.69M chunks, embedded with Voyage voyage-4-large. FastAPI on Railway, frontend on Vercel.",
+      "Live at thefdre.com with 50+ monthly active users (MAU), over an S&P 500 corpus with multi-class issuers normalized to one company record (~5 years each): 2,749 SEC 10-K/10-Q filings parsed into ~2.69M chunks, embedded with Voyage voyage-4-large. FastAPI on Railway, frontend on Vercel.",
     brand: {
       label: "FDRE",
       detail: "Financial Document Retrieval Engine",
@@ -241,9 +253,10 @@ const projects: Project[] = [
         count: { from: 0, to: 2749, thousands: true, durationMs: 2600 },
       },
       {
-        value: "S&P 500",
-        label: "issuer universe",
+        value: "50+",
+        label: "Monthly Active Users (MAU)",
         tone: "green",
+        count: { from: 0, to: 50, suffix: "+", durationMs: 2600 },
       },
     ],
     tags: [

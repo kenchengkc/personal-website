@@ -347,22 +347,6 @@ button { font: inherit; cursor: pointer; }
   flex: 1 1 0;
   justify-content: flex-end;
 }
-.v2-nav-resume {
-  flex-shrink: 0;
-  padding-inline: 22px;
-}
-/* .v2-btn uses transition: all — dense ↔ full nav changes padding/font and
-   animates for ~180ms, reflowing the grid so the brand jitters. Only ease
-   properties that don’t affect width. */
-.v2-nav .v2-btn {
-  transition:
-    color 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.18s ease,
-    opacity 0.18s ease;
-}
 .v2-nav-tabs {
   position: relative;
   display: inline-flex;
@@ -661,16 +645,6 @@ button { font: inherit; cursor: pointer; }
   .v2-nav--dense .v2-brand {
     margin-left: 10px;
   }
-  /* Match scrolled (dense) resume pill to full-brand sizing so the actions
-     cluster width doesn’t pulse when toggling layout. */
-  .v2-nav--dense .v2-nav-resume {
-    padding: 9px 17px;
-    font-size: 13px;
-    font-weight: 600;
-    gap: 5px;
-    position: relative;
-    left: -3px;
-  }
   /* Grid: reliable middle column so the section control gets all space after the brand
      (flex + space-between alone was starving the trigger on some mobile engines). */
   .v2-nav-inner {
@@ -698,8 +672,7 @@ button { font: inherit; cursor: pointer; }
       box-shadow 0.18s ease;
   }
   /* Full brand (hero top) + blog: flexible space on the left, brand aligned to
-     its trailing edge so the mark sits nearer the actions; column 2 stays
-     intrinsic width so About + Resume stay flush right. */
+     its trailing edge so the mark sits nearer the section control. */
   .v2-nav:not(.v2-nav--dense) .v2-nav-inner {
     width: 100%;
     max-width: 100%;
@@ -735,13 +708,6 @@ button { font: inherit; cursor: pointer; }
     gap: 10px;
     position: relative;
     left: -5px;
-  }
-  .v2-nav:not(.v2-nav--dense) .v2-nav-resume {
-    margin-right: 0;
-    padding: 9px 17px;
-    font-size: 13px;
-    font-weight: 600;
-    gap: 5px;
   }
   .v2-nav:not(.v2-nav--dense) .v2-nav-mnav-trigger {
     width: fit-content;
@@ -2310,10 +2276,8 @@ button { font: inherit; cursor: pointer; }
 }
 /* Wide banner-style logos: natural aspect ratio in the identity row */
 .v2-work-identity-logo--wide {
-  width: auto;
-  height: auto;
-  max-height: 64px;
-  max-width: 200px;
+  width: clamp(120px, 20vw, 200px);
+  height: 64px;
   object-fit: contain;
   background: transparent;
   clip-path: none;
@@ -3433,135 +3397,6 @@ body {
     height: clamp(72px, 25vw, 112px);
   }
 }
-
-/* ============ INTRO ============ */
-.intro-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: #000;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.32s ease-out;
-  touch-action: none;
-  overscroll-behavior: none;
-}
-.intro-vignette {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, rgba(5,30,90,0.55) 0%, rgba(0,0,0,0.96) 70%);
-}
-.intro-grain {
-  position: absolute; inset: 0;
-  opacity: 0.16;
-  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 3px);
-  mix-blend-mode: overlay;
-}
-.intro-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 24px; }
-.intro-meta {
-  display: inline-flex; align-items: center; gap: 12px;
-  font-family: var(--font-mono); font-size: 11px;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--color-accent-text);
-}
-.intro-meta-dot {
-  width: 8px; height: 8px;
-  background: var(--color-accent);
-  border-radius: 50%;
-  animation: v2pulse 1s ease infinite;
-  box-shadow: 0 0 14px var(--color-accent-glow);
-}
-.intro-gantry {
-  display: flex; gap: 18px; padding: 22px 28px;
-  background: linear-gradient(180deg, #1a1a1d 0%, #08090a 100%);
-  border: 1px solid #1a1a1d;
-  position: relative; border-radius: 8px;
-}
-.intro-gantry::before {
-  content: ''; position: absolute; left: 0; right: 0; top: -8px; height: 8px;
-  background: repeating-linear-gradient(90deg, #1a1a1d 0 8px, #08090a 8px 16px);
-}
-.intro-pole { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.intro-pole-stem { width: 2px; height: 10px; background: #2a2a2e; }
-.intro-pole-bar {
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 6px;
-  background: #0a0a0b;
-  border: 1px solid #2a2a2e;
-  border-radius: 4px;
-}
-.intro-light {
-  width: 52px; height: 26px;
-  border-radius: 3px;
-  background: #16161a;
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: background 0.1s ease, box-shadow 0.1s ease;
-}
-.intro-light--on {
-  background: var(--color-accent-bright);
-  background-image: radial-gradient(
-    circle at 50% 35%,
-    color-mix(in srgb, var(--color-accent-text-strong) 88%, #fff) 0%,
-    var(--color-accent-bright) 48%,
-    #071b48 100%
-  );
-  box-shadow:
-    0 0 28px rgba(97, 137, 246, 0.78),
-    inset 0 0 14px color-mix(in srgb, var(--color-accent-text-strong) 70%, transparent);
-}
-.intro-light--out { background: #0a0a0b; box-shadow: none; }
-@media (max-width: 720px) {
-  .intro-light { width: 36px; height: 20px; }
-  .intro-gantry { gap: 12px; padding: 16px 18px; }
-}
-.intro-readout {
-  display: grid; grid-template-columns: 110px 1fr;
-  gap: 8px 18px;
-  padding: 14px 22px;
-  background: rgba(8,9,10,0.6);
-  border: 1px solid var(--color-border);
-  min-width: 320px;
-  font-family: var(--font-mono);
-  border-radius: 8px;
-}
-.intro-readout-row { display: contents; }
-.intro-readout-k { font-size: 11px; letter-spacing: 0.16em; color: var(--color-muted); text-transform: uppercase; align-self: center; }
-.intro-readout-v { font-size: 13px; letter-spacing: 0.06em; color: var(--color-text); text-transform: uppercase; font-weight: 600; }
-.intro-readout-v--accent { color: var(--color-accent-text); animation: v2pulse 0.6s ease infinite; }
-.intro-skip {
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
-  border: 1.5px solid rgba(255, 255, 255, 0.32);
-  border-radius: 999px;
-  background: rgba(8, 12, 22, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #fff;
-  cursor: pointer;
-  transition: border-color 0.18s ease, background 0.18s ease,
-    color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
-  box-shadow: 0 6px 22px -10px rgba(0, 0, 0, 0.7);
-}
-.intro-skip:hover {
-  border-color: var(--color-accent-bright);
-  background: color-mix(in srgb, var(--color-accent) 22%, rgba(8, 12, 22, 0.55));
-  color: var(--color-accent-text);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 28px -8px var(--color-accent-glow);
-}
-.intro-flash {
-  position: absolute; inset: 0; z-index: 4; pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(97,137,246,0.62) 0%, transparent 60%);
-  animation: v2flash 0.5s ease forwards;
-}
-@keyframes v2flash { 0% { opacity: 0.9; } 100% { opacity: 0; } }
 
 /* ============ BLOG ARTICLE (long-form) ============ */
 .prose-v2 { color: var(--color-text-dim); font-size: 16px; line-height: 1.75; }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Libre_Franklin, Lora } from "next/font/google";
 import "./globals.css";
-import { LightsOutIntro } from "@/components/intro/LightsOutIntro";
 import { ScrollRevealController } from "@/components/motion/ScrollRevealController";
 import { Starfield } from "@/components/sections/Starfield";
 import { site } from "@/lib/site";
@@ -55,7 +54,6 @@ export default function RootLayout({
         <div className="v2-bg-carbon" aria-hidden />
         <div className="v2-bg-glow" aria-hidden />
         <Starfield className="v2-stars--page" />
-        <LightsOutIntro />
         <ScrollRevealController />
         {children}
         {isVercel ? <Analytics /> : null}
