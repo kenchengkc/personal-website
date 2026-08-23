@@ -2257,6 +2257,72 @@ button { font: inherit; cursor: pointer; }
   max-width: 680px;
   opacity: 0.92;
 }
+.v2-work-flow {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid rgba(220, 228, 240, 0.12);
+  border-radius: 8px;
+  background: rgba(7, 10, 16, 0.72);
+}
+.v2-work-flow-track {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+.v2-work-flow-part {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1 1 0;
+}
+.v2-work-flow-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  min-height: 52px;
+  padding: 9px 10px;
+  border: 1px solid color-mix(in srgb, var(--color-accent-bright) 26%, var(--color-border));
+  border-radius: 7px;
+  background: linear-gradient(135deg, rgba(97, 137, 246, 0.11), rgba(7, 10, 16, 0.12));
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+.v2-work-flow-step svg {
+  flex: 0 0 auto;
+  color: var(--color-accent-text);
+}
+.v2-work-flow-arrow {
+  flex: 0 0 auto;
+  margin-inline: 7px;
+  color: var(--color-accent-bright);
+}
+.v2-work-flow-outcome {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(220, 228, 240, 0.1);
+}
+.v2-work-flow-outcome span {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.v2-work-flow-outcome b {
+  color: var(--color-accent-text);
+  font-size: 13px;
+  line-height: 1.25;
+}
 .v2-ieee-wordmark {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 700;
@@ -2282,6 +2348,11 @@ button { font: inherit; cursor: pointer; }
   background: transparent;
   clip-path: none;
   border-radius: 0;
+}
+.v2-work-identity-logo--on-light {
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 8px;
 }
 .v2-work-award {
   width: fit-content;
@@ -2603,6 +2674,25 @@ button { font: inherit; cursor: pointer; }
   .v2-work-metrics { grid-template-columns: 1fr; }
   .v2-work-metric {
     min-height: 96px;
+  }
+  .v2-work-flow-track {
+    align-items: stretch;
+  }
+  .v2-work-flow-part {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .v2-work-flow-arrow {
+    margin: 0;
+    transform: rotate(90deg);
+  }
+  .v2-work-flow-step {
+    width: 100%;
+    font-size: 11px;
+  }
+  .v2-work-flow-outcome {
+    flex-direction: column;
+    gap: 4px;
   }
 }
 
