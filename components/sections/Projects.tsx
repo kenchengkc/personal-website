@@ -98,13 +98,13 @@ const projects: Project[] = [
       detail: "Amazon",
       meta: "",
       logo: {
-        src: "/images/amazon/amazon-logo.png",
+        src: "/images/amazon/amazon-logo.svg",
         alt: "Amazon logo",
         variant: "wide",
         lightBackground: true,
         compact: true,
-        width: 840,
-        height: 300,
+        width: 399,
+        height: 133,
       },
     },
     metrics: [
@@ -378,8 +378,26 @@ const projects: Project[] = [
     title: "USACO Platinum",
     category: "Competitive programming · USA Computing Olympiad",
     dates: "Dec 2023",
+    role: {
+      title: "Platinum Division Competitor",
+      org: "USA Computing Olympiad (USACO)",
+      location: "National algorithmic programming competition",
+    },
     summary:
-      "I reached USACO Platinum by solving the contest's hardest algorithmic problems under pressure, capped by a perfect Gold Division score.",
+      "The USA Computing Olympiad is the U.S. national algorithmic programming competition and IOI selection pathway, where I advanced to its top Platinum division.",
+    brand: {
+      label: "USACO",
+      detail: "USA Computing Olympiad",
+      meta: "",
+      logo: {
+        src: "/images/usaco/usaco-logo.png",
+        alt: "USA Computing Olympiad logo",
+        variant: "wide",
+        lightBackground: true,
+        width: 900,
+        height: 130,
+      },
+    },
     award: {
       label: "Gold → Platinum, perfect score",
       detail: "USA Computing Olympiad",
@@ -401,6 +419,7 @@ const projects: Project[] = [
     ],
     tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
     details: [
+      "USACO is a national programming competition and U.S. IOI selection pathway built around progressively harder Bronze, Silver, Gold, and Platinum divisions.",
       "Reached USACO Platinum, measured by a perfect 1000/1000 Gold Division contest score, by solving competition-grade C++ problems across graphs, dynamic programming, segment trees, and computational geometry.",
       "Improved contest reliability under hard limits, measured by accepted solutions within tight memory and runtime budgets, by using gdb profiling to isolate edge cases and performance bottlenecks.",
       "Advanced to the top USACO division, measured by Bronze to Silver to Gold to Platinum progression, by consistently solving higher-difficulty algorithmic contest sets.",
