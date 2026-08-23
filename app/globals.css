@@ -3609,3 +3609,10 @@ body {
 .v2-proj-link:hover { background: rgba(13, 25, 40, 0.94); border-color: rgba(112, 204, 239, 0.54); }
 .v2-blog-tag { background: rgba(31, 91, 124, 0.16); }
 .prose-v2 a { text-decoration-color: rgba(112, 204, 239, 0.48); }
+
+/* Bring the personal mark and hero wordmark into the same restrained cyan
+   spectrum without changing their underlying artwork. */
+.v2-brand-mark img,
+.v2-hero-wordmark-img {
+  filter: hue-rotate(-28deg) saturate(0.78);
+}

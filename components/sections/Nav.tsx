@@ -279,11 +279,22 @@ export function Nav() {
         const navH = headerRef.current?.getBoundingClientRect().height ?? 72;
         const y = window.scrollY + navH + 28;
         let cur = "home";
-        for (const id of SECTION_IDS) {
-          const el = document.getElementById(id);
-          if (!el) continue;
-          const top = el.getBoundingClientRect().top + window.scrollY;
-          if (top <= y) cur = id;
+        const atDocumentEnd =
+          window.scrollY + window.innerHeight >=
+          document.documentElement.scrollHeight - 2;
+
+        // A tall viewport can reach the page bottom before the final section's
+        // heading crosses the nav-offset threshold. At the true document end,
+        // the final section is unambiguously the active one.
+        if (atDocumentEnd) {
+          cur = SECTION_IDS[SECTION_IDS.length - 1];
+        } else {
+          for (const id of SECTION_IDS) {
+            const el = document.getElementById(id);
+            if (!el) continue;
+            const top = el.getBoundingClientRect().top + window.scrollY;
+            if (top <= y) cur = id;
+          }
         }
         if (cur !== activeRef.current) {
           setActive(cur);
