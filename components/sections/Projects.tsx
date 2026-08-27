@@ -223,7 +223,7 @@ const projects: Project[] = [
       location: "New York, NY, USA",
     },
     summary:
-      "FDRE pairs agentic retrieval with citation verification so financial research questions lead to precise, source-grounded answers from SEC filings.",
+      "FDRE is hedge-fund-oriented research infrastructure for point-in-time SEC filing retrieval, citation-verified evidence, and reproducible cross-sectional research.",
     brand: {
       label: "FDRE",
       detail: "Financial Document Retrieval Engine",
@@ -238,22 +238,22 @@ const projects: Project[] = [
     },
     metrics: [
       {
-        value: "2.69M",
+        value: "2.71M",
         label: "parsed chunks",
         tone: "white",
-        count: { from: 0, to: 2.69, decimals: 2, suffix: "M", durationMs: 2600 },
+        count: { from: 0, to: 2.71, decimals: 2, suffix: "M", durationMs: 2600 },
       },
       {
-        value: "2,749",
+        value: "2,762",
         label: "SEC filings",
         tone: "white",
-        count: { from: 0, to: 2749, thousands: true, durationMs: 2600 },
+        count: { from: 0, to: 2762, thousands: true, durationMs: 2600 },
       },
       {
-        value: "50+",
-        label: "Monthly Active Users (MAU)",
+        value: "100%",
+        label: "issuer Recall@3 / @5",
         tone: "green",
-        count: { from: 0, to: 50, suffix: "+", durationMs: 2600 },
+        count: { from: 0, to: 100, suffix: "%", durationMs: 2600 },
       },
     ],
     tags: [
@@ -271,7 +271,8 @@ const projects: Project[] = [
       "Vercel",
     ],
     details: [
-      "Made SEC filing search point-in-time and source-grounded, measured by 2.69M parsed chunks from 2,749 10-K/10-Q filings, by combining PostgreSQL GIN full-text BM25, pgvector HNSW halfvec Voyage embeddings, exact company resolution, query expansion, and SEC acceptance-time filters.",
+      "Made SEC filing search point-in-time and source-grounded, measured by 2.71M parsed chunks from 2,762 10-K/10-Q filings across 498 S&P 500 issuers, by combining PostgreSQL GIN full-text search, pgvector HNSW halfvec Voyage embeddings, exact company resolution, query expansion, and SEC acceptance-time filters.",
+      "Validated the deployed cross-sectional research path over real HTTPS, measured by 28/28 successful frozen-development cases, issuer Recall@1/3/5 of 0.929/1.000/1.000, 100% condition correctness/lineage/grounding, 0% PIT leakage, and 1.86s end-to-end p95 latency.",
       "Reduced unsupported generation in research answers, measured by citation-verified responses and deliberate abstention, by running a bounded LangGraph workflow that resolves filters, retrieves text/tables/facts, reranks evidence, gates claims, and verifies citations.",
       "Turned filings into reusable research datasets, measured by JSON, CSV, and Parquet exports for point-in-time issuer-period panels, by adding typed Company Facts queries and provider-neutral filing event studies with leakage checks and persisted manifests.",
       "Simplified the retrieval stack, measured by one PostgreSQL system of record instead of separate search, vector, queue, and analytics services, by storing metadata, lexical/vector indexes, facts, traces, ingestion manifests, and experiments together.",
