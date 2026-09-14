@@ -55,12 +55,12 @@ export function About() {
           </ScrollReveal>
           <ScrollReveal as="p" delay={0.14}>
             Alongside that I build <b>Quantiv</b>, an options-implied earnings
-            platform on <b>Vercel</b>: multi-week calendar, screener, symbol
-            pages, and a <b>Clerk</b> watchlist over nightly JSON, with{" "}
-            <b>LightGBM</b> scoring on <b>DuckDB</b> / Parquet and live quotes
-            through <b>Upstash</b>. Before Columbia I published single-author at
-            the <b>IEEE ITSC</b> on graph-network traffic forecasting (24% RMSE
-            win over STGCN) and built a CFD + neural-net F1 wing optimizer.
+            platform on Vercel: multi-week calendar, screener, symbol pages, and
+            a Clerk watchlist over nightly JSON, with LightGBM scoring on DuckDB
+            / Parquet and live quotes through Upstash. Before Columbia I
+            published single-author at the <b>IEEE ITSC</b> on graph-network
+            traffic forecasting (24% RMSE win over STGCN) and built a CFD +
+            neural-net F1 wing optimizer.
           </ScrollReveal>
         </div>
         <div className="v2-about-side">

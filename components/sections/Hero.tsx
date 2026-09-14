@@ -72,12 +72,11 @@ export function Hero() {
         </ScrollReveal>
 
         <ScrollReveal as="p" className="v2-hero-sub" delay={0.09} y={22}>
-          CS undergrad at <strong>Columbia</strong> (Egleston Scholar,{" "}
-          <strong>top 1% of class</strong>, GPA 3.8).{" "}
-          <strong>IEEE-published</strong> in deep learning,{" "}
-          <strong>USACO Platinum perfect score</strong>, and currently a{" "}
-          <strong>Software Development Engineer intern at Amazon</strong>.
-          Fluent in <strong>Python and C++</strong>; love tough puzzles.
+          CS undergrad at <strong>Columbia</strong>, currently a Software
+          Development Engineer intern at <strong>Amazon</strong> working on
+          supply-chain forecasting infrastructure. Egleston Scholar with a 3.8
+          GPA, IEEE-published in deep learning, and a USACO Platinum qualifier.
+          Mostly Python and C++.
         </ScrollReveal>
 
         <ScrollReveal className="v2-hero-actions" delay={0.13} y={20}>
