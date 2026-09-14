@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef } from "react";
 import Link from "next/link";
 import { School } from "lucide-react";
 import {
@@ -12,79 +12,34 @@ import {
   Mail,
   Scholar,
 } from "@/components/icons/Icons";
-import { CarSilhouette } from "@/components/cars/CarSilhouette";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { site } from "@/lib/site";
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
-  /** Must live in React state so re-renders don't reset data-wheel-spin from JSX. */
-  const [wheelSpin, setWheelSpin] = useState(false);
-  const [wheelSpinDir, setWheelSpinDir] = useState<"forward" | "reverse">(
-    "forward",
-  );
-  const lastProgressRef = useRef(0);
-  const spinDirRef = useRef<"forward" | "reverse">("forward");
 
   useEffect(() => {
-    function updateHeroCar() {
+    function updateHeroParallax() {
       const hero = heroRef.current;
-      const track = hero?.querySelector<HTMLElement>(".v2-hero-track");
-      const car = hero?.querySelector<HTMLElement>(".v2-hero-track-car");
 
-      if (!hero || !track || !car) {
+      if (!hero) {
         return;
       }
-
-      const rect = hero.getBoundingClientRect();
-      const narrow = window.innerWidth < 720;
-      const progressDen = Math.max(
-        narrow ? 680 : 340,
-        window.innerHeight * (narrow ? 1.2 : 0.8),
-      );
-      const progress = Math.min(
-        1,
-        Math.max(0, -rect.top / progressDen),
-      );
-      /** Spin for the whole horizontal run: after first movement until the car reaches the far side (scroll up or down). */
-      const inMotion = progress > 0 && progress < 1;
-      setWheelSpin(inMotion);
-
-      if (inMotion) {
-        const prev = lastProgressRef.current;
-        if (progress > prev && spinDirRef.current !== "forward") {
-          spinDirRef.current = "forward";
-          setWheelSpinDir("forward");
-        } else if (progress < prev && spinDirRef.current !== "reverse") {
-          spinDirRef.current = "reverse";
-          setWheelSpinDir("reverse");
-        }
-      }
-      lastProgressRef.current = progress;
-
-      const carWidth = car.getBoundingClientRect().width;
-      const travel = Math.max(0, track.clientWidth - carWidth - 56);
-
-      hero.style.setProperty("--hero-car-x", `${-travel * progress}px`);
-      hero.style.setProperty(
-        "--hero-wheel-state",
-        inMotion ? "running" : "paused",
-      );
 
       // Parallax: how far the hero has scrolled up past the viewport top.
       // CSS layers multiply this by their own (small) factor so the backdrop
       // drifts slower than the copy and the wordmark lifts gently.
-      const scrolled = Math.max(0, -rect.top);
+      const scrolled = Math.max(0, -hero.getBoundingClientRect().top);
       hero.style.setProperty("--hero-shift", String(scrolled));
     }
 
-    updateHeroCar();
-    window.addEventListener("scroll", updateHeroCar, { passive: true });
-    window.addEventListener("resize", updateHeroCar);
+    updateHeroParallax();
+    window.addEventListener("scroll", updateHeroParallax, { passive: true });
+    window.addEventListener("resize", updateHeroParallax);
 
     return () => {
-      window.removeEventListener("scroll", updateHeroCar);
-      window.removeEventListener("resize", updateHeroCar);
+      window.removeEventListener("scroll", updateHeroParallax);
+      window.removeEventListener("resize", updateHeroParallax);
     };
   }, []);
 
@@ -96,13 +51,7 @@ export function Hero() {
   }
 
   return (
-    <section
-      className="v2-hero"
-      id="home"
-      ref={heroRef}
-      data-wheel-spin={wheelSpin ? "1" : "0"}
-      data-wheel-spin-dir={wheelSpinDir}
-    >
+    <section className="v2-hero" id="home" ref={heroRef}>
       <div className="v2-hero-bg" aria-hidden />
 
       <div className="v2-hero-copy">
@@ -176,26 +125,6 @@ export function Hero() {
           </ScrollReveal>
         </div>
       </div>
-
-      <ScrollReveal className="v2-hero-track" aria-hidden delay={0.16} y={18}>
-        <div className="v2-hero-track-tags">
-          <span className="v2-mono v2-mono--accent">CURRENT FOCUS</span>
-          <span className="v2-pill v2-pill--focus">● ACTIVE</span>
-        </div>
-        <div className="v2-hero-track-line" />
-        <div className="v2-hero-track-streaks">
-          <span className="v2-streak v2-streak--1" />
-          <span className="v2-streak v2-streak--2" />
-          <span className="v2-streak v2-streak--3" />
-          <span className="v2-streak v2-streak--4" />
-          <span className="v2-streak v2-streak--5" />
-        </div>
-        <CarSilhouette
-          className="v2-hero-track-car"
-          fill="var(--color-text)"
-        />
-        <div className="v2-hero-track-ground" />
-      </ScrollReveal>
 
       <ScrollReveal className="v2-hero-socials" delay={0.2} y={16}>
         <Link

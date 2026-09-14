@@ -759,11 +759,8 @@ button { font: inherit; cursor: pointer; }
   position: relative;
   padding-top: 12px;
   scroll-margin-top: 90px;
-  --hero-car-x: 0px;
-  --hero-wheel-state: paused;
 }
 .v2-hero-copy,
-.v2-hero-track,
 .v2-hero-socials,
 .v2-hero-wordmark { position: relative; z-index: 1; }
 
@@ -1225,342 +1222,32 @@ button { font: inherit; cursor: pointer; }
   border-radius: 999px;
   white-space: nowrap;
 }
-.v2-pill--focus {
-  border-color: color-mix(in srgb, var(--color-accent-bright) 70%, rgba(255, 255, 255, 0.22));
-  color: var(--color-accent-bright);
-}
 
 /* The "racing line" that bleeds across the section with the car perched on it */
-.v2-hero-track {
-  position: relative;
-  margin: 56px -28px 0;
-  height: 150px;
-  display: flex;
-  align-items: center;
-}
-.v2-hero-track::before {
-  content: '';
-  position: absolute;
-  left: 36%;
-  right: 4%;
-  top: 22%;
-  bottom: 8%;
-  background:
-    radial-gradient(ellipse at 58% 48%, rgba(97,137,246,0.18), transparent 64%),
-    linear-gradient(90deg, transparent, rgba(31,63,139,0.18), transparent);
-  filter: blur(14px);
-  opacity: 0.78;
-  pointer-events: none;
-}
-.v2-hero-track-tags {
-  position: absolute;
-  top: -22px;
-  left: 28px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-.v2-hero-track-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.08) 8%,
-    var(--color-accent) 50%,
-    rgba(255,255,255,0.08) 92%,
-    transparent 100%
-  );
-  transform: translateY(-0.5px);
-}
-.v2-hero-track-line::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 14px var(--color-accent-glow);
-  transform: translate(-50%, -50%);
-}
 
 /* Speed streaks behind the car. Five horizontal lines at varied lengths,
    thickness, and animation cadence. They stay invisible until the hero is
    in motion, then fly leftward to sell the speed read. */
-.v2-hero-track-streaks {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.v2-hero[style*="running"] .v2-hero-track-streaks { opacity: 1; }
-
-.v2-streak {
-  position: absolute;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.55) 35%,
-    rgba(255, 255, 255, 0.85) 60%,
-    transparent 100%
-  );
-  border-radius: 2px;
-  animation: v2streak 0.95s linear infinite;
-  will-change: transform, opacity;
-}
-.v2-streak--1 { top: 38%; right: -22%; width: 22%; animation-delay: 0s;    animation-duration: 0.85s; }
-.v2-streak--2 { top: 46%; right: -28%; width: 28%; animation-delay: 0.18s; animation-duration: 1.05s; opacity: 0.75; height: 1px; }
-.v2-streak--3 { top: 54%; right: -18%; width: 18%; animation-delay: 0.42s; animation-duration: 0.75s; height: 2px; }
-.v2-streak--4 { top: 62%; right: -34%; width: 34%; animation-delay: 0.08s; animation-duration: 1.2s;  opacity: 0.6; }
-.v2-streak--5 { top: 70%; right: -25%; width: 25%; animation-delay: 0.55s; animation-duration: 0.9s;  height: 1px; }
-.v2-streak--3 {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--color-accent) 60%, transparent) 30%,
-    var(--color-accent) 60%,
-    transparent 100%
-  );
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 60%, transparent);
-}
-@keyframes v2streak {
-  0%   { transform: translateX(0); opacity: 0; }
-  20%  { opacity: 1; }
-  100% { transform: translateX(-160%); opacity: 0; }
-}
 
 /* Subtle ground contact shadow under the car so it stops feeling like a
    floating cutout. */
-.v2-hero-track-ground {
-  position: absolute;
-  bottom: 8%;
-  right: 8%;
-  width: 50%;
-  height: 14px;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.32) 35%,
-    transparent 70%
-  );
-  filter: blur(3px);
-  transform: translateX(var(--hero-car-x, 0));
-  transition: transform 0.05s linear;
-}
-.v2-hero[style*="running"] .v2-hero-track-ground {
-  animation: v2groundShimmer 0.18s linear infinite;
-}
-@keyframes v2groundShimmer {
-  0%, 100% { opacity: 0.95; }
-  50%      { opacity: 0.78; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .v2-streak { animation: none !important; opacity: 0 !important; }
-  .v2-hero-track-ground { animation: none !important; }
-}
-
-.v2-hero-track-car {
-  position: absolute;
-  display: block;
-  isolation: isolate;
-  right: 5%;
-  top: 50%;
-  width: 560px;
-  aspect-ratio: 1644 / 530;
-  max-width: 78%;
-  transform: translate(var(--hero-car-x, 0px), -46%);
-  filter:
-    drop-shadow(0 16px 24px rgba(0,0,0,0.68))
-    drop-shadow(0 0 20px rgba(97,137,246,0.12));
-  will-change: transform;
-}
-.v2-hero-track-car::before,
-.v2-hero-track-car::after {
-  content: '';
-  position: absolute;
-  pointer-events: none;
-}
-.v2-hero-track-car::before {
-  z-index: 0;
-  left: 7%;
-  right: 3%;
-  top: 12%;
-  bottom: 9%;
-  background:
-    radial-gradient(ellipse at 66% 40%, rgba(97,137,246,0.2), transparent 58%),
-    radial-gradient(ellipse at 38% 76%, rgba(31,63,139,0.16), transparent 54%);
-  filter: blur(16px);
-  opacity: 0.7;
-}
-.v2-hero-track-car::after {
-  z-index: 1;
-  left: 7%;
-  right: 7%;
-  bottom: 3%;
-  height: 16%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(0,0,0,0.72), rgba(0,0,0,0.2) 48%, transparent 72%);
-  filter: blur(5px);
-  transform: translateY(36%);
-}
-.v2-hero-track-car-img {
-  position: relative;
-  z-index: 2;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  /* Shave anti-aliased white fringe from the PNG canvas edges */
-  clip-path: inset(0.65px);
-  /* Dark micro-halo matches page bg so lighter edge pixels blend in */
-  filter:
-    drop-shadow(0 0 0.6px rgb(2, 7, 19))
-    drop-shadow(0 0 2px rgba(2, 7, 19, 0.9))
-    drop-shadow(0 0 5px rgba(2, 7, 19, 0.38))
-    saturate(1.05) contrast(1.02) brightness(0.91) hue-rotate(2deg);
-  user-select: none;
-  pointer-events: none;
-}
 /* ============ STABLE 2.5D RACE CAR WHEELS ============ */
 
-.rb-wheel-shell {
-  position: absolute;
-  z-index: 3;
-  display: block;
-
-  --rb-wheel-perspective-x: 0.92;
-  --rb-wheel-tilt: -1deg;
-
-  transform:
-    translate(-50%, -50%)
-    rotate(var(--rb-wheel-tilt))
-    scaleX(var(--rb-wheel-perspective-x));
-
-  transform-origin: 50% 50%;
-  border-radius: 50%;
-  overflow: hidden;
-  pointer-events: none;
-  aspect-ratio: 1;
-  height: auto;
-
-  background: #020308;
-  box-shadow:
-    inset 0 0 8px 5px rgba(0, 0, 0, 0.9),
-    0 3px 8px rgba(0, 0, 0, 0.45);
-}
-
 /* Front wheel */
-.rb-wheel-shell--front {
-  left: 29.38%;
-  top: 75.2%;
-  width: 13.5%;
-
-  --rb-wheel-perspective-x: 0.92;
-  --rb-wheel-tilt: -1deg;
-}
 
 /* Rear wheel */
-.rb-wheel-shell--rear {
-  left: 89.72%;
-  top: 58.2%;
-  width: 13%;
-
-  --rb-wheel-perspective-x: 0.94;
-  --rb-wheel-tilt: -0.75deg;
-}
 
 /* Static base wheel from the car image */
-.rb-wheel {
-  display: block;
-  width: 100%;
-  height: auto;
-  transform-origin: 50% 50%;
-  border-radius: 50%;
-  filter:
-    drop-shadow(0 0 0.75px rgb(2, 7, 19))
-    drop-shadow(0 0 2px rgba(2, 7, 19, 0.82))
-    saturate(1.05) contrast(1.03) brightness(0.9) hue-rotate(2deg);
-}
 
 /* Remove the white highlight. Dark-only shading is safer. */
-.rb-wheel-shell::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  border-radius: 50%;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      transparent 0%,
-      transparent 58%,
-      rgba(0, 0, 0, 0.48) 100%
-    );
-}
 
 /* Optional motion blur on the static plate */
-.v2-hero-track-car .rb-wheel {
-  transition: filter 0.35s ease;
-  will-change: filter;
-}
-
-.v2-hero[style*="running"] .v2-hero-track-car .rb-wheel {
-  filter:
-    drop-shadow(0 0 0.75px rgb(2, 7, 19))
-    drop-shadow(0 0 2px rgba(2, 7, 19, 0.82))
-    saturate(1.05)
-    contrast(1.03)
-    brightness(0.9)
-    hue-rotate(2deg)
-    url(#rb-wheel-motion);
-}
 
 /* Fill the shell. No perspective here. */
-.rb-wheel-spinner {
-  position: absolute;
-  inset: 0;
-  display: block;
-  pointer-events: none;
-  opacity: 1;
-  transform: none;
-  perspective: none;
-  transform-style: flat;
-}
 
 /* No yaw animation here. */
-.rb-wheel-spin-yaw {
-  position: absolute;
-  inset: 0;
-  transform: none;
-  transform-origin: 50% 50%;
-  transform-style: flat;
-}
-
-.v2-hero[style*="running"] .rb-wheel-spin-yaw {
-  animation: none;
-}
 
 /* Clip slightly inside the outer edge to hide white/transparent fringe. */
-.rb-wheel-spin-inner {
-  position: absolute;
-  inset: 1.5px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #020308;
-  box-shadow: inset 0 0 10px 6px rgba(1, 3, 8, 0.88);
-}
 
 /*
   IMPORTANT:
@@ -1568,87 +1255,15 @@ button { font: inherit; cursor: pointer; }
   The image inside does NOT spin.
   This prevents hub-correction offsets from creating wobble.
 */
-.rb-wheel-spin-scale {
-  --rb-clip-overscan: 1.14;
-
-  position: absolute;
-  inset: 0;
-  transform:
-    scale(var(--rb-clip-overscan))
-    rotate(0deg);
-  transform-origin: 50% 50%;
-  will-change: transform;
-}
-
-.v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 200ms linear infinite;
-}
 
 /* Scroll up → progress decreases → reverse spin vs. scroll down. */
-.v2-hero[data-wheel-spin="1"][data-wheel-spin-dir="reverse"] .rb-wheel-spin-scale {
-  animation-direction: reverse;
-}
-
-@keyframes rbWheelStableSpin {
-  from {
-    transform:
-      scale(var(--rb-clip-overscan))
-      rotate(0deg);
-  }
-  to {
-    transform:
-      scale(var(--rb-clip-overscan))
-      rotate(-360deg);
-  }
-}
 
 /*
   The image is only for hub alignment.
   Adjust --rb-hub-x / --rb-hub-y if the center still drifts.
 */
-.rb-wheel-spin-img {
-  --rb-hub-x: 0px;
-  --rb-hub-y: 0px;
-
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: 50% 50%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background-color: #020308;
-
-  transform: translate(var(--rb-hub-x), var(--rb-hub-y));
-  transform-origin: 50% 50%;
-  filter: brightness(0.96) contrast(1.04);
-  backface-visibility: hidden;
-}
 
 /* Use these only if the hub still looks slightly off-center */
-.rb-wheel-shell--front .rb-wheel-spin-img {
-  --rb-hub-x: 0px;
-  --rb-hub-y: 0px;
-}
-
-.rb-wheel-shell--rear .rb-wheel-spin-img {
-  --rb-hub-x: 0px;
-  --rb-hub-y: 0px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rb-wheel-spin-scale {
-    animation: none !important;
-    will-change: auto;
-    transform:
-      scale(var(--rb-clip-overscan))
-      rotate(0deg);
-  }
-}
-@media (max-width: 720px) {
-  .v2-hero-track { margin: 44px -28px 0; height: 118px; }
-  .v2-hero-track-car { right: 8%; width: 88%; max-width: 88%; }
-}
 
 .v2-hero-socials {
   margin-top: 36px;
@@ -1953,7 +1568,7 @@ button { font: inherit; cursor: pointer; }
   text-transform: uppercase;
 }
 
-/* Experience-tab marker (rail dot or active CarTopDown) */
+/* Experience-tab marker (rail dot) */
 .v2-exp-tab {
   grid-template-columns: 28px 1fr;
   cursor: pointer;
@@ -1975,18 +1590,6 @@ button { font: inherit; cursor: pointer; }
   transition: background 0.16s ease, transform 0.16s ease;
 }
 .v2-work-tab:hover .v2-exp-tab-dot { background: var(--color-text-dim); }
-.v2-exp-tab-car {
-  width: 16px;
-  height: 26px;
-  display: block;
-  filter: drop-shadow(0 0 8px var(--color-accent-glow));
-  animation: v2expCarPulse 2.4s ease-in-out infinite;
-}
-.v2-exp-tab-car svg { width: 100%; height: 100%; display: block; }
-@keyframes v2expCarPulse {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
-}
 
 /* Vertical rail behind the tabs to keep the timeline feel */
 .v2-exp-tablist { position: relative; }
@@ -3112,25 +2715,6 @@ body {
 .v2-hero-meta span {
   padding: 15px 16px;
 }
-
-.v2-hero-track {
-  height: 118px;
-  opacity: 0.78;
-}
-.v2-hero-track::before,
-.v2-hero-track-streaks,
-.v2-hero-track-line::after {
-  opacity: 0.28;
-}
-.v2-hero-track-car {
-  width: 470px;
-  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.66));
-}
-.v2-pill--focus {
-  color: var(--color-status);
-  border-color: color-mix(in srgb, var(--color-status) 36%, transparent);
-  background: color-mix(in srgb, var(--color-status) 6%, transparent);
-}
 .v2-hero-socials {
   justify-content: flex-start;
   gap: 12px 22px;
@@ -3150,9 +2734,6 @@ body {
   transform: translate3d(0, calc(var(--hero-shift, 0) * -0.05px), 0);
   will-change: transform;
 }
-.v2-hero-track {
-  transform: translate3d(0, calc(var(--hero-shift, 0) * -0.06px), 0);
-}
 
 /* ---- Sticky project tab-rail: pins the selector while the taller detail
    panel scrolls past it. Desktop two-column layout only. ---- */
@@ -3167,8 +2748,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .v2-hero-bg,
-  .v2-hero-wordmark-img,
-  .v2-hero-track {
+  .v2-hero-wordmark-img {
     transform: none;
   }
   .v2-work-list {
@@ -3387,12 +2967,6 @@ body {
   .v2-section {
     margin-top: 86px;
   }
-  .v2-hero-track {
-    height: 98px;
-  }
-  .v2-hero-track-car {
-    width: 82%;
-  }
   .v2-hero-wordmark-img {
     height: clamp(72px, 25vw, 112px);
   }
@@ -3451,65 +3025,6 @@ body {
 }
 
 /* ============ HUB-CENTERED REAL WHEEL SPIN ============ */
-
-.rb-wheel-spin-inner {
-  position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #020308;
-  box-shadow: inset 0 0 10px 6px rgba(1, 3, 8, 0.88);
-}
-
-.rb-wheel-spin-scale {
-  --rb-clip-overscan: 1.14;
-
-  position: absolute;
-  inset: 0;
-  transform:
-    scale(var(--rb-clip-overscan))
-    rotate(0deg);
-  transform-origin: 50% 50%;
-  will-change: transform;
-}
-
-.v2-hero[data-wheel-spin="1"] .rb-wheel-spin-scale {
-  animation: rbWheelStableSpin 200ms linear infinite;
-}
-
-.v2-hero[data-wheel-spin="1"][data-wheel-spin-dir="reverse"] .rb-wheel-spin-scale {
-  animation-direction: reverse;
-}
-
-@keyframes rbWheelStableSpin {
-  from {
-    transform:
-      scale(var(--rb-clip-overscan))
-      rotate(0deg);
-  }
-  to {
-    transform:
-      scale(var(--rb-clip-overscan))
-      rotate(-360deg);
-  }
-}
-
-.rb-wheel-spin-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 50%;
-
-  transform: none !important;
-  animation: none !important;
-  transform-origin: 50% 50%;
-
-  border-radius: 50%;
-  background: #020308;
-  filter: brightness(0.96) contrast(1.04);
-  backface-visibility: hidden;
-}
 
 /* Final cascade layer: restrained deep-space treatment. */
 :root {
