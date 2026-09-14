@@ -34,7 +34,7 @@ type MetricCount = {
   prefix?: string;
   suffix?: string;
   durationMs?: number;
-  /** Render the integer with thousands separators (e.g. 2,749). */
+  /** Render the integer with thousands separators (e.g. 2,762). */
   thousands?: boolean;
 };
 
@@ -80,6 +80,23 @@ const PANEL_TABS: { id: PanelTab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "build", label: "Details" },
 ];
+
+const brandLinks: Record<string, string> = {
+  "usequantiv.com": site.links.quantiv,
+  "thefdre.com": site.links.fdre,
+};
+
+function BrandMeta({ meta }: { meta: string }) {
+  const href = brandLinks[meta];
+
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {meta}
+    </a>
+  ) : (
+    meta
+  );
+}
 
 const projects: Project[] = [
   {
@@ -138,9 +155,9 @@ const projects: Project[] = [
       "Configuration Management",
     ],
     details: [
-      "Replaced legacy per-service configuration with one version-controlled source of truth, measured by shared JSON config across 17 interconnected packages and services used by all 13 engineers on the team, by building a centralized Config package for MOSAIC and the forecasting services around it.",
-      "Cut the manual work of reconciling configuration changes, measured by roughly 90% less manual comparison time, by automating cross-config dependency tracking from Research Scientists' model outputs through to downstream Business Intelligence Engineer configurations.",
-      "Let services consume configuration across lanes, measured by working publish and retrieve paths in production, by adding Python Lambda functions that write and read configs in S3, exposing them through Amazon Coral APIs, and provisioning the infrastructure with TypeScript AWS CDK.",
+      "One version-controlled JSON config now backs 17 interconnected packages and services, replacing the legacy per-service setups each team maintained by hand. All 13 engineers work from it.",
+      "Config changes used to be reconciled by eye, from Research Scientists' model outputs down to Business Intelligence Engineer configs. Automating that dependency tracking cut the manual comparison time by roughly 90%.",
+      "Delivery works across lanes: Python Lambda functions publish and retrieve configs in S3, Amazon Coral APIs expose them to consuming services, and the infrastructure is provisioned with TypeScript AWS CDK.",
     ],
   },
   {
@@ -165,29 +182,22 @@ const projects: Project[] = [
     },
     metrics: [
       {
-        value: "1.04B+",
-        label: "option records",
+        value: "120,000+",
+        label: "historical earnings records",
         tone: "white",
-        count: { from: 0, to: 1.04, decimals: 2, suffix: "B+", durationMs: 2600 },
+        count: { from: 0, to: 120000, suffix: "+", thousands: true, durationMs: 2600 },
       },
       {
-        value: "70+",
-        label: "Monthly Active Users (MAU)",
+        value: "10,000+",
+        label: "searchable ticker identities",
+        tone: "white",
+        count: { from: 0, to: 10000, suffix: "+", thousands: true, durationMs: 2600 },
+      },
+      {
+        value: "~100",
+        label: "monthly active users (MAUs)",
         tone: "green",
-        count: { from: 0, to: 70, suffix: "+", durationMs: 2600 },
-      },
-      {
-        value: "50-100",
-        label: "tickers / week",
-        tone: "white",
-        count: {
-          from: 0,
-          to: 50,
-          fromSecondary: 0,
-          toSecondary: 100,
-          separator: "-",
-          durationMs: 2600,
-        },
+        count: { from: 0, to: 100, prefix: "~", durationMs: 2600 },
       },
     ],
     tags: [
@@ -205,11 +215,11 @@ const projects: Project[] = [
       "Railway",
     ],
     details: [
-      "Shipped a production options-research workflow, measured by 70+ monthly active users (MAU) and 50-100 ticker analyses per week, by building calendar, screener, symbol, and watchlist routes with expected moves, per-expiry context, and live batch quotes.",
-      "Kept browsing fast and resilient, measured by static JSON navigation without FastAPI on every page load, by generating frontend data with tools/build_frontend_data.py and reserving Railway FastAPI for HMAC-signed live LightGBM inference.",
-      "Automated daily data refreshes, measured by a 1.04B+ option-record dataset redeployed nightly, by orchestrating DoltHub sync, Finnhub/FMP earnings overlays, integrity gates, DuckDB/Parquet views, daily_score, Neon import, and Vercel public-data commits.",
-      "Added authenticated portfolio tracking, measured by drag-reorder watchlists with live prices and batch ML, by storing user state in Neon Postgres via Clerk and keeping Parquet/model artifacts in Cloudflare R2 outside git.",
-      "Improved quote freshness for high-interest symbols, measured by shared Upstash quote:{symbol} cache reads across web and worker paths, by combining a Railway Finnhub WebSocket/REST worker with Vercel cron fallbacks and interest-ranked refreshes.",
+      "Calendar, screener, symbol, and watchlist routes cover expected moves, per-expiry context, and live batch quotes across 120,000+ historical earnings records and 10,000+ searchable ticker identities. Roughly 100 people use it monthly.",
+      "Browsing stays fast because the frontend reads prebuilt data that tools/build_frontend_data.py generates, leaving Railway FastAPI for HMAC-signed live LightGBM inference only. Production p90 FCP is 428 ms against a 1.8 s budget.",
+      "A nightly pipeline reconciles providers and rescores: DoltHub sync, Finnhub and FMP earnings overlays, integrity gates, DuckDB/Parquet views, daily_score, Neon import, and a Vercel public-data commit. 296 local tests cover the frontend, the backend and ML, and the pipeline tooling.",
+      "Watchlists are authenticated and drag-reorderable with live prices and batch ML scoring. User state lives in Neon Postgres behind Clerk, while Parquet and model artifacts sit in Cloudflare R2 rather than git.",
+      "For high-interest symbols, a Railway worker on Finnhub WebSocket and REST writes to a shared Upstash quote:{symbol} cache that both web and worker paths read, backed by Vercel cron fallbacks and interest-ranked refreshes.",
     ],
     links: [{ label: "Visit usequantiv.com", href: site.links.quantiv }],
   },
@@ -230,7 +240,7 @@ const projects: Project[] = [
       meta: "thefdre.com",
       logo: {
         src: "/images/fdre/fdre-wordmark.png",
-        alt: "FDRE — Financial Document Retrieval Engine wordmark",
+        alt: "FDRE, Financial Document Retrieval Engine wordmark",
         variant: "wide",
         width: 638,
         height: 236,
@@ -271,12 +281,13 @@ const projects: Project[] = [
       "Vercel",
     ],
     details: [
-      "Made SEC filing search point-in-time and source-grounded, measured by 2.71M parsed chunks from 2,762 10-K/10-Q filings across 498 S&P 500 issuers, by combining PostgreSQL GIN full-text search, pgvector HNSW halfvec Voyage embeddings, exact company resolution, query expansion, and SEC acceptance-time filters.",
-      "Validated the deployed cross-sectional research path over real HTTPS, measured by 28/28 successful frozen-development cases, issuer Recall@1/3/5 of 0.929/1.000/1.000, 100% condition correctness/lineage/grounding, 0% PIT leakage, and 1.86s end-to-end p95 latency.",
-      "Reduced unsupported generation in research answers, measured by citation-verified responses and deliberate abstention, by running a bounded LangGraph workflow that resolves filters, retrieves text/tables/facts, reranks evidence, gates claims, and verifies citations.",
-      "Turned filings into reusable research datasets, measured by JSON, CSV, and Parquet exports for point-in-time issuer-period panels, by adding typed Company Facts queries and provider-neutral filing event studies with leakage checks and persisted manifests.",
-      "Simplified the retrieval stack, measured by one PostgreSQL system of record instead of separate search, vector, queue, and analytics services, by storing metadata, lexical/vector indexes, facts, traces, ingestion manifests, and experiments together.",
-      "Kept ingestion resumable and deployable, measured by staged GitHub Actions runs and Railway pre-deploy migrations, by adding provider backoff, stage manifests, Alembic, FastAPI, and a Vercel-hosted Next.js UI.",
+      "Retrieval is hybrid and point-in-time: PostgreSQL GIN full-text search alongside pgvector HNSW halfvec Voyage embeddings, with exact company resolution, query expansion, and SEC acceptance-time filters. The corpus is 2,712,277 parsed and embedded chunks from 2,762 10-K and 10-Q filings, covering 498 of 499 S&P 500 primary tickers.",
+      "The deployed cross-sectional research path is validated over real HTTPS: 28 of 28 frozen-development cases pass, issuer Recall@1/3/5 comes in at 0.929/1.000/1.000, condition correctness, lineage, and grounding are all 100%, point-in-time leakage is 0%, and end-to-end p95 latency is 1.86s.",
+      "A bounded LangGraph workflow resolves filters, retrieves text, tables, and facts, reranks the evidence, gates claims, and verifies citations. When the evidence does not support an answer it abstains instead of generating one.",
+      "Verified responses to identical point-in-time questions are cached, bringing repeat queries down to about 44 ms. Abstentions are never cached.",
+      "Typed Company Facts queries and provider-neutral filing event studies turn filings into reusable datasets, exported as JSON, CSV, or Parquet issuer-period panels with leakage checks and persisted manifests.",
+      "One PostgreSQL instance is the entire system of record: metadata, lexical and vector indexes, facts, traces, ingestion manifests, and experiments. There are no separate search, vector, queue, or analytics services to keep in sync.",
+      "Ingestion is resumable and deployable, with provider backoff and stage manifests behind staged GitHub Actions runs, Alembic migrations applied pre-deploy on Railway, and a Vercel-hosted Next.js UI.",
     ],
     links: [
       { label: "Visit thefdre.com", href: site.links.fdre },
@@ -348,10 +359,10 @@ const projects: Project[] = [
       "APIs",
     ],
     details: [
-      "Led Embers to hackathon finals and awards, measured by Top 5 of 172 teams, Best Use of Google Gemini API, and Best FinTech Project, by building a React + Flask app that auto-inventoried household items from ~30s wildfire-claim videos.",
-      "Automated insurance inventory valuation, measured by 90%+ detection accuracy and per-item confidence/value outputs, by localizing objects with YOLOv11 and OpenCV, sending crops to Gemini, and storing dashboard results in Flask and Supabase.",
-      "Reduced manual claim documentation effort, measured by an estimated ~50% time savings, by adding a voice assistant with Whisper, Gemini, and ElevenLabs for hands-free asset valuation.",
-      "Presented a complete claim workflow under hackathon constraints, measured by three LA Hacks awards, by integrating video capture, detection overlays, inventory totals, valuation, and conversational assistance into one demo.",
+      "A React and Flask app that auto-inventories household items from roughly 30-second wildfire-claim videos. It took Top 5 of 172 teams, Best Use of Google Gemini API, and Best FinTech Project.",
+      "YOLOv11 and OpenCV localize objects at 90%+ detection accuracy, crops go to Gemini for valuation, and per-item confidence and value land in a Flask and Supabase dashboard.",
+      "A voice assistant built on Whisper, Gemini, and ElevenLabs handles hands-free asset valuation, cutting manual claim documentation by an estimated 50%.",
+      "Video capture, detection overlays, inventory totals, valuation, and conversational assistance all shipped as one working demo inside the hackathon window.",
     ],
     links: [
       { label: "Embers on Devpost", href: "https://devpost.com/software/insurefire" },
@@ -421,9 +432,9 @@ const projects: Project[] = [
     tags: ["C++", "Advanced Data Structures and Algorithms", "gdb"],
     details: [
       "USACO is a national programming competition and U.S. IOI selection pathway built around progressively harder Bronze, Silver, Gold, and Platinum divisions.",
-      "Reached USACO Platinum, measured by a perfect 1000/1000 Gold Division contest score, by solving competition-grade C++ problems across graphs, dynamic programming, segment trees, and computational geometry.",
-      "Improved contest reliability under hard limits, measured by accepted solutions within tight memory and runtime budgets, by using gdb profiling to isolate edge cases and performance bottlenecks.",
-      "Advanced to the top USACO division, measured by Bronze to Silver to Gold to Platinum progression, by consistently solving higher-difficulty algorithmic contest sets.",
+      "A perfect 1000/1000 in the Gold Division contest qualified me for Platinum, working through competition C++ problems across graphs, dynamic programming, segment trees, and computational geometry.",
+      "Tight memory and runtime budgets mean edge cases decide the score, so I leaned on gdb profiling to find those and the performance bottlenecks behind them.",
+      "Bronze to Silver to Gold to Platinum, one division at a time, on progressively harder contest sets.",
     ],
   },
   {
@@ -474,10 +485,9 @@ const projects: Project[] = [
       "Data Pipelines",
     ],
     details: [
-      "Improved traffic turning-ratio forecasting, measured by 24% lower RMSE than STGCN, by engineering GC-INF as a 4-layer Graph ConvNet + Informer model that learns spatial-temporal road-graph patterns in PyTorch.",
-      "Captured long-range traffic dependencies efficiently, measured by stable 15-minute turning-ratio forecasts, by feeding Chebyshev graph-convolution outputs into Informer's ProbSparse attention with Adam and cosine decay on raw series.",
-      "Validated the model against a prior benchmark, measured by 24% RMSE improvement over STGCN (IJCAI '17), by comparing GC-INF on intersection turning-ratio prediction tasks.",
-      "Earned peer-reviewed visibility for independent research, measured by a single-author IEEE ITSC 2023 paper, Simulation and Control session chair role, and Team Canada ISEF finalist status, by writing, presenting, and defending the GC-INF work.",
+      "GC-INF is a 4-layer Graph ConvNet and Informer hybrid in PyTorch that learns spatial-temporal road-graph patterns. On intersection turning-ratio prediction it cut RMSE 24% below STGCN (IJCAI '17), the prior state of the art.",
+      "Chebyshev graph-convolution outputs feed Informer's ProbSparse attention, trained on raw series with Adam and cosine decay, which holds long-range dependencies well enough for stable 15-minute forecasts.",
+      "I wrote, presented, and defended the work myself: a single-author IEEE ITSC 2023 paper, a Simulation and Control session chair role, and Team Canada ISEF finalist status.",
     ],
     links: [
       { label: "Read paper", href: site.links.gcinf },
@@ -540,9 +550,9 @@ const projects: Project[] = [
       "Backpropagation",
     ],
     details: [
-      "Made aerodynamic iteration faster, measured by sub-second pressure-map predictions, by training a MATLAB backpropagation feed-forward neural network as a CFD surrogate.",
-      "Reduced simulated drag while exploring wing designs, measured by 43% drag reduction and 100x iteration speedup, by embedding the ANN in an end-to-end aero-analytics stack for geometry decisions.",
-      "Published the single-author research outcome, measured by a Highlights in Science Engineering and Technology paper and CWSF gold medal, by documenting the CFD, surrogate-model, and optimization workflow.",
+      "A MATLAB backpropagation feed-forward network trained as a CFD surrogate returns pressure maps in under a second, so aerodynamic iteration stops waiting on full simulation runs.",
+      "Embedded in an end-to-end aero-analytics stack driving geometry decisions, it reached 43% drag reduction with a 100x iteration speedup.",
+      "Single-author write-up of the CFD, surrogate-model, and optimization workflow, published in Highlights in Science Engineering and Technology and awarded a CWSF gold medal.",
     ],
     links: [{ label: "Read paper", href: site.links.f1cfd }],
   },
@@ -592,10 +602,10 @@ const projects: Project[] = [
     ],
     tags: ["C++", "CMake", "SLURM", "Java", "JavaFX", "Python"],
     details: [
-      "Accelerated large CVRP solving, measured by a 15% C++ solver speedup on 1,000+ node instances with 40+ vehicles, by training ML on dual-value and variable patterns from Column Generation pricing problems to prune unproductive branches earlier.",
-      "Scaled experiments across university HPC resources, measured by SLURM runs across tens of thousands of cores on UF HiPerGator, by batching solver simulations and collecting performance traces.",
-      "Improved researcher inspection of solver behavior, measured by an interactive route exploration workflow, by building a JavaFX visualizer for stepping through generated CVRP solutions.",
-      "Converted the internship research into a recognized paper, measured by Best Paper Award at SSTP, by presenting the ML-guided branch-pruning approach and experimental results.",
+      "Training ML on dual-value and variable patterns from Column Generation pricing problems let the solver prune unproductive branches earlier, worth a 15% C++ speedup on instances with 1,000+ nodes and 40+ vehicles.",
+      "Experiments ran batched under SLURM across tens of thousands of cores on UF HiPerGator, collecting performance traces along the way.",
+      "A JavaFX visualizer lets researchers step through generated solutions and inspect solver behavior route by route.",
+      "The internship research became a paper and took Best Paper Award at SSTP.",
     ],
     media: {
       src: "/media/cvrp-visualizer.png",
@@ -951,17 +961,7 @@ export function Projects() {
                             {active.brand?.meta ? (
                               <>
                                 {" · "}
-                                {active.brand.meta === "usequantiv.com" ? (
-                                  <a
-                                    href={site.links.quantiv}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    usequantiv.com
-                                  </a>
-                                ) : (
-                                  active.brand.meta
-                                )}
+                                <BrandMeta meta={active.brand.meta} />
                               </>
                             ) : null}
                           </span>
@@ -972,17 +972,7 @@ export function Projects() {
                             {active.brand.detail}
                           </span>
                           <span className="v2-work-identity-sub">
-                            {active.brand.meta === "usequantiv.com" ? (
-                              <a
-                                href={site.links.quantiv}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                usequantiv.com
-                              </a>
-                            ) : (
-                              active.brand.meta
-                            )}
+                            <BrandMeta meta={active.brand.meta} />
                           </span>
                         </>
                       ) : null}
