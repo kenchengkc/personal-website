@@ -4,13 +4,22 @@ import { useEffect, useRef } from "react";
 
 type Point = { x: number; y: number };
 
+type BrainPoint = Point & {
+  edge: boolean;
+  shade: number;
+};
+
+type GlyphSize = "xs" | "sm" | "md" | "lg";
+
 type Particle = {
   lane: number;
   offset: number;
-  target: Point;
+  target: BrainPoint;
   char: "0" | "1";
   gold: boolean;
   phase: number;
+  size: GlyphSize;
+  alphaBias: number;
 };
 
 const clamp = (value: number, min = 0, max = 1) =>
@@ -28,7 +37,11 @@ const hash = (value: number) => {
   return x - Math.floor(x);
 };
 
-function drawBrainMask(context: CanvasRenderingContext2D, width: number, height: number) {
+function drawBrainMask(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+) {
   const cx = width / 2;
   const cy = height / 2 + 4;
   const sx = width / 420;
@@ -41,7 +54,6 @@ function drawBrainMask(context: CanvasRenderingContext2D, width: number, height:
   const brain = new Path2D();
   brain.moveTo(0, -132);
 
-  // Left hemisphere: rounded frontal/parietal lobes with a temporal bulge.
   brain.bezierCurveTo(-24, -150, -66, -147, -92, -128);
   brain.bezierCurveTo(-124, -137, -157, -114, -160, -83);
   brain.bezierCurveTo(-187, -72, -198, -39, -183, -14);
@@ -50,7 +62,6 @@ function drawBrainMask(context: CanvasRenderingContext2D, width: number, height:
   brain.bezierCurveTo(-75, 133, -35, 134, -13, 111);
   brain.bezierCurveTo(-4, 98, -2, 78, 0, 62);
 
-  // Right hemisphere.
   brain.bezierCurveTo(2, 78, 4, 98, 13, 111);
   brain.bezierCurveTo(35, 134, 75, 133, 96, 107);
   brain.bezierCurveTo(126, 111, 158, 88, 157, 57);
@@ -64,11 +75,10 @@ function drawBrainMask(context: CanvasRenderingContext2D, width: number, height:
   context.fill(brain);
 
   context.globalCompositeOperation = "destination-out";
+  context.strokeStyle = "#000";
   context.lineCap = "round";
   context.lineJoin = "round";
 
-  // Longitudinal fissure.
-  context.strokeStyle = "#000";
   context.lineWidth = 8;
   context.beginPath();
   context.moveTo(0, -134);
@@ -76,14 +86,12 @@ function drawBrainMask(context: CanvasRenderingContext2D, width: number, height:
   context.bezierCurveTo(-4, 6, 5, 31, 0, 58);
   context.stroke();
 
-  // Lower central notch makes the two hemispheres unmistakable.
   context.lineWidth = 7;
   context.beginPath();
   context.moveTo(0, 63);
   context.bezierCurveTo(-8, 82, -7, 101, 0, 116);
   context.stroke();
 
-  // Major sulci. These negative-space folds are what make the silhouette read as a brain.
   const folds = [
     [-112, -101, -86, -118, -54, -106, -47, -82],
     [-149, -72, -116, -87, -80, -74, -71, -50],
@@ -113,8 +121,6 @@ function drawBrainMask(context: CanvasRenderingContext2D, width: number, height:
     context.stroke();
   }
 
-  // A few shorter secondary folds avoid an overly geometric look.
-  context.lineWidth = 3.5;
   const shortFolds = [
     [-122, -8, -105, 5, -96, 20],
     [-104, -62, -88, -51, -84, -37],
@@ -128,6 +134,7 @@ function drawBrainMask(context: CanvasRenderingContext2D, width: number, height:
     [31, 7, 19, 19, 23, 36],
   ];
 
+  context.lineWidth = 3.5;
   for (const [x1, y1, x2, y2, x3, y3] of shortFolds) {
     context.beginPath();
     context.moveTo(x1, y1);
@@ -151,26 +158,54 @@ function buildBrain(width: number, height: number) {
   drawBrainMask(maskContext, maskWidth, maskHeight);
 
   const pixels = maskContext.getImageData(0, 0, maskWidth, maskHeight).data;
-  const points: Point[] = [];
-  const step = 9;
+  const points: BrainPoint[] = [];
+  const step = 7;
   let sampleIndex = 0;
 
-  const displayWidth = Math.min(width * 0.54, 510);
-  const displayHeight = Math.min(height * 0.78, 330);
+  const displayWidth = Math.min(width * 0.56, 525);
+  const displayHeight = Math.min(height * 0.8, 340);
   const left = width / 2 - displayWidth / 2;
-  const top = height / 2 - displayHeight / 2 - 6;
+  const top = height / 2 - displayHeight / 2 - 5;
 
-  for (let y = 5; y < maskHeight - 5; y += step) {
-    for (let x = 5; x < maskWidth - 5; x += step) {
-      const pixel = (y * maskWidth + x) * 4;
-      if (pixels[pixel + 3] < 100) continue;
+  const alphaAt = (x: number, y: number) => {
+    if (x < 0 || y < 0 || x >= maskWidth || y >= maskHeight) return 0;
+    return pixels[(Math.floor(y) * maskWidth + Math.floor(x)) * 4 + 3];
+  };
 
-      const jitterX = (hash(sampleIndex + 17) - 0.5) * 2.5;
-      const jitterY = (hash(sampleIndex + 91) - 0.5) * 2.5;
+  const edgeOffsets = [
+    [-6, 0],
+    [6, 0],
+    [0, -6],
+    [0, 6],
+    [-4, -4],
+    [4, -4],
+    [-4, 4],
+    [4, 4],
+  ];
+
+  for (let y = 4; y < maskHeight - 4; y += step) {
+    for (let x = 4; x < maskWidth - 4; x += step) {
+      if (alphaAt(x, y) < 100) continue;
+
+      const edge = edgeOffsets.some(
+        ([dx, dy]) => alphaAt(x + dx, y + dy) < 100,
+      );
+
+      const nx = (x - maskWidth / 2) / (maskWidth / 2);
+      const ny = (y - maskHeight / 2) / (maskHeight / 2);
+      const radial = clamp(1 - Math.sqrt(nx * nx + ny * ny));
+      const shade = clamp(
+        0.38 + radial * 0.34 + hash(sampleIndex + 313) * 0.28,
+      );
+
+      const jitterX = (hash(sampleIndex + 17) - 0.5) * 2.2;
+      const jitterY = (hash(sampleIndex + 91) - 0.5) * 2.2;
 
       points.push({
         x: left + (x / maskWidth) * displayWidth + jitterX,
         y: top + (y / maskHeight) * displayHeight + jitterY,
+        edge,
+        shade,
       });
 
       sampleIndex += 1;
@@ -178,6 +213,17 @@ function buildBrain(width: number, height: number) {
   }
 
   return points;
+}
+
+function sizeForPoint(point: BrainPoint, index: number): GlyphSize {
+  if (point.edge) {
+    return hash(index + 401) > 0.42 ? "lg" : "md";
+  }
+
+  const sample = hash(index + 719);
+  if (sample < 0.46) return "xs";
+  if (sample < 0.78) return "sm";
+  return "md";
 }
 
 export function BinaryBrain() {
@@ -212,43 +258,38 @@ export function BinaryBrain() {
 
       const targets = buildBrain(rect.width, rect.height);
       particlesRef.current = targets.map((target, index) => ({
-        lane: index % 24,
-        offset: (index * 23) % 310,
+        lane: index % 28,
+        offset: (index * 19) % 340,
         target,
         char: index % 3 === 0 ? "1" : "0",
-        gold: index % 67 === 0,
+        gold: index % 101 === 0,
         phase: hash(index + 211) * Math.PI * 2,
+        size: sizeForPoint(target, index),
+        alphaBias: (target.shade - 0.5) * 0.24 + (target.edge ? 0.1 : -0.02),
       }));
     };
 
     const updateProgress = () => {
       const rect = wrap.getBoundingClientRect();
       const viewport = window.innerHeight;
-      const start = viewport * 0.93;
-      const end = viewport * 0.18;
+
+      // Hold the binary streams still until roughly 82% of the canvas is visible.
+      const start = viewport - rect.height * 0.82;
+      const end = Math.max(viewport * 0.16, start - viewport * 0.48);
+
       progressRef.current = reducedMotionRef.current
         ? 1
-        : clamp((start - rect.top) / (start - end));
+        : clamp((start - rect.top) / Math.max(1, start - end));
     };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        visibleRef.current = entry.isIntersecting;
-      },
-      { rootMargin: "30% 0px 30% 0px" },
-    );
 
     const draw = (time: number) => {
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
       const progress = progressRef.current;
-      const streamPhase = ease(progress / 0.32);
-      const formPhase = ease((progress - 0.12) / 0.78);
+      const streamPhase = ease(progress / 0.34);
+      const formPhase = ease((progress - 0.1) / 0.82);
 
       context.clearRect(0, 0, width, height);
-      const fontFamily = window.getComputedStyle(document.body).fontFamily;
-      const glyphSize = width < 720 ? 9 : 10;
-      context.font = `500 ${glyphSize}px ${fontFamily}`;
       context.textAlign = "center";
       context.textBaseline = "middle";
 
@@ -260,46 +301,71 @@ export function BinaryBrain() {
           24,
           width / 2,
           height * 0.5,
-          Math.min(width, 520) * 0.46,
+          Math.min(width, 540) * 0.47,
         );
-        gradient.addColorStop(0, `rgba(199,164,91,${0.04 * glow})`);
-        gradient.addColorStop(0.42, `rgba(208,210,213,${0.032 * glow})`);
+        gradient.addColorStop(0, `rgba(199,164,91,${0.038 * glow})`);
+        gradient.addColorStop(0.44, `rgba(208,210,213,${0.032 * glow})`);
         gradient.addColorStop(1, "rgba(10,10,10,0)");
         context.fillStyle = gradient;
         context.fillRect(0, 0, width, height);
       }
 
-      for (let i = 0; i < particlesRef.current.length; i += 1) {
-        const particle = particlesRef.current[i];
-        const laneX = ((particle.lane + 0.5) / 24) * width;
-        const travel =
-          ((time * 0.03 + particle.offset) % (height + 220)) - 110;
-        const streamY = lerp(-90 - particle.offset * 0.34, travel, streamPhase);
+      const fontFamily = window.getComputedStyle(document.body).fontFamily;
+      const mobile = width < 720;
+      const sizes: Array<[GlyphSize, number, number]> = [
+        ["xs", mobile ? 5.5 : 6.5, 400],
+        ["sm", mobile ? 7 : 8, 450],
+        ["md", mobile ? 8.5 : 10, 500],
+        ["lg", mobile ? 10 : 12, 600],
+      ];
 
-        const stagger = (i % 37) / 37;
-        const localForm = ease((formPhase - stagger * 0.12) / 0.88);
+      for (const [tier, glyphSize, weight] of sizes) {
+        context.font = `${weight} ${glyphSize}px ${fontFamily}`;
 
-        // The final structure stays alive like the reference point cloud,
-        // but only with a sub-pixel shimmer so the anatomy remains readable.
-        const settledMotion = localForm > 0.96
-          ? Math.sin(time * 0.0015 + particle.phase) * 0.45
-          : 0;
+        for (let i = 0; i < particlesRef.current.length; i += 1) {
+          const particle = particlesRef.current[i];
+          if (particle.size !== tier) continue;
 
-        const x =
-          lerp(laneX, particle.target.x, localForm) + settledMotion;
-        const y =
-          lerp(streamY, particle.target.y, localForm) +
-          Math.cos(time * 0.0013 + particle.phase) * 0.28 * localForm;
+          const laneX = ((particle.lane + 0.5) / 28) * width;
+          const travel =
+            ((time * 0.029 + particle.offset) % (height + 230)) - 115;
+          const streamY = lerp(
+            -105 - particle.offset * 0.31,
+            travel,
+            streamPhase,
+          );
 
-        const baseAlpha = 0.14 + 0.76 * localForm;
-        context.fillStyle = particle.gold
-          ? `rgba(222,193,121,${0.22 + 0.68 * localForm})`
-          : `rgba(208,211,216,${baseAlpha})`;
+          const stagger = (i % 43) / 43;
+          const localForm = ease((formPhase - stagger * 0.1) / 0.9);
 
-        context.fillText(particle.char, x, y);
+          const settledMotion =
+            localForm > 0.97
+              ? Math.sin(time * 0.00145 + particle.phase) * 0.35
+              : 0;
+
+          const x =
+            lerp(laneX, particle.target.x, localForm) + settledMotion;
+          const y =
+            lerp(streamY, particle.target.y, localForm) +
+            Math.cos(time * 0.0012 + particle.phase) * 0.2 * localForm;
+
+          const sizeAlpha =
+            tier === "xs" ? -0.12 : tier === "sm" ? -0.06 : tier === "lg" ? 0.08 : 0;
+          const alpha = clamp(
+            0.13 + 0.73 * localForm + particle.alphaBias + sizeAlpha,
+            0.08,
+            0.96,
+          );
+
+          context.fillStyle = particle.gold
+            ? `rgba(222,193,121,${clamp(alpha + 0.08)})`
+            : `rgba(208,211,216,${alpha})`;
+
+          context.fillText(particle.char, x, y);
+        }
       }
 
-      if (visibleRef.current || progress < 1) {
+      if (visibleRef.current) {
         frameRef.current = window.requestAnimationFrame(draw);
       } else {
         frameRef.current = null;
@@ -312,6 +378,17 @@ export function BinaryBrain() {
         frameRef.current = window.requestAnimationFrame(draw);
       }
     };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) wake();
+      },
+      {
+        rootMargin: "0px",
+        threshold: 0.08,
+      },
+    );
 
     const onResize = () => {
       rebuild();
