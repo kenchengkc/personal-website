@@ -1,11 +1,11 @@
 :root {
-  --page: #f3f2ed;
-  --paper: #fbfaf7;
-  --ink: #1d1d1b;
-  --ink-2: #55544f;
-  --ink-3: #85837d;
-  --line: #d9d7cf;
-  --line-strong: #c8c5bc;
+  --page: #090909;
+  --paper: #0d0d0d;
+  --ink: #e7e7e4;
+  --ink-2: #a1a19c;
+  --ink-3: #6f6f6a;
+  --line: #202020;
+  --line-strong: #2c2c2c;
   --max-content: 1200px;
 
   /* Compatibility aliases for the writing routes. */
@@ -46,7 +46,7 @@ body {
 }
 
 ::selection {
-  background: #d8d6cf;
+  background: #2a2a2a;
   color: var(--ink);
 }
 
