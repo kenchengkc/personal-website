@@ -48,17 +48,10 @@
 .amazon-code > span {
   display: block;
   padding: 3px 8px;
-  transition:
-    background 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .amazon-code > span:not(:first-child):not(:last-child) {
   padding-left: 26px;
-}
-
-.amazon-code > span.active {
-  background: #f0efeb;
 }
 
 .amazon-code i {
@@ -80,9 +73,8 @@
   gap: 10px;
   min-height: 42px;
   border-bottom: 1px solid #ecebe7;
-  color: #96958f;
+  color: #474641;
   font-size: 12px;
-  transition: color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .amazon-services span:first-child {
@@ -92,21 +84,9 @@
 .amazon-services i {
   width: 6px;
   height: 6px;
-  border: 1px solid #aaa9a3;
+  border: 1px solid #77756f;
   border-radius: 50%;
-  background: transparent;
-  transition:
-    background 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.amazon-services span.ready {
-  color: #2f2f2d;
-}
-
-.amazon-services span.ready i {
-  border-color: #4f5c53;
-  background: #4f5c53;
+  background: #77756f;
 }
 
 /* Quantiv, copied from the /about research-loop visual language. */
@@ -1122,10 +1102,7 @@
     animation: none !important;
   }
 
-  .embers-progress i,
-  .amazon-code > span,
-  .amazon-services span,
-  .amazon-services i {
+  .embers-progress i {
     transition: none;
   }
 }
