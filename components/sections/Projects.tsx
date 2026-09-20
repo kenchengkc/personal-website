@@ -88,23 +88,36 @@ export function Projects() {
           <p className="section-kicker" data-reveal>Research and other work</p>
 
           <div className="research-list">
-            {otherWork.map((item) => (
-              <article className="research-row" key={item.title} data-reveal>
-                <div>
-                  <h3>{item.title}</h3>
-                  <span
-                    className={
-                      /gold|platinum|best paper|winner/i.test(item.meta)
-                        ? "award-meta"
-                        : undefined
-                    }
-                  >
-                    {item.meta}
-                  </span>
-                </div>
-                <p>{item.detail}</p>
-              </article>
-            ))}
+            {otherWork.map((item) => {
+              const isPlatinum = /platinum/i.test(`${item.title} ${item.meta}`);
+              const isGoldAward = /gold|best paper|winner/i.test(`${item.title} ${item.meta}`);
+
+              return (
+                <article
+                  className={isPlatinum ? "research-row is-platinum" : "research-row"}
+                  key={item.title}
+                  data-reveal
+                >
+                  <div>
+                    <h3 className={isPlatinum ? "platinum-title" : undefined}>
+                      {item.title}
+                    </h3>
+                    <span
+                      className={
+                        isPlatinum
+                          ? "platinum-meta"
+                          : isGoldAward
+                            ? "award-meta"
+                            : undefined
+                      }
+                    >
+                      {item.meta}
+                    </span>
+                  </div>
+                  <p>{item.detail}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
