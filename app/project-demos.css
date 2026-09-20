@@ -852,78 +852,149 @@
   font-size: 8px;
 }
 
-/* Embers, based on the actual upload/progress component and About steps. */
+/* Embers uses the real project screenshots as an interactive film strip. */
 
-.embers-progress-wrap {
-  height: calc(100% - 42px);
-  display: grid;
-  align-content: center;
-  gap: 24px;
-  padding: 42px;
+.embers-demo {
+  background: #0b0b0a;
+  color: #ecece8;
 }
 
-.embers-progress {
-  width: 100%;
-  height: 3px;
-  background: #e3e2dd;
+.embers-demo .demo-topline {
+  border-color: #242422;
+  background: #0b0b0a;
+  color: #8b8b86;
+}
+
+.embers-demo .demo-topline span:last-child {
+  color: #5f5f5a;
+}
+
+.embers-gallery {
+  position: relative;
+  height: calc(100% - 42px);
   overflow: hidden;
 }
 
-.embers-progress i {
-  display: block;
+.embers-gallery-track {
   height: 100%;
-  background: #202020;
-  transition: width 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 34px max(34px, calc((100% - 880px) / 2)) 48px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: max(34px, calc((100% - 880px) / 2));
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #343431 transparent;
 }
 
-.embers-progress-copy {
+.embers-gallery-track::-webkit-scrollbar {
+  height: 5px;
+}
+
+.embers-gallery-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.embers-gallery-track::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #343431;
+}
+
+.embers-gallery-card {
+  flex: 0 0 min(78%, 760px);
+  margin: 0;
+  scroll-snap-align: center;
+  outline: none;
+  opacity: 0.9;
+  transform: scale(0.985);
+  transform-origin: center;
+  transition:
+    opacity 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.embers-gallery-track:hover .embers-gallery-card {
+  opacity: 0.58;
+  filter: saturate(0.78);
+  transform: scale(0.975);
+}
+
+.embers-gallery-track .embers-gallery-card:hover,
+.embers-gallery-track .embers-gallery-card:focus-visible {
+  z-index: 2;
+  opacity: 1;
+  filter: saturate(1);
+  transform: translateY(-5px) scale(1.01);
+}
+
+.embers-gallery-card:focus-visible .embers-gallery-image {
+  outline: 1px solid #8d8d88;
+  outline-offset: 4px;
+}
+
+.embers-gallery-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid #292927;
+  border-radius: 13px;
+  background: #f3f3ef;
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.32);
+}
+
+.embers-gallery-image img {
+  object-fit: contain;
+}
+
+.embers-gallery-card figcaption {
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 18px;
+  grid-template-columns: 28px minmax(100px, auto) minmax(0, 1fr);
+  gap: 14px;
   align-items: baseline;
+  padding: 13px 2px 0;
 }
 
-.embers-progress-copy strong {
-  font-size: 27px;
-  font-weight: 400;
-  letter-spacing: -0.03em;
-}
-
-.embers-progress-copy span {
-  color: #74736e;
-  font-size: 13px;
-}
-
-.embers-progress-wrap ol {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 10px 0 0;
-  padding: 0;
-  border-top: 1px solid #deddd8;
-  list-style: none;
-}
-
-.embers-progress-wrap li {
-  display: grid;
-  gap: 8px;
-  padding: 16px 14px 0 0;
-  color: #a2a19b;
-  font-size: 11px;
-  transition: color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.embers-progress-wrap li + li {
-  padding-left: 14px;
-  border-left: 1px solid #deddd8;
-}
-
-.embers-progress-wrap li span {
-  color: inherit;
+.embers-gallery-card figcaption span,
+.embers-gallery-card figcaption small {
+  color: #6f6f6a;
   font-size: 9px;
+  font-weight: 400;
 }
 
-.embers-progress-wrap li.done {
-  color: #252523;
+.embers-gallery-card figcaption strong {
+  color: #d7d7d3;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.embers-gallery-card figcaption small {
+  justify-self: end;
+  text-align: right;
+}
+
+.embers-gallery-hint {
+  position: absolute;
+  right: 24px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #5f5f5a;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.embers-gallery-hint i {
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(90deg, #5f5f5a, transparent);
 }
 
 @media (max-width: 900px) {
@@ -1073,16 +1144,30 @@
     min-height: 94px;
   }
 
-  .embers-progress-wrap {
-    padding: 26px 20px;
+  .embers-gallery-track {
+    gap: 14px;
+    padding: 22px 16px 42px;
+    scroll-padding-inline: 16px;
   }
 
-  .embers-progress-wrap ol {
-    grid-template-columns: 1fr 1fr;
+  .embers-gallery-card {
+    flex-basis: 88%;
   }
 
-  .embers-progress-wrap li:nth-child(3) {
-    border-left: 0;
+  .embers-gallery-card figcaption {
+    grid-template-columns: 24px 1fr;
+    gap: 8px;
+  }
+
+  .embers-gallery-card figcaption small {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .embers-gallery-hint {
+    right: 16px;
+    bottom: 10px;
   }
 }
 
@@ -1102,7 +1187,7 @@
     animation: none !important;
   }
 
-  .embers-progress i {
+  .embers-gallery-card {
     transition: none;
   }
 }
