@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Mulish } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
 import "./project-demos.css";
 
-const mulish = Mulish({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "600"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -37,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={mulish.variable}>
+    <html lang="en" className={inter.variable}>
       <body>
         <ScrollExperience />
         {children}
