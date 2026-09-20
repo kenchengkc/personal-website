@@ -85,7 +85,7 @@ export const featuredProjects: FeaturedProject[] = [
     demo: "quantiv",
   },
   {
-    name: "FDRE",
+    name: "Financial Document Retrieval Engine",
     eyebrow: "Research infrastructure",
     date: "2026 - present",
     summary:
@@ -109,7 +109,7 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     stack: "FastAPI, Postgres, pgvector, LangGraph, Next.js",
     href: "https://thefdre.com",
-    hrefLabel: "Open FDRE",
+    hrefLabel: "Open Financial Document Retrieval Engine",
     secondaryHref:
       "https://github.com/kenchengkc/the-financial-document-retrieval-engine",
     secondaryLabel: "Source",
