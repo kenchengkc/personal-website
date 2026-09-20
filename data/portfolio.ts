@@ -72,8 +72,8 @@ export const otherWork = [
   },
   {
     title: "USACO Platinum",
-    meta: "2023",
-    detail: "Advanced algorithms competition, promoted from Gold with a 1000/1000 score.",
+    meta: "Top division · Top 1% nationally · 2023",
+    detail: "Highest USACO division, promoted from Gold with a 1000/1000 score.",
   },
   {
     title: "Need for Speed",
