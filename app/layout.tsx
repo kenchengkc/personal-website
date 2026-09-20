@@ -15,7 +15,7 @@ const inter = Inter({
 const isVercel = process.env.VERCEL === "1";
 
 export const metadata: Metadata = {
-  title: "Ken Cheng | Software, ML, Quant",
+  title: "Ken Cheng",
   description:
     "Ken Cheng is a Columbia computer science student building software, machine learning, quantitative, and research systems.",
   metadataBase: new URL("https://kencheng.dev"),
