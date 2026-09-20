@@ -1,5 +1,4 @@
 :root {
-  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --bg: #090a0a;
   --bg-elevated: #0d0e0e;
   --surface: #111212;
