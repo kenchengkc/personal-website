@@ -1,11 +1,12 @@
 export function Columbia() {
   const coursework = [
-    "Data Structures & Algorithms",
+    "Databases",
     "Artificial Intelligence",
-    "Machine Learning",
+    "Natural Language Processing",
+    "Linear Regression",
     "Linear Algebra",
+    "Data Structures",
     "Probability Theory",
-    "Statistical Inference",
   ];
 
   return (
