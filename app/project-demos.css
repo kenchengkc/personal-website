@@ -5,8 +5,8 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #fff;
-  color: #171717;
+  background: #0d0d0d;
+  color: #e7e7e4;
   font-family: var(--font-sans), Arial, sans-serif;
 }
 
@@ -17,14 +17,14 @@
   justify-content: space-between;
   gap: 16px;
   padding: 0 16px;
-  border-bottom: 1px solid #deddd8;
-  color: #74736e;
+  border-bottom: 1px solid #242424;
+  color: #777772;
   font-size: 10px;
   letter-spacing: 0.02em;
 }
 
 .demo-topline span:last-child {
-  color: #9a9994;
+  color: #5f5f5a;
 }
 
 /* Amazon */
@@ -55,7 +55,7 @@
 }
 
 .amazon-code i {
-  color: #6f6d68;
+  color: #8b8b86;
   font-style: normal;
 }
 
@@ -64,7 +64,7 @@
   align-content: center;
   gap: 0;
   padding: 28px;
-  border-left: 1px solid #deddd8;
+  border-left: 1px solid #242424;
 }
 
 .amazon-services span {
@@ -72,32 +72,32 @@
   align-items: center;
   gap: 10px;
   min-height: 42px;
-  border-bottom: 1px solid #ecebe7;
-  color: #474641;
+  border-bottom: 1px solid #202020;
+  color: #a4a49f;
   font-size: 12px;
 }
 
 .amazon-services span:first-child {
-  border-top: 1px solid #ecebe7;
+  border-top: 1px solid #202020;
 }
 
 .amazon-services i {
   width: 6px;
   height: 6px;
-  border: 1px solid #77756f;
+  border: 1px solid #70706b;
   border-radius: 50%;
-  background: #77756f;
+  background: #70706b;
 }
 
 /* Quantiv, copied from the /about research-loop visual language. */
 
 .quantiv-demo {
-  --qv-blue: #5d7899;
-  --qv-up: #597461;
-  --qv-down: #9b6262;
-  --qv-flag: #7e7088;
-  --qv-line: #deddd8;
-  --qv-muted: #85847f;
+  --qv-blue: #6f8ba5;
+  --qv-up: #6f8d79;
+  --qv-down: #9a6a6a;
+  --qv-flag: #887790;
+  --qv-line: #242424;
+  --qv-muted: #777772;
 }
 
 .qv-story-grid {
@@ -153,16 +153,16 @@
 }
 
 .qv-band {
-  fill: #dce5ee;
+  fill: #1c252d;
 }
 
 .qv-spot-line {
-  stroke: #2b2b29;
+  stroke: #ddddda;
   stroke-width: 2;
 }
 
 .qv-spot-dot {
-  fill: #2b2b29;
+  fill: #ddddda;
 }
 
 .qv-up {
@@ -182,20 +182,20 @@
 }
 
 .qv-history-band {
-  fill: #edf1f5;
-  stroke: #b2c0ce;
+  fill: #15191d;
+  stroke: #40505e;
 }
 
 .qv-model-outer {
-  fill: #efefec;
+  fill: #171717;
 }
 
 .qv-model-range {
-  fill: #e6e0e9;
+  fill: #29242d;
 }
 
 .qv-model-mid {
-  fill: #cfc3d5;
+  fill: #3b3340;
 }
 
 .qv-model-median {
@@ -212,12 +212,12 @@
 /* FDRE, adapted directly from the /about SystemFlow. */
 
 .fdre-demo {
-  --fdre-green: #62796a;
-  --fdre-green-soft: #edf1ed;
-  --fdre-cyan: #607b79;
-  --fdre-line: #deddd8;
-  --fdre-line-strong: #cbc9c2;
-  --fdre-muted: #7d7b76;
+  --fdre-green: #758b7b;
+  --fdre-green-soft: #151915;
+  --fdre-cyan: #6f8b88;
+  --fdre-line: #242424;
+  --fdre-line-strong: #303030;
+  --fdre-muted: #777772;
 }
 
 .fdre-stage-rail {
@@ -236,7 +236,7 @@
   padding: 12px;
   border: 0;
   border-right: 1px solid var(--fdre-line);
-  background: #fff;
+  background: #0d0d0d;
   color: var(--fdre-muted);
   text-align: left;
   cursor: pointer;
@@ -251,8 +251,8 @@
 
 .fdre-stage-rail button:hover,
 .fdre-stage-rail button.active {
-  color: #272725;
-  background: #f2f2ee;
+  color: #e1e1de;
+  background: #151515;
 }
 
 .fdre-stage-rail button svg {
@@ -317,7 +317,7 @@
   padding: 20px 22px;
   overflow: hidden;
   border: 1px solid var(--fdre-line-strong);
-  background: #fff;
+  background: #0d0d0d;
   transform: rotate(-1deg);
 }
 
@@ -346,7 +346,7 @@
   display: block;
   height: 8px;
   margin-top: 10px;
-  background: #ecebe7;
+  background: #232323;
 }
 
 .fdre-document > i:nth-of-type(1),
@@ -394,7 +394,7 @@
   justify-self: start;
   padding: 15px 17px;
   border: 1px solid var(--fdre-line-strong);
-  background: #f3f6f5;
+  background: #111512;
   animation: fdre-stamp-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both 120ms;
 }
 
@@ -444,7 +444,7 @@
 }
 
 .fdre-parse-source span {
-  color: #252523;
+  color: #ddddda;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
 }
@@ -512,7 +512,7 @@
   gap: 16px;
   padding: 14px 16px;
   border: 1px solid var(--fdre-line);
-  background: #fafaf8;
+  background: #111111;
   animation: fdre-fragment-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -561,7 +561,7 @@
 }
 
 .fdre-query-box span {
-  color: #252523;
+  color: #ddddda;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
 }
@@ -604,16 +604,16 @@
 }
 
 .fdre-result-stack > div.best {
-  border-color: #a9b5ac;
+  border-color: #435448;
   background: var(--fdre-green-soft);
-  color: #405448;
+  color: #a8b7ac;
 }
 
 .fdre-rank-pulse {
   position: absolute;
   width: 160px;
   height: 160px;
-  border: 1px solid #bac5bd;
+  border: 1px solid #465348;
   border-radius: 50%;
   pointer-events: none;
   animation: fdre-rank-pulse 1.7s ease-out infinite;
@@ -716,7 +716,7 @@
 }
 
 .fdre-check-card strong {
-  color: #405448;
+  color: #a8b7ac;
   font-size: 15px;
   font-weight: 600;
 }
@@ -775,7 +775,7 @@
 .fdre-output-card > i {
   width: 88%;
   height: 7px;
-  background: #cbd4cd;
+  background: #334039;
   transform-origin: left;
   animation: fdre-line-grow 740ms ease both 140ms;
 }
@@ -797,7 +797,7 @@
 .fdre-output-card > div > i {
   height: 16px;
   border: 1px solid var(--fdre-line);
-  background: #fafaf8;
+  background: #111111;
 }
 
 .fdre-output-card > div.bars {
@@ -810,7 +810,7 @@
 .fdre-output-card > div.bars i {
   flex: 1;
   border: 0;
-  background: #87998c;
+  background: #667a6b;
   transform-origin: bottom;
   animation: fdre-bar-grow 700ms ease both;
 }
@@ -865,14 +865,14 @@
 .embers-progress {
   width: 100%;
   height: 3px;
-  background: #e3e2dd;
+  background: #242424;
   overflow: hidden;
 }
 
 .embers-progress i {
   display: block;
   height: 100%;
-  background: #202020;
+  background: #d8d8d4;
   transition: width 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -890,7 +890,7 @@
 }
 
 .embers-progress-copy span {
-  color: #74736e;
+  color: #777772;
   font-size: 13px;
 }
 
@@ -907,14 +907,14 @@
   display: grid;
   gap: 8px;
   padding: 16px 14px 0 0;
-  color: #a2a19b;
+  color: #666661;
   font-size: 11px;
   transition: color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .embers-progress-wrap li + li {
   padding-left: 14px;
-  border-left: 1px solid #deddd8;
+  border-left: 1px solid #242424;
 }
 
 .embers-progress-wrap li span {
@@ -923,7 +923,7 @@
 }
 
 .embers-progress-wrap li.done {
-  color: #252523;
+  color: #ddddda;
 }
 
 @media (max-width: 900px) {
