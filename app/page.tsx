@@ -1,4 +1,3 @@
-import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
@@ -9,7 +8,6 @@ import { Footer } from "@/components/sections/Footer";
 export default function HomePage() {
   return (
     <>
-      <Nav />
       <main className="site-main">
         <Hero />
         <About />
