@@ -1,33 +1,23 @@
 import type { Metadata } from "next";
-import { Libre_Franklin, Lora } from "next/font/google";
-import "./globals.css";
-import { ScrollRevealController } from "@/components/motion/ScrollRevealController";
-import { Starfield } from "@/components/sections/Starfield";
-import { site } from "@/lib/site";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { ScrollExperience } from "@/components/motion/ScrollExperience";
+import { site } from "@/lib/site";
+import "./globals.css";
+import "./project-demos.css";
 
-const libreFranklin = Libre_Franklin({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const lora = Lora({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-
 const isVercel = process.env.VERCEL === "1";
 
 export const metadata: Metadata = {
-  title: `${site.name} - CS @ Columbia`,
+  title: "Ken Cheng",
   description:
-    "Ken Cheng, Columbia CS (Egleston Scholar). Founder of Quantiv (options-implied earnings moves on Vercel, DuckDB + LightGBM pipeline, live quotes). IEEE-published, USACO Platinum.",
+    "Ken Cheng is a Columbia computer science student building software, machine learning, quantitative, and research systems.",
   metadataBase: new URL("https://kencheng.dev"),
   icons: {
     icon: [{ url: "/images/kclogo.png", type: "image/png" }],
@@ -46,15 +36,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${libreFranklin.variable} ${lora.variable}`}
-    >
-      <body suppressHydrationWarning>
-        <div className="v2-bg-carbon" aria-hidden />
-        <div className="v2-bg-glow" aria-hidden />
-        <Starfield className="v2-stars--page" />
-        <ScrollRevealController />
+    <html lang="en" className={inter.variable}>
+      <body>
+        <ScrollExperience />
         {children}
         {isVercel ? <Analytics /> : null}
       </body>
