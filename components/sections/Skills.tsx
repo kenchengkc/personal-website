@@ -1,3 +1,5 @@
+import { BinaryBrain } from "@/components/skills/BinaryBrain";
+
 const skillGroups = [
   {
     label: "Languages",
@@ -75,6 +77,8 @@ export function Skills() {
           </p>
         </div>
       </div>
+
+      <BinaryBrain />
 
       <div className="reading-column">
         <div className="skills-field" data-reveal>
