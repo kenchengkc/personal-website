@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import { Libre_Franklin, Lora } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const libreFranklin = Libre_Franklin({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const lora = Lora({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -44,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${libreFranklin.variable} ${lora.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body>
         <ScrollExperience />
         {children}
