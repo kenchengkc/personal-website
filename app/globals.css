@@ -670,7 +670,7 @@ textarea {
   gap: 24px;
   padding: 24px 0 34px;
   color: var(--ink-3);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* Reveal motion stays subtle. */
