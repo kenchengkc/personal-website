@@ -1,3 +1,4 @@
+import { AnimatedMetric } from "@/components/projects/AnimatedMetric";
 import { ProjectDemo } from "@/components/projects/ProjectDemos";
 import { featuredProjects, otherWork } from "@/data/portfolio";
 
@@ -38,10 +39,17 @@ export function Projects() {
 
                 <ul className="project-metrics" aria-label={`${project.name} metrics`}>
                   {project.metrics.map((metric) => {
-                    const awardMetric = /award|top 5|gold|platinum/i.test(metric);
+                    const awardMetric =
+                      metric.award ||
+                      /award|gold|platinum/i.test(`${metric.value} ${metric.label}`);
+
                     return (
-                      <li className={awardMetric ? "is-award" : undefined} key={metric}>
-                        {metric}
+                      <li
+                        className={awardMetric ? "is-award" : undefined}
+                        key={`${metric.value}-${metric.label}`}
+                      >
+                        <AnimatedMetric metric={metric} />
+                        <span className="metric-label">{metric.label}</span>
                       </li>
                     );
                   })}
