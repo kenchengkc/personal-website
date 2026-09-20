@@ -1,5 +1,5 @@
 :root {
-  --page: #090909;
+  --page: #0a0a0a;
   --paper: #0d0d0d;
   --ink: #e7e7e4;
   --ink-2: #a2a29d;
@@ -9,6 +9,16 @@
   --rail-accent: #ff5a1f;
   --reading: 720px;
   --result: 1040px;
+  --section-divider: linear-gradient(
+    90deg,
+    #0a0a0a 0%,
+    #151515 16%,
+    #292929 38%,
+    #343434 50%,
+    #292929 62%,
+    #151515 84%,
+    #0a0a0a 100%
+  );
 
   --color-bg: var(--page);
   --color-surface: var(--paper);
@@ -204,15 +214,10 @@ textarea {
 .hero-avatar {
   width: 88px;
   height: 88px;
-  display: grid;
-  place-items: center;
   margin-bottom: 8px;
   border: 1px solid #303030;
   border-radius: 50%;
-  background: #111111;
-  color: #d5d5d1;
-  font-size: 18px;
-  letter-spacing: -0.04em;
+  object-fit: cover;
 }
 
 .hero-identity strong {
@@ -240,8 +245,14 @@ textarea {
 
 .scroll-prompt i {
   width: 1px;
-  height: 66px;
-  background: #2d2d2d;
+  height: 108px;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0) 0%,
+    #141414 28%,
+    #272727 66%,
+    #3a3a3a 100%
+  );
 }
 
 .hero-copy {
@@ -286,7 +297,24 @@ textarea {
 .narrative-section,
 .work-section,
 .contact-section {
+  position: relative;
   padding: 132px 24px;
+}
+
+.about-section::before,
+.work-section::before,
+.research-section::before,
+.writing-section::before,
+.contact-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(100%, 2048px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: var(--section-divider);
+  pointer-events: none;
 }
 
 .about-section {
@@ -368,7 +396,19 @@ textarea {
 }
 
 .project-chapter + .project-chapter {
-  border-top: 1px solid #151515;
+  position: relative;
+}
+
+.project-chapter + .project-chapter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(100%, 2048px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: var(--section-divider);
+  pointer-events: none;
 }
 
 .project-copy {
