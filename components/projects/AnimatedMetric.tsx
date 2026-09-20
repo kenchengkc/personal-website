@@ -45,7 +45,7 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
         observer.disconnect();
         hasAnimatedRef.current = true;
 
-        const duration = count.durationMs ?? 1600;
+        const duration = (count.durationMs ?? 1600) * 1.1;
         let startedAt = 0;
 
         const step = (now: number) => {
