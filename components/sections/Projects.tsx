@@ -37,9 +37,14 @@ export function Projects() {
                 <p className="project-summary">{project.summary}</p>
 
                 <ul className="project-metrics" aria-label={`${project.name} metrics`}>
-                  {project.metrics.map((metric) => (
-                    <li key={metric}>{metric}</li>
-                  ))}
+                  {project.metrics.map((metric) => {
+                    const awardMetric = /award|top 5|gold|platinum/i.test(metric);
+                    return (
+                      <li className={awardMetric ? "is-award" : undefined} key={metric}>
+                        {metric}
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 <p className="project-stack">{project.stack}</p>
@@ -87,7 +92,15 @@ export function Projects() {
               <article className="research-row" key={item.title} data-reveal>
                 <div>
                   <h3>{item.title}</h3>
-                  <span>{item.meta}</span>
+                  <span
+                    className={
+                      /gold|platinum|best paper|winner/i.test(item.meta)
+                        ? "award-meta"
+                        : undefined
+                    }
+                  >
+                    {item.meta}
+                  </span>
                 </div>
                 <p>{item.detail}</p>
               </article>
