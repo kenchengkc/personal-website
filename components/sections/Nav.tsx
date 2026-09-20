@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
 
@@ -11,49 +10,22 @@ const links = [
 
 export function Nav() {
   return (
-    <header className="site-rail">
-      <div className="rail-identity">
-        <Link href="/" className="rail-brand" aria-label="Ken Cheng, home">
-          <Image
-            src="/images/kclogo.png"
-            alt=""
-            width={42}
-            height={42}
-            className="rail-logo"
-            priority
-          />
-          <span>
-            <strong>Ken Cheng</strong>
-            <small>CS @ Columbia</small>
-          </span>
-        </Link>
+    <header className="site-header">
+      <Link href="/" className="site-brand" aria-label="Ken Cheng, home">
+        <span>Ken Cheng</span>
+        <small>Software · ML · Quant</small>
+      </Link>
 
-        <span className="rail-status">
-          <i aria-hidden="true" />
-          Summer 2027
-        </span>
-      </div>
-
-      <nav className="rail-nav" aria-label="Primary navigation">
+      <nav className="site-nav" aria-label="Primary navigation">
         {links.map((link) => (
           <Link key={link.href} href={link.href}>
             {link.label}
           </Link>
         ))}
         <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
-          Resume
+          Resume ↗
         </a>
       </nav>
-
-      <div className="rail-links">
-        <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
-          GitHub
-        </a>
-        <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
-          LinkedIn
-        </a>
-        <a href={`mailto:${site.email}`}>Email</a>
-      </div>
     </header>
   );
 }
