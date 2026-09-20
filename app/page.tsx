@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <>
       <Nav />
-      <main className="v2-main">
+      <main className="site-main">
         <Hero />
         <About />
         <Projects />
