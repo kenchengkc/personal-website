@@ -2,10 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+type Milestone = {
+  label: string;
+  progress: number;
+};
+
 export function ScrollExperience() {
-  const ticks = useMemo(() => Array.from({ length: 44 }), []);
+  const ticks = useMemo(() => Array.from({ length: 54 }), []);
   const [progress, setProgress] = useState(0);
   const [activeLabel, setActiveLabel] = useState("INTRO");
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -20,12 +26,38 @@ export function ScrollExperience() {
 
     let animationFrame = 0;
 
+    const measureMilestones = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+
+      if (scrollable <= 0) {
+        setMilestones([]);
+        return;
+      }
+
+      const viewportAnchor = window.innerHeight * 0.43;
+      const nextMilestones = sectionNodes.map((section) => {
+        const targetScroll = section.offsetTop - viewportAnchor;
+        const sectionProgress = Math.min(
+          1,
+          Math.max(0, targetScroll / scrollable),
+        );
+
+        return {
+          label: section.dataset.scrollLabel ?? "SECTION",
+          progress: sectionProgress,
+        };
+      });
+
+      setMilestones(nextMilestones);
+    };
+
     const updateScrollState = () => {
       animationFrame = 0;
 
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
       const nextProgress = scrollable > 0 ? window.scrollY / scrollable : 0;
-      setProgress(Math.min(1, Math.max(0, nextProgress)));
+      const clampedProgress = Math.min(1, Math.max(0, nextProgress));
+      setProgress(clampedProgress);
 
       if (sectionNodes.length > 0) {
         const viewportAnchor = window.innerHeight * 0.43;
@@ -34,7 +66,10 @@ export function ScrollExperience() {
 
         for (const section of sectionNodes) {
           const rect = section.getBoundingClientRect();
-          const sectionAnchor = Math.max(rect.top, Math.min(viewportAnchor, rect.bottom));
+          const sectionAnchor = Math.max(
+            rect.top,
+            Math.min(viewportAnchor, rect.bottom),
+          );
           const distance = Math.abs(sectionAnchor - viewportAnchor);
 
           if (distance < closestDistance) {
@@ -53,9 +88,16 @@ export function ScrollExperience() {
       }
     };
 
+    const onResize = () => {
+      measureMilestones();
+      onScroll();
+    };
+
+    measureMilestones();
     updateScrollState();
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
 
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -79,7 +121,7 @@ export function ScrollExperience() {
       root.classList.remove("motion-ready");
       revealObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
 
       if (animationFrame !== 0) {
         window.cancelAnimationFrame(animationFrame);
@@ -87,24 +129,66 @@ export function ScrollExperience() {
     };
   }, []);
 
+  const goToSection = (label: string) => {
+    const target = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-scroll-section]"),
+    ).find((section) => section.dataset.scrollLabel === label);
+
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const markerTop = 4 + progress * 92;
+  const activeTick = progress * (ticks.length - 1);
+
   return (
-    <aside className="scroll-ruler" aria-hidden="true">
-      <div className="ruler-track">
-        {ticks.map((_, index) => (
-          <span
-            className={index % 6 === 0 ? "ruler-tick ruler-tick-long" : "ruler-tick"}
-            key={index}
-          />
-        ))}
+    <nav className="scroll-ruler" aria-label="Page sections">
+      <div className="ruler-track" aria-hidden="true">
+        {ticks.map((_, index) => {
+          const distance = Math.abs(index - activeTick);
+          const near = distance <= 4;
+          const core = distance <= 1.25;
+
+          return (
+            <span
+              className={[
+                "ruler-tick",
+                index % 7 === 0 ? "ruler-tick-long" : "",
+                near ? "ruler-tick-near" : "",
+                core ? "ruler-tick-core" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              key={index}
+            />
+          );
+        })}
       </div>
 
       <div
         className="ruler-marker"
-        style={{ top: `${4 + progress * 92}%` }}
+        style={{ top: `${markerTop}%` }}
+        aria-hidden="true"
       >
         <i />
-        <span>{activeLabel}</span>
       </div>
-    </aside>
+
+      <div className="ruler-milestones">
+        {milestones.map((milestone) => (
+          <button
+            type="button"
+            className={
+              milestone.label === activeLabel
+                ? "ruler-milestone is-active"
+                : "ruler-milestone"
+            }
+            style={{ top: `${4 + milestone.progress * 92}%` }}
+            onClick={() => goToSection(milestone.label)}
+            key={milestone.label}
+          >
+            {milestone.label}
+          </button>
+        ))}
+      </div>
+    </nav>
   );
 }
