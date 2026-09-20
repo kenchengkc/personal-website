@@ -38,7 +38,7 @@ export function Hero() {
           <i />
           <span>IEEE published</span>
           <i />
-          <span>USACO Platinum</span>
+          <span className="hero-platinum">USACO Platinum · Top 1% nationally</span>
         </div>
       </div>
 
