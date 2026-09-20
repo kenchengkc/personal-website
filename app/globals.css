@@ -697,6 +697,110 @@ textarea {
   70% { transform: translate(-2px, -2px) rotate(0.9deg); }
 }
 
+
+.binary-brain {
+  position: relative;
+  width: min(calc(100% - 48px), 720px);
+  height: 300px;
+  margin: 28px auto 8px;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: #090a0b;
+}
+
+.binary-brain-field {
+  position: absolute;
+  inset: 0;
+}
+
+.binary-particle {
+  position: absolute;
+  left: var(--sx);
+  top: var(--sy);
+  z-index: 1;
+  color: #8a8d92;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--particle-size);
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0.16;
+  transform: translate(-50%, -50%);
+  will-change: left, top, opacity;
+}
+
+.binary-particle.is-gold {
+  color: var(--gold-bright);
+}
+
+.binary-brain.is-active .binary-particle {
+  animation: brain-particle-assemble 2.2s cubic-bezier(0.2, 0.8, 0.2, 1)
+    var(--particle-delay) both;
+}
+
+.binary-brain.is-complete .binary-particle {
+  left: var(--tx);
+  top: var(--ty);
+  opacity: var(--particle-alpha);
+  animation: none;
+}
+
+.binary-brain-guide {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 292px;
+  height: 292px;
+  color: #aeb2b8;
+  opacity: 0.08;
+  transform: translate(-50%, -50%) scale(0.96);
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.binary-brain-guide-detail {
+  color: #d3d6da;
+  opacity: 0;
+}
+
+.binary-brain.is-active .binary-brain-guide {
+  opacity: 0.22;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.binary-brain.is-active .binary-brain-guide-detail {
+  opacity: 0.34;
+}
+
+.binary-brain.is-complete .binary-brain-guide {
+  opacity: 0.28;
+}
+
+.binary-brain.is-complete .binary-brain-guide-detail {
+  opacity: 0.46;
+}
+
+@keyframes brain-particle-assemble {
+  0% {
+    left: var(--sx);
+    top: var(--sy);
+    opacity: 0.16;
+  }
+  22% {
+    left: var(--sx);
+    top: calc(var(--sy) + 7%);
+    opacity: 0.34;
+  }
+  100% {
+    left: var(--tx);
+    top: var(--ty);
+    opacity: var(--particle-alpha);
+  }
+}
+
 /* Platinum award treatment */
 
 .research-row.is-platinum {
@@ -1498,6 +1602,17 @@ textarea {
 
   .skills-heading > p {
     text-align: left;
+  }
+
+  .binary-brain {
+    width: 100%;
+    height: 240px;
+    margin-top: 24px;
+  }
+
+  .binary-brain-guide {
+    width: 220px;
+    height: 220px;
   }
 
   .skill-row {
