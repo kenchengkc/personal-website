@@ -3,10 +3,10 @@ import { publications } from "@/data/portfolio";
 export function BlogList() {
   return (
     <section className="writing-section" id="writing">
-      <div className="section-heading section-heading-compact" data-reveal>
-        <p className="eyebrow">Publications</p>
-        <h2>Published work.</h2>
-      </div>
+      <header className="section-heading" data-reveal>
+        <span className="section-number">04</span>
+        <h2>Publications</h2>
+      </header>
 
       <div className="publication-list">
         {publications.map((publication) => (
