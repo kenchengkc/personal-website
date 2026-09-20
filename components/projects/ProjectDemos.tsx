@@ -41,41 +41,42 @@ function AmazonDemo() {
     >
       <div className="demo-topline">
         <span>Amazon SCOT · Long-Term Planning</span>
-        <span>high-level architecture</span>
+        <span>configuration architecture</span>
       </div>
 
       <div className="amazon-architecture">
         <section className="amazon-stage amazon-inputs">
           <span className="amazon-stage-label">01 · Inputs</span>
-          <h4>Planning configuration</h4>
+          <h4>Planning inputs</h4>
 
           <div className="amazon-input-list">
-            <span><Settings size={15} aria-hidden="true" />Forecast horizon + model settings</span>
-            <span><GitBranch size={15} aria-hidden="true" />Environment + dependency overrides</span>
-            <span><Database size={15} aria-hidden="true" />Revenue + inventory data references</span>
+            <span><Settings size={15} aria-hidden="true" />Forecast horizon</span>
+            <span><GitBranch size={15} aria-hidden="true" />Overrides</span>
+            <span><Database size={15} aria-hidden="true" />Data refs</span>
           </div>
         </section>
 
         <ArrowRight className="amazon-flow-arrow" size={21} aria-hidden="true" />
 
         <section className="amazon-stage amazon-config-layer">
-          <span className="amazon-stage-label">02 · Shared layer</span>
+          <span className="amazon-stage-label">02 · Shared config</span>
+
           <div className="amazon-shared-heading">
             <Cloud size={20} aria-hidden="true" />
-            <h4>Versioned config package</h4>
+            <h4>Versioned config</h4>
           </div>
 
           <div className="amazon-config-core">
-            <span>schema validation</span>
-            <span>dependency map</span>
-            <span>single source of truth</span>
+            <span>validated</span>
+            <span>versioned</span>
+            <span>distributed</span>
           </div>
 
           <div className="amazon-aws-services" aria-label="AWS services">
-            <span><Cloud size={13} aria-hidden="true" />Lambda</span>
-            <span><Database size={13} aria-hidden="true" />S3</span>
-            <span><Boxes size={13} aria-hidden="true" />Glue</span>
-            <span><Package size={13} aria-hidden="true" />CDK</span>
+            <span><Cloud size={13} aria-hidden="true" />AWS Lambda</span>
+            <span><Database size={13} aria-hidden="true" />AWS S3</span>
+            <span><Boxes size={13} aria-hidden="true" />AWS Glue</span>
+            <span><Package size={13} aria-hidden="true" />AWS CDK</span>
           </div>
         </section>
 
@@ -83,7 +84,7 @@ function AmazonDemo() {
 
         <section className="amazon-stage amazon-consumers">
           <span className="amazon-stage-label">03 · Consumers</span>
-          <h4>Forecasting system</h4>
+          <h4>Forecast stack</h4>
 
           <div className="amazon-consumer-map">
             <div>
@@ -100,17 +101,17 @@ function AmazonDemo() {
 
           <div className="amazon-output">
             <BarChart3 size={17} aria-hidden="true" />
-            <span><strong>MOSAIC</strong> long-term revenue + inventory forecasts</span>
+            <span><strong>MOSAIC</strong> · revenue + inventory forecasts</span>
           </div>
         </section>
       </div>
 
       <div className="amazon-impact">
-        <span>configure once</span>
+        <span>configure</span>
         <i />
-        <span>validate + distribute</span>
+        <span>distribute</span>
         <i />
-        <span>consistent forecast runs</span>
+        <span>forecast</span>
         <strong>~90% less manual comparison</strong>
       </div>
     </div>
