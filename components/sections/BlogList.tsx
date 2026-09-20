@@ -22,9 +22,14 @@ export function BlogList() {
               data-reveal
             >
               <div>
-                <span>
-                  {publication.venue} · {publication.date}
-                </span>
+                <div className="publication-meta">
+                  <span>
+                    {publication.venue} · {publication.date}
+                  </span>
+                  <span className="citation-tag">
+                    {publication.citations} citation{publication.citations === 1 ? "" : "s"}
+                  </span>
+                </div>
                 <h3>{publication.title}</h3>
               </div>
               <span className="publication-arrow" aria-hidden="true">↗</span>
