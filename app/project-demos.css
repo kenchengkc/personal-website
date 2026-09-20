@@ -19,7 +19,7 @@
   padding: 0 16px;
   border-bottom: 1px solid #deddd8;
   color: #74736e;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.02em;
 }
 
@@ -70,7 +70,7 @@
 
 .amazon-stage-label {
   color: #99948b;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -97,8 +97,8 @@
   padding: 11px 0;
   border-top: 1px solid #ebe8e1;
   color: #605d56;
-  font-size: 10px;
-  line-height: 1.35;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .amazon-input-list > span:last-child {
@@ -146,7 +146,7 @@
   border-left: 2px solid var(--amazon-gold);
   background: rgba(199, 154, 67, 0.07);
   color: #5d5140;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .amazon-aws-services {
@@ -165,7 +165,7 @@
   border: 1px solid #e4dccb;
   background: #fffefa;
   color: #6b6252;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .amazon-aws-services svg {
@@ -201,7 +201,7 @@
 
 .amazon-consumer-map span {
   color: var(--amazon-muted);
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1.3;
 }
 
@@ -214,8 +214,8 @@
   padding: 13px;
   border-top: 1px solid #e7e4dd;
   color: #5c5952;
-  font-size: 10px;
-  line-height: 1.4;
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .amazon-output svg,
@@ -235,7 +235,7 @@
   padding: 0 34px;
   border-top: 1px solid var(--amazon-line);
   color: #817d75;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .amazon-impact i {
@@ -436,7 +436,7 @@
 .fdre-stage-rail small {
   margin-top: 2px;
   color: var(--fdre-muted);
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .fdre-viewport {
@@ -488,7 +488,7 @@
   gap: 12px;
   color: var(--fdre-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.05em;
 }
 
@@ -578,13 +578,13 @@
 .fdre-stamp small {
   color: var(--fdre-cyan);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .fdre-stamp strong {
   margin-top: 5px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -703,7 +703,7 @@
 
 .fdre-fragments span {
   color: var(--fdre-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .fdre-retrieve {
@@ -741,7 +741,7 @@
   border: 1px solid var(--fdre-line);
   color: var(--fdre-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
   animation: fdre-result-in 460ms ease both;
 }
 
@@ -805,7 +805,7 @@
 .fdre-source-card span {
   color: var(--fdre-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .fdre-source-card p {
@@ -884,7 +884,7 @@
 
 .fdre-check-card span {
   color: var(--fdre-muted);
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .fdre-research {
@@ -925,7 +925,7 @@
 
 .fdre-output-card > span {
   color: var(--fdre-green);
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .fdre-output-card > strong {
@@ -1010,7 +1010,7 @@
   bottom: 14px;
   transform: translateX(-50%);
   color: var(--fdre-muted);
-  font-size: 8px;
+  font-size: 9px;
 }
 
 /* Embers uses the real project screenshots as an interactive film strip. */
@@ -1122,14 +1122,14 @@
 
 .embers-gallery-card figcaption span,
 .embers-gallery-card figcaption small {
-  color: #6f6f6a;
-  font-size: 9px;
+  color: #858580;
+  font-size: 10px;
   font-weight: 400;
 }
 
 .embers-gallery-card figcaption strong {
   color: #d7d7d3;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
 }
 
@@ -1146,7 +1146,7 @@
   align-items: center;
   gap: 9px;
   color: #5f5f5a;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   pointer-events: none;
@@ -1293,7 +1293,7 @@
   }
 
   .fdre-stage-rail strong {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .fdre-scene {
