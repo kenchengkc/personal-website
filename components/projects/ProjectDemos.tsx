@@ -2,11 +2,19 @@
 
 import Image from "next/image";
 import {
+  ArrowRight,
   BarChart3,
+  Boxes,
   CheckCircle2,
+  Cloud,
+  Database,
   FileText,
+  GitBranch,
+  Package,
   Search,
+  Settings,
   TableProperties,
+  Users,
 } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { FeaturedProject } from "@/data/portfolio";
@@ -26,39 +34,84 @@ function usePrefersReducedMotion() {
 }
 
 function AmazonDemo() {
-  const keys = [
-    ["forecast_horizon", "104 weeks"],
-    ["revenue_model", "mosaic-v17"],
-    ["inventory_policy", "ltpf-standard"],
-    ["dependency_map", "17 packages"],
-  ] as const;
-
   return (
-    <div className="project-demo amazon-demo" aria-label="Amazon shared configuration preview">
+    <div
+      className="project-demo amazon-demo"
+      aria-label="High-level Amazon long-term planning configuration architecture"
+    >
       <div className="demo-topline">
-        <span>shared-config.json</span>
-        <span>Amazon SCOT</span>
+        <span>Amazon SCOT · Long-Term Planning</span>
+        <span>high-level architecture</span>
       </div>
-      <div className="amazon-config">
-        <div className="amazon-code">
-          <span>{"{"}</span>
-          {keys.map(([key, value], index) => (
-            <span key={key}>
-              <i>"{key}"</i>: "{value}"{index < keys.length - 1 ? "," : ""}
-            </span>
-          ))}
-          <span>{"}"}</span>
-        </div>
-        <div className="amazon-services" aria-label="Systems using the shared configuration">
-          {["MOSAIC", "Demand", "Revenue", "Inventory", "BIE", "Research"].map(
-            (service) => (
-              <span key={service}>
-                <i />
-                {service}
-              </span>
-            ),
-          )}
-        </div>
+
+      <div className="amazon-architecture">
+        <section className="amazon-stage amazon-inputs">
+          <span className="amazon-stage-label">01 · Inputs</span>
+          <h4>Planning configuration</h4>
+
+          <div className="amazon-input-list">
+            <span><Settings size={15} aria-hidden="true" />Forecast horizon + model settings</span>
+            <span><GitBranch size={15} aria-hidden="true" />Environment + dependency overrides</span>
+            <span><Database size={15} aria-hidden="true" />Revenue + inventory data references</span>
+          </div>
+        </section>
+
+        <ArrowRight className="amazon-flow-arrow" size={21} aria-hidden="true" />
+
+        <section className="amazon-stage amazon-config-layer">
+          <span className="amazon-stage-label">02 · Shared layer</span>
+          <div className="amazon-shared-heading">
+            <Cloud size={20} aria-hidden="true" />
+            <h4>Versioned config package</h4>
+          </div>
+
+          <div className="amazon-config-core">
+            <span>schema validation</span>
+            <span>dependency map</span>
+            <span>single source of truth</span>
+          </div>
+
+          <div className="amazon-aws-services" aria-label="AWS services">
+            <span><Cloud size={13} aria-hidden="true" />Lambda</span>
+            <span><Database size={13} aria-hidden="true" />S3</span>
+            <span><Boxes size={13} aria-hidden="true" />Glue</span>
+            <span><Package size={13} aria-hidden="true" />CDK</span>
+          </div>
+        </section>
+
+        <ArrowRight className="amazon-flow-arrow" size={21} aria-hidden="true" />
+
+        <section className="amazon-stage amazon-consumers">
+          <span className="amazon-stage-label">03 · Consumers</span>
+          <h4>Forecasting system</h4>
+
+          <div className="amazon-consumer-map">
+            <div>
+              <Boxes size={17} aria-hidden="true" />
+              <strong>17</strong>
+              <span>packages + services</span>
+            </div>
+            <div>
+              <Users size={17} aria-hidden="true" />
+              <strong>13</strong>
+              <span>engineers</span>
+            </div>
+          </div>
+
+          <div className="amazon-output">
+            <BarChart3 size={17} aria-hidden="true" />
+            <span><strong>MOSAIC</strong> long-term revenue + inventory forecasts</span>
+          </div>
+        </section>
+      </div>
+
+      <div className="amazon-impact">
+        <span>configure once</span>
+        <i />
+        <span>validate + distribute</span>
+        <i />
+        <span>consistent forecast runs</span>
+        <strong>~90% less manual comparison</strong>
       </div>
     </div>
   );
