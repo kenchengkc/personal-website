@@ -1,15 +1,60 @@
+import { BinaryBrain } from "@/components/skills/BinaryBrain";
+
 const skillGroups = [
   {
     label: "Languages",
-    skills: ["Python", "C++", "TypeScript", "R"],
+    skills: ["Python", "C++", "TypeScript", "SQL"],
   },
   {
-    label: "ML + Data",
-    skills: ["PyTorch", "LightGBM", "DuckDB", "PostgreSQL", "pgvector"],
+    label: "ML + NLP",
+    skills: [
+      "PyTorch",
+      "LLMs",
+      "Transformers",
+      "RAG",
+      "Embeddings",
+      "Computer Vision",
+      "LightGBM",
+      "XGBoost",
+      "YOLOv11",
+    ],
   },
   {
-    label: "Systems + Web",
-    skills: ["Next.js", "FastAPI", "Redis", "AWS Lambda", "S3", "Glue", "CDK"],
+    label: "Data + Systems",
+    skills: [
+      "Pandas",
+      "NumPy",
+      "PostgreSQL",
+      "pgvector",
+      "DuckDB",
+      "Parquet",
+      "FastAPI",
+      "Docker",
+      "Git",
+    ],
+  },
+  {
+    label: "Cloud + Product",
+    skills: [
+      "AWS Lambda",
+      "S3",
+      "Glue",
+      "CDK",
+      "React",
+      "Flask",
+      "Supabase",
+      "LangGraph",
+    ],
+  },
+  {
+    label: "Methods",
+    skills: [
+      "Feature Engineering",
+      "Model Evaluation",
+      "Time-Series Validation",
+      "Quantile Regression",
+      "Experiment Tracking",
+    ],
   },
 ] as const;
 
@@ -23,10 +68,19 @@ export function Skills() {
     >
       <div className="reading-column">
         <div className="skills-heading" data-reveal>
-          <p className="section-kicker">Skills</p>
-          <p>Tools I reach for across ML, quantitative systems, and product engineering.</p>
+          <div>
+            <p className="section-kicker">Skills</p>
+            <h2>From models to production.</h2>
+          </div>
+          <p>
+            ML, retrieval, data infrastructure, and the systems needed to ship them.
+          </p>
         </div>
+      </div>
 
+      <BinaryBrain />
+
+      <div className="reading-column">
         <div className="skills-field" data-reveal>
           {skillGroups.map((group, groupIndex) => (
             <div className="skill-row" key={group.label}>
