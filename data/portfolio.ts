@@ -82,7 +82,7 @@ export const otherWork = [
   },
   {
     title: "CVRP Solver",
-    meta: "UF, 2023",
+    meta: "UF SSTP · Best Paper, 2023",
     detail: "ML-assisted column generation for vehicle routing, 15% faster C++ solver.",
   },
 ] as const;
