@@ -286,7 +286,7 @@ textarea {
   gap: 24px;
   margin-top: 26px;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .hero-links a {
@@ -327,7 +327,7 @@ textarea {
 .section-kicker {
   margin: 0 0 24px;
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
@@ -358,7 +358,7 @@ textarea {
 
 .profile-facts dt,
 .profile-facts dd {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .profile-facts dt {
@@ -423,7 +423,7 @@ textarea {
   grid-template-columns: 34px 1fr auto;
   gap: 12px;
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.03em;
 }
 
@@ -453,7 +453,7 @@ textarea {
 }
 
 .project-metrics li {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .project-metrics li:not(:last-child)::after {
@@ -487,7 +487,7 @@ textarea {
 .project-stack {
   margin: 18px 0 0;
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -497,7 +497,7 @@ textarea {
   gap: 18px 24px;
   margin-top: 24px;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .project-links a,
@@ -552,8 +552,8 @@ textarea {
 
 .project-caption {
   margin: 20px 0 0;
-  color: #686863;
-  font-size: 10px;
+  color: #767671;
+  font-size: 11px;
   text-align: center;
 }
 
@@ -586,12 +586,12 @@ textarea {
   display: block;
   margin-top: 5px;
   color: var(--ink-3);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .research-row p {
   color: var(--ink-2);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -606,7 +606,7 @@ textarea {
 
 .publication-row > div > span {
   color: var(--ink-3);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .publication-row h3 {
@@ -659,7 +659,7 @@ textarea {
   gap: 18px 24px;
   margin-top: 34px;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .site-footer {
@@ -716,7 +716,7 @@ textarea {
   display: flex;
   gap: 18px;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .site-nav a {
@@ -757,7 +757,7 @@ textarea {
 .v2-mono,
 .v2-mono--accent {
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .v2-blog {
@@ -786,7 +786,7 @@ textarea {
   padding: 4px 7px;
   border: 1px solid var(--line-strong);
   color: var(--ink-2);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .v2-blog-title {
@@ -812,7 +812,7 @@ textarea {
   border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .prose-v2 {
