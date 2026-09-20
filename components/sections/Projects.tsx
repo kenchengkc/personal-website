@@ -47,6 +47,7 @@ export function Projects() {
                       <li
                         className={awardMetric ? "is-award" : undefined}
                         key={`${metric.value}-${metric.label}`}
+                        aria-label={`${metric.value} ${metric.label}`}
                       >
                         <AnimatedMetric metric={metric} />
                         <span className="metric-label">{metric.label}</span>
