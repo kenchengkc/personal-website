@@ -377,9 +377,9 @@ function FdreDemo() {
   const ActiveScene = FDRE_SCENES[activeStage];
 
   return (
-    <div className="project-demo fdre-demo" aria-label="FDRE About page system flow">
+    <div className="project-demo fdre-demo" aria-label="Financial Document Retrieval Engine system flow">
       <div className="demo-topline">
-        <span>FDRE · from filing to evidence</span>
+        <span>Financial Document Retrieval Engine · from filing to evidence</span>
         <span>from /about</span>
       </div>
       <div className="fdre-stage-rail">
