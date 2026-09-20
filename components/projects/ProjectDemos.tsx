@@ -66,6 +66,12 @@ function AmazonDemo() {
 function QuantivMarketVisual({ animated }: { animated: boolean }) {
   return (
     <svg viewBox="0 0 360 180" role="img" aria-label="ATM straddle range centered on spot">
+      <defs>
+        <linearGradient id="quantiv-market-band" x1="0" x2="1">
+          <stop offset="0%" stopColor="var(--qv-blue-2)" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="var(--qv-blue-1)" stopOpacity="0.9" />
+        </linearGradient>
+      </defs>
       <line x1="28" x2="332" y1="94" y2="94" className="qv-axis" />
       <rect x="92" y="78" width="176" height="32" rx="16" className="qv-band">
         {animated ? (
@@ -194,7 +200,10 @@ function QuantivDemo() {
       </div>
       <div className="qv-story-grid">
         {stories.map(([kicker, title, visual]) => (
-          <article key={kicker}>
+          <article
+            className={`qv-story qv-story-${kicker.toLowerCase()}`}
+            key={kicker}
+          >
             <div className="qv-visual">{visual}</div>
             <span>{kicker}</span>
             <h4>{title}</h4>
