@@ -93,6 +93,7 @@ export const publications = [
       "GC-INF: A Novel Adaptive Traffic Control System using Machine Learning for Turning Ratio Predictions",
     venue: "IEEE Intelligent Transportation Systems Conference",
     date: "2023",
+    citations: 1,
     href:
       "https://www.researchgate.net/publication/378189206_GC-INF_A_Novel_Adaptive_Traffic_Control_System_using_Machine_Learning_for_Turning_Ratio_Predictions",
   },
@@ -101,6 +102,7 @@ export const publications = [
       "A Need For Speed: Enhancing F1 Race Cars with a Novel Computational Fluid Dynamics and Machine Learning Method",
     venue: "Highlights in Science, Engineering and Technology",
     date: "2023",
+    citations: 2,
     href:
       "https://www.researchgate.net/publication/371141171_A_Need_For_Speed_Enhancing_F1_Race_Cars_with_a_Novel_Computational_Fluid_Dynamics_and_Machine_Learning_Method",
   },
