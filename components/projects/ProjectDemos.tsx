@@ -31,37 +31,27 @@ function AmazonDemo() {
     ["inventory_policy", "ltpf-standard"],
     ["dependency_map", "17 packages"],
   ] as const;
-  const [active, setActive] = useState(0);
-  const reducedMotion = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (reducedMotion) return;
-    const timer = window.setInterval(() => {
-      setActive((current) => (current + 1) % keys.length);
-    }, 1300);
-    return () => window.clearInterval(timer);
-  }, [keys.length, reducedMotion]);
 
   return (
     <div className="project-demo amazon-demo" aria-label="Amazon shared configuration preview">
       <div className="demo-topline">
         <span>shared-config.json</span>
-        <span>validated</span>
+        <span>Amazon SCOT</span>
       </div>
       <div className="amazon-config">
         <div className="amazon-code">
           <span>{"{"}</span>
           {keys.map(([key, value], index) => (
-            <span className={index === active ? "active" : undefined} key={key}>
+            <span key={key}>
               <i>"{key}"</i>: "{value}"{index < keys.length - 1 ? "," : ""}
             </span>
           ))}
           <span>{"}"}</span>
         </div>
-        <div className="amazon-services">
+        <div className="amazon-services" aria-label="Systems using the shared configuration">
           {["MOSAIC", "Demand", "Revenue", "Inventory", "BIE", "Research"].map(
-            (service, index) => (
-              <span className={index <= active + 1 ? "ready" : undefined} key={service}>
+            (service) => (
+              <span key={service}>
                 <i />
                 {service}
               </span>
