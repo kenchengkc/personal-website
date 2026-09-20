@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Mulish } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const geist = Geist({
+const mulish = Mulish({
   subsets: ["latin"],
+  weight: ["400", "600"],
   variable: "--font-sans",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
   display: "swap",
 });
 
@@ -41,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={mulish.variable}>
       <body>
         <ScrollExperience />
         {children}
