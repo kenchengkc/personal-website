@@ -938,7 +938,25 @@ textarea {
 }
 
 .project-metrics li {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-value {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.project-metrics li:not(.is-award) .metric-value {
+  color: var(--ink);
+}
+
+.metric-label {
+  margin-left: 4px;
 }
 
 .project-metrics li:not(:last-child)::after {
