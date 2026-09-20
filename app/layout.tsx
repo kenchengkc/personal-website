@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
+import "./project-demos.css";
 
 const mulish = Mulish({
   subsets: ["latin"],
