@@ -4,8 +4,8 @@ export function Contact() {
   return (
     <section className="contact-section" id="contact">
       <div data-reveal>
-        <p className="eyebrow">Contact</p>
-        <h2>Have something interesting?</h2>
+        <span className="section-number">05</span>
+        <h2>Contact</h2>
         <a className="contact-email" href={`mailto:${site.email}`}>
           {site.email}
           <span aria-hidden="true">↗</span>
