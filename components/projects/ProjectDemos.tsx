@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   BarChart3,
   CheckCircle2,
@@ -351,54 +352,55 @@ function FdreDemo() {
   );
 }
 
-const EMBERS_PROGRESS = [0, 25, 50, 75, 100] as const;
+const EMBERS_GALLERY = [
+  {
+    src: "/media/embers-yolo-live-detection.png",
+    alt: "Embers live object detection view identifying household items in a walkthrough video",
+    label: "Live detection",
+    detail: "YOLO tracking across walkthrough frames",
+  },
+  {
+    src: "/media/embers-inventory-dashboard.png",
+    alt: "Embers inventory dashboard showing detected household items and replacement values",
+    label: "Inventory",
+    detail: "Structured items and replacement values",
+  },
+] as const;
 
 function EmbersDemo() {
-  const reducedMotion = usePrefersReducedMotion();
-  const [step, setStep] = useState(reducedMotion ? EMBERS_PROGRESS.length - 1 : 0);
-  const progress = EMBERS_PROGRESS[step];
-  const status =
-    progress < 25
-      ? "Preparing your video..."
-      : progress < 50
-        ? "Uploading to secure storage..."
-        : progress < 75
-          ? "Processing video frames..."
-          : progress < 100
-            ? "Almost there..."
-            : "Upload complete!";
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setStep(EMBERS_PROGRESS.length - 1);
-      return;
-    }
-    const timer = window.setInterval(() => {
-      setStep((current) => (current + 1) % EMBERS_PROGRESS.length);
-    }, 1200);
-    return () => window.clearInterval(timer);
-  }, [reducedMotion]);
-
   return (
-    <div className="project-demo embers-demo" aria-label="Embers upload and analysis progress">
+    <div className="project-demo embers-demo" aria-label="Embers product screenshots">
       <div className="demo-topline">
-        <span>Embers · video analysis</span>
-        <span>from upload flow</span>
+        <span>Embers · product frames</span>
+        <span>scroll / hover</span>
       </div>
-      <div className="embers-progress-wrap">
-        <div className="embers-progress"><i style={{ width: `${progress}%` }} /></div>
-        <div className="embers-progress-copy">
-          <strong>{progress}%</strong>
-          <span>{status}</span>
-        </div>
-        <ol>
-          {["Record a video", "Upload to Embers", "AI analysis", "Get your inventory"].map((label, index) => (
-            <li className={progress >= (index + 1) * 25 ? "done" : undefined} key={label}>
-              <span>{index + 1}</span>
-              {label}
-            </li>
+
+      <div className="embers-gallery" role="region" aria-label="Embers screenshot gallery">
+        <div className="embers-gallery-track">
+          {EMBERS_GALLERY.map((frame, index) => (
+            <figure className="embers-gallery-card" tabIndex={0} key={frame.src}>
+              <div className="embers-gallery-image">
+                <Image
+                  src={frame.src}
+                  alt={frame.alt}
+                  fill
+                  sizes="(max-width: 720px) 86vw, 760px"
+                  priority={index === 0}
+                />
+              </div>
+              <figcaption>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{frame.label}</strong>
+                <small>{frame.detail}</small>
+              </figcaption>
+            </figure>
           ))}
-        </ol>
+        </div>
+
+        <div className="embers-gallery-hint" aria-hidden="true">
+          <span>Scroll</span>
+          <i />
+        </div>
       </div>
     </div>
   );
