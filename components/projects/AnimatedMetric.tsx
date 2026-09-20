@@ -19,12 +19,12 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
   const [displayValue, setDisplayValue] = useState(
     metric.count?.from ?? null,
   );
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
     const count = metric.count;
     const node = ref.current;
-    if (!count || !node || hasAnimated) return;
+    if (!count || !node || hasAnimatedRef.current) return;
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -32,7 +32,7 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
 
     if (reduceMotion) {
       setDisplayValue(count.to);
-      setHasAnimated(true);
+      hasAnimatedRef.current = true;
       return;
     }
 
@@ -40,10 +40,10 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting || hasAnimated) return;
+        if (!entry.isIntersecting || hasAnimatedRef.current) return;
 
         observer.disconnect();
-        setHasAnimated(true);
+        hasAnimatedRef.current = true;
 
         const duration = count.durationMs ?? 1600;
         let startedAt = 0;
@@ -66,8 +66,8 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
         frame = window.requestAnimationFrame(step);
       },
       {
-        threshold: 0.55,
-        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.2,
+        rootMargin: "0px 0px -6% 0px",
       },
     );
 
@@ -77,7 +77,7 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
       observer.disconnect();
       window.cancelAnimationFrame(frame);
     };
-  }, [hasAnimated, metric.count]);
+  }, [metric.count]);
 
   return (
     <span
