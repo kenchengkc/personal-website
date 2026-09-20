@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -9,7 +10,14 @@ export function Hero() {
       data-scroll-label="INTRO"
     >
       <div className="hero-identity" data-reveal>
-        <div className="hero-avatar" aria-hidden="true">KC</div>
+        <Image
+          src="/images/profile-photo.jpg"
+          alt="Ken Cheng"
+          width={192}
+          height={192}
+          className="hero-avatar"
+          priority
+        />
         <strong>Ken Cheng</strong>
         <span>Computer Science · Columbia University · New York</span>
       </div>
