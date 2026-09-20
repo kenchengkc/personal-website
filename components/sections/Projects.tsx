@@ -5,10 +5,10 @@ export function Projects() {
   return (
     <>
       <section className="work-section" id="work">
-        <div className="section-heading" data-reveal>
-          <p className="eyebrow">Selected work</p>
-          <h2>Built to work, not just to look good.</h2>
-        </div>
+        <header className="section-heading" data-reveal>
+          <span className="section-number">02</span>
+          <h2>Selected work</h2>
+        </header>
 
         <div className="project-list">
           {featuredProjects.map((project, index) => (
@@ -34,23 +34,13 @@ export function Projects() {
                 {(project.href || project.secondaryHref) && (
                   <div className="project-links">
                     {project.href && project.hrefLabel ? (
-                      <a
-                        href={project.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-link text-link-primary"
-                      >
-                        {project.hrefLabel} <span aria-hidden="true">↗</span>
+                      <a href={project.href} target="_blank" rel="noopener noreferrer">
+                        {project.hrefLabel} ↗
                       </a>
                     ) : null}
                     {project.secondaryHref && project.secondaryLabel ? (
-                      <a
-                        href={project.secondaryHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-link"
-                      >
-                        {project.secondaryLabel} <span aria-hidden="true">↗</span>
+                      <a href={project.secondaryHref} target="_blank" rel="noopener noreferrer">
+                        {project.secondaryLabel} ↗
                       </a>
                     ) : null}
                   </div>
@@ -59,9 +49,6 @@ export function Projects() {
 
               <div className="project-visual">
                 <ProjectDemo kind={project.demo} />
-                <span className="project-visual-index" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
               </div>
             </article>
           ))}
@@ -69,10 +56,10 @@ export function Projects() {
       </section>
 
       <section className="research-section" id="research">
-        <div className="section-heading section-heading-compact" data-reveal>
-          <p className="eyebrow">Research + recognition</p>
-          <h2>Other work.</h2>
-        </div>
+        <header className="section-heading" data-reveal>
+          <span className="section-number">03</span>
+          <h2>Research and other work</h2>
+        </header>
 
         <div className="research-list">
           {otherWork.map((item) => (
