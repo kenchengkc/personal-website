@@ -4,16 +4,29 @@ import { featuredProjects, otherWork } from "@/data/portfolio";
 export function Projects() {
   return (
     <>
-      <section className="work-section" id="work">
-        <header className="section-heading" data-reveal>
-          <span className="section-number">02</span>
-          <h2>Selected work</h2>
-        </header>
+      <section
+        className="work-section"
+        id="work"
+        data-scroll-section
+        data-scroll-label="WORK"
+      >
+        <div className="reading-column section-intro" data-reveal>
+          <p className="section-kicker">Selected work</p>
+          <h2>Things I have built.</h2>
+          <p>
+            A few projects where the implementation matters as much as the idea.
+          </p>
+        </div>
 
         <div className="project-list">
           {featuredProjects.map((project, index) => (
-            <article className="project-chapter" key={project.name} data-reveal>
-              <div className="project-copy">
+            <article
+              className="project-chapter"
+              key={project.name}
+              data-scroll-section
+              data-scroll-label={project.name.toUpperCase()}
+            >
+              <div className="project-copy reading-column" data-reveal>
                 <div className="project-meta">
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <span>{project.eyebrow}</span>
@@ -47,28 +60,39 @@ export function Projects() {
                 )}
               </div>
 
-              <div className="project-visual">
-                <ProjectDemo kind={project.demo} />
+              <div className="project-result" data-reveal>
+                <div className="project-visual">
+                  <ProjectDemo kind={project.demo} />
+                </div>
+                <p className="project-caption">
+                  {project.name} · {project.eyebrow}
+                </p>
               </div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="research-section" id="research">
-        <header className="section-heading" data-reveal>
-          <span className="section-number">03</span>
-          <h2>Research and other work</h2>
-        </header>
+      <section
+        className="narrative-section research-section"
+        id="research"
+        data-scroll-section
+        data-scroll-label="RESEARCH"
+      >
+        <div className="reading-column">
+          <p className="section-kicker" data-reveal>Research and other work</p>
 
-        <div className="research-list">
-          {otherWork.map((item) => (
-            <article className="research-row" key={item.title} data-reveal>
-              <h3>{item.title}</h3>
-              <p>{item.detail}</p>
-              <span>{item.meta}</span>
-            </article>
-          ))}
+          <div className="research-list">
+            {otherWork.map((item) => (
+              <article className="research-row" key={item.title} data-reveal>
+                <div>
+                  <h3>{item.title}</h3>
+                  <span>{item.meta}</span>
+                </div>
+                <p>{item.detail}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
     </>
