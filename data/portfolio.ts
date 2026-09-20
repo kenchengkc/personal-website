@@ -9,14 +9,7 @@ export type FeaturedProject = {
   hrefLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
-  visual: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-    fit?: "contain" | "cover";
-    surface?: "light" | "dark";
-  };
+  demo: "amazon" | "quantiv" | "fdre" | "embers";
 };
 
 export const featuredProjects: FeaturedProject[] = [
@@ -28,14 +21,7 @@ export const featuredProjects: FeaturedProject[] = [
       "Built shared configuration infrastructure behind long-term supply-chain forecasting across 17 packages and services.",
     metrics: ["17 packages + services", "13 engineers", "~90% less manual comparison"],
     stack: "Python, TypeScript, AWS Lambda, S3, CDK",
-    visual: {
-      src: "/images/amazon/amazon-logo.svg",
-      alt: "Amazon",
-      width: 520,
-      height: 220,
-      fit: "contain",
-      surface: "light",
-    },
+    demo: "amazon",
   },
   {
     name: "Quantiv",
@@ -47,14 +33,7 @@ export const featuredProjects: FeaturedProject[] = [
     stack: "Next.js, Python, LightGBM, DuckDB, Postgres, Redis",
     href: "https://usequantiv.com",
     hrefLabel: "Open Quantiv",
-    visual: {
-      src: "/images/quantiv/quantiv-color-banner.png",
-      alt: "Quantiv",
-      width: 900,
-      height: 360,
-      fit: "contain",
-      surface: "dark",
-    },
+    demo: "quantiv",
   },
   {
     name: "FDRE",
@@ -69,14 +48,7 @@ export const featuredProjects: FeaturedProject[] = [
     secondaryHref:
       "https://github.com/kenchengkc/the-financial-document-retrieval-engine",
     secondaryLabel: "Source",
-    visual: {
-      src: "/media/fdre-research-answer.png",
-      alt: "FDRE research answer with cited SEC filing evidence",
-      width: 1350,
-      height: 850,
-      fit: "cover",
-      surface: "dark",
-    },
+    demo: "fdre",
   },
   {
     name: "Embers",
@@ -88,14 +60,7 @@ export const featuredProjects: FeaturedProject[] = [
     stack: "Python, YOLOv11, Gemini, React, Flask, Supabase",
     href: "https://devpost.com/software/insurefire",
     hrefLabel: "View project",
-    visual: {
-      src: "/media/embers-yolo-live-detection.png",
-      alt: "Embers live object detection",
-      width: 1280,
-      height: 720,
-      fit: "cover",
-      surface: "dark",
-    },
+    demo: "embers",
   },
 ];
 
