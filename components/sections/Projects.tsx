@@ -25,7 +25,7 @@ export function Projects() {
               className="project-chapter"
               key={project.name}
               data-scroll-section
-              data-scroll-label={project.name.toUpperCase()}
+              data-scroll-label={project.demo === "fdre" ? "RETRIEVAL" : project.name.toUpperCase()}
             >
               <div className="project-copy reading-column" data-reveal>
                 <div className="project-meta">
