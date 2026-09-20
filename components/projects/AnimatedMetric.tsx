@@ -83,7 +83,7 @@ export function AnimatedMetric({ metric }: { metric: FeaturedMetric }) {
     <span
       ref={ref}
       className="metric-value"
-      aria-label={`${metric.value} ${metric.label}`}
+      aria-hidden="true"
     >
       {metric.count && displayValue != null
         ? formatCount(displayValue, metric.count)
