@@ -137,7 +137,7 @@ export function ScrollExperience() {
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const markerTop = 4 + progress * 92;
+  const markerTop = progress * 100;
   const activeTick = progress * (ticks.length - 1);
 
   return (
