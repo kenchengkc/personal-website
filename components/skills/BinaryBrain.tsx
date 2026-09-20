@@ -327,13 +327,10 @@ export function BinaryBrain() {
           if (particle.size !== tier) continue;
 
           const laneX = ((particle.lane + 0.5) / 28) * width;
+          const idleY = (particle.offset % (height + 70)) - 35;
           const travel =
             ((time * 0.029 + particle.offset) % (height + 230)) - 115;
-          const streamY = lerp(
-            -105 - particle.offset * 0.31,
-            travel,
-            streamPhase,
-          );
+          const streamY = lerp(idleY, travel, streamPhase);
 
           const stagger = (i % 43) / 43;
           const localForm = ease((formPhase - stagger * 0.1) / 0.9);
