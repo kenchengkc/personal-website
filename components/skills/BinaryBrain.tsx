@@ -149,7 +149,8 @@ export function BinaryBrain() {
       const formPhase = ease((progress - 0.18) / 0.74);
 
       context.clearRect(0, 0, width, height);
-      context.font = "500 11px var(--font-sans), Arial, sans-serif";
+      const fontFamily = window.getComputedStyle(document.body).fontFamily;
+      context.font = `500 11px ${fontFamily}`;
       context.textAlign = "center";
       context.textBaseline = "middle";
 
@@ -204,20 +205,23 @@ export function BinaryBrain() {
       }
     };
 
+    const onResize = () => {
+      rebuild();
+      wake();
+    };
+
     rebuild();
     updateProgress();
     observer.observe(wrap);
     frameRef.current = window.requestAnimationFrame(draw);
 
     window.addEventListener("scroll", wake, { passive: true });
-    window.addEventListener("resize", () => {
-      rebuild();
-      wake();
-    });
+    window.addEventListener("resize", onResize);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", wake);
+      window.removeEventListener("resize", onResize);
       if (frameRef.current !== null) {
         window.cancelAnimationFrame(frameRef.current);
       }
