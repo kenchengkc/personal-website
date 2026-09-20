@@ -135,7 +135,7 @@ textarea {
   display: flex;
   align-items: center;
   transform: translateY(-50%);
-  transition: top 90ms linear;
+  transition: none;
 }
 
 .ruler-marker::before {
