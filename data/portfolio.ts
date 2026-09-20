@@ -72,7 +72,7 @@ export const otherWork = [
   },
   {
     title: "USACO Platinum",
-    meta: "Top division · Top 1% nationally · 2023",
+    meta: "Top 1% nationally · 2023",
     detail: "Highest USACO division, promoted from Gold with a 1000/1000 score.",
   },
   {
