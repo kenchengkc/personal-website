@@ -12,8 +12,7 @@ export function Nav() {
   return (
     <header className="site-header">
       <Link href="/" className="site-brand" aria-label="Ken Cheng, home">
-        <span>Ken Cheng</span>
-        <small>Software · ML · Quant</small>
+        Ken Cheng
       </Link>
 
       <nav className="site-nav" aria-label="Primary navigation">
@@ -23,7 +22,7 @@ export function Nav() {
           </Link>
         ))}
         <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
-          Resume ↗
+          Resume
         </a>
       </nav>
     </header>
