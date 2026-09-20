@@ -1,9 +1,26 @@
+export type MetricCount = {
+  from: number;
+  to: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  thousands?: boolean;
+  durationMs?: number;
+};
+
+export type FeaturedMetric = {
+  value: string;
+  label: string;
+  count?: MetricCount;
+  award?: boolean;
+};
+
 export type FeaturedProject = {
   name: string;
   eyebrow: string;
   date: string;
   summary: string;
-  metrics: string[];
+  metrics: FeaturedMetric[];
   stack: string;
   href?: string;
   hrefLabel?: string;
@@ -19,7 +36,23 @@ export const featuredProjects: FeaturedProject[] = [
     date: "Summer 2026",
     summary:
       "Built shared configuration infrastructure behind long-term supply-chain forecasting across 17 packages and services.",
-    metrics: ["17 packages + services", "13 engineers", "~90% less manual comparison"],
+    metrics: [
+      {
+        value: "17",
+        label: "packages + services",
+        count: { from: 0, to: 17, durationMs: 1700 },
+      },
+      {
+        value: "13",
+        label: "engineers",
+        count: { from: 0, to: 13, durationMs: 1700 },
+      },
+      {
+        value: "~90%",
+        label: "less manual comparison",
+        count: { from: 0, to: 90, prefix: "~", suffix: "%", durationMs: 1900 },
+      },
+    ],
     stack: "Python, TypeScript, AWS Lambda, S3, CDK",
     demo: "amazon",
   },
@@ -29,7 +62,23 @@ export const featuredProjects: FeaturedProject[] = [
     date: "2025 - present",
     summary:
       "Options and earnings analytics that turns live market data into expected-move forecasts and searchable research.",
-    metrics: ["120k+ earnings records", "10k+ ticker identities", "~100 monthly active users"],
+    metrics: [
+      {
+        value: "120k+",
+        label: "earnings records",
+        count: { from: 0, to: 120, suffix: "k+", durationMs: 2000 },
+      },
+      {
+        value: "10k+",
+        label: "ticker identities",
+        count: { from: 0, to: 10, suffix: "k+", durationMs: 1800 },
+      },
+      {
+        value: "~100",
+        label: "monthly active users",
+        count: { from: 0, to: 100, prefix: "~", durationMs: 1900 },
+      },
+    ],
     stack: "Next.js, Python, LightGBM, DuckDB, Postgres, Redis",
     href: "https://usequantiv.com",
     hrefLabel: "Open Quantiv",
@@ -41,7 +90,23 @@ export const featuredProjects: FeaturedProject[] = [
     date: "2026 - present",
     summary:
       "A point-in-time SEC research engine with hybrid retrieval, citation verification, and reproducible cross-sectional analysis.",
-    metrics: ["2.71M parsed chunks", "2,762 SEC filings", "100% issuer Recall@3"],
+    metrics: [
+      {
+        value: "2.71M",
+        label: "parsed chunks",
+        count: { from: 0, to: 2.71, decimals: 2, suffix: "M", durationMs: 2000 },
+      },
+      {
+        value: "2,762",
+        label: "SEC filings",
+        count: { from: 0, to: 2762, thousands: true, durationMs: 2000 },
+      },
+      {
+        value: "100%",
+        label: "issuer Recall@3",
+        count: { from: 0, to: 100, suffix: "%", durationMs: 1800 },
+      },
+    ],
     stack: "FastAPI, Postgres, pgvector, LangGraph, Next.js",
     href: "https://thefdre.com",
     hrefLabel: "Open FDRE",
@@ -56,7 +121,25 @@ export const featuredProjects: FeaturedProject[] = [
     date: "LA Hacks 2025",
     summary:
       "A claims-ready home inventory from a short video walkthrough, with real-time detection, valuation, and voice assistance.",
-    metrics: ["Top 5 of 172 teams", "90%+ detection accuracy", "3 awards"],
+    metrics: [
+      {
+        value: "Top 5",
+        label: "of 172 teams",
+        count: { from: 172, to: 5, prefix: "Top ", durationMs: 1900 },
+        award: true,
+      },
+      {
+        value: "90%+",
+        label: "detection accuracy",
+        count: { from: 0, to: 90, suffix: "%+", durationMs: 1800 },
+      },
+      {
+        value: "3",
+        label: "awards",
+        count: { from: 0, to: 3, durationMs: 1500 },
+        award: true,
+      },
+    ],
     stack: "Python, YOLOv11, Gemini, React, Flask, Supabase",
     href: "https://devpost.com/software/insurefire",
     hrefLabel: "View project",
