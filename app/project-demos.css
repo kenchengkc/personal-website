@@ -281,7 +281,7 @@
 .qv-story-grid article > span {
   margin-top: 10px;
   color: var(--qv-muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .qv-story-grid h4 {
@@ -305,7 +305,7 @@
 .qv-visual text {
   fill: var(--qv-muted);
   font-family: var(--font-sans), Arial, sans-serif;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .qv-axis {
@@ -436,7 +436,7 @@
 .fdre-stage-rail small {
   margin-top: 2px;
   color: var(--fdre-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .fdre-viewport {
@@ -488,7 +488,7 @@
   gap: 12px;
   color: var(--fdre-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.05em;
 }
 
@@ -578,7 +578,7 @@
 .fdre-stamp small {
   color: var(--fdre-cyan);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .fdre-stamp strong {
@@ -805,7 +805,7 @@
 .fdre-source-card span {
   color: var(--fdre-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .fdre-source-card p {
@@ -884,7 +884,7 @@
 
 .fdre-check-card span {
   color: var(--fdre-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .fdre-research {
@@ -925,7 +925,7 @@
 
 .fdre-output-card > span {
   color: var(--fdre-green);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .fdre-output-card > strong {
@@ -1010,7 +1010,7 @@
   bottom: 14px;
   transform: translateX(-50%);
   color: var(--fdre-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* Embers uses the real project screenshots as an interactive film strip. */
@@ -1123,7 +1123,7 @@
 .embers-gallery-card figcaption span,
 .embers-gallery-card figcaption small {
   color: #858580;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 400;
 }
 
@@ -1145,8 +1145,8 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #5f5f5a;
-  font-size: 9px;
+  color: #6e6e69;
+  font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   pointer-events: none;
