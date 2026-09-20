@@ -74,8 +74,8 @@ textarea {
   bottom: 40px;
   left: 18px;
   z-index: 60;
-  width: 150px;
-  pointer-events: none;
+  width: 168px;
+  pointer-events: auto;
 }
 
 .ruler-track {
@@ -92,6 +92,9 @@ textarea {
   width: 10px;
   height: 1px;
   background: #252525;
+  transition:
+    width 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .ruler-tick-long {
@@ -99,14 +102,23 @@ textarea {
   background: #3a3a3a;
 }
 
+.ruler-tick-near {
+  width: 24px;
+  background: #9a3518;
+}
+
+.ruler-tick-core {
+  width: 46px;
+  background: var(--rail-accent);
+}
+
 .ruler-marker {
   position: absolute;
-  left: 0;
+  left: -1px;
   display: flex;
   align-items: center;
-  gap: 10px;
   transform: translateY(-50%);
-  transition: top 120ms linear;
+  transition: top 90ms linear;
 }
 
 .ruler-marker::before {
@@ -120,19 +132,51 @@ textarea {
 
 .ruler-marker i {
   display: block;
-  width: 36px;
+  width: 12px;
   height: 1px;
   background: var(--rail-accent);
-  box-shadow:
-    0 -10px 0 -0.2px var(--rail-accent),
-    0 10px 0 -0.2px var(--rail-accent);
 }
 
-.ruler-marker span {
-  color: var(--rail-accent);
+.ruler-milestones {
+  position: absolute;
+  inset: 0;
+}
+
+.ruler-milestone {
+  position: absolute;
+  left: 58px;
+  min-width: 84px;
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: transparent;
   font-size: 10px;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
+  letter-spacing: 0.11em;
+  text-align: left;
+  text-transform: uppercase;
+  transform: translateY(-50%);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    color 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.scroll-ruler:hover .ruler-milestone {
+  color: #5f5f5b;
+}
+
+.ruler-milestone:hover {
+  color: #b8b8b3 !important;
+}
+
+.ruler-milestone.is-active {
+  color: var(--rail-accent) !important;
+  background: rgba(255, 255, 255, 0.025);
+  box-shadow:
+    -20px 0 28px rgba(255, 255, 255, 0.035),
+    18px 0 32px rgba(255, 255, 255, 0.025);
 }
 
 /* Homepage */
@@ -411,8 +455,22 @@ textarea {
 }
 
 .project-result {
+  position: relative;
   width: min(calc(100% - 48px), var(--result));
   margin: 62px auto 0;
+  isolation: isolate;
+}
+
+.project-result::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 10% 3% -4%;
+  border-radius: 28px;
+  background: rgba(238, 238, 232, 0.07);
+  filter: blur(38px);
+  opacity: 0.95;
+  pointer-events: none;
 }
 
 .project-visual {
@@ -423,8 +481,8 @@ textarea {
   border-radius: 16px;
   background: var(--paper);
   box-shadow:
-    0 26px 74px rgba(235, 235, 230, 0.11),
-    0 0 0 1px rgba(255, 255, 255, 0.015);
+    0 28px 82px rgba(235, 235, 230, 0.13),
+    0 0 0 1px rgba(255, 255, 255, 0.018);
 }
 
 .project-caption {
@@ -813,10 +871,15 @@ textarea {
     margin-top: 42px;
   }
 
+  .project-result::before {
+    inset: 14% 4% -2%;
+    filter: blur(28px);
+  }
+
   .project-visual {
     aspect-ratio: 4 / 3;
     border-radius: 12px;
-    box-shadow: 0 18px 48px rgba(235, 235, 230, 0.08);
+    box-shadow: 0 18px 48px rgba(235, 235, 230, 0.09);
   }
 
   .research-row {
