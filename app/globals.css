@@ -2,13 +2,18 @@
   --page: #0a0a0a;
   --paper: #0d0d0d;
   --ink: #e7e7e4;
-  --ink-2: #a2a29d;
-  --ink-3: #6e6e69;
-  --line: #202020;
-  --line-strong: #2b2b2b;
-  --rail-accent: #ff5a1f;
-  --gold: #c9a04d;
-  --gold-soft: rgba(201, 160, 77, 0.12);
+  --ink-2: #a9aaad;
+  --ink-3: #74767a;
+  --silver: #aeb0b4;
+  --silver-bright: #d0d2d5;
+  --silver-dim: #5b5d61;
+  --line: #222326;
+  --line-strong: #303236;
+  --gold: #c7a45b;
+  --gold-bright: #dec179;
+  --gold-dim: #8d7440;
+  --gold-soft: rgba(199, 164, 91, 0.12);
+  --rail-accent: var(--gold);
   --reading: 720px;
   --result: 1040px;
   --section-divider: linear-gradient(
@@ -103,7 +108,7 @@ textarea {
   display: block;
   width: 10px;
   height: 1px;
-  background: #252525;
+  background: #2a2b2e;
   transition:
     width 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -111,12 +116,12 @@ textarea {
 
 .ruler-tick-long {
   width: 28px;
-  background: #3a3a3a;
+  background: #505257;
 }
 
 .ruler-tick-near {
   width: 24px;
-  background: #9a3518;
+  background: var(--gold-dim);
 }
 
 .ruler-tick-core {
@@ -176,19 +181,19 @@ textarea {
 }
 
 .scroll-ruler:hover .ruler-milestone {
-  color: #5f5f5b;
+  color: var(--silver-dim);
 }
 
 .ruler-milestone:hover {
-  color: #b8b8b3 !important;
+  color: var(--silver-bright) !important;
 }
 
 .ruler-milestone.is-active {
-  color: var(--rail-accent) !important;
-  background: rgba(255, 255, 255, 0.025);
+  color: var(--gold-bright) !important;
+  background: rgba(199, 164, 91, 0.045);
   box-shadow:
-    -20px 0 28px rgba(255, 255, 255, 0.035),
-    18px 0 32px rgba(255, 255, 255, 0.025);
+    -20px 0 30px rgba(199, 164, 91, 0.055),
+    18px 0 34px rgba(208, 210, 213, 0.025);
 }
 
 /* Homepage */
@@ -464,7 +469,7 @@ textarea {
 
 
 .project-metrics li.is-award {
-  color: #d7b263;
+  color: var(--gold-bright);
 }
 
 .project-metrics li.is-award::before {
@@ -475,7 +480,7 @@ textarea {
 }
 
 .research-row span.award-meta {
-  color: #d7b263;
+  color: var(--gold-bright);
 }
 
 .research-row span.award-meta::before {
@@ -604,9 +609,29 @@ textarea {
   border-bottom: 1px solid var(--line);
 }
 
-.publication-row > div > span {
+.publication-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.publication-meta > span:first-child {
   color: var(--ink-3);
   font-size: 11px;
+}
+
+.citation-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border: 1px solid #3a3c40;
+  border-radius: 999px;
+  background: rgba(174, 176, 180, 0.04);
+  color: var(--silver);
+  font-size: 11px;
+  line-height: 1;
 }
 
 .publication-row h3 {
