@@ -1,7 +1,7 @@
 export function Columbia() {
   const coursework = [
     "Advanced Programming in C",
-    "Data Structures",
+    "Data Structures and Algorithms",
     "Artificial Intelligence",
     "Databases",
     "Natural Language Processing",
