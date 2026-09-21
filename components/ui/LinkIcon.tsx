@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 type LinkIconName =
   | "resume"
   | "github"
@@ -6,7 +8,7 @@ type LinkIconName =
   | "scholar"
   | "columbia";
 
-const paths: Record<LinkIconName, React.ReactNode> = {
+const paths: Record<LinkIconName, ReactNode> = {
   resume: (
     <>
       <path d="M6 2.75h7l5 5V21.25H6z" />
