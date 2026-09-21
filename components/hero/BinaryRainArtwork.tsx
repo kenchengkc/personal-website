@@ -39,78 +39,74 @@ const hash = (value: number) => {
 };
 
 const BRAIN_CURVES: BrainCurve[] = [
-  // Outer silhouette, based on a recognizable lateral brain profile.
-  { from: { x: 18, y: 60 }, control: { x: 13, y: 48 }, to: { x: 19, y: 34 }, role: "outline" },
-  { from: { x: 19, y: 34 }, control: { x: 25, y: 20 }, to: { x: 37, y: 17 }, role: "outline" },
-  { from: { x: 37, y: 17 }, control: { x: 48, y: 8 }, to: { x: 59, y: 15 }, role: "outline" },
-  { from: { x: 59, y: 15 }, control: { x: 72, y: 13 }, to: { x: 80, y: 25 }, role: "outline" },
-  { from: { x: 80, y: 25 }, control: { x: 88, y: 35 }, to: { x: 84, y: 48 }, role: "outline" },
-  { from: { x: 84, y: 48 }, control: { x: 89, y: 59 }, to: { x: 80, y: 68 }, role: "outline" },
-  { from: { x: 80, y: 68 }, control: { x: 76, y: 77 }, to: { x: 66, y: 78 }, role: "outline" },
-  { from: { x: 66, y: 78 }, control: { x: 59, y: 83 }, to: { x: 52, y: 76 }, role: "outline" },
-  { from: { x: 52, y: 76 }, control: { x: 43, y: 78 }, to: { x: 36, y: 83 }, role: "outline" },
-  { from: { x: 36, y: 83 }, control: { x: 24, y: 84 }, to: { x: 18, y: 72 }, role: "outline" },
-  { from: { x: 18, y: 72 }, control: { x: 14, y: 67 }, to: { x: 18, y: 60 }, role: "outline" },
+  // Outer silhouette: lateral brain profile with distinct lobe bumps.
+  { from: { x: 16, y: 58 }, control: { x: 11, y: 49 }, to: { x: 16, y: 39 }, role: "outline" },
+  { from: { x: 16, y: 39 }, control: { x: 18, y: 28 }, to: { x: 27, y: 23 }, role: "outline" },
+  { from: { x: 27, y: 23 }, control: { x: 31, y: 14 }, to: { x: 41, y: 16 }, role: "outline" },
+  { from: { x: 41, y: 16 }, control: { x: 48, y: 9 }, to: { x: 57, y: 15 }, role: "outline" },
+  { from: { x: 57, y: 15 }, control: { x: 67, y: 12 }, to: { x: 73, y: 21 }, role: "outline" },
+  { from: { x: 73, y: 21 }, control: { x: 82, y: 23 }, to: { x: 82, y: 34 }, role: "outline" },
+  { from: { x: 82, y: 34 }, control: { x: 89, y: 41 }, to: { x: 84, y: 51 }, role: "outline" },
+  { from: { x: 84, y: 51 }, control: { x: 89, y: 60 }, to: { x: 81, y: 67 }, role: "outline" },
+  { from: { x: 81, y: 67 }, control: { x: 79, y: 77 }, to: { x: 69, y: 77 }, role: "outline" },
+  { from: { x: 69, y: 77 }, control: { x: 63, y: 84 }, to: { x: 55, y: 77 }, role: "outline" },
+  { from: { x: 55, y: 77 }, control: { x: 48, y: 82 }, to: { x: 40, y: 79 }, role: "outline" },
+  { from: { x: 40, y: 79 }, control: { x: 30, y: 84 }, to: { x: 23, y: 75 }, role: "outline" },
+  { from: { x: 23, y: 75 }, control: { x: 14, y: 72 }, to: { x: 17, y: 63 }, role: "outline" },
+  { from: { x: 17, y: 63 }, control: { x: 12, y: 61 }, to: { x: 16, y: 58 }, role: "outline" },
 
-  // Major folds. These are intentionally sparse, like the simple reference drawing.
-  { from: { x: 27, y: 35 }, control: { x: 34, y: 22 }, to: { x: 44, y: 27 }, role: "fold" },
-  { from: { x: 39, y: 18 }, control: { x: 36, y: 31 }, to: { x: 41, y: 40 }, role: "fold" },
-  { from: { x: 55, y: 17 }, control: { x: 49, y: 27 }, to: { x: 53, y: 39 }, role: "fold" },
-  { from: { x: 69, y: 23 }, control: { x: 77, y: 28 }, to: { x: 76, y: 38 }, role: "fold" },
-  { from: { x: 22, y: 52 }, control: { x: 29, y: 42 }, to: { x: 37, y: 48 }, role: "fold" },
-  { from: { x: 35, y: 43 }, control: { x: 41, y: 37 }, to: { x: 46, y: 46 }, role: "fold" },
-  { from: { x: 48, y: 44 }, control: { x: 57, y: 34 }, to: { x: 66, y: 42 }, role: "fold", accent: true },
-  { from: { x: 65, y: 44 }, control: { x: 76, y: 40 }, to: { x: 79, y: 53 }, role: "fold", accent: true },
-  { from: { x: 27, y: 63 }, control: { x: 42, y: 52 }, to: { x: 56, y: 57 }, role: "fold" },
-  { from: { x: 56, y: 57 }, control: { x: 67, y: 61 }, to: { x: 71, y: 49 }, role: "fold", accent: true },
-  { from: { x: 36, y: 69 }, control: { x: 45, y: 73 }, to: { x: 51, y: 66 }, role: "fold" },
-  { from: { x: 67, y: 65 }, control: { x: 76, y: 62 }, to: { x: 79, y: 70 }, role: "fold" },
+  // Major cortical folds, intentionally sparse and rounded.
+  { from: { x: 24, y: 38 }, control: { x: 29, y: 27 }, to: { x: 38, y: 31 }, role: "fold" },
+  { from: { x: 34, y: 20 }, control: { x: 32, y: 32 }, to: { x: 37, y: 41 }, role: "fold" },
+  { from: { x: 49, y: 17 }, control: { x: 44, y: 29 }, to: { x: 48, y: 40 }, role: "fold" },
+  { from: { x: 62, y: 20 }, control: { x: 70, y: 25 }, to: { x: 68, y: 35 }, role: "fold" },
+  { from: { x: 72, y: 29 }, control: { x: 78, y: 32 }, to: { x: 75, y: 40 }, role: "fold" },
+  { from: { x: 22, y: 51 }, control: { x: 27, y: 42 }, to: { x: 35, y: 47 }, role: "fold" },
+  { from: { x: 34, y: 45 }, control: { x: 42, y: 37 }, to: { x: 47, y: 47 }, role: "fold" },
+  { from: { x: 49, y: 45 }, control: { x: 57, y: 35 }, to: { x: 65, y: 43 }, role: "fold", accent: true },
+  { from: { x: 65, y: 43 }, control: { x: 75, y: 40 }, to: { x: 77, y: 51 }, role: "fold", accent: true },
+  { from: { x: 24, y: 62 }, control: { x: 37, y: 53 }, to: { x: 51, y: 57 }, role: "fold" },
+  { from: { x: 50, y: 57 }, control: { x: 60, y: 64 }, to: { x: 66, y: 52 }, role: "fold", accent: true },
+  { from: { x: 33, y: 68 }, control: { x: 41, y: 73 }, to: { x: 49, y: 66 }, role: "fold" },
+  { from: { x: 64, y: 65 }, control: { x: 72, y: 61 }, to: { x: 76, y: 68 }, role: "fold" },
 
-  // Brainstem, separate from the cortex silhouette.
-  { from: { x: 55, y: 77 }, control: { x: 57, y: 88 }, to: { x: 59, y: 94 }, role: "stem" },
-  { from: { x: 59, y: 94 }, control: { x: 64, y: 92 }, to: { x: 63, y: 80 }, role: "stem" },
+  // Brainstem.
+  { from: { x: 54, y: 77 }, control: { x: 56, y: 88 }, to: { x: 59, y: 95 }, role: "stem" },
+  { from: { x: 59, y: 95 }, control: { x: 64, y: 91 }, to: { x: 62, y: 79 }, role: "stem" },
 ];
 
 const MESH_NODES: Point[] = [
-  { x: 25, y: 38 },
-  { x: 33, y: 27 },
-  { x: 43, y: 22 },
-  { x: 54, y: 22 },
-  { x: 65, y: 25 },
-  { x: 75, y: 32 },
-  { x: 29, y: 51 },
-  { x: 40, y: 42 },
-  { x: 51, y: 43 },
-  { x: 62, y: 41 },
-  { x: 73, y: 47 },
-  { x: 27, y: 65 },
-  { x: 38, y: 61 },
-  { x: 49, y: 60 },
-  { x: 60, y: 59 },
-  { x: 72, y: 62 },
-  { x: 39, y: 75 },
-  { x: 51, y: 70 },
-  { x: 63, y: 72 },
+  { x: 29, y: 36 },
+  { x: 42, y: 27 },
+  { x: 56, y: 29 },
+  { x: 70, y: 36 },
+  { x: 33, y: 53 },
+  { x: 49, y: 47 },
+  { x: 65, y: 50 },
+  { x: 35, y: 68 },
+  { x: 51, y: 65 },
+  { x: 67, y: 66 },
 ];
 
 const MESH_EDGES: Array<[number, number, boolean]> = [
-  [0, 1, false], [1, 2, false], [2, 3, false], [3, 4, false], [4, 5, false],
-  [0, 6, false], [1, 7, false], [2, 7, false], [2, 8, false], [3, 8, false],
-  [3, 9, true], [4, 9, false], [4, 10, false], [5, 10, false],
-  [6, 7, false], [7, 8, false], [8, 9, true], [9, 10, true],
-  [6, 11, false], [6, 12, false], [7, 12, false], [7, 13, false],
-  [8, 13, true], [8, 14, true], [9, 14, true], [9, 15, false], [10, 15, false],
-  [11, 12, false], [12, 13, false], [13, 14, true], [14, 15, false],
-  [12, 16, false], [12, 17, false], [13, 17, false], [14, 17, true],
-  [14, 18, false], [15, 18, false], [16, 17, false], [17, 18, false],
+  [0, 1, false],
+  [1, 2, false],
+  [2, 3, false],
+  [0, 4, false],
+  [1, 5, false],
+  [2, 5, true],
+  [2, 6, false],
+  [3, 6, false],
+  [4, 5, false],
+  [5, 6, true],
+  [4, 7, false],
+  [4, 8, false],
+  [5, 8, true],
+  [6, 8, false],
+  [6, 9, false],
+  [7, 8, false],
+  [8, 9, false],
 ];
-
-const FACETS = [
-  [7, 8, 13],
-  [8, 9, 14],
-  [12, 13, 17],
-  [9, 14, 15],
-] as const;
 
 const pointOnCurve = (curve: BrainCurve, t: number) => {
   const inverse = 1 - t;
@@ -181,9 +177,6 @@ const PARTICLES: Particle[] = TARGETS.map((target, index) => {
   };
 });
 
-const polygonPoints = (indices: readonly number[]) =>
-  indices.map((index) => `${MESH_NODES[index].x},${MESH_NODES[index].y}`).join(" ");
-
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(false);
@@ -240,8 +233,9 @@ export function BinaryRainArtwork() {
         .join(" ")}
       aria-hidden="true"
     >
-      <div className="hero-binary-rain">
-        {PARTICLES.map((particle, index) => (
+      <div className="hero-brain-stage">
+        <div className="hero-binary-rain">
+          {PARTICLES.map((particle, index) => (
           <span
             className={[
               "hero-binary-bit",
@@ -267,23 +261,15 @@ export function BinaryRainArtwork() {
           >
             {particle.char}
           </span>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <svg
-        className="hero-brain-mesh"
+        <svg
+          className="hero-brain-mesh"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         role="presentation"
       >
-        {FACETS.map((facet, index) => (
-          <polygon
-            className={index === 1 ? "brain-facet is-accent" : "brain-facet"}
-            key={facet.join("-")}
-            points={polygonPoints(facet)}
-          />
-        ))}
-
         {MESH_EDGES.map(([from, to, accent], index) => (
           <line
             className={accent ? "brain-mesh-edge is-accent" : "brain-mesh-edge"}
@@ -295,16 +281,17 @@ export function BinaryRainArtwork() {
           />
         ))}
 
-        {MESH_NODES.map((node, index) => (
-          <circle
-            className={index === 8 || index === 14 ? "brain-mesh-node is-accent" : "brain-mesh-node"}
-            cx={node.x}
-            cy={node.y}
-            key={`${node.x}-${node.y}`}
-            r={index === 8 || index === 14 ? 0.7 : 0.48}
-          />
-        ))}
-      </svg>
+          {MESH_NODES.map((node, index) => (
+            <circle
+              className={index === 5 || index === 8 ? "brain-mesh-node is-accent" : "brain-mesh-node"}
+              cx={node.x}
+              cy={node.y}
+              key={`${node.x}-${node.y}`}
+              r={index === 5 || index === 8 ? 0.62 : 0.44}
+            />
+          ))}
+        </svg>
+      </div>
     </div>
   );
 }
