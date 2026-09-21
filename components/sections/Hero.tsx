@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { BinaryRainArtwork } from "@/components/hero/BinaryRainArtwork";
-import { LinkIcon } from "@/components/ui/LinkIcon";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -45,17 +44,14 @@ export function Hero() {
       </div>
 
       <div className="hero-links" data-reveal>
-        <a className="icon-link" href={site.resumePath} target="_blank" rel="noopener noreferrer">
-          <LinkIcon name="resume" />
-          <span>Resume ↗</span>
+        <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
+          Resume ↗
         </a>
-        <a className="icon-link" href={site.socials.github} target="_blank" rel="noopener noreferrer">
-          <LinkIcon name="github" />
-          <span>GitHub ↗</span>
+        <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
+          GitHub ↗
         </a>
-        <a className="icon-link" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
-          <LinkIcon name="linkedin" />
-          <span>LinkedIn ↗</span>
+        <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
+          LinkedIn ↗
         </a>
       </div>
 

@@ -2,99 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type MilestoneLevel = "major" | "subsection";
-
 type Milestone = {
   label: string;
   progress: number;
-  displayProgress: number;
-  level: MilestoneLevel;
 };
 
-const TRACK_START = 0.04;
-const TRACK_END = 0.96;
-const MIN_LABEL_GAP = 0.045;
-
-function spaceMilestones(
-  milestones: Omit<Milestone, "displayProgress">[],
-): Milestone[] {
-  if (milestones.length === 0) return [];
-
-  const display = milestones.map((milestone) =>
-    Math.min(
-      TRACK_END,
-      Math.max(
-        TRACK_START,
-        TRACK_START + milestone.progress * (TRACK_END - TRACK_START),
-      ),
-    ),
-  );
-
-  for (let index = 1; index < display.length; index += 1) {
-    display[index] = Math.max(
-      display[index],
-      display[index - 1] + MIN_LABEL_GAP,
-    );
-  }
-
-  if (display[display.length - 1] > TRACK_END) {
-    display[display.length - 1] = TRACK_END;
-
-    for (let index = display.length - 2; index >= 0; index -= 1) {
-      display[index] = Math.min(
-        display[index],
-        display[index + 1] - MIN_LABEL_GAP,
-      );
-    }
-  }
-
-  if (display[0] < TRACK_START) {
-    const offset = TRACK_START - display[0];
-    for (let index = 0; index < display.length; index += 1) {
-      display[index] += offset;
-    }
-  }
-
-  return milestones.map((milestone, index) => ({
-    ...milestone,
-    displayProgress: display[index],
-  }));
-}
-
-function mapProgressToRail(progress: number, milestones: Milestone[]) {
-  if (milestones.length === 0) {
-    return TRACK_START + progress * (TRACK_END - TRACK_START);
-  }
-
-  if (progress <= milestones[0].progress) {
-    return milestones[0].displayProgress;
-  }
-
-  const last = milestones[milestones.length - 1];
-  if (progress >= last.progress) {
-    return last.displayProgress;
-  }
-
-  for (let index = 0; index < milestones.length - 1; index += 1) {
-    const current = milestones[index];
-    const next = milestones[index + 1];
-
-    if (progress < current.progress || progress > next.progress) continue;
-
-    const span = Math.max(0.0001, next.progress - current.progress);
-    const localProgress = (progress - current.progress) / span;
-
-    return (
-      current.displayProgress +
-      (next.displayProgress - current.displayProgress) * localProgress
-    );
-  }
-
-  return TRACK_START + progress * (TRACK_END - TRACK_START);
-}
-
 export function ScrollExperience() {
-  const ticks = useMemo(() => Array.from({ length: 64 }), []);
+  const ticks = useMemo(() => Array.from({ length: 54 }), []);
   const [progress, setProgress] = useState(0);
   const [activeLabel, setActiveLabel] = useState("INTRO");
   const [milestones, setMilestones] = useState<Milestone[]>([]);
@@ -113,8 +27,7 @@ export function ScrollExperience() {
     let animationFrame = 0;
 
     const measureMilestones = () => {
-      const scrollable =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
 
       if (scrollable <= 0) {
         setMilestones([]);
@@ -122,33 +35,26 @@ export function ScrollExperience() {
       }
 
       const viewportAnchor = window.innerHeight * 0.43;
-      const measured = sectionNodes
-        .map((section) => {
-          const targetScroll = section.offsetTop - viewportAnchor;
-          const sectionProgress = Math.min(
-            1,
-            Math.max(0, targetScroll / scrollable),
-          );
+      const nextMilestones = sectionNodes.map((section) => {
+        const targetScroll = section.offsetTop - viewportAnchor;
+        const sectionProgress = Math.min(
+          1,
+          Math.max(0, targetScroll / scrollable),
+        );
 
-          return {
-            label: section.dataset.scrollLabel ?? "SECTION",
-            progress: sectionProgress,
-            level:
-              section.dataset.scrollLevel === "subsection"
-                ? ("subsection" as const)
-                : ("major" as const),
-          };
-        })
-        .sort((a, b) => a.progress - b.progress);
+        return {
+          label: section.dataset.scrollLabel ?? "SECTION",
+          progress: sectionProgress,
+        };
+      });
 
-      setMilestones(spaceMilestones(measured));
+      setMilestones(nextMilestones);
     };
 
     const updateScrollState = () => {
       animationFrame = 0;
 
-      const scrollable =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
       const nextProgress = scrollable > 0 ? window.scrollY / scrollable : 0;
       const clampedProgress = Math.min(1, Math.max(0, nextProgress));
       setProgress(clampedProgress);
@@ -231,9 +137,8 @@ export function ScrollExperience() {
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const markerProgress = mapProgressToRail(progress, milestones);
-  const markerTop = markerProgress * 100;
-  const activeTick = markerProgress * (ticks.length - 1);
+  const markerTop = progress * 100;
+  const activeTick = progress * (ticks.length - 1);
 
   return (
     <nav className="scroll-ruler" aria-label="Page sections">
@@ -241,13 +146,13 @@ export function ScrollExperience() {
         {ticks.map((_, index) => {
           const distance = Math.abs(index - activeTick);
           const near = distance <= 4;
-          const core = distance <= 1.35;
+          const core = distance <= 1.25;
 
           return (
             <span
               className={[
                 "ruler-tick",
-                index % 8 === 0 ? "ruler-tick-long" : "",
+                index % 7 === 0 ? "ruler-tick-long" : "",
                 near ? "ruler-tick-near" : "",
                 core ? "ruler-tick-core" : "",
               ]
@@ -271,14 +176,12 @@ export function ScrollExperience() {
         {milestones.map((milestone) => (
           <button
             type="button"
-            className={[
-              "ruler-milestone",
-              milestone.level === "subsection" ? "is-subsection" : "is-major",
-              milestone.label === activeLabel ? "is-active" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            style={{ top: `${milestone.displayProgress * 100}%` }}
+            className={
+              milestone.label === activeLabel
+                ? "ruler-milestone is-active"
+                : "ruler-milestone"
+            }
+            style={{ top: `${4 + milestone.progress * 92}%` }}
             onClick={() => goToSection(milestone.label)}
             key={milestone.label}
           >
