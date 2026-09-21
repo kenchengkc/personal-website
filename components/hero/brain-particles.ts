@@ -15,7 +15,7 @@ export type BrainParticle = Point & {
 
 export const BRAIN_WIDTH = 1000;
 export const BRAIN_HEIGHT = 600;
-export const ASSEMBLY_DURATION = 3800;
+export const ASSEMBLY_DURATION = 4100;
 
 // These paths are sampling masks only. No paths, outlines, or surfaces are painted.
 const CORTEX =
@@ -156,9 +156,9 @@ export function createBrainParticles(context: CanvasRenderingContext2D): BrainPa
         color: colorAt(light, warmth),
         alpha: groove > 0.65 ? 0.18 + noise * 0.12 : 0.66 + light * 0.32,
         startX: 35 + (seed % 43) * 22 + (hash(seed + 19) - 0.5) * 4,
-        startY: -30 - hash(seed + 23) * 550,
-        rainY: 90 + hash(seed + 29) * 450,
-        delay: hash(seed + 31) * 650,
+        startY: -70 - hash(seed + 23) * 290,
+        rainY: 105 + hash(seed + 29) * 360,
+        delay: hash(seed + 31) * 420,
       });
     }
   }
