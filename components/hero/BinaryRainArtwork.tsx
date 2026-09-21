@@ -9,6 +9,9 @@ type Point = {
 
 type Triangle = readonly [number, number, number];
 
+type ParticleKind = "node" | "edge" | "face";
+type ParticleTone = "dim" | "mid" | "bright" | "gold";
+
 type Particle = {
   char: "0" | "1";
   startX: number;
@@ -17,8 +20,12 @@ type Particle = {
   targetX: number;
   targetY: number;
   size: number;
+  weight: 400 | 500 | 600 | 700;
+  finalAlpha: number;
   delay: number;
-  accent: boolean;
+  pulseDelay: number;
+  kind: ParticleKind;
+  tone: ParticleTone;
 };
 
 const VIEWBOX_WIDTH = 1000;
@@ -147,22 +154,38 @@ const toPercent = (point: Point) => ({
   y: (point.y / VIEWBOX_HEIGHT) * 100,
 });
 
-const PARTICLE_TARGETS = [
+const pointBetween = (a: Point, b: Point, t: number): Point => ({
+  x: a.x + (b.x - a.x) * t,
+  y: a.y + (b.y - a.y) * t,
+});
+
+const PARTICLE_TARGETS: Array<{
+  point: Point;
+  kind: ParticleKind;
+  accent: boolean;
+}> = [
   ...MESH_NODES.map((point, index) => ({
     point,
+    kind: "node" as const,
     accent: index === 21 || index === 27 || index === 32 || index === 33,
   })),
-  ...TRIANGLES.filter((_, index) => index % 2 === 0).map((triangle, index) => ({
+  ...TRIANGLES.map((triangle, index) => ({
     point: faceCenter(triangle),
-    accent: index % 9 === 4,
+    kind: "face" as const,
+    accent: index === 5 || index === 14 || index === 22 || index === 41,
   })),
-  ...MESH_EDGES.filter((_, index) => index % 3 === 0).map(([a, b], index) => ({
-    point: {
-      x: (MESH_NODES[a].x + MESH_NODES[b].x) / 2,
-      y: (MESH_NODES[a].y + MESH_NODES[b].y) / 2,
-    },
-    accent: index % 13 === 6,
-  })),
+  ...MESH_EDGES.flatMap(([a, b], edgeIndex) => {
+    const from = MESH_NODES[a];
+    const to = MESH_NODES[b];
+
+    return [0.28, 0.5, 0.72].map((t, sampleIndex) => ({
+      point: pointBetween(from, to, t),
+      kind: "edge" as const,
+      accent:
+        (edgeIndex % 17 === 8 || edgeIndex % 23 === 11) &&
+        sampleIndex !== 0,
+    }));
+  }),
 ];
 
 const RAIN_LANES = [3, 8, 13, 19, 26, 34, 43, 52, 61, 70, 79, 87, 94, 98];
@@ -170,6 +193,52 @@ const RAIN_LANES = [3, 8, 13, 19, 26, 34, 43, 52, 61, 70, 79, 87, 94, 98];
 const PARTICLES: Particle[] = PARTICLE_TARGETS.map((target, index) => {
   const lane = RAIN_LANES[index % RAIN_LANES.length];
   const percent = toPercent(target.point);
+  const shade = hash(index + 83);
+
+  const tone: ParticleTone = target.accent
+    ? "gold"
+    : target.kind === "node"
+      ? shade > 0.42
+        ? "bright"
+        : "mid"
+      : target.kind === "edge"
+        ? shade > 0.72
+          ? "bright"
+          : shade > 0.24
+            ? "mid"
+            : "dim"
+        : shade > 0.78
+          ? "mid"
+          : "dim";
+
+  const size =
+    target.kind === "node"
+      ? 9.5 + hash(index + 59) * 4.5
+      : target.kind === "edge"
+        ? 5.8 + hash(index + 61) * 3
+        : 4.6 + hash(index + 67) * 2.4;
+
+  const weight: Particle["weight"] =
+    target.kind === "node"
+      ? shade > 0.55
+        ? 700
+        : 600
+      : target.kind === "edge"
+        ? shade > 0.62
+          ? 600
+          : 500
+        : shade > 0.7
+          ? 500
+          : 400;
+
+  const finalAlpha =
+    tone === "gold"
+      ? 0.94
+      : target.kind === "node"
+        ? 0.72 + hash(index + 97) * 0.24
+        : target.kind === "edge"
+          ? 0.42 + hash(index + 101) * 0.34
+          : 0.24 + hash(index + 103) * 0.28;
 
   return {
     char: index % 3 === 0 ? "1" : "0",
@@ -178,9 +247,13 @@ const PARTICLES: Particle[] = PARTICLE_TARGETS.map((target, index) => {
     rainY: 12 + hash(index + 47) * 82,
     targetX: percent.x,
     targetY: percent.y,
-    size: 5.3 + hash(index + 59) * 2,
+    size,
+    weight,
+    finalAlpha,
     delay: hash(index + 71) * 0.6,
-    accent: target.accent,
+    pulseDelay: 0.3 + percent.x / 100 * 1.45,
+    kind: target.kind,
+    tone,
   };
 });
 
@@ -211,7 +284,7 @@ export function BinaryRainArtwork() {
 
         observer.disconnect();
         setActive(true);
-        timer = window.setTimeout(() => setComplete(true), 3300);
+        timer = window.setTimeout(() => setComplete(true), 3500);
       },
       {
         threshold: 0.18,
@@ -254,7 +327,9 @@ export function BinaryRainArtwork() {
             <span
               className={[
                 "hero-binary-bit",
-                particle.accent ? "is-gold" : "",
+                `is-${particle.kind}`,
+                `tone-${particle.tone}`,
+                particle.tone === "gold" ? "is-signal" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
@@ -267,7 +342,10 @@ export function BinaryRainArtwork() {
                   "--tx": `${particle.targetX}%`,
                   "--ty": `${particle.targetY}%`,
                   "--bit-size": `${particle.size}px`,
+                  "--bit-weight": particle.weight,
+                  "--bit-final-alpha": particle.finalAlpha,
                   "--bit-delay": `${particle.delay}s`,
+                  "--pulse-delay": `${particle.pulseDelay}s`,
                 } as CSSProperties
               }
             >
