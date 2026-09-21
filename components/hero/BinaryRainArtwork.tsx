@@ -39,49 +39,38 @@ const hash = (value: number) => {
 };
 
 const ANCHORS: Anchor[] = [
-  { x: 8, y: 27, strength: "small" },
-  { x: 5, y: 61, strength: "small" },
-  { x: 10, y: 82, strength: "small" },
+  { x: 4, y: 24, strength: "small" },
+  { x: 4, y: 50, strength: "small" },
+  { x: 4, y: 76, strength: "small" },
 
-  { x: 27, y: 38, strength: "medium" },
-  { x: 24, y: 73, strength: "medium" },
+  { x: 28, y: 34, strength: "medium" },
+  { x: 28, y: 66, strength: "medium" },
 
-  { x: 46, y: 21, strength: "small" },
-  { x: 49, y: 52, strength: "large", accent: true },
-  { x: 43, y: 84, strength: "small" },
+  { x: 50, y: 50, strength: "large", accent: true },
 
-  { x: 67, y: 34, strength: "medium" },
-  { x: 70, y: 69, strength: "medium" },
+  { x: 72, y: 31, strength: "medium" },
+  { x: 72, y: 69, strength: "medium" },
 
-  { x: 88, y: 25, strength: "small" },
-  { x: 92, y: 55, strength: "medium", accent: true },
-  { x: 86, y: 84, strength: "small" },
+  { x: 96, y: 39, strength: "medium", accent: true },
+  { x: 96, y: 61, strength: "medium" },
 ];
 
 const LINKS: Link[] = [
-  { from: 0, to: 3, bend: -7 },
-  { from: 1, to: 3, bend: 6 },
-  { from: 1, to: 4, bend: -6 },
-  { from: 2, to: 4, bend: 7 },
+  { from: 0, to: 3, bend: -3 },
+  { from: 1, to: 3, bend: 3 },
+  { from: 1, to: 4, bend: -3 },
+  { from: 2, to: 4, bend: 3 },
 
-  { from: 3, to: 5, bend: -9 },
-  { from: 3, to: 6, bend: 7, accent: true },
-  { from: 4, to: 6, bend: -7, accent: true },
-  { from: 4, to: 7, bend: 9 },
+  { from: 3, to: 5, bend: 4, accent: true },
+  { from: 4, to: 5, bend: -4, accent: true },
 
-  { from: 5, to: 8, bend: 8 },
-  { from: 6, to: 8, bend: -6, accent: true },
-  { from: 6, to: 9, bend: 7, accent: true },
-  { from: 7, to: 9, bend: -8 },
+  { from: 5, to: 6, bend: -4, accent: true },
+  { from: 5, to: 7, bend: 4, accent: true },
 
-  { from: 8, to: 10, bend: -7 },
-  { from: 8, to: 11, bend: 8, accent: true },
-  { from: 9, to: 11, bend: -8, accent: true },
-  { from: 9, to: 12, bend: 7 },
-
-  { from: 5, to: 6, bend: 4 },
-  { from: 6, to: 7, bend: -4 },
-  { from: 8, to: 9, bend: 4 },
+  { from: 6, to: 8, bend: -2, accent: true },
+  { from: 6, to: 9, bend: 4 },
+  { from: 7, to: 8, bend: -4 },
+  { from: 7, to: 9, bend: 2, accent: true },
 ];
 
 const controlPoint = (from: Anchor, to: Anchor, bend: number) => {
@@ -120,15 +109,15 @@ const sizeForStrength = (
   strength: Anchor["strength"],
   seed: number,
 ) => {
-  if (strength === "large") return 11 + hash(seed) * 2;
-  if (strength === "medium") return 8 + hash(seed) * 1.8;
-  return 5.5 + hash(seed) * 1.4;
+  if (strength === "large") return 11.5 + hash(seed) * 2.1;
+  if (strength === "medium") return 8.4 + hash(seed) * 1.8;
+  return 5.8 + hash(seed) * 1.3;
 };
 
 const alphaForStrength = (strength: Anchor["strength"]) => {
-  if (strength === "large") return 0.96;
-  if (strength === "medium") return 0.76;
-  return 0.48;
+  if (strength === "large") return 0.98;
+  if (strength === "medium") return 0.8;
+  return 0.56;
 };
 
 const buildTargets = () => {
@@ -137,22 +126,22 @@ const buildTargets = () => {
   LINKS.forEach((link, linkIndex) => {
     const from = ANCHORS[link.from];
     const to = ANCHORS[link.to];
-    const steps = link.accent ? 14 : 10;
+    const steps = link.accent ? 19 : 14;
 
     for (let index = 1; index < steps; index += 1) {
       const t = index / steps;
       const point = pointOnCurve(from, to, link.bend, t);
-      const accent = Boolean(link.accent && t > 0.16 && t < 0.9);
+      const accent = Boolean(link.accent && t > 0.12 && t < 0.92);
 
       targets.push({
         x: point.x,
         y: point.y,
         size: accent
-          ? 7.2 + hash(linkIndex * 100 + index + 13) * 1.4
-          : 5.2 + hash(linkIndex * 100 + index + 29) * 1.2,
-        alpha: accent ? 0.72 : 0.4,
+          ? 7.4 + hash(linkIndex * 101 + index + 13) * 1.5
+          : 5.4 + hash(linkIndex * 101 + index + 29) * 1.2,
+        alpha: accent ? 0.76 : 0.5,
         gold: accent,
-        pulseDelay: 0.2 + point.x / 100 * 1.35,
+        pulseDelay: 0.15 + point.x / 100 * 1.45,
       });
     }
   });
@@ -160,10 +149,10 @@ const buildTargets = () => {
   ANCHORS.forEach((anchor, anchorIndex) => {
     const count =
       anchor.strength === "large"
-        ? 18
+        ? 22
         : anchor.strength === "medium"
-          ? 11
-          : 7;
+          ? 14
+          : 8;
 
     for (let index = 0; index < count; index += 1) {
       if (index === 0) {
@@ -173,7 +162,7 @@ const buildTargets = () => {
           size: sizeForStrength(anchor.strength, anchorIndex + 311),
           alpha: alphaForStrength(anchor.strength),
           gold: Boolean(anchor.accent),
-          pulseDelay: 0.2 + anchor.x / 100 * 1.35,
+          pulseDelay: 0.15 + anchor.x / 100 * 1.45,
         });
         continue;
       }
@@ -181,12 +170,12 @@ const buildTargets = () => {
       const angle = ((index - 1) / (count - 1)) * Math.PI * 2;
       const radius =
         anchor.strength === "large"
-          ? 4.8 + hash(anchorIndex * 71 + index) * 3
+          ? 5.2 + hash(anchorIndex * 71 + index) * 2.8
           : anchor.strength === "medium"
-            ? 3 + hash(anchorIndex * 73 + index) * 2.2
-            : 1.8 + hash(anchorIndex * 79 + index) * 1.8;
+            ? 3.6 + hash(anchorIndex * 73 + index) * 2
+            : 2.1 + hash(anchorIndex * 79 + index) * 1.5;
 
-      const squash = anchor.strength === "large" ? 0.72 : 0.82;
+      const squash = anchor.strength === "large" ? 0.66 : 0.76;
 
       targets.push({
         x: anchor.x + Math.cos(angle) * radius,
@@ -197,35 +186,33 @@ const buildTargets = () => {
         ),
         alpha:
           anchor.strength === "large"
-            ? 0.78
+            ? 0.82
             : anchor.strength === "medium"
-              ? 0.58
-              : 0.42,
+              ? 0.64
+              : 0.48,
         gold: Boolean(anchor.accent && index % 3 === 0),
-        pulseDelay: 0.2 + anchor.x / 100 * 1.35,
+        pulseDelay: 0.15 + anchor.x / 100 * 1.45,
       });
     }
   });
 
-  const reasoningField = [
-    [36, 46],
-    [39, 57],
-    [40, 68],
-    [53, 30],
-    [57, 43],
-    [58, 61],
-    [54, 73],
-    [61, 79],
-    [73, 47],
-    [78, 57],
+  const hubField = [
+    [43, 43],
+    [44, 57],
+    [47, 36],
+    [47, 64],
+    [53, 36],
+    [53, 64],
+    [56, 43],
+    [56, 57],
   ];
 
-  reasoningField.forEach(([x, y], index) => {
+  hubField.forEach(([x, y], index) => {
     targets.push({
       x,
       y,
-      size: 4.8 + hash(index + 503) * 1.4,
-      alpha: 0.3 + hash(index + 509) * 0.2,
+      size: 5.2 + hash(index + 503) * 1.2,
+      alpha: 0.38 + hash(index + 509) * 0.18,
       gold: false,
       pulseDelay: 0,
     });
@@ -236,7 +223,7 @@ const buildTargets = () => {
 
 const TARGETS = buildTargets();
 
-const RAIN_LANES = [4, 10, 17, 25, 34, 45, 56, 68, 79, 89, 96];
+const RAIN_LANES = [3, 9, 16, 24, 33, 43, 53, 63, 73, 82, 91, 97];
 
 const PARTICLES: Particle[] = TARGETS.map((target, index) => {
   const lane = RAIN_LANES[index % RAIN_LANES.length];
@@ -244,10 +231,10 @@ const PARTICLES: Particle[] = TARGETS.map((target, index) => {
   return {
     ...target,
     char: index % 3 === 0 ? "1" : "0",
-    startX: lane + (hash(index + 17) - 0.5) * 5,
-    startY: -8 - hash(index + 31) * 42,
-    rainY: 12 + hash(index + 47) * 82,
-    delay: hash(index + 61) * 0.62,
+    startX: lane + (hash(index + 17) - 0.5) * 4.5,
+    startY: -10 - hash(index + 31) * 42,
+    rainY: 10 + hash(index + 47) * 84,
+    delay: hash(index + 61) * 0.58,
   };
 });
 
