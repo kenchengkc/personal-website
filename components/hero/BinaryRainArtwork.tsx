@@ -200,25 +200,6 @@ export function BinaryRainArtwork() {
         viewBox="0 0 240 180"
         role="presentation"
       >
-        <rect
-          className="circuit-path"
-          x="42"
-          y="20"
-          width="156"
-          height="140"
-          rx="10"
-          pathLength="1"
-        />
-        <rect
-          className="circuit-path circuit-path-inner"
-          x="76"
-          y="52"
-          width="88"
-          height="76"
-          rx="5"
-          pathLength="1"
-        />
-
         {[42, 66, 90, 114, 138].map((y, index) => (
           <g key={`h-${y}`}>
             <path
