@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BinaryRainArtwork } from "@/components/hero/BinaryRainArtwork";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -53,6 +54,8 @@ export function Hero() {
           LinkedIn ↗
         </a>
       </div>
+
+      <BinaryRainArtwork />
     </section>
   );
 }
