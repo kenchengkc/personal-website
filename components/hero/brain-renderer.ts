@@ -1,50 +1,49 @@
 import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH, createBrainParticles } from "./brain-particles";
 
-const LANES = 44;
-const LANE_WIDTH = BRAIN_WIDTH / LANES;
-const RAIN_HEIGHT = 720;
-const MOVING_DIGITS = 384;
-const SPRITE_SIZE = 40;
-const SPRITE_COLUMNS = 24;
+const STRANDS = 128;
+const LEFT = 100;
+const RIGHT = 900;
+const STRAND_WIDTH = (RIGHT - LEFT) / STRANDS;
+const PADDING = 12;
+const TILE_WIDTH = Math.ceil(STRAND_WIDTH + PADDING * 2);
+const LOOP_HEIGHT = BRAIN_HEIGHT + 24;
+const ATLAS_COLUMNS = 32;
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t); };
+const hash = (value: number) => { const x = Math.sin(value * 12.9898) * 43758.5453; return x - Math.floor(x); };
 
-function surface(width: number, height: number) {
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const context = canvas.getContext("2d");
-  if (!context) return null;
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  return { canvas, context };
-}
+// Every strand carries its final glyphs throughout the animation. A whole strand
+// shares a trajectory, so thousands of digits need only a few hundred image draws.
+const strands = Array.from({ length: STRANDS }, (_, index) => {
+  const speed = 0.17 + hash(index + 17) * 0.13;
+  const catchAt = 340 + hash(index + 31) * 430;
+  const phase = hash(index + 71) * LOOP_HEIGHT;
+  const caughtOffset = (phase + catchAt * speed) % LOOP_HEIGHT;
+  const distance = LOOP_HEIGHT - caughtOffset;
+  const duration = ASSEMBLY_DURATION - catchAt - 100 - hash(index + 53) * 170;
+  return {
+    x: LEFT + index * STRAND_WIDTH,
+    rainX: 20 + index / (STRANDS - 1) * (BRAIN_WIDTH - 40),
+    speed,
+    catchAt,
+    phase,
+    caughtOffset,
+    // Avoid a last-second abrupt stop if a strand is almost home when caught.
+    distance: distance < Math.max(100, speed * duration / 2) ? distance + LOOP_HEIGHT : distance,
+    duration,
+  };
+});
 
-/** Cache the dense surface; only rain strips and a bounded set of digits move. */
+/** The falling material and the finished brain are the same cached glyphs. */
 export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
-  const finished = surface(BRAIN_WIDTH, BRAIN_HEIGHT);
-  const rain = surface(BRAIN_WIDTH, RAIN_HEIGHT);
-  const sprites = surface(SPRITE_COLUMNS * SPRITE_SIZE, Math.ceil(MOVING_DIGITS / SPRITE_COLUMNS) * SPRITE_SIZE);
-  if (!finished || !rain || !sprites) return null;
-  const particles = createBrainParticles(finished.context);
-  const moving = Array.from({ length: MOVING_DIGITS }, (_, i) => particles[Math.floor(i * particles.length / MOVING_DIGITS)]);
-  let scale = 1;
+  const atlas = document.createElement("canvas");
+  const target = atlas.getContext("2d");
+  if (!target) return null;
+  const particles = createBrainParticles(target);
+  const assignments = particles.map(particle => Math.min(STRANDS - 1, Math.max(0, Math.floor((particle.x - LEFT) / STRAND_WIDTH))));
+  let tileWidth = TILE_WIDTH;
+  let tileHeight = LOOP_HEIGHT;
   let painted = false;
-
-  for (let lane = 0; lane < LANES; lane++) {
-    for (let row = 0; row < RAIN_HEIGHT / 14; row++) {
-      const seed = (lane * 73 + row * 31) % 101;
-      rain.context.font = `${seed % 3 === 0 ? 600 : 400} ${8 + seed % 4}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-      rain.context.fillStyle = seed % 9 === 0 ? "#d7efea" : seed % 3 === 0 ? "#86c5c2" : "#487e83";
-      rain.context.globalAlpha = 0.25 + (seed % 7) * 0.1;
-      rain.context.fillText(seed % 2 ? "1" : "0", (lane + 0.5) * LANE_WIDTH, row * 14 + 7);
-    }
-  }
-  moving.forEach((particle, i) => {
-    sprites.context.font = `${particle.weight} ${particle.size * 2}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-    sprites.context.fillStyle = particle.color;
-    sprites.context.fillText(particle.char, (i % SPRITE_COLUMNS + 0.5) * SPRITE_SIZE, (Math.floor(i / SPRITE_COLUMNS) + 0.5) * SPRITE_SIZE);
-  });
 
   function resize() {
     const width = canvas.getBoundingClientRect().width;
@@ -52,71 +51,64 @@ export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRe
     const pixelWidth = Math.max(1, Math.round(width * ratio));
     const pixelHeight = Math.max(1, Math.round(width / BRAIN_WIDTH * BRAIN_HEIGHT * ratio));
     if (painted && canvas.width === pixelWidth && canvas.height === pixelHeight) return;
-    canvas.width = finished!.canvas.width = pixelWidth;
-    canvas.height = finished!.canvas.height = pixelHeight;
-    scale = pixelWidth / BRAIN_WIDTH;
+    canvas.width = pixelWidth;
+    canvas.height = pixelHeight;
+    const scale = pixelWidth / BRAIN_WIDTH;
     context.setTransform(scale, 0, 0, scale, 0, 0);
-    const target = finished!.context;
-    target.setTransform(scale, 0, 0, scale, 0, 0);
-    target.textAlign = "center";
-    target.textBaseline = "middle";
-    // All ~6,000 digits are rendered once per size, never once per frame.
-    for (const particle of particles) {
-      target.font = `${particle.weight} ${particle.size}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-      target.fillStyle = particle.color;
-      target.globalAlpha = particle.alpha;
-      target.fillText(particle.char, particle.x, particle.y);
-    }
-    target.globalAlpha = 1;
+    tileWidth = Math.ceil(TILE_WIDTH * scale);
+    tileHeight = Math.ceil(LOOP_HEIGHT * scale);
+    atlas.width = ATLAS_COLUMNS * tileWidth;
+    atlas.height = Math.ceil(STRANDS / ATLAS_COLUMNS) * tileHeight;
+    target!.textAlign = "center";
+    target!.textBaseline = "middle";
+
+    // Place whole glyphs inside padded strips; cutting up a flattened image would
+    // split larger digits across strands while they move at different speeds.
+    particles.forEach((particle, index) => {
+      const strand = assignments[index];
+      const sourceX = (strand % ATLAS_COLUMNS) * tileWidth;
+      const sourceY = Math.floor(strand / ATLAS_COLUMNS) * tileHeight;
+      target!.font = `${particle.weight} ${particle.size * scale}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+      target!.fillStyle = particle.color;
+      target!.globalAlpha = particle.alpha;
+      target!.fillText(
+        particle.char,
+        sourceX + (particle.x - strands[strand].x + PADDING) / TILE_WIDTH * tileWidth,
+        sourceY + particle.y / LOOP_HEIGHT * tileHeight,
+      );
+    });
+    target!.globalAlpha = 1;
     painted = true;
   }
 
   function draw(elapsed: number) {
     context.clearRect(0, 0, BRAIN_WIDTH, BRAIN_HEIGHT);
-    if (elapsed >= ASSEMBLY_DURATION) {
-      context.drawImage(finished!.canvas, 0, 0, BRAIN_WIDTH, BRAIN_HEIGHT);
-      return;
-    }
-    const fadeIn = smooth(elapsed / 140);
-    const rainAlpha = fadeIn * (1 - smooth((elapsed - 400) / 1700));
-    if (rainAlpha > 0) {
-      context.globalAlpha = rainAlpha * 0.75;
-      for (let lane = 0; lane < LANES; lane++) {
-        const offset = (elapsed * (0.15 + (lane % 7) * 0.017) + lane * 83) % RAIN_HEIGHT;
-        const x = lane * LANE_WIDTH;
-        context.drawImage(rain!.canvas, x, 0, LANE_WIDTH, RAIN_HEIGHT, x, offset - RAIN_HEIGHT, LANE_WIDTH, RAIN_HEIGHT);
-        context.drawImage(rain!.canvas, x, 0, LANE_WIDTH, RAIN_HEIGHT, x, offset, LANE_WIDTH, RAIN_HEIGHT);
+    // Only the initial entrance fades. No glyph disappears to reveal a new image.
+    context.globalAlpha = smooth(elapsed / 160);
+    strands.forEach((strand, index) => {
+      const t = clamp((elapsed - strand.catchAt) / strand.duration);
+      const gather = smooth(t);
+      let offset: number;
+      if (t === 1) {
+        offset = 0;
+      } else if (elapsed < strand.catchAt) {
+        offset = (strand.phase + elapsed * strand.speed) % LOOP_HEIGHT;
+      } else {
+        // Cubic Hermite motion keeps the original downward velocity when caught
+        // and reaches the final position with zero velocity, without reversing.
+        const t2 = t * t;
+        const t3 = t2 * t;
+        const travel = (-2 * t3 + 3 * t2) * strand.distance
+          + (t3 - 2 * t2 + t) * strand.speed * strand.duration;
+        offset = (strand.caughtOffset + travel) % LOOP_HEIGHT;
       }
-    }
-
-    // A staggered front settles from the crown down while rain is still flowing.
-    // Each strip is a copy of the finished digits, including their final shading.
-    for (let lane = 0; lane < LANES; lane++) {
-      const head = clamp((elapsed - 240 - (lane % 7) * 26) / 1700) * (BRAIN_HEIGHT + 48);
-      const solid = Math.max(0, Math.min(BRAIN_HEIGHT, head - 48));
-      const x = lane * LANE_WIDTH;
-      context.globalAlpha = 1;
-      if (solid > 0) context.drawImage(finished!.canvas, x * scale, 0, LANE_WIDTH * scale, solid * scale, x, 0, LANE_WIDTH, solid);
-      // Feather the advancing edge without drawing any geometry onto the brain.
-      for (let band = 0; band < 3; band++) {
-        const y = solid + band * 16;
-        const height = Math.min(16, BRAIN_HEIGHT - y, head - y);
-        if (height <= 0) continue;
-        context.globalAlpha = (1 - band / 3) * smooth((head - y) / 48);
-        context.drawImage(finished!.canvas, x * scale, y * scale, LANE_WIDTH * scale, height * scale, x, y, LANE_WIDTH, height);
+      const x = strand.rainX + (strand.x - strand.rainX) * gather - PADDING;
+      const sourceX = (index % ATLAS_COLUMNS) * tileWidth;
+      const sourceY = Math.floor(index / ATLAS_COLUMNS) * tileHeight;
+      context.drawImage(atlas, sourceX, sourceY, tileWidth, tileHeight, x, offset, TILE_WIDTH, LOOP_HEIGHT);
+      if (offset > 0) {
+        context.drawImage(atlas, sourceX, sourceY, tileWidth, tileHeight, x, offset - LOOP_HEIGHT, TILE_WIDTH, LOOP_HEIGHT);
       }
-    }
-
-    moving.forEach((particle, i) => {
-      const t = clamp((elapsed - particle.y * 0.65 - (i % 9) * 17) / 1450);
-      if (t >= 1) return;
-      const gather = smooth((t - 0.15) / 0.85);
-      const laneX = (Math.floor(particle.x / LANE_WIDTH) + 0.5) * LANE_WIDTH;
-      const x = laneX + (particle.x - laneX) * gather + Math.sin(t * Math.PI) * Math.sin(i * 2.4) * 28;
-      const y = particle.y - (1 - t) ** 2 * (260 + (i % 5) * 38);
-      if (y < -15) return;
-      context.globalAlpha = particle.alpha * fadeIn * (1 - smooth((t - 0.8) / 0.2));
-      context.drawImage(sprites!.canvas, (i % SPRITE_COLUMNS) * SPRITE_SIZE, Math.floor(i / SPRITE_COLUMNS) * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE, x - 10, y - 10, 20, 20);
     });
     context.globalAlpha = 1;
   }
