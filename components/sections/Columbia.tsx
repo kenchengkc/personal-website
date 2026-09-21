@@ -22,10 +22,9 @@ export function Columbia() {
 
         <div className="columbia-heading" data-reveal>
           <div>
-            <h2>Computer Science at Columbia.</h2>
+            <h2>Columbia University</h2>
             <p>B.S. Computer Science · Statistics minor · Class of 2028</p>
           </div>
-          <span>New York</span>
         </div>
 
         <div className="columbia-honor" data-reveal>
