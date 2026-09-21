@@ -1,10 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-type Target = {
+type GraphNode = {
+  id: string;
   x: number;
   y: number;
+  radius: number;
+  accent?: boolean;
+};
+
+type GraphEdge = {
+  from: string;
+  to: string;
+  bend: number;
   accent?: boolean;
 };
 
@@ -26,68 +35,166 @@ const hash = (value: number) => {
   return x - Math.floor(x);
 };
 
+const NODES: GraphNode[] = [
+  { id: "s1", x: 22, y: 30, radius: 3.5 },
+  { id: "s2", x: 18, y: 70, radius: 3.5 },
+  { id: "s3", x: 26, y: 116, radius: 3.5 },
+  { id: "s4", x: 20, y: 154, radius: 3.5 },
+
+  { id: "p1", x: 78, y: 48, radius: 4 },
+  { id: "p2", x: 84, y: 132, radius: 4 },
+
+  { id: "h1", x: 138, y: 24, radius: 3.5 },
+  { id: "hub", x: 146, y: 92, radius: 5.5, accent: true },
+  { id: "h2", x: 132, y: 158, radius: 3.5 },
+
+  { id: "r1", x: 208, y: 54, radius: 4 },
+  { id: "r2", x: 214, y: 126, radius: 4 },
+
+  { id: "o1", x: 284, y: 72, radius: 4.5, accent: true },
+  { id: "o2", x: 292, y: 120, radius: 4.5 },
+];
+
+const EDGES: GraphEdge[] = [
+  { from: "s1", to: "p1", bend: -12 },
+  { from: "s2", to: "p1", bend: 9 },
+  { from: "s2", to: "p2", bend: -9 },
+  { from: "s3", to: "p2", bend: 11 },
+  { from: "s4", to: "p2", bend: -8 },
+
+  { from: "p1", to: "h1", bend: -15 },
+  { from: "p1", to: "hub", bend: 10, accent: true },
+  { from: "p2", to: "hub", bend: -11, accent: true },
+  { from: "p2", to: "h2", bend: 15 },
+
+  { from: "h1", to: "r1", bend: 12 },
+  { from: "hub", to: "r1", bend: -8, accent: true },
+  { from: "hub", to: "r2", bend: 10, accent: true },
+  { from: "h2", to: "r2", bend: -12 },
+
+  { from: "r1", to: "o1", bend: -10, accent: true },
+  { from: "r1", to: "o2", bend: 15 },
+  { from: "r2", to: "o1", bend: -16 },
+  { from: "r2", to: "o2", bend: 8, accent: true },
+
+  { from: "h1", to: "hub", bend: 9 },
+  { from: "hub", to: "h2", bend: -10 },
+  { from: "r1", to: "r2", bend: 11 },
+];
+
+const getNode = (id: string) => {
+  const node = NODES.find((candidate) => candidate.id === id);
+  if (!node) {
+    throw new Error(`Missing graph node: ${id}`);
+  }
+  return node;
+};
+
+const getControlPoint = (from: GraphNode, to: GraphNode, bend: number) => {
+  const midX = (from.x + to.x) / 2;
+  const midY = (from.y + to.y) / 2;
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.max(1, Math.hypot(dx, dy));
+
+  return {
+    x: midX - (dy / length) * bend,
+    y: midY + (dx / length) * bend,
+  };
+};
+
+const pointOnCurve = (
+  from: GraphNode,
+  to: GraphNode,
+  bend: number,
+  t: number,
+) => {
+  const control = getControlPoint(from, to, bend);
+  const inverse = 1 - t;
+
+  return {
+    x:
+      inverse * inverse * from.x +
+      2 * inverse * t * control.x +
+      t * t * to.x,
+    y:
+      inverse * inverse * from.y +
+      2 * inverse * t * control.y +
+      t * t * to.y,
+  };
+};
+
 const buildTargets = () => {
-  const targets: Target[] = [];
+  const targets: Array<{
+    x: number;
+    y: number;
+    gold: boolean;
+    weight: "small" | "medium" | "large";
+  }> = [];
 
-  const pushRect = (
-    left: number,
-    right: number,
-    top: number,
-    bottom: number,
-    count: number,
-  ) => {
-    const width = right - left;
-    const height = bottom - top;
-    const perimeter = width * 2 + height * 2;
+  for (const edge of EDGES) {
+    const from = getNode(edge.from);
+    const to = getNode(edge.to);
+    const steps = edge.accent ? 10 : 7;
 
-    for (let index = 0; index < count; index += 1) {
-      let distance = (index / count) * perimeter;
-      let x = left;
-      let y = top;
+    for (let index = 1; index < steps; index += 1) {
+      const point = pointOnCurve(from, to, edge.bend, index / steps);
 
-      if (distance <= width) {
-        x = left + distance;
-      } else if ((distance -= width) <= height) {
-        x = right;
-        y = top + distance;
-      } else if ((distance -= height) <= width) {
-        x = right - distance;
-        y = bottom;
-      } else {
-        distance -= width;
-        y = bottom - distance;
+      targets.push({
+        x: point.x,
+        y: point.y,
+        gold: Boolean(edge.accent && index > 2 && index < steps - 2),
+        weight: edge.accent ? "medium" : "small",
+      });
+    }
+  }
+
+  for (const node of NODES) {
+    const ringCount = node.accent ? 11 : 7;
+
+    for (let index = 0; index < ringCount; index += 1) {
+      if (index === 0) {
+        targets.push({
+          x: node.x,
+          y: node.y,
+          gold: Boolean(node.accent),
+          weight: node.accent ? "large" : "medium",
+        });
+        continue;
       }
 
-      targets.push({ x, y, accent: index % 19 === 0 });
-    }
-  };
+      const angle = ((index - 1) / (ringCount - 1)) * Math.PI * 2;
+      const radius = node.accent ? 7 : 4.5;
 
-  pushRect(-78, 78, -68, 68, 80);
-  pushRect(-44, 44, -38, 38, 48);
-
-  const tracePositions = [-48, -24, 0, 24, 48];
-
-  for (const y of tracePositions) {
-    for (const x of [-102, -94, -86, -78]) {
-      targets.push({ x, y, accent: y === 0 && x === -94 });
-      targets.push({ x: -x, y, accent: y === 0 && x === -94 });
+      targets.push({
+        x: node.x + Math.cos(angle) * radius,
+        y: node.y + Math.sin(angle) * radius,
+        gold: Boolean(node.accent && index % 3 === 0),
+        weight: node.accent ? "medium" : "small",
+      });
     }
   }
 
-  for (const x of tracePositions) {
-    for (const y of [-92, -84, -76, -68]) {
-      targets.push({ x, y, accent: x === 0 && y === -84 });
-      targets.push({ x, y: -y, accent: x === 0 && y === -84 });
-    }
-  }
+  const latentCloud = [
+    [111, 64],
+    [122, 78],
+    [116, 104],
+    [129, 118],
+    [164, 54],
+    [174, 72],
+    [168, 110],
+    [180, 132],
+    [186, 88],
+    [98, 92],
+  ];
 
-  const interiorX = [-28, -17, -6, 6, 17, 28];
-  const interiorY = [-23, -8, 8, 23];
-
-  for (const y of interiorY) {
-    for (const x of interiorX) {
-      targets.push({ x, y, accent: Math.abs(x) === 6 && Math.abs(y) === 8 });
-    }
+  for (const [x, y] of latentCloud) {
+    targets.push({
+      x,
+      y,
+      gold: false,
+      weight: "small",
+    });
   }
 
   return targets;
@@ -95,25 +202,38 @@ const buildTargets = () => {
 
 const TARGETS = buildTargets();
 
+const RAIN_LANES = [5, 11, 18, 27, 39, 51, 64, 76, 87, 95];
+
 const PARTICLES: Particle[] = TARGETS.map((target, index) => {
-  const startY = -4 + hash(index + 29) * 72;
+  const lane = RAIN_LANES[index % RAIN_LANES.length];
+  const laneJitter = (hash(index + 17) - 0.5) * 5.5;
+  const startY = -12 - hash(index + 23) * 34;
+
+  const size =
+    target.weight === "large"
+      ? 10.2 + hash(index + 31) * 1.8
+      : target.weight === "medium"
+        ? 7.3 + hash(index + 43) * 1.7
+        : 5.2 + hash(index + 59) * 1.3;
+
+  const alpha =
+    target.weight === "large"
+      ? 0.92
+      : target.weight === "medium"
+        ? 0.7
+        : 0.42;
 
   return {
     char: index % 3 === 0 ? "1" : "0",
-    startX: 4 + hash(index + 11) * 92,
+    startX: lane + laneJitter,
     startY,
-    rainY: Math.min(96, startY + 26 + hash(index + 47) * 36),
+    rainY: 18 + hash(index + 71) * 76,
     targetX: target.x,
     targetY: target.y,
-    size:
-      index % 11 === 0
-        ? 10 + hash(index + 61) * 2
-        : index % 4 === 0
-          ? 7.5 + hash(index + 71) * 1.5
-          : 5.5 + hash(index + 83) * 1.4,
-    alpha: 0.42 + hash(index + 97) * 0.44,
-    delay: hash(index + 109) * 0.38,
-    gold: Boolean(target.accent) || index % 79 === 0,
+    size,
+    alpha,
+    delay: hash(index + 89) * 0.58,
+    gold: target.gold,
   };
 });
 
@@ -144,11 +264,11 @@ export function BinaryRainArtwork() {
 
         observer.disconnect();
         setActive(true);
-        timer = window.setTimeout(() => setComplete(true), 3400);
+        timer = window.setTimeout(() => setComplete(true), 3300);
       },
       {
-        threshold: 0.25,
-        rootMargin: "0px 0px -4% 0px",
+        threshold: 0.18,
+        rootMargin: "0px 0px -2% 0px",
       },
     );
 
@@ -159,6 +279,22 @@ export function BinaryRainArtwork() {
       window.clearTimeout(timer);
     };
   }, []);
+
+  const paths = useMemo(
+    () =>
+      EDGES.map((edge) => {
+        const from = getNode(edge.from);
+        const to = getNode(edge.to);
+        const control = getControlPoint(from, to, edge.bend);
+
+        return {
+          key: `${edge.from}-${edge.to}`,
+          d: `M ${from.x} ${from.y} Q ${control.x} ${control.y} ${to.x} ${to.y}`,
+          accent: Boolean(edge.accent),
+        };
+      }),
+    [],
+  );
 
   return (
     <div
@@ -195,47 +331,29 @@ export function BinaryRainArtwork() {
         ))}
       </div>
 
-      <svg
-        className="hero-circuit-art"
-        viewBox="0 0 240 180"
-        role="presentation"
-      >
-        {[42, 66, 90, 114, 138].map((y, index) => (
-          <g key={`h-${y}`}>
-            <path
-              className={index === 2 ? "circuit-path circuit-path-accent" : "circuit-path"}
-              d={`M22 ${y} H42 M198 ${y} H218`}
-              pathLength="1"
-            />
-            <circle className="circuit-node" cx="22" cy={y} r="1.8" />
-            <circle className="circuit-node" cx="218" cy={y} r="1.8" />
-          </g>
+      <svg className="hero-graph-art" viewBox="0 0 320 180" role="presentation">
+        {paths.map((path) => (
+          <path
+            className={
+              path.accent ? "graph-path graph-path-accent" : "graph-path"
+            }
+            d={path.d}
+            key={path.key}
+            pathLength="1"
+          />
         ))}
 
-        {[72, 96, 120, 144, 168].map((x, index) => (
-          <g key={`v-${x}`}>
-            <path
-              className={index === 2 ? "circuit-path circuit-path-accent" : "circuit-path"}
-              d={`M${x} 0 V20 M${x} 160 V180`}
-              pathLength="1"
-            />
-            <circle className="circuit-node" cx={x} cy="2" r="1.8" />
-            <circle className="circuit-node" cx={x} cy="178" r="1.8" />
-          </g>
+        {NODES.map((node) => (
+          <circle
+            className={
+              node.accent ? "graph-node graph-node-accent" : "graph-node"
+            }
+            cx={node.x}
+            cy={node.y}
+            key={node.id}
+            r={node.radius}
+          />
         ))}
-
-        <path
-          className="circuit-path circuit-path-inner"
-          d="M76 72 H95 V62 H120 V52 M164 108 H145 V118 H120 V128"
-          pathLength="1"
-        />
-        <path
-          className="circuit-path circuit-path-inner"
-          d="M96 128 V105 H86 V90 H76 M144 52 V75 H154 V90 H164"
-          pathLength="1"
-        />
-
-        <circle className="circuit-node circuit-node-core" cx="120" cy="90" r="4" />
       </svg>
     </div>
   );
