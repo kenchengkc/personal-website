@@ -38,9 +38,9 @@
   --amazon-silver: #aeb0b4;
   --amazon-silver-bright: #d4d6d9;
   --amazon-muted: #767980;
-  --amazon-gold: #c7a45b;
-  --amazon-gold-bright: #dec179;
-  --amazon-gold-soft: rgba(199, 164, 91, 0.1);
+  --amazon-gold: var(--gold);
+  --amazon-gold-bright: var(--gold-bright);
+  --amazon-gold-soft: var(--gold-soft);
   background: var(--amazon-bg);
   color: var(--amazon-silver-bright);
 }
