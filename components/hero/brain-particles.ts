@@ -7,15 +7,11 @@ export type BrainParticle = Point & {
   weight: number;
   color: string;
   alpha: number;
-  startX: number;
-  startY: number;
-  rainY: number;
-  delay: number;
 };
 
 export const BRAIN_WIDTH = 1000;
 export const BRAIN_HEIGHT = 600;
-export const ASSEMBLY_DURATION = 3800;
+export const ASSEMBLY_DURATION = 2600;
 
 // These paths are sampling masks only. No paths, outlines, or surfaces are painted.
 const CORTEX =
@@ -91,7 +87,10 @@ function colorAt(light: number, warmth: number) {
   return `rgb(${from.map((channel, i) => Math.round(channel + (to[i] - channel) * blend)).join(",")})`;
 }
 
+let cachedParticles: BrainParticle[] | undefined;
+
 export function createBrainParticles(context: CanvasRenderingContext2D): BrainParticle[] {
+  if (cachedParticles) return cachedParticles;
   const cortex = new Path2D(CORTEX);
   const cerebellum = new Path2D(CEREBELLUM);
   const stem = new Path2D(STEM);
@@ -155,12 +154,9 @@ export function createBrainParticles(context: CanvasRenderingContext2D): BrainPa
         weight: large || light > 0.72 ? 700 : light > 0.46 ? 500 : 400,
         color: colorAt(light, warmth),
         alpha: groove > 0.65 ? 0.18 + noise * 0.12 : 0.66 + light * 0.32,
-        startX: 35 + (seed % 43) * 22 + (hash(seed + 19) - 0.5) * 4,
-        startY: -30 - hash(seed + 23) * 550,
-        rainY: 90 + hash(seed + 29) * 450,
-        delay: hash(seed + 31) * 650,
       });
     }
   }
+  cachedParticles = particles;
   return particles;
 }

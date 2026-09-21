@@ -70,9 +70,12 @@ are referenced as URLs from `/…` in components and `lib/site.ts`.
 pnpm typecheck
 pnpm lint
 pnpm build
+pnpm test:e2e
 ```
 
 ## Deployment
 
 Configured for **Vercel** (`vercel.json`). Add the Resend-related env vars in
 the dashboard and redeploy after changes.
+
+Browser checks use Playwright. Install its browser once with `pnpm exec playwright install chromium --only-shell`; `pnpm test:e2e` starts the local server when needed.

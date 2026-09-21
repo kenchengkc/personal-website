@@ -68,3 +68,7 @@ Thumbs.db
 
 # Previews
 previews/
+
+# Browser verification
+test-results/
+playwright-report/
