@@ -342,8 +342,8 @@ textarea {
 .hero-binary-art {
   position: relative;
   width: min(calc(100% - 24px), 1240px);
-  height: 380px;
-  margin: 28px auto -10px;
+  height: 548px;
+  margin: 24px auto -8px;
   overflow: hidden;
   background: transparent;
 }
@@ -352,8 +352,8 @@ textarea {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(calc(100% - 48px), 1000px);
-  height: 360px;
+  width: min(calc(100% - 72px), 900px);
+  aspect-ratio: 5 / 3;
   transform: translate(-50%, -50%);
 }
 
@@ -367,7 +367,7 @@ textarea {
   position: absolute;
   left: var(--sx);
   top: var(--sy);
-  color: #7d8187;
+  color: #7c8086;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: var(--bit-size);
   font-weight: 500;
@@ -378,16 +378,17 @@ textarea {
 }
 
 .hero-binary-bit.is-outline {
-  color: #b4b7bc;
+  color: #c2c5ca;
   font-weight: 600;
 }
 
 .hero-binary-bit.is-fold {
-  color: #85898f;
+  color: #8d9197;
 }
 
+.hero-binary-bit.is-cerebellum,
 .hero-binary-bit.is-stem {
-  color: #9fa3a8;
+  color: #a8acb2;
 }
 
 .hero-binary-bit.is-gold {
@@ -407,7 +408,7 @@ textarea {
 }
 
 .hero-binary-art.is-complete .hero-binary-bit.is-signal {
-  animation: binary-signal-travel 5s ease-in-out var(--pulse-delay) infinite;
+  animation: binary-signal-travel 5.2s ease-in-out var(--pulse-delay) infinite;
 }
 
 .hero-brain-mesh {
@@ -421,21 +422,30 @@ textarea {
   pointer-events: none;
 }
 
+.brain-surface {
+  fill: rgba(174, 176, 180, 0.028);
+  stroke: none;
+}
+
+.brain-surface-secondary {
+  fill: rgba(174, 176, 180, 0.018);
+}
+
 .brain-mesh-edge {
-  stroke: #71767d;
-  stroke-width: 0.62;
+  stroke: #7c8188;
+  stroke-width: 1;
   vector-effect: non-scaling-stroke;
-  opacity: 0.16;
+  opacity: 0.14;
 }
 
 .brain-mesh-edge.is-accent {
   stroke: var(--gold);
-  opacity: 0.28;
+  opacity: 0.26;
 }
 
 .brain-mesh-node {
-  fill: #b8bcc1;
-  opacity: 0.3;
+  fill: #c5c8cc;
+  opacity: 0.28;
 }
 
 .brain-mesh-node.is-accent {
@@ -449,7 +459,7 @@ textarea {
 
 .hero-binary-art.is-complete .brain-mesh-edge.is-accent,
 .hero-binary-art.is-complete .brain-mesh-node.is-accent {
-  animation: brain-mesh-signal 5s ease-in-out 1.3s infinite;
+  animation: brain-mesh-signal 5.2s ease-in-out 1.25s infinite;
 }
 
 @keyframes binary-rain-assemble {
@@ -486,8 +496,8 @@ textarea {
   }
   78% {
     opacity: 1;
-    filter: drop-shadow(0 0 5px rgba(222, 193, 121, 0.28));
-    transform: translate(-50%, -50%) scale(1.12);
+    filter: drop-shadow(0 0 5px rgba(222, 193, 121, 0.26));
+    transform: translate(-50%, -50%) scale(1.11);
   }
   86% {
     opacity: var(--bit-alpha);
@@ -501,18 +511,18 @@ textarea {
     opacity: 0;
   }
   to {
-    opacity: 0.34;
+    opacity: 0.38;
   }
 }
 
 @keyframes brain-mesh-signal {
   0%, 72%, 100% {
-    opacity: 0.28;
+    opacity: 0.26;
     filter: none;
   }
   82% {
-    opacity: 0.7;
-    filter: drop-shadow(0 0 4px rgba(222, 193, 121, 0.22));
+    opacity: 0.68;
+    filter: drop-shadow(0 0 4px rgba(222, 193, 121, 0.2));
   }
 }
 
@@ -1619,14 +1629,14 @@ textarea {
 
   .hero-binary-art {
     width: 100%;
-    height: 248px;
-    margin-top: 24px;
+    height: 270px;
+    margin-top: 22px;
     margin-bottom: -6px;
   }
 
   .hero-brain-stage {
-    width: calc(100% - 8px);
-    height: 232px;
+    width: calc(100% - 6px);
+    aspect-ratio: 5 / 3;
   }
 
   .narrative-section,
