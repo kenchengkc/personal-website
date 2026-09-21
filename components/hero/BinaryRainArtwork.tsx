@@ -9,10 +9,24 @@ import {
   type BrainParticle,
 } from "./brain-particles";
 
-const MAX_ANIMATED_PARTICLES = 1150;
+const MAX_ANIMATED_PARTICLES = 1450;
 const TARGET_FRAME_MS = 1000 / 30;
-const FINAL_REVEAL_START = 2500;
-const FINAL_REVEAL_DURATION = 850;
+const PARTICLE_TRAVEL_DURATION = 3400;
+const RAIN_FADE_START = 1250;
+const RAIN_FADE_END = 2750;
+const FINAL_REVEAL_START = 3050;
+const FINAL_REVEAL_END = 3900;
+
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+const smoothstep = (start: number, end: number, value: number) => {
+  const t = clamp01((value - start) / Math.max(1, end - start));
+  return t * t * (3 - 2 * t);
+};
+
+const hash = (value: number) => {
+  const x = Math.sin(value * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+};
 
 function renderFinalBrain(
   particles: BrainParticle[],
@@ -40,18 +54,64 @@ function renderFinalBrain(
   return canvas;
 }
 
+function renderRainTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = BRAIN_WIDTH;
+  canvas.height = 900;
+
+  const context = canvas.getContext("2d");
+  if (!context) return canvas;
+
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+
+  const glyphCount = 2350;
+  const palette = [
+    "rgb(64, 118, 120)",
+    "rgb(92, 151, 151)",
+    "rgb(138, 185, 182)",
+    "rgb(198, 216, 210)",
+    "rgb(232, 239, 231)",
+  ];
+
+  for (let index = 0; index < glyphCount; index += 1) {
+    const x = 55 + hash(index + 11) * 890;
+    const y = hash(index + 29) * canvas.height;
+    const size = 5 + hash(index + 43) * 4.6;
+    const bright = hash(index + 67);
+    const gold = hash(index + 101) > 0.982;
+
+    context.font = `${bright > 0.82 ? 600 : 400} ${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+    context.fillStyle = gold
+      ? "rgb(222, 193, 121)"
+      : palette[Math.min(palette.length - 1, Math.floor(bright * palette.length))];
+    context.globalAlpha = 0.16 + bright * 0.58;
+    context.fillText(hash(index + 149) > 0.5 ? "1" : "0", x, y);
+  }
+
+  context.globalAlpha = 1;
+  return canvas;
+}
+
 function sampleAnimationParticles(particles: BrainParticle[]) {
   if (particles.length <= MAX_ANIMATED_PARTICLES) return particles;
 
+  // Spread the moving sample evenly across the full final brain, then force in
+  // the largest/highest-alpha glyphs so the silhouette and strongest ridges
+  // visibly emerge from the waterfall rather than appearing later.
   const stride = Math.ceil(particles.length / MAX_ANIMATED_PARTICLES);
   const sampled = particles.filter((_, index) => index % stride === 0);
-
-  // Keep a small share of the largest glyphs in the moving set so the
-  // formation still carries the final brain's visual hierarchy.
   const sampledSet = new Set(sampled);
-  for (const particle of particles) {
-    if (sampled.length >= MAX_ANIMATED_PARTICLES + 180) break;
-    if (particle.size < 12 || sampledSet.has(particle)) continue;
+
+  const priority = [...particles].sort(
+    (a, b) =>
+      b.size * b.alpha * (b.weight / 400) -
+      a.size * a.alpha * (a.weight / 400),
+  );
+
+  for (const particle of priority) {
+    if (sampled.length >= MAX_ANIMATED_PARTICLES + 260) break;
+    if (sampledSet.has(particle)) continue;
     sampled.push(particle);
     sampledSet.add(particle);
   }
@@ -69,12 +129,12 @@ export function BinaryRainArtwork() {
     const context = canvas?.getContext("2d");
     if (!node || !canvas || !context) return;
 
-    // Sample masks in their original design-space coordinates, independent of
-    // the display scale applied during resize.
     context.setTransform(1, 0, 0, 1, 0, 0);
+
     const particles = createBrainParticles(context);
     const movingParticles = sampleAnimationParticles(particles);
     const finalBrain = renderFinalBrain(particles);
+    const rainTexture = renderRainTexture();
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
@@ -84,8 +144,6 @@ export function BinaryRainArtwork() {
     let visible = false;
     let complete = false;
 
-    // Cache only the glyphs that actually move. The full dense brain is
-    // pre-rendered once above and becomes a single draw call near completion.
     const atlas = document.createElement("canvas");
     const atlasContext = atlas.getContext("2d");
     if (!atlasContext) return;
@@ -107,6 +165,34 @@ export function BinaryRainArtwork() {
       );
     });
 
+    function drawRain() {
+      if (!context) return;
+
+      const rainFade =
+        1 - smoothstep(RAIN_FADE_START, RAIN_FADE_END, elapsed);
+      if (rainFade <= 0) return;
+
+      const offset = (elapsed * 0.19) % rainTexture.height;
+
+      context.save();
+      context.globalAlpha = rainFade * 0.82;
+      context.drawImage(
+        rainTexture,
+        0,
+        offset - rainTexture.height,
+        BRAIN_WIDTH,
+        rainTexture.height,
+      );
+      context.drawImage(
+        rainTexture,
+        0,
+        offset,
+        BRAIN_WIDTH,
+        rainTexture.height,
+      );
+      context.restore();
+    }
+
     function draw() {
       if (!canvas || !context) return;
 
@@ -118,36 +204,61 @@ export function BinaryRainArtwork() {
         return;
       }
 
-      const finalReveal = Math.max(
-        0,
-        Math.min(1, (elapsed - FINAL_REVEAL_START) / FINAL_REVEAL_DURATION),
+      drawRain();
+
+      const finalReveal = smoothstep(
+        FINAL_REVEAL_START,
+        FINAL_REVEAL_END,
+        elapsed,
       );
 
+      // The dense filler layer only starts resolving once the moving particles
+      // are already near their destinations. It sits underneath them so the
+      // brain appears to condense out of the stream rather than pop in front.
       if (finalReveal > 0) {
-        context.globalAlpha = finalReveal * 0.94;
+        context.globalAlpha = finalReveal;
         context.drawImage(finalBrain, 0, 0, BRAIN_WIDTH, BRAIN_HEIGHT);
       }
 
       movingParticles.forEach((particle, index) => {
-        const progress = Math.max(
-          0,
-          Math.min(1, (elapsed - particle.delay) / 3100),
+        const progress = clamp01(
+          (elapsed - particle.delay) / PARTICLE_TRAVEL_DURATION,
         );
         if (progress === 0) return;
 
-        const falling = Math.min(1, progress / 0.38);
-        const assembling = Math.max(0, (progress - 0.3) / 0.7);
-        const ease = 1 - (1 - assembling) ** 3;
+        const falling = smoothstep(0, 0.3, progress);
+        const condensing = smoothstep(0.2, 0.9, progress);
+        const locking = smoothstep(0.72, 1, progress);
+
         const rainY =
           particle.startY + (particle.rainY - particle.startY) * falling;
-        const x = particle.startX + (particle.x - particle.startX) * ease;
-        const y = rainY + (particle.y - rainY) * ease;
 
-        context.globalAlpha =
+        // First the stream narrows toward the brain region. Then the same glyph
+        // travels into its exact final coordinate, so the brain emerges from
+        // continuous particle motion rather than a separate replacement image.
+        const funnelX =
+          BRAIN_WIDTH / 2 + (particle.x - BRAIN_WIDTH / 2) * 0.72;
+        const funnelY =
+          150 + (particle.y - BRAIN_HEIGHT / 2) * 0.18;
+
+        const x =
+          particle.startX +
+          (funnelX - particle.startX) * condensing +
+          (particle.x - funnelX) * locking;
+        const y =
+          rainY +
+          (funnelY - rainY) * condensing +
+          (particle.y - funnelY) * locking;
+
+        const arrivalAlpha =
           particle.alpha *
           Math.min(1, progress * 7) *
-          (0.42 + ease * 0.58) *
-          (1 - finalReveal * 0.62);
+          (0.5 + condensing * 0.5);
+
+        // Once the full-density layer resolves, let duplicate animated glyphs
+        // recede slightly while staying visible long enough to preserve motion.
+        context.globalAlpha =
+          arrivalAlpha * (1 - finalReveal * 0.42);
 
         context.drawImage(
           atlas,
