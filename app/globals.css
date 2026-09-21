@@ -393,6 +393,41 @@ textarea {
   color: var(--ink);
 }
 
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.link-icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-link .link-icon {
+  opacity: 0.82;
+  transition:
+    opacity 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.icon-link:hover .link-icon {
+  opacity: 1;
+  transform: translateX(1px);
+}
+
+.icon-link .link-icon path:not([fill="none"]),
+.icon-link .link-icon rect:not([fill="none"]),
+.icon-link .link-icon circle:not([fill="none"]) {
+  vector-effect: non-scaling-stroke;
+}
+
 .hero-binary-art {
   position: relative;
   width: min(calc(100% - 24px), 1240px);
