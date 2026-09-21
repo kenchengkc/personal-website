@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { FileText, Github, Linkedin } from "lucide-react";
 import { BinaryRainArtwork } from "@/components/hero/BinaryRainArtwork";
+import { LinkIcon } from "@/components/ui/LinkIcon";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -46,15 +46,15 @@ export function Hero() {
 
       <div className="hero-links" data-reveal>
         <a className="icon-link" href={site.resumePath} target="_blank" rel="noopener noreferrer">
-          <FileText aria-hidden="true" />
+          <LinkIcon name="resume" />
           <span>Resume ↗</span>
         </a>
         <a className="icon-link" href={site.socials.github} target="_blank" rel="noopener noreferrer">
-          <Github aria-hidden="true" />
+          <LinkIcon name="github" />
           <span>GitHub ↗</span>
         </a>
         <a className="icon-link" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
-          <Linkedin aria-hidden="true" />
+          <LinkIcon name="linkedin" />
           <span>LinkedIn ↗</span>
         </a>
       </div>
