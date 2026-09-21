@@ -339,6 +339,164 @@ textarea {
   color: var(--ink);
 }
 
+.hero-binary-art {
+  position: relative;
+  width: min(calc(100% - 32px), 920px);
+  height: 220px;
+  margin: 34px auto -18px;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  background: #090a0b;
+}
+
+.hero-binary-rain {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-binary-bit {
+  position: absolute;
+  left: var(--sx);
+  top: var(--sy);
+  z-index: 1;
+  color: #777b81;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--bit-size);
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0.14;
+  transform: translate(-50%, -50%);
+  will-change: left, top, opacity;
+}
+
+.hero-binary-bit.is-gold {
+  color: var(--gold-bright);
+}
+
+.hero-binary-art.is-active .hero-binary-bit {
+  animation: binary-rain-assemble 2.75s cubic-bezier(0.2, 0.75, 0.18, 1)
+    var(--bit-delay) both;
+}
+
+.hero-binary-art.is-complete .hero-binary-bit {
+  left: calc(50% + var(--tx));
+  top: calc(50% + var(--ty));
+  opacity: var(--bit-alpha);
+  animation: none;
+}
+
+.hero-circuit-art {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 180px;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.circuit-path {
+  fill: none;
+  stroke: #aeb2b8;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.circuit-path-inner {
+  stroke: #d1d4d8;
+  stroke-width: 0.8;
+}
+
+.circuit-path-accent {
+  stroke: var(--gold-bright);
+}
+
+.circuit-node {
+  fill: #85898f;
+  opacity: 0;
+}
+
+.circuit-node-core {
+  fill: var(--gold-bright);
+}
+
+.hero-binary-art.is-active .circuit-path {
+  animation: circuit-draw 1.25s cubic-bezier(0.2, 0.8, 0.2, 1) 1.15s forwards;
+}
+
+.hero-binary-art.is-active .circuit-node {
+  animation: circuit-node-in 500ms ease 1.95s forwards;
+}
+
+.hero-binary-art.is-complete .circuit-path,
+.hero-binary-art.is-complete .circuit-node {
+  opacity: 1;
+  stroke-dashoffset: 0;
+  animation: none;
+}
+
+.hero-binary-art.is-complete .circuit-path-accent,
+.hero-binary-art.is-complete .circuit-node-core {
+  animation: circuit-gold-pulse 4.8s ease-in-out infinite;
+}
+
+@keyframes binary-rain-assemble {
+  0% {
+    left: var(--sx);
+    top: var(--sy);
+    opacity: 0.12;
+  }
+  28% {
+    left: var(--sx);
+    top: var(--ry);
+    opacity: 0.46;
+  }
+  45% {
+    left: var(--sx);
+    top: var(--ry);
+    opacity: 0.34;
+  }
+  100% {
+    left: calc(50% + var(--tx));
+    top: calc(50% + var(--ty));
+    opacity: var(--bit-alpha);
+  }
+}
+
+@keyframes circuit-draw {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.72;
+  }
+}
+
+@keyframes circuit-node-in {
+  from { opacity: 0; }
+  to { opacity: 0.86; }
+}
+
+@keyframes circuit-gold-pulse {
+  0%, 72%, 100% {
+    opacity: 0.72;
+    filter: none;
+  }
+  84% {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(222, 193, 121, 0.28));
+  }
+}
+
+
 .narrative-section,
 .work-section,
 .contact-section {
@@ -697,109 +855,6 @@ textarea {
   70% { transform: translate(-2px, -2px) rotate(0.9deg); }
 }
 
-
-.binary-brain {
-  position: relative;
-  width: min(calc(100% - 48px), 720px);
-  height: 300px;
-  margin: 28px auto 8px;
-  overflow: hidden;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: #090a0b;
-}
-
-.binary-brain-field {
-  position: absolute;
-  inset: 0;
-}
-
-.binary-particle {
-  position: absolute;
-  left: var(--sx);
-  top: var(--sy);
-  z-index: 1;
-  color: #8a8d92;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: var(--particle-size);
-  font-weight: 500;
-  line-height: 1;
-  opacity: 0.16;
-  transform: translate(-50%, -50%);
-  will-change: left, top, opacity;
-}
-
-.binary-particle.is-gold {
-  color: var(--gold-bright);
-}
-
-.binary-brain.is-active .binary-particle {
-  animation: brain-particle-assemble 2.2s cubic-bezier(0.2, 0.8, 0.2, 1)
-    var(--particle-delay) both;
-}
-
-.binary-brain.is-complete .binary-particle {
-  left: var(--tx);
-  top: var(--ty);
-  opacity: var(--particle-alpha);
-  animation: none;
-}
-
-.binary-brain-guide {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
-  width: 292px;
-  height: 292px;
-  color: #aeb2b8;
-  opacity: 0.08;
-  transform: translate(-50%, -50%) scale(0.96);
-  transition:
-    opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  pointer-events: none;
-}
-
-.binary-brain-guide-detail {
-  color: #d3d6da;
-  opacity: 0;
-}
-
-.binary-brain.is-active .binary-brain-guide {
-  opacity: 0.22;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.binary-brain.is-active .binary-brain-guide-detail {
-  opacity: 0.34;
-}
-
-.binary-brain.is-complete .binary-brain-guide {
-  opacity: 0.28;
-}
-
-.binary-brain.is-complete .binary-brain-guide-detail {
-  opacity: 0.46;
-}
-
-@keyframes brain-particle-assemble {
-  0% {
-    left: var(--sx);
-    top: var(--sy);
-    opacity: 0.16;
-  }
-  22% {
-    left: var(--sx);
-    top: calc(var(--sy) + 7%);
-    opacity: 0.34;
-  }
-  100% {
-    left: var(--tx);
-    top: var(--ty);
-    opacity: var(--particle-alpha);
-  }
-}
 
 /* Platinum award treatment */
 
@@ -1550,6 +1605,17 @@ textarea {
     gap: 18px;
   }
 
+  .hero-binary-art {
+    width: 100%;
+    height: 184px;
+    margin-top: 28px;
+    margin-bottom: -10px;
+  }
+
+  .hero-circuit-art {
+    transform: translate(-50%, -50%) scale(0.86);
+  }
+
   .narrative-section,
   .work-section,
   .contact-section {
@@ -1602,17 +1668,6 @@ textarea {
 
   .skills-heading > p {
     text-align: left;
-  }
-
-  .binary-brain {
-    width: 100%;
-    height: 240px;
-    margin-top: 24px;
-  }
-
-  .binary-brain-guide {
-    width: 220px;
-    height: 220px;
   }
 
   .skill-row {
