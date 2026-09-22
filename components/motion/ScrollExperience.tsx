@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { usePathname } from "next/navigation";
 
-type Milestone = { label: string; title: string; parent: string | null };
+type Milestone = { label: string; title: string; parent: string | null; progress: number };
 const TITLES: Record<string, string> = {
   INTRO: "Introduction", COLUMBIA: "Education", SKILLS: "Skills",
   WORK: "Selected work", AMAZON: "Amazon", QUANTIV: "Quantiv",
@@ -41,20 +41,33 @@ export function ScrollExperience() {
 
     function measure() {
       const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-section]"));
-      if (sections.length !== sectionsRef.current.length || sections.some((section, i) => section !== sectionsRef.current[i])) {
-        sectionsRef.current = sections;
-        setMilestones(sections.map(section => {
-          const label = section.dataset.scrollLabel ?? "SECTION";
-          return {
-            label,
-            title: TITLES[label] ?? label,
-            parent: section.parentElement?.closest<HTMLElement>("[data-scroll-section]")?.dataset.scrollLabel ?? null,
-          };
-        }));
-      }
       const scroller = document.scrollingElement ?? root;
+      sectionsRef.current = sections;
       positions = sections.map(section => section.getBoundingClientRect().top + scroller.scrollTop);
       scrollable = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+
+      // Place every label on the same coordinate scale as the progress marker.
+      // A label sits at the midpoint of the scroll range during which its section
+      // is active, so long sections receive proportionally more room on the rail.
+      const anchorOffset = Math.min(180, scroller.clientHeight * 0.22);
+      const starts = positions.map(position =>
+        scrollable > 0
+          ? Math.max(0, Math.min(1, (position - anchorOffset) / scrollable))
+          : 0,
+      );
+
+      setMilestones(sections.map((section, index) => {
+        const label = section.dataset.scrollLabel ?? "SECTION";
+        const start = starts[index] ?? 0;
+        const end = starts[index + 1] ?? 1;
+        return {
+          label,
+          title: TITLES[label] ?? label,
+          parent: section.parentElement?.closest<HTMLElement>("[data-scroll-section]")?.dataset.scrollLabel ?? null,
+          progress: Math.max(0, Math.min(1, start + (end - start) * 0.5)),
+        };
+      }));
+
       document.querySelectorAll("[data-reveal]").forEach(element => {
         if (observed.has(element)) return;
         observed.add(element);
@@ -123,45 +136,73 @@ export function ScrollExperience() {
   }
 
   const activeParent = milestones.find(item => item.label === activeLabel)?.parent;
+  const topLevelMilestones = milestones.filter(item => !item.parent);
+  const subsectionRails = topLevelMilestones.flatMap(parent => {
+    const children = milestones.filter(item => item.parent === parent.label);
+    if (children.length < 2) return [];
+    return [{
+      label: parent.label,
+      start: children[0].progress,
+      span: children[children.length - 1].progress - children[0].progress,
+    }];
+  });
+
   return (
     <nav ref={navRef} className="scroll-ruler" aria-label="Page sections" hidden={milestones.length === 0}>
       <div className="ruler-track" aria-hidden="true">
         {TICKS.map(index => <span key={index} className={`ruler-tick${index % 7 === 0 ? " ruler-tick-long" : ""}`} />)}
         <div className="ruler-marker"><i /></div>
       </div>
+
       <div className="ruler-contents">
         <span className="ruler-heading">On this page</span>
-        <ol className="ruler-milestones">
-          {milestones.filter(item => !item.parent).map((milestone, index) => (
-            <li className="ruler-section" key={milestone.label}>
-              <button
-                type="button"
-                className={`ruler-milestone${milestone.label === activeLabel ? " is-active" : ""}${milestone.label === activeParent ? " is-parent-active" : ""}`}
-                aria-current={milestone.label === activeLabel ? "location" : undefined}
-                onClick={() => goToSection(milestone.label)}
-              >
-                <span className="ruler-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                {milestone.title}
-              </button>
-              {milestones.some(item => item.parent === milestone.label) && (
-                <ol className="ruler-subsections">
-                  {milestones.filter(item => item.parent === milestone.label).map(child => (
-                    <li key={child.label}>
-                      <button
-                        type="button"
-                        className={`ruler-milestone ruler-subsection${child.label === activeLabel ? " is-active" : ""}`}
-                        aria-current={child.label === activeLabel ? "location" : undefined}
-                        onClick={() => goToSection(child.label)}
-                      >{child.title}</button>
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </li>
+
+        <div className="ruler-scale">
+          {subsectionRails.map(group => (
+            <span
+              className="ruler-subsection-rail"
+              key={group.label}
+              aria-hidden="true"
+              style={{
+                "--subsection-start": group.start,
+                "--subsection-span": group.span,
+              } as CSSProperties}
+            />
           ))}
-        </ol>
+
+          <ol className="ruler-milestones">
+            {milestones.map(milestone => {
+              const topLevelIndex = topLevelMilestones.findIndex(item => item.label === milestone.label);
+              const isSubsection = milestone.parent !== null;
+
+              return (
+                <li
+                  className={`ruler-section${isSubsection ? " is-subsection" : ""}`}
+                  key={milestone.label}
+                  style={{ "--milestone-progress": milestone.progress } as CSSProperties}
+                >
+                  <button
+                    type="button"
+                    className={`ruler-milestone${isSubsection ? " ruler-subsection" : ""}${milestone.label === activeLabel ? " is-active" : ""}${milestone.label === activeParent ? " is-parent-active" : ""}`}
+                    aria-current={milestone.label === activeLabel ? "location" : undefined}
+                    onClick={() => goToSection(milestone.label)}
+                  >
+                    {!isSubsection ? (
+                      <span className="ruler-number" aria-hidden="true">
+                        {String(topLevelIndex + 1).padStart(2, "0")}
+                      </span>
+                    ) : null}
+                    {milestone.title}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
         <div className="ruler-progress-label"><span>Page</span><span ref={percentRef}>0%</span></div>
       </div>
     </nav>
   );
+
 }

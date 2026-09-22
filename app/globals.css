@@ -108,9 +108,10 @@ textarea {
   outline-offset: 4px;
 }
 
-/* Page progress and section navigation share a gutter, not a coordinate scale. */
+/* Page progress and section navigation share one coordinate scale. */
 .scroll-ruler {
   --scroll-progress: 0;
+  --ruler-scale-inset: 44px;
   position: fixed;
   inset: 32px auto 32px 18px;
   z-index: 60;
@@ -121,7 +122,7 @@ textarea {
 
 .ruler-track {
   position: absolute;
-  inset: 0 auto 0 0;
+  inset: var(--ruler-scale-inset) auto var(--ruler-scale-inset) 0;
   width: 22px;
   display: flex;
   flex-direction: column;
@@ -159,28 +160,40 @@ textarea {
 .ruler-contents {
   position: absolute;
   inset: 0 0 0 30px;
-  display: flex;
-  flex-direction: column;
 }
 
 .ruler-heading {
-  padding: 0 8px 14px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0 8px;
   color: var(--ink-3);
   font-size: 8px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 
-.ruler-milestones,
-.ruler-subsections { margin: 0; padding: 0; list-style: none; }
-
-.ruler-milestones {
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line-strong) transparent;
+.ruler-scale {
+  position: absolute;
+  inset: var(--ruler-scale-inset) 0;
 }
 
-.ruler-section + .ruler-section { margin-top: 6px; }
+.ruler-milestones {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ruler-section {
+  position: absolute;
+  top: calc(var(--milestone-progress) * 100%);
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+}
 
 .ruler-milestone {
   display: flex;
@@ -208,22 +221,47 @@ textarea {
 .ruler-milestone.is-active .ruler-number { color: var(--gold); }
 .ruler-milestone:focus-visible { outline-offset: -1px; }
 
-.ruler-subsections {
-  margin: 4px 0 12px 17px;
-  padding-left: 9px;
-  border-left: 1px solid var(--line-strong);
+.ruler-subsection {
+  width: calc(100% - 26px);
+  min-height: 30px;
+  margin-left: 26px;
+  padding-left: 10px;
+  font-size: 10px;
+  font-weight: 400;
 }
 
-.ruler-subsection { min-height: 30px; font-size: 10px; font-weight: 400; }
+.ruler-subsection-rail {
+  position: absolute;
+  top: calc(var(--subsection-start) * 100%);
+  left: 22px;
+  width: 1px;
+  height: calc(var(--subsection-span) * 100%);
+  background: var(--line-strong);
+  transform: translateY(-1px);
+  pointer-events: none;
+}
 
 .ruler-progress-label {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
-  margin-top: auto;
-  padding: 16px 8px 0;
+  padding: 0 8px;
   color: var(--ink-3);
   font-size: 9px;
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-height: 720px) and (min-width: 981px) {
+  .scroll-ruler { --ruler-scale-inset: 38px; }
+  .ruler-milestone {
+    min-height: 26px;
+    padding-block: 4px;
+    font-size: 9px;
+  }
+  .ruler-subsection { min-height: 24px; }
 }
 
 /* Homepage */

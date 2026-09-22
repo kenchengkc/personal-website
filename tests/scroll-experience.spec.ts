@@ -7,21 +7,47 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator(".ruler-milestone")).toHaveCount(11);
 });
 
-test("sidebar labels remain separated when hovered, including on short screens", async ({ page }) => {
+test("sidebar milestones share the same page scale as the scroll marker", async ({ page }) => {
   for (const height of [1000, 650]) {
     await page.setViewportSize({ width: 1440, height });
-    await page.locator(".scroll-ruler").hover();
-    const boxes = await page.locator(".ruler-milestone").evaluateAll(elements =>
+
+    const count = await page.locator(".ruler-section").count();
+    for (let index = 0; index < count; index++) {
+      const item = page.locator(".ruler-section").nth(index);
+      const progress = await item.evaluate(element =>
+        Number((element as HTMLElement).style.getPropertyValue("--milestone-progress")),
+      );
+
+      await page.evaluate(progress => {
+        const scrollable = document.documentElement.scrollHeight - innerHeight;
+        window.scrollTo({ top: scrollable * progress, behavior: "instant" });
+      }, progress);
+
+      await expect.poll(async () => {
+        const [markerCenter, itemCenter] = await Promise.all([
+          page.locator(".ruler-marker").evaluate(element => {
+            const rect = element.getBoundingClientRect();
+            return rect.top + rect.height / 2;
+          }),
+          item.locator(".ruler-milestone").evaluate(element => {
+            const rect = element.getBoundingClientRect();
+            return rect.top + rect.height / 2;
+          }),
+        ]);
+        return Math.abs(markerCenter - itemCenter);
+      }).toBeLessThan(1.5);
+    }
+
+    const centers = await page.locator(".ruler-milestone").evaluateAll(elements =>
       elements.map(element => {
         const rect = element.getBoundingClientRect();
-        return { top: rect.top, bottom: rect.bottom, left: rect.left };
+        return { center: rect.top + rect.height / 2, left: rect.left };
       }),
     );
-    for (let i = 1; i < boxes.length; i++) {
-      expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom);
+    for (let i = 1; i < centers.length; i++) {
+      expect(centers[i].center).toBeGreaterThan(centers[i - 1].center);
     }
-    expect(boxes[4].left).toBeGreaterThan(boxes[3].left);
-    expect(boxes.at(-1)!.bottom).toBeLessThan(height);
+    expect(centers[4].left).toBeGreaterThan(centers[3].left);
   }
 });
 
