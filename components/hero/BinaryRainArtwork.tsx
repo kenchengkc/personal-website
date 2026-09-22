@@ -19,6 +19,7 @@ export function BinaryRainArtwork() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let elapsed = 0;
+    let rainLeadIn = 0;
     let lastTime = 0;
     let visible = false;
     let started = false;
@@ -26,11 +27,13 @@ export function BinaryRainArtwork() {
     let disposed = false;
 
     function tick(time: number) {
-      elapsed += lastTime ? time - lastTime : 0;
+      const delta = lastTime ? time - lastTime : 0;
+      if (started) elapsed += delta;
+      else rainLeadIn += delta;
       lastTime = time;
       complete = elapsed >= ASSEMBLY_DURATION;
-      node!.dataset.phase = complete ? "complete" : "assembling";
-      renderer!.draw(elapsed);
+      node!.dataset.phase = complete ? "complete" : started ? "assembling" : "raining";
+      renderer!.draw(elapsed, rainLeadIn);
       frame = complete ? 0 : requestAnimationFrame(tick);
     }
 
@@ -42,8 +45,8 @@ export function BinaryRainArtwork() {
         complete = true;
         elapsed = ASSEMBLY_DURATION;
         node!.dataset.phase = "complete";
-        renderer!.draw(elapsed);
-      } else if (started && visible && !document.hidden && !complete) {
+        renderer!.draw(elapsed, rainLeadIn);
+      } else if (visible && !document.hidden && !complete) {
         frame = requestAnimationFrame(tick);
       }
     }
@@ -65,7 +68,7 @@ export function BinaryRainArtwork() {
 
     function resize() {
       renderer!.resize();
-      renderer!.draw(elapsed);
+      renderer!.draw(elapsed, rainLeadIn);
       node!.dataset.ready = "true";
       updateVisibility();
     }
@@ -96,7 +99,7 @@ export function BinaryRainArtwork() {
   }, []);
 
   return (
-    <div ref={ref} className="hero-binary-art" data-phase="waiting" aria-hidden="true">
+    <div ref={ref} className="hero-binary-art" data-phase="raining" aria-hidden="true">
       <div className="hero-brain-stage">
         <picture>
           <source media="(prefers-reduced-motion: reduce)" srcSet="/images/brain-still.webp" />

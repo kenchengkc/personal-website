@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-test("assembly waits for scrolling past 70% of the waterfall height", async ({ page }) => {
+test("rain keeps moving while assembly waits for scrolling past 70%", async ({ page }) => {
   await page.goto("/");
   const artwork = page.locator(".hero-binary-art");
   const canvas = page.locator(".hero-brain-canvas");
@@ -18,8 +18,11 @@ test("assembly waits for scrolling past 70% of the waterfall height", async ({ p
     const height = Math.min(bounds.bottom, container.bottom) - top;
     window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.69, behavior: "instant" });
   });
-  await page.waitForTimeout(400);
-  await expect(artwork).toHaveAttribute("data-phase", "waiting");
+  const firstFrame = await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
+  await expect.poll(async () => (await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL())) !== firstFrame).toBe(true);
+  // Rain must keep looping beyond the entire assembly duration without forming a brain.
+  await page.waitForTimeout(2800);
+  await expect(artwork).toHaveAttribute("data-phase", "raining");
   await canvas.evaluate(element => {
     const bounds = element.getBoundingClientRect();
     const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
@@ -39,7 +42,7 @@ test("a tall viewport still waits for the first scroll", async ({ page }) => {
   const artwork = page.locator(".hero-binary-art");
   await expect(artwork).toHaveAttribute("data-ready", "true");
   await page.waitForTimeout(400);
-  await expect(artwork).toHaveAttribute("data-phase", "waiting");
+  await expect(artwork).toHaveAttribute("data-phase", "raining");
   await page.evaluate(() => window.scrollTo({ top: 10, behavior: "instant" }));
   await expect(artwork).toHaveAttribute("data-phase", "assembling");
 });

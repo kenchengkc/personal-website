@@ -31,7 +31,6 @@ const segments = Array.from({ length: COLUMNS * ROWS }, (_, index) => {
     speed,
     catchAt,
     phase,
-    caughtY: wrap(phase + catchAt * speed),
     drift: (hash(index + 97) - 0.5) * 36,
     duration: ASSEMBLY_DURATION - catchAt - 120 - hash(index + 53) * 300,
   };
@@ -88,7 +87,9 @@ export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRe
     painted = true;
   }
 
-  function draw(elapsed: number) {
+  // The lead-in advances while rain loops, then stays fixed during assembly so
+  // every strand continues from its current position when the threshold is met.
+  function draw(elapsed: number, rainLeadIn = 0) {
     context.clearRect(0, 0, BRAIN_WIDTH, BRAIN_HEIGHT);
     context.globalAlpha = 1;
     segments.forEach((segment, index) => {
@@ -97,13 +98,14 @@ export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRe
       const gather = smooth(t);
       let y: number;
       if (elapsed < segment.catchAt) {
-        y = wrap(segment.phase + elapsed * segment.speed);
+        y = wrap(segment.phase + (rainLeadIn + elapsed) * segment.speed);
       } else {
         // Match the falling speed when captured, then ease to a zero-speed landing.
         // No wrapping or image replacement occurs once a piece begins gathering.
         const t2 = t * t;
         const t3 = t2 * t;
-        y = (2 * t3 - 3 * t2 + 1) * segment.caughtY
+        const caughtY = wrap(segment.phase + (rainLeadIn + segment.catchAt) * segment.speed);
+        y = (2 * t3 - 3 * t2 + 1) * caughtY
           + (-2 * t3 + 3 * t2) * segment.y
           + (t3 - 2 * t2 + t) * segment.speed * segment.duration;
       }
