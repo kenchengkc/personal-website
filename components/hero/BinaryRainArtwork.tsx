@@ -59,7 +59,7 @@ export function BinaryRainArtwork() {
       const bottom = Math.min(bounds.bottom, container.bottom);
       const visibleHeight = Math.max(0, Math.min(bottom, window.innerHeight) - Math.max(top, 0));
       const nextVisible = visibleHeight > 0;
-      const nextStarted = started || (window.scrollY > 0 && visibleHeight > (bottom - top) * 0.7);
+      const nextStarted = started || (window.scrollY > 0 && visibleHeight > (bottom - top) * 0.5);
       if (visible === nextVisible && started === nextStarted) return;
       visible = nextVisible;
       started = nextStarted;
@@ -76,7 +76,7 @@ export function BinaryRainArtwork() {
     resize();
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 0.7, 1] });
+    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 0.5, 1] });
     observer.observe(canvas);
     window.addEventListener("scroll", updateVisibility, { passive: true });
     reducedMotion.addEventListener("change", syncAnimation);
