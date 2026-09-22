@@ -389,14 +389,24 @@ textarea {
 .hero-links {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
   margin-top: 26px;
   color: var(--ink-3);
   font-size: 12px;
 }
 
 .hero-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  line-height: 1;
   transition: color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hero-links svg {
+  flex: 0 0 auto;
 }
 
 .hero-links a:hover {

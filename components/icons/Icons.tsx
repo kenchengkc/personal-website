@@ -53,6 +53,25 @@ export const Download = ({ size = 14, className }: IconProps) => (
   </svg>
 );
 
+export const Resume = ({ size = 16, className }: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+    className={className}
+  >
+    <path d="M6 2.75h8l4 4V21.25H6z" />
+    <path d="M14 2.75v4h4" />
+    <path d="M9 11h6M9 14.5h6M9 18h4.5" />
+  </svg>
+);
+
 export const GitHub = ({ size = 16, className }: IconProps) => (
   <svg
     width={size}
@@ -88,7 +107,7 @@ export const Scholar = ({ size = 16, className }: IconProps) => (
     aria-hidden
     className={className}
   >
-    <path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
+    <path d="M5.242 13.769 0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" />
   </svg>
 );
 
