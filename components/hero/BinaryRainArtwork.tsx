@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ASSEMBLY_DURATION } from "./brain-particles";
+import Image from "next/image";
+import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles";
 import { createBrainRenderer } from "./brain-renderer";
 
 export function BinaryRainArtwork() {
@@ -49,6 +50,7 @@ export function BinaryRainArtwork() {
     function resize() {
       renderer!.resize();
       renderer!.draw(elapsed);
+      node!.dataset.ready = "true";
     }
 
     resize();
@@ -80,7 +82,20 @@ export function BinaryRainArtwork() {
   return (
     <div ref={ref} className="hero-binary-art" aria-hidden="true">
       <div className="hero-brain-stage">
-        <canvas ref={canvasRef} className="hero-brain-canvas" />
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/brain-still.webp" />
+          <Image
+            className="hero-brain-poster"
+            src="/images/brain-rain.webp"
+            alt=""
+            width={BRAIN_WIDTH}
+            height={BRAIN_HEIGHT}
+            loading="eager"
+            fetchPriority="high"
+            unoptimized
+          />
+        </picture>
+        <canvas ref={canvasRef} width={BRAIN_WIDTH} height={BRAIN_HEIGHT} className="hero-brain-canvas" />
       </div>
     </div>
   );

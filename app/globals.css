@@ -383,12 +383,19 @@ textarea {
   transform: translate(-50%, -50%);
 }
 
-.hero-brain-canvas {
+.hero-brain-canvas,
+.hero-brain-poster {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
 }
+
+.hero-brain-canvas { opacity: 0; }
+.hero-binary-art[data-ready="true"] .hero-brain-canvas { opacity: 1; }
+.hero-binary-art[data-ready="true"] .hero-brain-poster { visibility: hidden; }
 
 .narrative-section,
 .work-section,

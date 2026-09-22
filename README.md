@@ -79,3 +79,5 @@ Configured for **Vercel** (`vercel.json`). Add the Resend-related env vars in
 the dashboard and redeploy after changes.
 
 Browser checks use Playwright. Install its browser once with `pnpm exec playwright install chromium --only-shell`; `pnpm test:e2e` starts the local server when needed.
+
+The hero includes static rain and reduced-motion frames for the initial page load. After changing the brain artwork or its starting arrangement, regenerate them with `node scripts/generate-brain-posters.mjs`.

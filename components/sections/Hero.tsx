@@ -10,7 +10,7 @@ export function Hero() {
       data-scroll-section
       data-scroll-label="INTRO"
     >
-      <div className="hero-identity" data-reveal>
+      <div className="hero-identity">
         <Image
           src="/images/profile-photo.jpg"
           alt="Ken Cheng"
@@ -23,12 +23,12 @@ export function Hero() {
         <span>Columbia CS · Quantiv founder · New York</span>
       </div>
 
-      <div className="scroll-prompt" data-reveal>
+      <div className="scroll-prompt">
         <span>SCROLL</span>
         <i />
       </div>
 
-      <div className="hero-copy" data-reveal>
+      <div className="hero-copy">
         <h1>ML systems for markets, forecasting, and financial research.</h1>
         <p>
           I build production systems: expected-move models, SEC retrieval,
@@ -43,7 +43,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="hero-links" data-reveal>
+      <div className="hero-links">
         <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
           Resume ↗
         </a>
