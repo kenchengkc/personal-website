@@ -108,21 +108,18 @@ textarea {
   outline-offset: 4px;
 }
 
-/* Page progress and section navigation share one coordinate scale. */
+/* Page progress and section destinations use the same measured coordinate scale. */
 .scroll-ruler {
   --scroll-progress: 0;
-  --ruler-scale-inset: 44px;
   position: fixed;
   inset: 32px auto 32px 18px;
   z-index: 60;
   width: 166px;
 }
 
-.scroll-ruler[hidden] { display: none; }
-
 .ruler-track {
   position: absolute;
-  inset: var(--ruler-scale-inset) auto var(--ruler-scale-inset) 0;
+  inset: 32px auto 32px 0;
   width: 22px;
   display: flex;
   flex-direction: column;
@@ -157,16 +154,28 @@ textarea {
 
 .ruler-marker i { width: 18px; height: 1px; background: var(--gold-metal); }
 
+.ruler-connectors {
+  position: absolute;
+  inset: 32px auto 32px 0;
+  width: 30px;
+  height: calc(100% - 64px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ruler-connectors path { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+.ruler-stop { fill: var(--ink-3); }
+.ruler-connectors .is-active path { stroke: var(--gold); }
+.ruler-connectors .is-active .ruler-stop { fill: var(--gold-bright); }
+
 .ruler-contents {
   position: absolute;
   inset: 0 0 0 30px;
+  display: flex;
+  flex-direction: column;
 }
 
 .ruler-heading {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
   padding: 0 8px;
   color: var(--ink-3);
   font-size: 8px;
@@ -174,26 +183,15 @@ textarea {
   text-transform: uppercase;
 }
 
-.ruler-scale {
-  position: absolute;
-  inset: var(--ruler-scale-inset) 0;
-}
-
 .ruler-milestones {
   position: absolute;
-  inset: 0;
+  inset: 32px 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.ruler-section {
-  position: absolute;
-  top: calc(var(--milestone-progress) * 100%);
-  left: 0;
-  width: 100%;
-  transform: translateY(-50%);
-}
+.ruler-section { position: absolute; width: 100%; transform: translateY(-50%); }
 
 .ruler-milestone {
   display: flex;
@@ -222,46 +220,26 @@ textarea {
 .ruler-milestone:focus-visible { outline-offset: -1px; }
 
 .ruler-subsection {
-  width: calc(100% - 26px);
-  min-height: 30px;
-  margin-left: 26px;
-  padding-left: 10px;
-  font-size: 10px;
+  margin-left: 17px;
+  width: calc(100% - 17px);
+  padding-left: 9px;
+  border-left: 1px solid var(--line-strong);
+  border-radius: 0 3px 3px 0;
   font-weight: 400;
 }
 
-.ruler-subsection-rail {
-  position: absolute;
-  top: calc(var(--subsection-start) * 100%);
-  left: 22px;
-  width: 1px;
-  height: calc(var(--subsection-span) * 100%);
-  background: var(--line-strong);
-  transform: translateY(-1px);
-  pointer-events: none;
+@media (max-height: 520px) {
+  .ruler-milestone { min-height: 24px; padding-block: 4px; font-size: 9px; }
 }
 
 .ruler-progress-label {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
   display: flex;
   justify-content: space-between;
+  margin-top: auto;
   padding: 0 8px;
   color: var(--ink-3);
   font-size: 9px;
   font-variant-numeric: tabular-nums;
-}
-
-@media (max-height: 720px) and (min-width: 981px) {
-  .scroll-ruler { --ruler-scale-inset: 38px; }
-  .ruler-milestone {
-    min-height: 26px;
-    padding-block: 4px;
-    font-size: 9px;
-  }
-  .ruler-subsection { min-height: 24px; }
 }
 
 /* Homepage */

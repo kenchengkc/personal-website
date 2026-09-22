@@ -7,48 +7,41 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator(".ruler-milestone")).toHaveCount(11);
 });
 
-test("sidebar milestones share the same page scale as the scroll marker", async ({ page }) => {
-  for (const height of [1000, 650]) {
+test("sidebar labels remain separated when hovered, including on short screens", async ({ page }) => {
+  for (const height of [1800, 1000, 650, 500]) {
     await page.setViewportSize({ width: 1440, height });
-
-    const count = await page.locator(".ruler-section").count();
-    for (let index = 0; index < count; index++) {
-      const item = page.locator(".ruler-section").nth(index);
-      const progress = await item.evaluate(element =>
-        Number((element as HTMLElement).style.getPropertyValue("--milestone-progress")),
-      );
-
-      await page.evaluate(progress => {
-        const scrollable = document.documentElement.scrollHeight - innerHeight;
-        window.scrollTo({ top: scrollable * progress, behavior: "instant" });
-      }, progress);
-
-      await expect.poll(async () => {
-        const [markerCenter, itemCenter] = await Promise.all([
-          page.locator(".ruler-marker").evaluate(element => {
-            const rect = element.getBoundingClientRect();
-            return rect.top + rect.height / 2;
-          }),
-          item.locator(".ruler-milestone").evaluate(element => {
-            const rect = element.getBoundingClientRect();
-            return rect.top + rect.height / 2;
-          }),
-        ]);
-        return Math.abs(markerCenter - itemCenter);
-      }).toBeLessThan(1.5);
-    }
-
-    const centers = await page.locator(".ruler-milestone").evaluateAll(elements =>
+    await page.locator(".scroll-ruler").hover();
+    const boxes = await page.locator(".ruler-milestone").evaluateAll(elements =>
       elements.map(element => {
         const rect = element.getBoundingClientRect();
-        return { center: rect.top + rect.height / 2, left: rect.left };
+        return { top: rect.top, bottom: rect.bottom, left: rect.left };
       }),
     );
-    for (let i = 1; i < centers.length; i++) {
-      expect(centers[i].center).toBeGreaterThan(centers[i - 1].center);
+    for (let i = 1; i < boxes.length; i++) {
+      expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom);
     }
-    expect(centers[4].left).toBeGreaterThan(centers[3].left);
+    expect(boxes[4].left).toBeGreaterThan(boxes[3].left);
+    expect(boxes.at(-1)!.bottom).toBeLessThan(height);
   }
+});
+
+test("section stops share the arrow's scroll scale and Contact reaches the bottom", async ({ page }) => {
+  const sections = await page.locator("[data-scroll-section]").evaluateAll(elements => elements.map(element => (element as HTMLElement).dataset.scrollLabel!));
+  for (const label of sections) {
+    await page.locator(`[data-scroll-label="${label}"]`).evaluate(element => element.scrollIntoView({ behavior: "instant" }));
+    await expect.poll(() => page.locator(`.ruler-stop[data-label="${label}"]`).evaluate(element => {
+      const stop = element.getBoundingClientRect();
+      const arrow = document.querySelector(".ruler-marker")!.getBoundingClientRect();
+      return Math.abs(stop.top + stop.height / 2 - arrow.top - arrow.height / 2);
+    })).toBeLessThan(1);
+  }
+  const contact = page.locator(".ruler-milestone").filter({ hasText: "Contact" });
+  await expect(contact).toHaveAttribute("aria-current", "location");
+  expect(await contact.evaluate(element => {
+    const button = element.getBoundingClientRect();
+    const arrow = document.querySelector(".ruler-marker")!.getBoundingClientRect();
+    return Math.abs(button.top + button.height / 2 - arrow.top - arrow.height / 2);
+  })).toBeLessThan(1);
 });
 
 test("nested projects become active and navigation targets the correct project", async ({ page }) => {
@@ -80,6 +73,16 @@ test("scroll marker follows the scrollable page, including after layout growth",
     const marker = element.getBoundingClientRect();
     const rail = document.querySelector(".ruler-track")!.getBoundingClientRect();
     return Math.abs((marker.top + marker.height / 2 - rail.top) / rail.height - scrollY / (document.documentElement.scrollHeight - innerHeight));
+  })).toBeLessThan(0.005);
+  await expect.poll(() => page.locator(".ruler-stop").evaluateAll(elements => {
+    const rail = document.querySelector(".ruler-track")!.getBoundingClientRect();
+    const scrollable = document.documentElement.scrollHeight - innerHeight;
+    return Math.max(...elements.map(element => {
+      const section = document.querySelector(`[data-scroll-label="${element.getAttribute("data-label")}"]`)!;
+      const expected = Math.min(1, (section.getBoundingClientRect().top + scrollY) / scrollable);
+      const stop = element.getBoundingClientRect();
+      return Math.abs((stop.top + stop.height / 2 - rail.top) / rail.height - expected);
+    }));
   })).toBeLessThan(0.005);
 });
 
