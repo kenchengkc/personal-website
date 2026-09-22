@@ -1,5 +1,19 @@
 import { expect, test } from "@playwright/test";
 
+test("the initial document stays dark before external styles or scripts load", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.route("**/*.css", route => route.abort());
+  await page.goto("/");
+  const colors = await page.locator("html").evaluate(element => ({
+    background: getComputedStyle(element).backgroundColor,
+    scheme: getComputedStyle(element).colorScheme,
+  }));
+  expect(colors).toEqual({ background: "rgb(10, 10, 10)", scheme: "dark" });
+  await expect(page.locator(".hero-copy h1")).toBeVisible();
+  await context.close();
+});
+
 test("rain is present before JavaScript loads", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 1400 } });
   const page = await context.newPage();

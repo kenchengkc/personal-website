@@ -21,6 +21,7 @@ export function BinaryRainArtwork() {
     let elapsed = 0;
     let lastTime = 0;
     let visible = false;
+    let started = false;
     let complete = false;
     let disposed = false;
 
@@ -42,25 +43,39 @@ export function BinaryRainArtwork() {
         elapsed = ASSEMBLY_DURATION;
         node!.dataset.phase = "complete";
         renderer!.draw(elapsed);
-      } else if (visible && !document.hidden && !complete) {
+      } else if (started && visible && !document.hidden && !complete) {
         frame = requestAnimationFrame(tick);
       }
+    }
+
+    function updateVisibility() {
+      const bounds = canvas!.getBoundingClientRect();
+      const container = node!.getBoundingClientRect();
+      // The artwork clips the canvas on desktop; measure its displayed height.
+      const top = Math.max(bounds.top, container.top);
+      const bottom = Math.min(bounds.bottom, container.bottom);
+      const visibleHeight = Math.max(0, Math.min(bottom, window.innerHeight) - Math.max(top, 0));
+      const nextVisible = visibleHeight > 0;
+      const nextStarted = started || (window.scrollY > 0 && visibleHeight > (bottom - top) * 0.7);
+      if (visible === nextVisible && started === nextStarted) return;
+      visible = nextVisible;
+      started = nextStarted;
+      syncAnimation();
     }
 
     function resize() {
       renderer!.resize();
       renderer!.draw(elapsed);
       node!.dataset.ready = "true";
+      updateVisibility();
     }
 
     resize();
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      syncAnimation();
-    }, { threshold: 0.12 });
-    observer.observe(node);
+    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 0.7, 1] });
+    observer.observe(canvas);
+    window.addEventListener("scroll", updateVisibility, { passive: true });
     reducedMotion.addEventListener("change", syncAnimation);
     document.addEventListener("visibilitychange", syncAnimation);
     // A restored tab should get a fresh backing store if its pixel ratio changed.
@@ -72,6 +87,7 @@ export function BinaryRainArtwork() {
       disposed = true;
       cancelAnimationFrame(frame);
       observer.disconnect();
+      window.removeEventListener("scroll", updateVisibility);
       resizeObserver.disconnect();
       reducedMotion.removeEventListener("change", syncAnimation);
       document.removeEventListener("visibilitychange", syncAnimation);
@@ -80,7 +96,7 @@ export function BinaryRainArtwork() {
   }, []);
 
   return (
-    <div ref={ref} className="hero-binary-art" aria-hidden="true">
+    <div ref={ref} className="hero-binary-art" data-phase="waiting" aria-hidden="true">
       <div className="hero-brain-stage">
         <picture>
           <source media="(prefers-reduced-motion: reduce)" srcSet="/images/brain-still.webp" />

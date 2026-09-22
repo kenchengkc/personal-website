@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
@@ -13,6 +13,11 @@ const inter = Inter({
 });
 
 const isVercel = process.env.VERCEL === "1";
+
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0a0a0a",
+};
 
 export const metadata: Metadata = {
   title: "Ken Cheng",
@@ -36,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} style={{ backgroundColor: "#0a0a0a", color: "#e7e7e4", colorScheme: "dark" }}>
       <body>
         <ScrollExperience />
         {children}

@@ -6,6 +6,44 @@ declare global {
   }
 }
 
+test("assembly waits for scrolling past 70% of the waterfall height", async ({ page }) => {
+  await page.goto("/");
+  const artwork = page.locator(".hero-binary-art");
+  const canvas = page.locator(".hero-brain-canvas");
+  await expect(artwork).toHaveAttribute("data-ready", "true");
+  await canvas.evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
+    const top = Math.max(bounds.top, container.top);
+    const height = Math.min(bounds.bottom, container.bottom) - top;
+    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.69, behavior: "instant" });
+  });
+  await page.waitForTimeout(400);
+  await expect(artwork).toHaveAttribute("data-phase", "waiting");
+  await canvas.evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
+    const top = Math.max(bounds.top, container.top);
+    const height = Math.min(bounds.bottom, container.bottom) - top;
+    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.71, behavior: "instant" });
+  });
+  await expect(artwork).toHaveAttribute("data-phase", "assembling");
+  // The threshold starts the transition once; it does not interrupt it afterward.
+  await page.evaluate(() => window.scrollBy({ top: -30, behavior: "instant" }));
+  await expect(artwork).toHaveAttribute("data-phase", "complete", { timeout: 5000 });
+});
+
+test("a tall viewport still waits for the first scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1800 });
+  await page.goto("/");
+  const artwork = page.locator(".hero-binary-art");
+  await expect(artwork).toHaveAttribute("data-ready", "true");
+  await page.waitForTimeout(400);
+  await expect(artwork).toHaveAttribute("data-phase", "waiting");
+  await page.evaluate(() => window.scrollTo({ top: 10, behavior: "instant" }));
+  await expect(artwork).toHaveAttribute("data-phase", "assembling");
+});
+
 test("brain assembly bounds repaint work and stops drawing after completion", async ({ page }) => {
   await page.addInitScript(() => {
     window.brainDraws = { total: 0, peak: 0 };
