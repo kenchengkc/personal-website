@@ -188,11 +188,6 @@ export const otherWork: OtherWork[] = [
     detail: "Highest division of the USA Computing Olympiad, promoted from Gold with a 1000/1000 score.",
   },
   {
-    title: "High School Big Data & AI Challenge",
-    meta: "National Champion · National Research Council Canada, 2024",
-    detail: "Computer vision with Python and PyTorch.",
-  },
-  {
     title: "Need for Speed",
     meta: "Canada-Wide Science Fair · Gold Medal, 2022",
     detail: "Computational fluid dynamics and neural surrogate modeling for Formula 1 aerodynamics, achieving a 43% drag reduction.",
