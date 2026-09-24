@@ -393,6 +393,24 @@ textarea {
   color: var(--ink);
 }
 
+.link-arrow {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: -0.08em;
+  opacity: 0.65;
+  transition: opacity 160ms ease;
+}
+
+a:hover .link-arrow,
+a:focus-visible .link-arrow { opacity: 1; }
+
+.hero-links .link-arrow,
+.contact-links .link-arrow { margin-left: -3px; }
+
+.project-links .link-arrow,
+.research-row .link-arrow,
+.contact-email .link-arrow { margin-left: 5px; }
+
 .hero-binary-art {
   position: relative;
   width: min(calc(100% - 24px), 1240px);
@@ -1191,7 +1209,10 @@ textarea {
 }
 
 .publication-row {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 13px;
+  align-items: center;
+  gap: 18px;
   padding: 26px 0;
   border-bottom: 1px solid var(--line);
 }

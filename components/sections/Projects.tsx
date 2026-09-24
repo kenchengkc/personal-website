@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "@/components/icons/Icons";
 import { AnimatedMetric } from "@/components/projects/AnimatedMetric";
 import { ProjectDemo } from "@/components/projects/ProjectDemos";
 import { featuredProjects, otherWork } from "@/data/portfolio";
@@ -12,7 +13,7 @@ export function Projects() {
         data-scroll-label="WORK"
       >
         <div className="reading-column section-intro" data-reveal>
-          <p className="section-kicker">Selected work</p>
+          <p className="section-kicker">Selected Work</p>
           <h2>Things I have built.</h2>
           <p>
             A few projects where the implementation matters as much as the idea.
@@ -68,12 +69,12 @@ export function Projects() {
                   <div className="project-links">
                     {project.href && project.hrefLabel ? (
                       <a href={project.href} target="_blank" rel="noopener noreferrer">
-                        {project.hrefLabel}
+                        {project.hrefLabel}<ArrowUpRight />
                       </a>
                     ) : null}
                     {project.secondaryHref && project.secondaryLabel ? (
                       <a href={project.secondaryHref} target="_blank" rel="noopener noreferrer">
-                        {project.secondaryLabel}
+                        {project.secondaryLabel}<ArrowUpRight />
                       </a>
                     ) : null}
                   </div>
@@ -100,7 +101,7 @@ export function Projects() {
         data-scroll-label="RESEARCH"
       >
         <div className="reading-column">
-          <p className="section-kicker" data-reveal>Research and other experience</p>
+          <p className="section-kicker" data-reveal>Research and Other Experience</p>
 
           <div className="research-list">
             {otherWork.map((item) => {
@@ -115,7 +116,7 @@ export function Projects() {
                 >
                   <div>
                     <h3 className={isPlatinum ? "platinum-title" : undefined}>
-                      {item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a> : item.title}
+                      {item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.title}<ArrowUpRight /></a> : item.title}
                     </h3>
                     <span
                       className={

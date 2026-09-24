@@ -25,7 +25,7 @@ export function Columbia() {
         <div className="columbia-heading" data-reveal>
           <div>
             <h2>Columbia University</h2>
-            <p>B.S. Computer Science · Statistics minor</p>
+            <p>B.S. Computer Science · Statistics Minor</p>
             <p>GPA 3.8 · Expected May 2028</p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export function Columbia() {
         </div>
 
         <div className="coursework-block" data-reveal>
-          <span className="coursework-label">Selected coursework</span>
+          <span className="coursework-label">Selected Coursework</span>
           <div className="coursework-grid">
             {coursework.map((course, index) => (
               <span key={course}>

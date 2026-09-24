@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "@/components/icons/Icons";
 import { publications } from "@/data/portfolio";
 
 export function BlogList() {
@@ -33,6 +34,7 @@ export function BlogList() {
                 </div>
                 <h3>{publication.title}</h3>
               </div>
+              <ArrowUpRight className="publication-arrow" />
             </a>
           ))}
         </div>

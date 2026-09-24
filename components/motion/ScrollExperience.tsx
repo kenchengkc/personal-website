@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 type Milestone = { label: string; title: string; parent: string | null; number: number; position: number; labelY: number };
 const TITLES: Record<string, string> = {
   INTRO: "Introduction", COLUMBIA: "Education", SKILLS: "Skills",
-  WORK: "Selected work", AMAZON: "Amazon", QUANTIV: "Quantiv",
-  RETRIEVAL: "SEC retrieval", EMBERS: "Embers", RESEARCH: "Research",
+  WORK: "Selected Work", AMAZON: "Amazon", QUANTIV: "Quantiv",
+  RETRIEVAL: "SEC Retrieval", EMBERS: "Embers", RESEARCH: "Research",
   PAPERS: "Publications", CONTACT: "Contact",
 };
 const TICKS = Array.from({ length: 54 }, (_, i) => i);
@@ -151,7 +151,7 @@ export function ScrollExperience() {
         ))}
       </svg>
       <div className="ruler-contents">
-        <span className="ruler-heading">On this page</span>
+        <span className="ruler-heading">On This Page</span>
         <ol className="ruler-milestones">
           {milestones.map(milestone => (
             <li className="ruler-section" key={milestone.label} style={{ top: milestone.labelY }}>

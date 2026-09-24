@@ -33,7 +33,7 @@ export type FeaturedProject = {
 export const featuredProjects: FeaturedProject[] = [
   {
     name: "Amazon",
-    eyebrow: "Software development engineer intern",
+    eyebrow: "Software Development Engineer Intern",
     date: "Jun–Aug 2026",
     summary:
       "Owned design, testing, rollout, and documentation of shared configuration infrastructure for Amazon SCOT’s long-term supply-chain forecasting.",
@@ -62,8 +62,8 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Quantiv",
-    eyebrow: "Founder & lead engineer",
-    date: "Jul 2025 – present",
+    eyebrow: "Founder & Lead Engineer",
+    date: "Jul 2025 – Present",
     summary:
       "Built and launched an earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
     details: [
@@ -94,8 +94,8 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Financial Document Retrieval Engine",
-    eyebrow: "Research infrastructure",
-    date: "Jun 2026 – present",
+    eyebrow: "Research Infrastructure",
+    date: "Jun 2026 – Present",
     summary:
       "Built hybrid lexical and vector retrieval over SEC filings, with citation verification, evidence-based abstention, and point-in-time filtering.",
     details: [
@@ -129,7 +129,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Embers",
-    eyebrow: "Machine learning",
+    eyebrow: "Machine Learning",
     date: "Apr 2025 · LA Hacks",
     summary:
       "Led a four-person team building a video-to-inventory app with YOLO object tracking, cross-frame deduplication, Gemini valuation, and Supabase persistence.",
@@ -167,24 +167,24 @@ type OtherWork = { title: string; meta: string; detail: string; href?: string };
 export const otherWork: OtherWork[] = [
   {
     title: "Creative Machines Lab",
-    meta: "Columbia · Undergraduate deep learning researcher · Sep 2026 – present",
+    meta: "Columbia · Undergraduate Deep Learning Researcher · Sep 2026 – Present",
     detail: "Developing LLM evaluation and activation-probing tools to study deceptive communication separately from factual errors and unsupported claims. Collected 160 Qwen2.5-7B responses under a fixed development protocol, with scenario-level split checks and annotation gates.",
   },
   {
     title: "Wasserstein Regimes",
-    meta: "Optimal transport & unsupervised learning · Sep 2026 – present",
+    meta: "Optimal Transport & Unsupervised Learning · Sep 2026 – Present",
     detail: "Compared nine clustering methods across five ETFs using chronological folds, purged holdouts, and synthetic controls. Scale explained 95–98% of raw Wasserstein centroid separation, limiting claims of added distributional information.",
     href: "https://github.com/kenchengkc/wasserstein-regimes",
   },
   {
     title: "GC-INF",
-    meta: "Sole-author publication · IEEE ITSC, 2023",
+    meta: "Sole-Author Publication · IEEE ITSC, 2023",
     detail: "Developed a graph-convolutional and Informer model, evaluating four baselines across three horizons. Reduced 15-minute turning-ratio RMSE by 24% versus STGCN on SUMO-simulated traffic data. IEEE ITSC Session Chair and Team Canada ISEF finalist (Top 30).",
     href: "https://ieeexplore.ieee.org/abstract/document/10422188",
   },
   {
     title: "Midnight Sun Solar Car Team",
-    meta: "University of Waterloo · Software engineer, optimization & data · Aug 2023 – Mar 2024",
+    meta: "University of Waterloo · Software Engineer, Optimization & Data · Aug 2023 – Mar 2024",
     detail: "Modeled race-day energy from sunlight, speed, and route telemetry using dynamic programming and vectorized NumPy Dijkstra routing. Reduced predicted energy shortfall by around 20% and scenario runtime to under 30 seconds.",
   },
   {
@@ -216,7 +216,7 @@ export const publications = [
     venue: "IEEE Intelligent Transportation Systems Conference",
     date: "2023",
     citations: 1,
-    authorship: "Sole author",
+    authorship: "Sole Author",
     href:
       "https://ieeexplore.ieee.org/abstract/document/10422188",
   },

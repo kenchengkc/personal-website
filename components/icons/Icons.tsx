@@ -17,20 +17,20 @@ export const Arrow = ({ size = 14, className }: IconProps) => (
   </svg>
 );
 
-export const ArrowUpRight = ({ size = 14, className }: IconProps) => (
+export const ArrowUpRight = ({ size = 13, className }: IconProps) => (
   <svg
     width={size}
     height={size}
-    viewBox="0 0 24 24"
+    viewBox="0 0 16 16"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2.4"
+    strokeWidth="1.4"
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden
-    className={className}
+    className={className ? `link-arrow ${className}` : "link-arrow"}
   >
-    <path d="M7 17 17 7M8 7h9v9" />
+    <path d="M3 13 13 3M3 3h10v10" />
   </svg>
 );
 

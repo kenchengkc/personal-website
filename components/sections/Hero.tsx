@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BinaryRainArtwork } from "@/components/hero/BinaryRainArtwork";
-import { GitHub, LinkedIn, Resume, Scholar } from "@/components/icons/Icons";
+import { ArrowUpRight, GitHub, LinkedIn, Resume, Scholar } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -21,7 +21,7 @@ export function Hero() {
           priority
         />
         <strong>Ken Cheng</strong>
-        <span>Columbia CS · ML researcher · Quantiv founder</span>
+        <span>Columbia CS · ML Researcher · Quantiv Founder</span>
       </div>
 
       <div className="scroll-prompt">
@@ -36,9 +36,9 @@ export function Hero() {
           behavior at Columbia’s Creative Machines Lab.
         </p>
         <div className="hero-proof" aria-label="Selected credentials">
-          <span>Former Amazon SCOT SDE intern</span>
+          <span>Former Amazon SCOT SDE Intern</span>
           <i />
-          <span>IEEE sole author</span>
+          <span>IEEE Sole Author</span>
           <i />
           <span className="hero-platinum">USACO Platinum · 1000/1000 Gold</span>
         </div>
@@ -48,18 +48,22 @@ export function Hero() {
         <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
           <Resume />
           <span>Resume</span>
+          <ArrowUpRight />
         </a>
         <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
           <GitHub />
           <span>GitHub</span>
+          <ArrowUpRight />
         </a>
         <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
           <LinkedIn />
           <span>LinkedIn</span>
+          <ArrowUpRight />
         </a>
         <a href={site.socials.scholar} target="_blank" rel="noopener noreferrer">
           <Scholar />
           <span>Google Scholar</span>
+          <ArrowUpRight />
         </a>
       </div>
 
