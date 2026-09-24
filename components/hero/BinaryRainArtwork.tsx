@@ -6,6 +6,8 @@ import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles"
 import { createBrainRenderer } from "./brain-renderer";
 import { loadBrainAtlas } from "./load-brain-atlas";
 
+const ASSEMBLY_VISIBILITY_THRESHOLD = 0.35;
+
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -63,7 +65,7 @@ export function BinaryRainArtwork() {
       const bottom = Math.min(bounds.bottom, container.bottom);
       const visibleHeight = Math.max(0, Math.min(bottom, window.innerHeight) - Math.max(top, 0));
       const nextVisible = visibleHeight > 0;
-      const nextStarted = started || (window.scrollY > 0 && visibleHeight > (bottom - top) * 0.5);
+      const nextStarted = started || (window.scrollY > 0 && visibleHeight > (bottom - top) * ASSEMBLY_VISIBILITY_THRESHOLD);
       if (visible === nextVisible && started === nextStarted) return;
       visible = nextVisible;
       started = nextStarted;
@@ -90,7 +92,7 @@ export function BinaryRainArtwork() {
     });
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 0.5, 1] });
+    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, ASSEMBLY_VISIBILITY_THRESHOLD, 1] });
     observer.observe(canvas);
     window.addEventListener("scroll", updateVisibility, { passive: true });
     reducedMotion.addEventListener("change", syncAnimation);

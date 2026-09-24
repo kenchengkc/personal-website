@@ -6,9 +6,9 @@ declare global {
   }
 }
 
-test("rain keeps moving while assembly waits for scrolling past 50%", async ({ page }) => {
+test("rain keeps moving while assembly waits for scrolling past 35%", async ({ page }) => {
   // Keep the initial artwork below the trigger so both sides can be reached by scrolling.
-  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto("/");
   const artwork = page.locator(".hero-binary-art");
   const canvas = page.locator(".hero-brain-canvas");
@@ -18,7 +18,7 @@ test("rain keeps moving while assembly waits for scrolling past 50%", async ({ p
     const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
     const top = Math.max(bounds.top, container.top);
     const height = Math.min(bounds.bottom, container.bottom) - top;
-    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.49, behavior: "instant" });
+    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.34, behavior: "instant" });
   });
   const firstFrame = await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
   await expect.poll(async () => (await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL())) !== firstFrame).toBe(true);
@@ -30,7 +30,7 @@ test("rain keeps moving while assembly waits for scrolling past 50%", async ({ p
     const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
     const top = Math.max(bounds.top, container.top);
     const height = Math.min(bounds.bottom, container.bottom) - top;
-    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.51, behavior: "instant" });
+    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.36, behavior: "instant" });
   });
   await expect(artwork).toHaveAttribute("data-phase", "assembling");
   // The threshold starts the transition once; it does not interrupt it afterward.
