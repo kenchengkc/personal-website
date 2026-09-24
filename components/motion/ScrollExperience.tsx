@@ -151,7 +151,6 @@ export function ScrollExperience() {
         ))}
       </svg>
       <div className="ruler-contents">
-        <span className="ruler-heading">On This Page</span>
         <ol className="ruler-milestones">
           {milestones.map(milestone => (
             <li className="ruler-section" key={milestone.label} style={{ top: milestone.labelY }}>

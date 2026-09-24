@@ -175,14 +175,6 @@ textarea {
   flex-direction: column;
 }
 
-.ruler-heading {
-  padding: 0 8px;
-  color: var(--ink-3);
-  font-size: 8px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
 .ruler-milestones {
   position: absolute;
   inset: 32px 0;
