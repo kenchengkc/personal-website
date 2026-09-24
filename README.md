@@ -1,7 +1,7 @@
 # Ken Cheng: personal site
 
-Portfolio and landing site for **kencheng.dev**: Columbia CS, projects (Quantiv,
-Embers, research, competitions), publications list, optional MDX posts, resume
+Portfolio and landing site for **kencheng.me**: Columbia CS, Creative Machines Lab,
+projects (Quantiv, FDRE, Embers), research, publications, optional MDX posts, resume
 download, and a contact form backed by **Resend**.
 
 The UI is mostly bespoke CSS (see `app/globals.css`, `v2-*` layout) with
@@ -42,7 +42,7 @@ Set the same values in the Vercel project for production.
 | Area | Location |
 | ---- | -------- |
 | Site copy, links, resume path | `lib/site.ts` |
-| Homepage sections (hero, about, projects, contact, etc.) | `components/sections/*.tsx`. Project cards and copy live in **`Projects.tsx`**. |
+| Homepage sections (hero, about, projects, contact, etc.) | `components/sections/*.tsx`. Project metrics, descriptions, research, and publication records live in **`data/portfolio.ts`**. |
 | Publications strip on the homepage | **`components/sections/BlogList.tsx`** (static list; links out to papers) |
 | Long-form posts under `/blog` | **`content/blog/*.mdx`** (or `.md`) with YAML front matter |
 | Contact API | `app/api/contact/route.ts` |
@@ -63,6 +63,13 @@ Post body…
 Static files (logos, project media, PDF resume, credentials) live under
 **`public/`** (e.g. `public/resume/`, `public/images/`, `public/media/`). Paths
 are referenced as URLs from `/…` in components and `lib/site.ts`.
+
+The September 24, 2026 content sync uses the ML/data and software engineering
+resumes for current metrics and dates, plus the quantitative resume for additional
+experience. The main resume download is the ML/data version. Keep evaluation
+qualifications with the results: Quantiv's 31% weighted MAE improvement is from
+development validation; Amazon's comparison-time reduction is survey-based; FDRE
+recall and latency figures describe specific benchmarks.
 
 ## Checks
 

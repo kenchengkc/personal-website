@@ -1,14 +1,16 @@
 const skillGroups = [
   {
     label: "Languages",
-    skills: ["Python", "C++", "TypeScript", "SQL"],
+    skills: ["Python", "C++", "TypeScript", "Java", "JavaScript", "SQL", "Bash"],
   },
   {
     label: "ML + NLP",
     skills: [
       "PyTorch",
-      "LLMs",
-      "Transformers",
+      "Hugging Face Transformers",
+      "scikit-learn",
+      "LLM Evaluation",
+      "Information Retrieval",
       "RAG",
       "Embeddings",
       "Computer Vision",
@@ -22,13 +24,16 @@ const skillGroups = [
     skills: [
       "Pandas",
       "NumPy",
+      "SciPy",
       "PostgreSQL",
       "pgvector",
       "DuckDB",
       "Parquet",
+      "Redis",
       "FastAPI",
       "Docker",
       "Git",
+      "Linux",
     ],
   },
   {
@@ -36,12 +41,13 @@ const skillGroups = [
     skills: [
       "AWS Lambda",
       "S3",
-      "Glue",
       "CDK",
       "React",
+      "Next.js",
       "Flask",
       "Supabase",
-      "LangGraph",
+      "GitHub Actions",
+      "CI/CD",
     ],
   },
   {
@@ -49,9 +55,11 @@ const skillGroups = [
     skills: [
       "Feature Engineering",
       "Model Evaluation",
-      "Time-Series Validation",
+      "Walk-Forward Validation",
       "Quantile Regression",
-      "Experiment Tracking",
+      "Activation Probing",
+      "Options Pricing",
+      "Backtesting",
     ],
   },
 ] as const;

@@ -25,6 +25,7 @@ export function BlogList() {
                 <div className="publication-meta">
                   <span>
                     {publication.venue} · {publication.date}
+                    {publication.authorship ? ` · ${publication.authorship}` : ""}
                   </span>
                   <span className="citation-tag">
                     {publication.citations} citation{publication.citations === 1 ? "" : "s"}

@@ -20,6 +20,7 @@ export type FeaturedProject = {
   eyebrow: string;
   date: string;
   summary: string;
+  details?: string[];
   metrics: FeaturedMetric[];
   stack: string;
   href?: string;
@@ -32,10 +33,13 @@ export type FeaturedProject = {
 export const featuredProjects: FeaturedProject[] = [
   {
     name: "Amazon",
-    eyebrow: "Software engineering",
-    date: "Summer 2026",
+    eyebrow: "Software development engineer intern",
+    date: "Jun–Aug 2026",
     summary:
-      "Built shared configuration infrastructure behind long-term supply-chain forecasting across 17 packages and services.",
+      "Owned design, testing, rollout, and documentation of shared configuration infrastructure for Amazon SCOT’s long-term supply-chain forecasting.",
+    details: [
+      "Used by engineers, managers, economists, and scientists. Automated dependency tracing from research model outputs to downstream configurations; the reduction in manual comparison time is based on user surveys.",
+    ],
     metrics: [
       {
         value: "17",
@@ -43,9 +47,9 @@ export const featuredProjects: FeaturedProject[] = [
         count: { from: 0, to: 17, durationMs: 1700 },
       },
       {
-        value: "13",
-        label: "engineers",
-        count: { from: 0, to: 13, durationMs: 1700 },
+        value: "30+",
+        label: "cross-functional users",
+        count: { from: 0, to: 30, suffix: "+", durationMs: 1700 },
       },
       {
         value: "~90%",
@@ -58,10 +62,14 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Quantiv",
-    eyebrow: "Founder, product + ML",
-    date: "2025 - present",
+    eyebrow: "Founder & lead engineer",
+    date: "Jul 2025 – present",
     summary:
-      "Options and earnings analytics that turns live market data into expected-move forecasts and searchable research.",
+      "Built and launched an earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
+    details: [
+      "On development validation, the models achieved 31% lower weighted MAE than the options-implied baseline. Forecast pipelines use chronological validation, data-freshness checks, and model-drift monitoring.",
+      "Nightly ingestion and batch inference run on DuckDB/Parquet and GitHub Actions. FastAPI model serving uses signed artifacts, SHA-256 verification, atomic activation, and recovery to the previous verified model; Redis shares live quotes.",
+    ],
     metrics: [
       {
         value: "120k+",
@@ -74,12 +82,12 @@ export const featuredProjects: FeaturedProject[] = [
         count: { from: 0, to: 10, suffix: "k+", durationMs: 1800 },
       },
       {
-        value: "~100",
+        value: "120+",
         label: "monthly active users",
-        count: { from: 0, to: 100, prefix: "~", durationMs: 1900 },
+        count: { from: 0, to: 120, suffix: "+", durationMs: 1900 },
       },
     ],
-    stack: "Next.js, Python, LightGBM, DuckDB, Postgres, Redis",
+    stack: "Next.js, TypeScript, Python, LightGBM, DuckDB, Parquet, PostgreSQL, Redis, FastAPI",
     href: "https://usequantiv.com",
     hrefLabel: "Open Quantiv",
     demo: "quantiv",
@@ -87,27 +95,31 @@ export const featuredProjects: FeaturedProject[] = [
   {
     name: "Financial Document Retrieval Engine",
     eyebrow: "Research infrastructure",
-    date: "2026 - present",
+    date: "Jun 2026 – present",
     summary:
-      "A point-in-time SEC research engine with hybrid retrieval, citation verification, and reproducible cross-sectional analysis.",
+      "Built hybrid lexical and vector retrieval over SEC filings, with citation verification, evidence-based abstention, and point-in-time filtering.",
+    details: [
+      "Multi-query expansion raised Recall@5 from 0.152 to 0.212 on a 33-query benchmark. Half-precision vectors reduced database size by 27%, from 15 to 11 GB.",
+      "Batched embeddings, ANN-first search, and bounded candidate pools cut cross-company retrieval p95 from approximately 59 seconds to 1.74 seconds in a retrieval benchmark.",
+    ],
     metrics: [
       {
-        value: "2.71M",
-        label: "parsed chunks",
-        count: { from: 0, to: 2.71, decimals: 2, suffix: "M", durationMs: 2000 },
+        value: "3.04M",
+        label: "embedded passages",
+        count: { from: 0, to: 3.04, decimals: 2, suffix: "M", durationMs: 2000 },
       },
       {
-        value: "2,762",
+        value: "3,204",
         label: "SEC filings",
-        count: { from: 0, to: 2762, thousands: true, durationMs: 2000 },
+        count: { from: 0, to: 3204, thousands: true, durationMs: 2000 },
       },
       {
-        value: "100%",
-        label: "issuer Recall@3",
-        count: { from: 0, to: 100, suffix: "%", durationMs: 1800 },
+        value: "75+",
+        label: "monthly active users",
+        count: { from: 0, to: 75, suffix: "+", durationMs: 1800 },
       },
     ],
-    stack: "FastAPI, Postgres, pgvector, LangGraph, Next.js",
+    stack: "Python, FastAPI, PostgreSQL, pgvector, Next.js",
     href: "https://thefdre.com",
     hrefLabel: "Open Financial Document Retrieval Engine",
     secondaryHref:
@@ -118,9 +130,12 @@ export const featuredProjects: FeaturedProject[] = [
   {
     name: "Embers",
     eyebrow: "Machine learning",
-    date: "LA Hacks 2025",
+    date: "Apr 2025 · LA Hacks",
     summary:
-      "A claims-ready home inventory from a short video walkthrough, with real-time detection, valuation, and voice assistance.",
+      "Led a four-person team building a video-to-inventory app with YOLO object tracking, cross-frame deduplication, Gemini valuation, and Supabase persistence.",
+    details: [
+      "Integrated voice search and item snapshots into the inventory workflow. Placed Top 5 of 172 teams and won the Google Gemini and Financial Tech prizes at LA Hacks 2025.",
+    ],
     metrics: [
       {
         value: "Top 5",
@@ -129,14 +144,14 @@ export const featuredProjects: FeaturedProject[] = [
         award: true,
       },
       {
-        value: "90%+",
-        label: "detection accuracy",
-        count: { from: 0, to: 90, suffix: "%+", durationMs: 1800 },
+        value: "4",
+        label: "person team",
+        count: { from: 0, to: 4, durationMs: 1800 },
       },
       {
-        value: "3",
-        label: "awards",
-        count: { from: 0, to: 3, durationMs: 1500 },
+        value: "2",
+        label: "category prizes",
+        count: { from: 0, to: 2, durationMs: 1500 },
         award: true,
       },
     ],
@@ -147,16 +162,40 @@ export const featuredProjects: FeaturedProject[] = [
   },
 ];
 
-export const otherWork = [
+type OtherWork = { title: string; meta: string; detail: string; href?: string };
+
+export const otherWork: OtherWork[] = [
+  {
+    title: "Creative Machines Lab",
+    meta: "Columbia · Undergraduate deep learning researcher · Sep 2026 – present",
+    detail: "Developing LLM evaluation and activation-probing tools to study deceptive communication separately from factual errors and unsupported claims. Collected 160 Qwen2.5-7B responses under a fixed development protocol, with scenario-level split checks and annotation gates.",
+  },
+  {
+    title: "Wasserstein Regimes",
+    meta: "Optimal transport & unsupervised learning · Sep 2026 – present",
+    detail: "Compared nine clustering methods across five ETFs using chronological folds, purged holdouts, and synthetic controls. Scale explained 95–98% of raw Wasserstein centroid separation, limiting claims of added distributional information.",
+    href: "https://github.com/kenchengkc/wasserstein-regimes",
+  },
   {
     title: "GC-INF",
-    meta: "IEEE ITSC, 2023",
-    detail: "Traffic forecasting with a Graph ConvNet and Informer, 24% lower RMSE than STGCN.",
+    meta: "Sole-author publication · IEEE ITSC, 2023",
+    detail: "Developed a graph-convolutional and Informer model, evaluating four baselines across three horizons. Reduced 15-minute turning-ratio RMSE by 24% versus STGCN on SUMO-simulated traffic data. IEEE ITSC Session Chair and Team Canada ISEF finalist (Top 30).",
+    href: "https://ieeexplore.ieee.org/abstract/document/10422188",
+  },
+  {
+    title: "Midnight Sun Solar Car Team",
+    meta: "University of Waterloo · Software engineer, optimization & data · Aug 2023 – Mar 2024",
+    detail: "Modeled race-day energy from sunlight, speed, and route telemetry using dynamic programming and vectorized NumPy Dijkstra routing. Reduced predicted energy shortfall by around 20% and scenario runtime to under 30 seconds.",
   },
   {
     title: "USACO Platinum",
     meta: "Top 1% nationally · 2023",
     detail: "Highest USACO division, promoted from Gold with a 1000/1000 score.",
+  },
+  {
+    title: "High School Big Data & AI Challenge",
+    meta: "National Champion · National Research Council Canada, 2024",
+    detail: "Computer vision with Python and PyTorch.",
   },
   {
     title: "Need for Speed",
@@ -168,7 +207,7 @@ export const otherWork = [
     meta: "UF SSTP · Best Paper, 2023",
     detail: "ML-assisted column generation for vehicle routing, 15% faster C++ solver.",
   },
-] as const;
+];
 
 export const publications = [
   {
@@ -177,8 +216,9 @@ export const publications = [
     venue: "IEEE Intelligent Transportation Systems Conference",
     date: "2023",
     citations: 1,
+    authorship: "Sole author",
     href:
-      "https://www.researchgate.net/publication/378189206_GC-INF_A_Novel_Adaptive_Traffic_Control_System_using_Machine_Learning_for_Turning_Ratio_Predictions",
+      "https://ieeexplore.ieee.org/abstract/document/10422188",
   },
   {
     title:
@@ -186,6 +226,7 @@ export const publications = [
     venue: "Highlights in Science, Engineering and Technology",
     date: "2023",
     citations: 2,
+    authorship: null,
     href:
       "https://www.researchgate.net/publication/371141171_A_Need_For_Speed_Enhancing_F1_Race_Cars_with_a_Novel_Computational_Fluid_Dynamics_and_Machine_Learning_Method",
   },

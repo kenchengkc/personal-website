@@ -1074,6 +1074,16 @@ textarea {
   line-height: 1.6;
 }
 
+.project-details {
+  margin-top: 20px;
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.project-details p { margin: 0; }
+.project-details p + p { margin-top: 10px; }
+
 .project-links {
   display: flex;
   flex-wrap: wrap;
@@ -1084,6 +1094,7 @@ textarea {
 }
 
 .project-links a,
+.research-row h3 a,
 .contact-email,
 .contact-links a {
   text-decoration: underline;
@@ -1096,6 +1107,7 @@ textarea {
 }
 
 .project-links a:hover,
+.research-row h3 a:hover,
 .contact-email:hover,
 .contact-links a:hover {
   color: var(--ink);

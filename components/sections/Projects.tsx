@@ -56,6 +56,12 @@ export function Projects() {
                   })}
                 </ul>
 
+                {project.details && (
+                  <div className="project-details">
+                    {project.details.map(detail => <p key={detail}>{detail}</p>)}
+                  </div>
+                )}
+
                 <p className="project-stack">{project.stack}</p>
 
                 {(project.href || project.secondaryHref) && (
@@ -94,12 +100,12 @@ export function Projects() {
         data-scroll-label="RESEARCH"
       >
         <div className="reading-column">
-          <p className="section-kicker" data-reveal>Research and other work</p>
+          <p className="section-kicker" data-reveal>Research and other experience</p>
 
           <div className="research-list">
             {otherWork.map((item) => {
               const isPlatinum = /platinum/i.test(`${item.title} ${item.meta}`);
-              const isGoldAward = /gold|best paper|winner/i.test(`${item.title} ${item.meta}`);
+              const isGoldAward = /gold|best paper|winner|champion/i.test(`${item.title} ${item.meta}`);
 
               return (
                 <article
@@ -109,7 +115,7 @@ export function Projects() {
                 >
                   <div>
                     <h3 className={isPlatinum ? "platinum-title" : undefined}>
-                      {item.title}
+                      {item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.title} ↗</a> : item.title}
                     </h3>
                     <span
                       className={

@@ -21,7 +21,7 @@ export function Hero() {
           priority
         />
         <strong>Ken Cheng</strong>
-        <span>Columbia CS · Quantiv founder · New York</span>
+        <span>Columbia CS · ML researcher · Quantiv founder</span>
       </div>
 
       <div className="scroll-prompt">
@@ -30,17 +30,17 @@ export function Hero() {
       </div>
 
       <div className="hero-copy">
-        <h1>ML systems for markets, forecasting, and financial research.</h1>
+        <h1>ML systems for forecasting, retrieval, and research.</h1>
         <p>
-          I build production systems: expected-move models, SEC retrieval,
-          and long-term forecasting infrastructure.
+          I build earnings forecasts and SEC retrieval systems, and study LLM
+          behavior at Columbia’s Creative Machines Lab.
         </p>
         <div className="hero-proof" aria-label="Selected credentials">
-          <span>Amazon SCOT SDE intern</span>
+          <span>Former Amazon SCOT SDE intern</span>
           <i />
-          <span>IEEE published</span>
+          <span>IEEE sole author</span>
           <i />
-          <span className="hero-platinum">USACO Platinum · Top 1% nationally</span>
+          <span className="hero-platinum">USACO Platinum · 1000/1000 Gold</span>
         </div>
       </div>
 

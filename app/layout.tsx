@@ -21,16 +21,15 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Ken Cheng",
-  description:
-    "Ken Cheng is a Columbia computer science student building software, machine learning, quantitative, and research systems.",
-  metadataBase: new URL("https://kencheng.dev"),
+  description: site.description,
+  metadataBase: new URL(site.url),
   icons: {
     icon: [{ url: "/images/kclogo.png", type: "image/png" }],
     apple: [{ url: "/images/kclogo.png", type: "image/png" }],
   },
   openGraph: {
     title: site.name,
-    description: site.tagline,
+    description: site.description,
     type: "website",
   },
 };

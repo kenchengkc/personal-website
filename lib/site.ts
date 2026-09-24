@@ -1,6 +1,8 @@
 export const site = {
   name: "Ken Cheng",
-  tagline: "CS @ Columbia · ML, Quant, Systems",
+  url: "https://kencheng.me",
+  tagline: "Columbia CS · LLM research · ML systems",
+  description: "Ken Cheng is a Columbia CS student, Creative Machines Lab researcher, and Quantiv founder building ML forecasting, retrieval, and data systems.",
   email: "kc3843@columbia.edu",
   phone: "(917) 431-3478",
   location: "New York, NY",
@@ -17,7 +19,7 @@ export const site = {
     fdre: "https://thefdre.com",
     fdreRepo: "https://github.com/kenchengkc/the-financial-document-retrieval-engine",
     gcinf:
-      "https://www.researchgate.net/publication/378189206_GC-INF_A_Novel_Adaptive_Traffic_Control_System_using_Machine_Learning_for_Turning_Ratio_Predictions",
+      "https://ieeexplore.ieee.org/abstract/document/10422188",
     f1cfd:
       "https://www.researchgate.net/publication/371141171_A_Need_For_Speed_Enhancing_F1_Race_Cars_with_a_Novel_Computational_Fluid_Dynamics_and_Machine_Learning_Method",
   },

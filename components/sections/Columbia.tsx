@@ -1,11 +1,13 @@
 export function Columbia() {
   const coursework = [
+    "Machine Learning",
+    "Natural Language Processing",
+    "Artificial Intelligence",
     "Advanced Programming in C",
     "Data Structures and Algorithms",
-    "Artificial Intelligence",
     "Databases",
-    "Natural Language Processing",
     "Probability Theory",
+    "Statistics",
     "Linear Algebra",
     "Linear Regression",
   ];
@@ -23,7 +25,8 @@ export function Columbia() {
         <div className="columbia-heading" data-reveal>
           <div>
             <h2>Columbia University</h2>
-            <p>B.S. Computer Science · Statistics minor · Class of 2028</p>
+            <p>B.S. Computer Science · Statistics minor</p>
+            <p>GPA 3.8 · Expected May 2028</p>
           </div>
         </div>
 
