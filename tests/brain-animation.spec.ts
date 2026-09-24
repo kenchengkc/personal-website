@@ -94,3 +94,45 @@ test("reduced motion paints a stable brain and preserves it after mobile resize"
   await page.waitForTimeout(150);
   expect(await page.locator(".hero-brain-canvas").evaluate((element: HTMLCanvasElement) => element.toDataURL())).toBe(before);
 });
+
+test("rain wraps outside the image and does not jump after a delayed frame", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1400 });
+  await page.addInitScript(() => {
+    const motion = { pops: 0, maxStep: 0, paintedGlyphs: 0 };
+    (window as unknown as { rainMotion: typeof motion }).rainMotion = motion;
+    const positions = new Map<CanvasImageSource, number>();
+    const draw = CanvasRenderingContext2D.prototype.drawImage;
+    const text = CanvasRenderingContext2D.prototype.fillText;
+    CanvasRenderingContext2D.prototype.fillText = function (...args: Parameters<typeof text>) {
+      motion.paintedGlyphs++;
+      return Reflect.apply(text, this, args);
+    };
+    CanvasRenderingContext2D.prototype.drawImage = function (image: CanvasImageSource, ...coordinates: number[]) {
+      if (this.canvas.classList.contains("hero-brain-canvas")) {
+        const key = image;
+        const y = coordinates[1];
+        const previous = positions.get(key);
+        if (previous !== undefined) {
+          const step = Math.abs(y - previous);
+          if (step < 40) motion.maxStep = Math.max(motion.maxStep, step);
+          else if (previous < 588 && previous + 124 > 12) motion.pops++;
+        }
+        positions.set(key, y);
+      }
+      return Reflect.apply(draw, this, [image, ...coordinates]);
+    };
+  });
+  await page.goto("/");
+  await expect(page.locator(".hero-binary-art")).toHaveAttribute("data-ready", "true");
+  await page.waitForTimeout(300);
+  await page.evaluate(() => {
+    const until = performance.now() + 160;
+    while (performance.now() < until) { /* simulate an unrelated long task */ }
+  });
+  await page.waitForTimeout(1500);
+  const motion = await page.evaluate(() => (window as unknown as { rainMotion: { pops: number; maxStep: number; paintedGlyphs: number } }).rainMotion);
+  expect(motion.paintedGlyphs).toBe(0);
+  expect(motion.pops).toBe(0);
+  expect(motion.maxStep).toBeGreaterThan(0);
+  expect(motion.maxStep).toBeLessThan(10);
+});

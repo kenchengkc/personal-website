@@ -1,90 +1,27 @@
-import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH, createBrainParticles } from "./brain-particles";
+import { BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles";
+import { PADDING, TILE_HEIGHT, TILE_WIDTH, segments, wrap } from "./brain-layout";
 
-const COLUMNS = 96;
-const ROWS = 6;
-const LEFT = 100;
-const RIGHT = 900;
-const STRAND_WIDTH = (RIGHT - LEFT) / COLUMNS;
-const SEGMENT_HEIGHT = BRAIN_HEIGHT / ROWS;
-const PADDING = 12;
-const TILE_WIDTH = Math.ceil(STRAND_WIDTH + PADDING * 2);
-const TILE_HEIGHT = SEGMENT_HEIGHT + PADDING * 2;
-const LOOP_HEIGHT = BRAIN_HEIGHT + 24;
-const ATLAS_COLUMNS = 32;
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
-const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t); };
-const hash = (value: number) => { const x = Math.sin(value * 12.9898) * 43758.5453; return x - Math.floor(x); };
-const wrap = (y: number) => (y % LOOP_HEIGHT) - SEGMENT_HEIGHT;
+const smooth = (value: number) => value * value * (3 - 2 * value);
 
-// Short pieces of a rain strand gather independently, throughout the silhouette.
-// Each piece keeps the same whole digits, color, and opacity from start to finish.
-const segments = Array.from({ length: COLUMNS * ROWS }, (_, index) => {
-  const column = index % COLUMNS;
-  const row = Math.floor(index / COLUMNS);
-  const speed = 0.17 + hash(column + 17) * 0.1;
-  const catchAt = 320 + hash(index + 31) * 260;
-  const phase = hash(column + 71) * LOOP_HEIGHT + row * SEGMENT_HEIGHT;
-  return {
-    x: LEFT + column * STRAND_WIDTH,
-    y: row * SEGMENT_HEIGHT,
-    rainX: 24 + column / (COLUMNS - 1) * (BRAIN_WIDTH - 48),
-    speed,
-    catchAt,
-    phase,
-    drift: (hash(index + 97) - 0.5) * 36,
-    duration: ASSEMBLY_DURATION - catchAt - 120 - hash(index + 53) * 300,
-  };
-});
-
-/** The falling material and finished brain are the same cached glyphs. */
-export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
-  const atlas = document.createElement("canvas");
-  const target = atlas.getContext("2d");
-  if (!target) return null;
-  const particles = createBrainParticles(target);
-  const assignments = particles.map(particle => {
-    const column = Math.min(COLUMNS - 1, Math.max(0, Math.floor((particle.x - LEFT) / STRAND_WIDTH)));
-    const row = Math.min(ROWS - 1, Math.max(0, Math.floor(particle.y / SEGMENT_HEIGHT)));
-    return row * COLUMNS + column;
-  });
-  const occupied = new Set(assignments);
-  let tileWidth = TILE_WIDTH;
-  let tileHeight = TILE_HEIGHT;
-  let painted = false;
-
-  function resize() {
+/** The falling material and finished brain use the same pre-rendered digits. */
+export function createBrainRenderer(
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+  atlas: { tiles: CanvasImageSource[]; occupied: number[] },
+) {
+  function resize(settled = false) {
     const width = canvas.getBoundingClientRect().width;
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    // Moving strips need a display-sized buffer. Repainting a Retina buffer
+    // quadruples raster work; restore that detail for the settled artwork.
+    const ratio = settled ? Math.min(window.devicePixelRatio || 1, 2) : 1;
     const pixelWidth = Math.max(1, Math.round(width * ratio));
     const pixelHeight = Math.max(1, Math.round(width / BRAIN_WIDTH * BRAIN_HEIGHT * ratio));
-    if (painted && canvas.width === pixelWidth && canvas.height === pixelHeight) return;
+    if (canvas.width === pixelWidth && canvas.height === pixelHeight) return;
     canvas.width = pixelWidth;
     canvas.height = pixelHeight;
     const scale = pixelWidth / BRAIN_WIDTH;
     context.setTransform(scale, 0, 0, scale, 0, 0);
-    tileWidth = Math.ceil(TILE_WIDTH * scale);
-    tileHeight = Math.ceil(TILE_HEIGHT * scale);
-    atlas.width = ATLAS_COLUMNS * tileWidth;
-    atlas.height = Math.ceil(segments.length / ATLAS_COLUMNS) * tileHeight;
-    target!.textAlign = "center";
-    target!.textBaseline = "middle";
-
-    // Padded tiles preserve whole characters, including the large bold digits.
-    particles.forEach((particle, index) => {
-      const segment = assignments[index];
-      const sourceX = (segment % ATLAS_COLUMNS) * tileWidth;
-      const sourceY = Math.floor(segment / ATLAS_COLUMNS) * tileHeight;
-      target!.font = `${particle.weight} ${particle.size * scale}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-      target!.fillStyle = particle.color;
-      target!.globalAlpha = particle.alpha;
-      target!.fillText(
-        particle.char,
-        sourceX + (particle.x - segments[segment].x + PADDING) / TILE_WIDTH * tileWidth,
-        sourceY + (particle.y - segments[segment].y + PADDING) / TILE_HEIGHT * tileHeight,
-      );
-    });
-    target!.globalAlpha = 1;
-    painted = true;
   }
 
   // The lead-in advances while rain loops, then stays fixed during assembly so
@@ -92,8 +29,8 @@ export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRe
   function draw(elapsed: number, rainLeadIn = 0) {
     context.clearRect(0, 0, BRAIN_WIDTH, BRAIN_HEIGHT);
     context.globalAlpha = 1;
-    segments.forEach((segment, index) => {
-      if (!occupied.has(index)) return;
+    for (const index of atlas.occupied) {
+      const segment = segments[index];
       const t = clamp((elapsed - segment.catchAt) / segment.duration);
       const gather = smooth(t);
       let y: number;
@@ -111,10 +48,8 @@ export function createBrainRenderer(canvas: HTMLCanvasElement, context: CanvasRe
       }
       const x = segment.rainX + (segment.x - segment.rainX) * gather
         + Math.sin(Math.PI * gather) * segment.drift - PADDING;
-      const sourceX = (index % ATLAS_COLUMNS) * tileWidth;
-      const sourceY = Math.floor(index / ATLAS_COLUMNS) * tileHeight;
-      context.drawImage(atlas, sourceX, sourceY, tileWidth, tileHeight, x, y - PADDING, TILE_WIDTH, TILE_HEIGHT);
-    });
+      context.drawImage(atlas.tiles[index], x, y - PADDING, TILE_WIDTH, TILE_HEIGHT);
+    }
   }
 
   return { resize, draw };

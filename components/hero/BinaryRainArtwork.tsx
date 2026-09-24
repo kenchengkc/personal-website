@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles";
 import { createBrainRenderer } from "./brain-renderer";
+import { loadBrainAtlas } from "./load-brain-atlas";
 
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,8 +15,7 @@ export function BinaryRainArtwork() {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!node || !canvas || !context) return;
-    const renderer = createBrainRenderer(canvas, context);
-    if (!renderer) return;
+    let renderer: ReturnType<typeof createBrainRenderer> | undefined;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let elapsed = 0;
@@ -27,12 +27,14 @@ export function BinaryRainArtwork() {
     let disposed = false;
 
     function tick(time: number) {
-      const delta = lastTime ? time - lastTime : 0;
+      // A busy frame must not fast-forward the visible rain by a large distance.
+      const delta = lastTime ? Math.min(time - lastTime, 34) : 0;
       if (started) elapsed += delta;
       else rainLeadIn += delta;
       lastTime = time;
       complete = elapsed >= ASSEMBLY_DURATION;
       node!.dataset.phase = complete ? "complete" : started ? "assembling" : "raining";
+      if (complete) renderer!.resize(true);
       renderer!.draw(elapsed, rainLeadIn);
       frame = complete ? 0 : requestAnimationFrame(tick);
     }
@@ -41,10 +43,12 @@ export function BinaryRainArtwork() {
       cancelAnimationFrame(frame);
       frame = 0;
       lastTime = 0;
+      if (!renderer) return;
       if (reducedMotion.matches) {
         complete = true;
         elapsed = ASSEMBLY_DURATION;
         node!.dataset.phase = "complete";
+        renderer.resize(true);
         renderer!.draw(elapsed, rainLeadIn);
       } else if (visible && !document.hidden && !complete) {
         frame = requestAnimationFrame(tick);
@@ -67,13 +71,23 @@ export function BinaryRainArtwork() {
     }
 
     function resize() {
-      renderer!.resize();
+      if (!renderer) return;
+      renderer.resize(complete);
       renderer!.draw(elapsed, rainLeadIn);
       node!.dataset.ready = "true";
       updateVisibility();
     }
 
-    resize();
+    // Keep the matching poster visible while decoding; no glyph generation
+    // or thousands of text paints run on the page's first animation frame.
+    loadBrainAtlas().then(atlas => {
+      if (disposed) return;
+      renderer = createBrainRenderer(canvas, context, atlas);
+      resize();
+      syncAnimation();
+    }).catch(() => {
+      // The server-rendered artwork remains visible if its atlas cannot load.
+    });
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
     const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 0.5, 1] });
@@ -100,6 +114,9 @@ export function BinaryRainArtwork() {
 
   return (
     <div ref={ref} className="hero-binary-art" data-phase="raining" aria-hidden="true">
+      <link rel="preload" as="image" href="/images/brain-rain.webp" media="(prefers-reduced-motion: no-preference)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/images/brain-still.webp" media="(prefers-reduced-motion: reduce)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/images/brain-atlas.webp" />
       <div className="hero-brain-stage">
         <picture>
           <source media="(prefers-reduced-motion: reduce)" srcSet="/images/brain-still.webp" />

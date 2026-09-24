@@ -52,3 +52,24 @@ test("hero does not hide or move when JavaScript hydrates", async ({ page }) => 
   expect(Math.min(...samples.map(sample => sample.opacity))).toBe(1);
   expect(Math.max(...samples.map(sample => sample.y)) - Math.min(...samples.map(sample => sample.y))).toBeLessThan(1);
 });
+
+test("the poster stays visible while the digit atlas loads", async ({ page }) => {
+  let release!: () => void;
+  const ready = new Promise<void>(resolve => { release = resolve; });
+  await page.route("**/images/brain-atlas.webp", async route => {
+    await ready;
+    await route.continue();
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const artwork = page.locator(".hero-binary-art");
+  const poster = page.locator(".hero-brain-poster");
+  await expect(poster).toBeVisible();
+  await expect(page.locator(".hero-brain-canvas")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".ruler-milestone")).toHaveCount(11);
+  const before = await artwork.boundingBox();
+  release();
+  await expect(artwork).toHaveAttribute("data-ready", "true");
+  await expect(page.locator(".hero-brain-canvas")).toHaveCSS("opacity", "1");
+  await expect(poster).toBeHidden();
+  expect(await artwork.boundingBox()).toEqual(before);
+});

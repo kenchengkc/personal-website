@@ -80,4 +80,6 @@ the dashboard and redeploy after changes.
 
 Browser checks use Playwright. Install its browser once with `pnpm exec playwright install chromium --only-shell`; `pnpm test:e2e` starts the local server when needed.
 
-The hero includes static rain and reduced-motion frames for the initial page load. After changing the brain artwork or its starting arrangement, regenerate them with `node scripts/generate-brain-posters.mjs`.
+The hero uses a pre-rendered digit atlas and matching static rain/reduced-motion frames for its initial page load. After changing the brain artwork or its starting arrangement, regenerate all assets with `node scripts/generate-brain-posters.mjs`. The browser decodes the atlas once and draws small cached bitmaps, so artwork generation never blocks startup.
+
+To inspect first-load animation frame timing and a frame-by-frame filmstrip, run a production server on port 3001, then `node scripts/profile-brain-startup.mjs /tmp/brain-audit 4`. The last argument sets CPU slowdown; use `1` for normal speed. `AUDIT_URL` overrides the server URL. Timing measurements and compositor recordings run separately to avoid screenshot overhead skewing the results.
