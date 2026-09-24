@@ -1,20 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { AmazonDemo } from "@/components/projects/AmazonDemo";
 import {
-  ArrowRight,
   BarChart3,
-  Boxes,
   CheckCircle2,
-  Cloud,
-  Database,
   FileText,
-  GitBranch,
-  Package,
   Search,
-  Settings,
   TableProperties,
-  Users,
 } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { FeaturedProject } from "@/data/portfolio";
@@ -30,91 +23,6 @@ function usePrefersReducedMotion() {
     },
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     () => false,
-  );
-}
-
-function AmazonDemo() {
-  return (
-    <div
-      className="project-demo amazon-demo"
-      aria-label="High-level Amazon long-term planning configuration architecture"
-    >
-      <div className="demo-topline">
-        <span>Amazon SCOT · Long-Term Planning</span>
-        <span>configuration architecture</span>
-      </div>
-
-      <div className="amazon-architecture">
-        <section className="amazon-stage amazon-inputs">
-          <span className="amazon-stage-label">01 · Inputs</span>
-          <h4>Planning inputs</h4>
-
-          <div className="amazon-input-list">
-            <span><Settings size={15} aria-hidden="true" />Forecast horizon</span>
-            <span><GitBranch size={15} aria-hidden="true" />Overrides</span>
-            <span><Database size={15} aria-hidden="true" />Data refs</span>
-          </div>
-        </section>
-
-        <ArrowRight className="amazon-flow-arrow" size={21} aria-hidden="true" />
-
-        <section className="amazon-stage amazon-config-layer">
-          <span className="amazon-stage-label">02 · Shared config</span>
-
-          <div className="amazon-shared-heading">
-            <Cloud size={20} aria-hidden="true" />
-            <h4>Versioned config</h4>
-          </div>
-
-          <div className="amazon-config-core">
-            <span>validated</span>
-            <span>versioned</span>
-            <span>distributed</span>
-          </div>
-
-          <div className="amazon-aws-services" aria-label="AWS services">
-            <span><Cloud size={13} aria-hidden="true" />AWS Lambda</span>
-            <span><Database size={13} aria-hidden="true" />AWS S3</span>
-            <span><Boxes size={13} aria-hidden="true" />AWS Glue</span>
-            <span><Package size={13} aria-hidden="true" />AWS CDK</span>
-          </div>
-        </section>
-
-        <ArrowRight className="amazon-flow-arrow" size={21} aria-hidden="true" />
-
-        <section className="amazon-stage amazon-consumers">
-          <span className="amazon-stage-label">03 · Consumers</span>
-          <h4>Forecast stack</h4>
-
-          <div className="amazon-consumer-map">
-            <div>
-              <Boxes size={17} aria-hidden="true" />
-              <strong>17</strong>
-              <span>packages + services</span>
-            </div>
-            <div>
-              <Users size={17} aria-hidden="true" />
-              <strong>13</strong>
-              <span>engineers</span>
-            </div>
-          </div>
-
-          <div className="amazon-output">
-            <BarChart3 size={17} aria-hidden="true" />
-            <span><strong>MOSAIC</strong> · revenue + inventory forecasts</span>
-          </div>
-        </section>
-      </div>
-
-      <div className="amazon-impact">
-        <span>configure</span>
-        <i />
-        <span>distribute</span>
-        <i />
-        <span>forecast</span>
-        <strong>~90% less manual comparison</strong>
-      </div>
-    </div>
   );
 }
 

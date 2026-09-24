@@ -1,3 +1,4 @@
+import { GitHub, LinkedIn, Scholar } from "@/components/icons/Icons";
 import { site } from "@/lib/site";
 
 export function Contact() {
@@ -18,13 +19,16 @@ export function Contact() {
 
         <div className="contact-links" data-reveal>
           <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
-            GitHub
+            <GitHub />
+            <span>GitHub</span>
           </a>
           <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
-            LinkedIn
+            <LinkedIn />
+            <span>LinkedIn</span>
           </a>
           <a href={site.socials.scholar} target="_blank" rel="noopener noreferrer">
-            Scholar
+            <Scholar />
+            <span>Scholar</span>
           </a>
           <a
             href={site.socials.columbiaEngineering}

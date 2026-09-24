@@ -375,7 +375,8 @@ textarea {
   font-size: 12px;
 }
 
-.hero-links a {
+.hero-links a,
+.contact-links a {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -383,7 +384,8 @@ textarea {
   transition: color 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.hero-links svg {
+.hero-links svg,
+.contact-links svg {
   flex: 0 0 auto;
 }
 
