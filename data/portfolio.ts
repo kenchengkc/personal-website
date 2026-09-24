@@ -174,18 +174,13 @@ export const otherWork: OtherWork[] = [
     title: "Wasserstein Regimes",
     meta: "Optimal Transport & Unsupervised Learning · Sep 2026 – Present",
     detail: "Compared nine clustering methods across five ETFs using chronological folds, purged holdouts, and synthetic controls. Scale explained 95–98% of raw Wasserstein centroid separation, limiting claims of added distributional information.",
-    href: "https://github.com/kenchengkc/wasserstein-regimes",
+    href: "https://wasserstein-regimes.vercel.app",
   },
   {
     title: "GC-INF",
     meta: "Sole-Author Publication · IEEE ITSC, 2023",
     detail: "Developed a graph-convolutional and Informer model, evaluating four baselines across three horizons. Reduced 15-minute turning-ratio RMSE by 24% versus STGCN on SUMO-simulated traffic data. IEEE ITSC Session Chair and Team Canada ISEF finalist (Top 30).",
     href: "https://ieeexplore.ieee.org/abstract/document/10422188",
-  },
-  {
-    title: "Midnight Sun Solar Car Team",
-    meta: "University of Waterloo · Software Engineer, Optimization & Data · Aug 2023 – Mar 2024",
-    detail: "Modeled race-day energy from sunlight, speed, and route telemetry using dynamic programming and vectorized NumPy Dijkstra routing. Reduced predicted energy shortfall by around 20% and scenario runtime to under 30 seconds.",
   },
   {
     title: "USACO Platinum",
