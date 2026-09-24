@@ -67,7 +67,7 @@ export const featuredProjects: FeaturedProject[] = [
     summary:
       "Built and launched an earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
     details: [
-      "On development validation, the models achieved 31% lower weighted MAE than the options-implied baseline. Forecast pipelines use chronological validation, data-freshness checks, and model-drift monitoring.",
+      "On development validation, the models achieved 31% lower weighted mean absolute error than the options-implied baseline. Forecast pipelines use chronological validation, data-freshness checks, and model-drift monitoring.",
       "Nightly ingestion and batch inference run on DuckDB/Parquet and GitHub Actions. FastAPI model serving uses signed artifacts, SHA-256 verification, atomic activation, and recovery to the previous verified model; Redis shares live quotes.",
     ],
     metrics: [
@@ -100,7 +100,7 @@ export const featuredProjects: FeaturedProject[] = [
       "Built hybrid lexical and vector retrieval over SEC filings, with citation verification, evidence-based abstention, and point-in-time filtering.",
     details: [
       "Multi-query expansion raised Recall@5 from 0.152 to 0.212 on a 33-query benchmark. Half-precision vectors reduced database size by 27%, from 15 to 11 GB.",
-      "Batched embeddings, ANN-first search, and bounded candidate pools cut cross-company retrieval p95 from approximately 59 seconds to 1.74 seconds in a retrieval benchmark.",
+      "Batched embeddings, approximate nearest-neighbor search, and bounded candidate pools cut 95th-percentile cross-company retrieval latency from approximately 59 seconds to 1.74 seconds in a retrieval benchmark.",
     ],
     metrics: [
       {
@@ -173,19 +173,19 @@ export const otherWork: OtherWork[] = [
   {
     title: "Wasserstein Regimes",
     meta: "Optimal Transport & Unsupervised Learning · Sep 2026 – Present",
-    detail: "Compared nine clustering methods across five ETFs using chronological folds, purged holdouts, and synthetic controls. Scale explained 95–98% of raw Wasserstein centroid separation, limiting claims of added distributional information.",
+    detail: "Compared nine clustering methods across five exchange-traded funds using chronological folds, purged holdouts, and synthetic controls. Scale explained 95–98% of raw Wasserstein centroid separation, limiting claims of added distributional information.",
     href: "https://wasserstein-regimes.vercel.app",
   },
   {
-    title: "GC-INF",
-    meta: "Sole-Author Publication · IEEE ITSC, 2023",
-    detail: "Developed a graph-convolutional and Informer model, evaluating four baselines across three horizons. Reduced 15-minute turning-ratio RMSE by 24% versus STGCN on SUMO-simulated traffic data. IEEE ITSC Session Chair and Team Canada ISEF finalist (Top 30).",
+    title: "GC-INF Traffic Forecasting",
+    meta: "Sole-Author Publication · IEEE Intelligent Transportation Systems Conference, 2023",
+    detail: "Developed a graph-convolutional and Informer model, evaluating four baselines across three horizons. Reduced 15-minute turning-ratio root mean square error by 24% versus STGCN on SUMO-simulated traffic data. Served as a conference Session Chair and was a Team Canada finalist for the International Science and Engineering Fair (Top 30).",
     href: "https://ieeexplore.ieee.org/abstract/document/10422188",
   },
   {
     title: "USACO Platinum",
     meta: "Top 1% nationally · 2023",
-    detail: "Highest USACO division, promoted from Gold with a 1000/1000 score.",
+    detail: "Highest division of the USA Computing Olympiad, promoted from Gold with a 1000/1000 score.",
   },
   {
     title: "High School Big Data & AI Challenge",
@@ -194,13 +194,13 @@ export const otherWork: OtherWork[] = [
   },
   {
     title: "Need for Speed",
-    meta: "CWSF Gold, 2022",
-    detail: "CFD plus neural surrogate modeling for Formula 1 aero, 43% drag reduction.",
+    meta: "Canada-Wide Science Fair · Gold Medal, 2022",
+    detail: "Computational fluid dynamics and neural surrogate modeling for Formula 1 aerodynamics, achieving a 43% drag reduction.",
   },
   {
-    title: "CVRP Solver",
-    meta: "UF SSTP · Best Paper, 2023",
-    detail: "ML-assisted column generation for vehicle routing, 15% faster C++ solver.",
+    title: "Capacitated Vehicle Routing Problem Solver",
+    meta: "University of Florida Student Science Training Program · Best Paper, 2023",
+    detail: "Machine learning-assisted column generation for vehicle routing, producing a 15% faster C++ solver.",
   },
 ];
 

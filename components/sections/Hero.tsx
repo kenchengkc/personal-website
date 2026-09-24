@@ -36,7 +36,7 @@ export function Hero() {
           behavior at Columbia’s Creative Machines Lab.
         </p>
         <div className="hero-proof" aria-label="Selected credentials">
-          <span>Former Amazon SCOT SDE Intern</span>
+          <span>Former Amazon Software Development Engineer Intern</span>
           <i />
           <span>IEEE Sole Author</span>
           <i />
