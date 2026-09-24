@@ -68,12 +68,12 @@ export function Projects() {
                   <div className="project-links">
                     {project.href && project.hrefLabel ? (
                       <a href={project.href} target="_blank" rel="noopener noreferrer">
-                        {project.hrefLabel} ↗
+                        {project.hrefLabel}
                       </a>
                     ) : null}
                     {project.secondaryHref && project.secondaryLabel ? (
                       <a href={project.secondaryHref} target="_blank" rel="noopener noreferrer">
-                        {project.secondaryLabel} ↗
+                        {project.secondaryLabel}
                       </a>
                     ) : null}
                   </div>
@@ -115,7 +115,7 @@ export function Projects() {
                 >
                   <div>
                     <h3 className={isPlatinum ? "platinum-title" : undefined}>
-                      {item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.title} ↗</a> : item.title}
+                      {item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a> : item.title}
                     </h3>
                     <span
                       className={

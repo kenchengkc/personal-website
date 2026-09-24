@@ -14,7 +14,7 @@ export function Contact() {
         <h2 data-reveal>Let&apos;s talk.</h2>
 
         <a className="contact-email" href={`mailto:${site.email}`} data-reveal>
-          {site.email} ↗
+          {site.email}
         </a>
 
         <div className="contact-links" data-reveal>

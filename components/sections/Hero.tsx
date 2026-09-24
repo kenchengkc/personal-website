@@ -47,19 +47,19 @@ export function Hero() {
       <div className="hero-links" aria-label="Profile links">
         <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
           <Resume />
-          <span>Resume ↗</span>
+          <span>Resume</span>
         </a>
         <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
           <GitHub />
-          <span>GitHub ↗</span>
+          <span>GitHub</span>
         </a>
         <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
           <LinkedIn />
-          <span>LinkedIn ↗</span>
+          <span>LinkedIn</span>
         </a>
         <a href={site.socials.scholar} target="_blank" rel="noopener noreferrer">
           <Scholar />
-          <span>Google Scholar ↗</span>
+          <span>Google Scholar</span>
         </a>
       </div>
 

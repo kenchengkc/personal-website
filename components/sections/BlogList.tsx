@@ -33,7 +33,6 @@ export function BlogList() {
                 </div>
                 <h3>{publication.title}</h3>
               </div>
-              <span className="publication-arrow" aria-hidden="true">↗</span>
             </a>
           ))}
         </div>
