@@ -75,6 +75,38 @@ test("brain assembly bounds repaint work and stops drawing after completion", as
   expect(await page.evaluate(() => window.brainDraws.total)).toBe(draws.total);
 });
 
+test("Retina artwork keeps the same sharp resolution through the final assembly frame", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 2 });
+  const page = await context.newPage();
+  try {
+    await page.goto("/");
+    await expect(page.locator(".hero-binary-art")).toHaveAttribute("data-ready", "true");
+    const canvas = page.locator(".hero-brain-canvas");
+    const initial = await canvas.evaluate((element: HTMLCanvasElement) => ({
+      width: element.width,
+      height: element.height,
+      displayWidth: element.getBoundingClientRect().width,
+    }));
+    expect(initial.width).toBe(Math.round(initial.displayWidth * 2));
+    const frames = await canvas.evaluate((element: HTMLCanvasElement) => new Promise<{ width: number; height: number; phase: string }[]>(resolve => {
+      const samples: { width: number; height: number; phase: string }[] = [];
+      element.scrollIntoView({ behavior: "instant", block: "center" });
+      function sample() {
+        const phase = element.closest<HTMLElement>(".hero-binary-art")!.dataset.phase!;
+        samples.push({ width: element.width, height: element.height, phase });
+        if (phase === "complete") resolve(samples);
+        else requestAnimationFrame(sample);
+      }
+      requestAnimationFrame(sample);
+    }));
+    expect(frames.some(frame => frame.phase === "assembling")).toBe(true);
+    expect(frames.at(-1)!.phase).toBe("complete");
+    expect([...new Set(frames.map(frame => `${frame.width}x${frame.height}`))]).toEqual([`${initial.width}x${initial.height}`]);
+  } finally {
+    await context.close();
+  }
+});
+
 test("reduced motion paints a stable brain and preserves it after mobile resize", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");

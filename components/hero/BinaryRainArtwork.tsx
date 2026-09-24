@@ -36,7 +36,6 @@ export function BinaryRainArtwork() {
       lastTime = time;
       complete = elapsed >= ASSEMBLY_DURATION;
       node!.dataset.phase = complete ? "complete" : started ? "assembling" : "raining";
-      if (complete) renderer!.resize(true);
       renderer!.draw(elapsed, rainLeadIn);
       frame = complete ? 0 : requestAnimationFrame(tick);
     }
@@ -50,7 +49,7 @@ export function BinaryRainArtwork() {
         complete = true;
         elapsed = ASSEMBLY_DURATION;
         node!.dataset.phase = "complete";
-        renderer.resize(true);
+        renderer.resize();
         renderer!.draw(elapsed, rainLeadIn);
       } else if (visible && !document.hidden && !complete) {
         frame = requestAnimationFrame(tick);
@@ -74,7 +73,7 @@ export function BinaryRainArtwork() {
 
     function resize() {
       if (!renderer) return;
-      renderer.resize(complete);
+      renderer.resize();
       renderer!.draw(elapsed, rainLeadIn);
       node!.dataset.ready = "true";
       updateVisibility();

@@ -10,11 +10,11 @@ export function createBrainRenderer(
   context: CanvasRenderingContext2D,
   atlas: { tiles: CanvasImageSource[]; occupied: number[] },
 ) {
-  function resize(settled = false) {
+  function resize() {
     const width = canvas.getBoundingClientRect().width;
-    // Moving strips need a display-sized buffer. Repainting a Retina buffer
-    // quadruples raster work; restore that detail for the settled artwork.
-    const ratio = settled ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+    // Keep the same pixel density during motion and after settling, avoiding
+    // a sharpness jump on the final frame. The pre-rendered atlas supports 2x.
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const pixelWidth = Math.max(1, Math.round(width * ratio));
     const pixelHeight = Math.max(1, Math.round(width / BRAIN_WIDTH * BRAIN_HEIGHT * ratio));
     if (canvas.width === pixelWidth && canvas.height === pixelHeight) return;
