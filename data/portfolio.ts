@@ -172,9 +172,15 @@ export const otherWork: OtherWork[] = [
   },
   {
     title: "Wasserstein Regimes",
-    meta: "Optimal Transport & Unsupervised Learning · Sep 2026 – Present",
-    detail: "Compared nine clustering methods across five exchange-traded funds using chronological folds, purged holdouts, and synthetic controls. Scale explained 95–98% of raw Wasserstein centroid separation, limiting claims of added distributional information.",
+    meta: "Optimal Transport & Risk Forecasting · Sep 2026 – Present",
+    detail: "Built a NumPy research platform for Wasserstein and joint sliced-Wasserstein clustering across five exchange-traded funds, with chronological validation, robustness controls, frozen-model scoring, and resumable parallel experiments. An exploratory study of 600 five-session risk forecasts did not demonstrate an advantage over four simpler baselines.",
     href: "https://wasserstein-regimes.vercel.app",
+  },
+  {
+    title: "Aster",
+    meta: "Parallel Hyperparameter Optimization · Sep 2026 – Present",
+    detail: "Built an open-source Python prototype for tuning noisy simulations through parallel evaluation, adaptive replication, early stopping, and independent audits. In one 16-configuration synthetic experiment, it selected the same candidate as full-budget search using 72 rather than 432 search evaluations.",
+    href: "https://aster-hpo.vercel.app",
   },
   {
     title: "GC-INF Traffic Forecasting",
