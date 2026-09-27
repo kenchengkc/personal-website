@@ -6,7 +6,7 @@ import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles"
 import { createBrainRenderer } from "./brain-renderer";
 import { loadBrainAtlas } from "./load-brain-atlas";
 
-const ASSEMBLY_VISIBILITY_THRESHOLD = 0.35;
+const ASSEMBLY_VISIBILITY_THRESHOLD = 0.3;
 
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement>(null);

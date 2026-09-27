@@ -12,12 +12,8 @@ export function Projects() {
         data-scroll-section
         data-scroll-label="WORK"
       >
-        <div className="reading-column section-intro" data-reveal>
-          <p className="section-kicker">Selected Work</p>
-          <h2>Things I have built.</h2>
-          <p>
-            A few projects where the implementation matters as much as the idea.
-          </p>
+        <div className="reading-column" data-reveal>
+          <h2 className="section-kicker">Selected Work</h2>
         </div>
 
         <div className="project-list">

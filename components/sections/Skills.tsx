@@ -73,18 +73,7 @@ export function Skills() {
       data-scroll-label="SKILLS"
     >
       <div className="reading-column">
-        <div className="skills-heading" data-reveal>
-          <div>
-            <p className="section-kicker">Skills</p>
-            <h2>From models to production.</h2>
-          </div>
-          <p>
-            ML, retrieval, data infrastructure, and the systems needed to ship them.
-          </p>
-        </div>
-      </div>
-
-      <div className="reading-column">
+        <h2 className="section-kicker" data-reveal>Skills</h2>
         <div className="skills-field" data-reveal>
           {skillGroups.map((group, groupIndex) => (
             <div className="skill-row" key={group.label}>

@@ -10,8 +10,7 @@ export function Contact() {
       data-scroll-label="CONTACT"
     >
       <div className="reading-column">
-        <p className="section-kicker" data-reveal>Contact</p>
-        <h2 data-reveal>Let&apos;s talk.</h2>
+        <h2 className="section-kicker" data-reveal>Contact</h2>
 
         <a className="contact-email" href={`mailto:${site.email}`} data-reveal>
           {site.email}<ArrowUpRight />
