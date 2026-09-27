@@ -7,7 +7,7 @@ export function Columbia() {
     "Data Structures and Algorithms",
     "Databases",
     "Probability Theory",
-    "Statistics",
+    "Statistical Inference",
     "Linear Algebra",
     "Linear Regression",
   ];
