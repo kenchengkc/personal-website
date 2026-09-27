@@ -914,6 +914,10 @@ a:focus-visible .link-arrow { opacity: 1; }
   padding: 64px 24px 108px;
 }
 
+.project-chapter:first-child {
+  padding-top: 0;
+}
+
 .project-chapter + .project-chapter {
   position: relative;
 }
