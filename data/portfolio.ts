@@ -168,7 +168,7 @@ export const otherWork: OtherWork[] = [
   {
     title: "Creative Machines Lab",
     meta: "Columbia · Undergraduate Deep Learning Researcher · Sep 2026 – Present",
-    detail: "Developing LLM evaluation and activation-probing tools to study deceptive communication separately from factual errors and unsupported claims. Collected 160 Qwen2.5-7B responses under a fixed development protocol, with scenario-level split checks and annotation gates.",
+    detail: "Built reproducible evaluations of deceptive communication using Qwen2.5 3B and 7B, with 1,728 responses in a controlled task study. Trained multilayer perceptrons and small transformers under conflicting rewards, and tested factual retention with shared versus separate output heads. Implemented activation extraction, model-specific adapters, and a shared neural detector; detector evaluation awaits independently validated examples.",
   },
   {
     title: "Wasserstein Regimes",
