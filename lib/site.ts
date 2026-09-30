@@ -1,8 +1,8 @@
 export const site = {
   name: "Ken Cheng",
   url: "https://kencheng.me",
-  tagline: "Columbia CS · LLM research · ML systems",
-  description: "Ken Cheng is a Columbia CS student, Creative Machines Lab researcher, and Quantiv founder building ML forecasting, retrieval, and data systems.",
+  tagline: "Columbia CS · Software Engineering · Machine Learning Research",
+  description: "Ken Cheng: Columbia Computer Science, Class of 2028. Former Amazon software engineering intern, Creative Machines Lab researcher, and Quantiv founder building financial forecasting and retrieval systems.",
   email: "kc3843@columbia.edu",
   phone: "(917) 431-3478",
   location: "New York, NY",

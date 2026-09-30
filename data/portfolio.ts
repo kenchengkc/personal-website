@@ -39,6 +39,7 @@ export const featuredProjects: FeaturedProject[] = [
       "Owned design, testing, rollout, and documentation of shared configuration infrastructure for Amazon SCOT’s long-term supply-chain forecasting.",
     details: [
       "Used by engineers, managers, economists, and scientists. Automated dependency tracing from research model outputs to downstream configurations; the reduction in manual comparison time is based on user surveys.",
+      "Shipped version-controlled JSON configuration delivery through Python, AWS Lambda, S3, and internal APIs, with infrastructure as code in TypeScript using AWS CDK.",
     ],
     metrics: [
       {
@@ -65,10 +66,11 @@ export const featuredProjects: FeaturedProject[] = [
     eyebrow: "Founder & Lead Engineer",
     date: "Jul 2025 – Present",
     summary:
-      "Built and launched an earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
+      "Built and launched an open-source earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
     details: [
-      "On development validation, the models achieved 31% lower weighted mean absolute error than the options-implied baseline. Forecast pipelines use chronological validation, data-freshness checks, and model-drift monitoring.",
-      "Nightly ingestion and batch inference run on DuckDB/Parquet and GitHub Actions. FastAPI model serving uses signed artifacts, SHA-256 verification, atomic activation, and recovery to the previous verified model; Redis shares live quotes.",
+      "Four-fold walk-forward validation with a five-day purge measured 31% lower weighted mean absolute error than the options-implied baseline on development data. Forecast pipelines include data-freshness checks and model-drift monitoring.",
+      "Nightly ingestion and batch inference run on DuckDB/Parquet and GitHub Actions. FastAPI serving uses signed artifacts, SHA-256 verification, atomic activation, and recovery to the previous verified model; Redis shares live quotes.",
+      "Regression tests cover corrupt downloads, mismatched bundles, missing features, and crossed prediction quantiles. Rejected model updates preserve the previously active model.",
     ],
     metrics: [
       {
@@ -94,12 +96,12 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Financial Document Retrieval Engine",
-    eyebrow: "Research Infrastructure",
+    eyebrow: "Financial Search & Research Infrastructure",
     date: "Jun 2026 – Present",
     summary:
-      "Built hybrid lexical and vector retrieval over SEC filings, with citation verification, evidence-based abstention, and point-in-time filtering.",
+      "Built an open-source financial research platform over SEC filings, combining PostgreSQL full-text search and pgvector approximate nearest-neighbor search with citation verification, evidence-based abstention, and point-in-time filtering.",
     details: [
-      "Multi-query expansion raised Recall@5 from 0.152 to 0.212 on a 33-query benchmark. Half-precision vectors reduced database size by 27%, from 15 to 11 GB.",
+      "Multi-query expansion raised Recall@5 from 0.152 to 0.212 on a 33-query benchmark. Half-precision vectors reduced database size by 27%, from 15 to 11 GB, with no observed top-10 ranking change in benchmark comparisons.",
       "Batched embeddings, approximate nearest-neighbor search, and bounded candidate pools cut 95th-percentile cross-company retrieval latency from approximately 59 seconds to 1.74 seconds in a retrieval benchmark.",
     ],
     metrics: [
@@ -168,7 +170,7 @@ export const otherWork: OtherWork[] = [
   {
     title: "Creative Machines Lab",
     meta: "Columbia · Undergraduate Deep Learning Researcher · Sep 2026 – Present",
-    detail: "Built reproducible evaluations of deceptive communication using Qwen2.5 3B and 7B, with 1,728 responses in a controlled task study. Trained multilayer perceptrons and small transformers under conflicting rewards, and tested factual retention with shared versus separate output heads. Implemented activation extraction, model-specific adapters, and a shared neural detector; detector evaluation awaits independently validated examples.",
+    detail: "Trained transformers with 3.18 million parameters and multilayer perceptrons to study deceptive communication. Compared output-head designs and factual retention under conflicting rewards across 18 training jobs and three seeds; verified paired CPU runs after diagnosing GPU numerical drift. Built resumable PyTorch evaluations, activation extraction, model-specific adapters, and a shared neural detector with leakage and serialization tests. Detector evaluation awaits independently validated examples.",
   },
   {
     title: "Wasserstein Regimes",

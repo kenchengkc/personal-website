@@ -21,7 +21,7 @@ export function Hero() {
           priority
         />
         <strong>Ken Cheng</strong>
-        <span>Columbia CS · ML Researcher · Quantiv Founder</span>
+        <span>Columbia Computer Science · Class of 2028</span>
       </div>
 
       <div className="scroll-prompt">
@@ -30,10 +30,11 @@ export function Hero() {
       </div>
 
       <div className="hero-copy">
-        <h1>ML systems for forecasting, retrieval, and research.</h1>
+        <h1>Software engineering and machine learning research.</h1>
         <p>
-          I build earnings forecasts and SEC retrieval systems, and study LLM
-          behavior at Columbia’s Creative Machines Lab.
+          I build earnings forecasts and financial search systems, and study
+          deceptive communication in language models at Columbia’s Creative
+          Machines Lab.
         </p>
         <div className="hero-proof" aria-label="Selected credentials">
           <span>Former Amazon Software Development Engineer Intern</span>

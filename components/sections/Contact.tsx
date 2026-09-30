@@ -12,6 +12,11 @@ export function Contact() {
       <div className="reading-column">
         <h2 className="section-kicker" data-reveal>Contact</h2>
 
+        <p className="contact-interest" data-reveal>
+          Seeking software engineering, quantitative development, and machine
+          learning research internships.
+        </p>
+
         <a className="contact-email" href={`mailto:${site.email}`} data-reveal>
           {site.email}<ArrowUpRight />
         </a>

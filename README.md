@@ -64,12 +64,16 @@ Static files (logos, project media, PDF resume, credentials) live under
 **`public/`** (e.g. `public/resume/`, `public/images/`, `public/media/`). Paths
 are referenced as URLs from `/…` in components and `lib/site.ts`.
 
-The September 24, 2026 content sync uses the ML/data and software engineering
-resumes for current metrics and dates, plus the quantitative resume for additional
-experience. The main resume download is the ML/data version. Keep evaluation
-qualifications with the results: Quantiv's 31% weighted MAE improvement is from
-development validation; Amazon's comparison-time reduction is survey-based; FDRE
-recall and latency figures describe specific benchmarks.
+The September 30, 2026 content sync uses both the ML/data and software engineering
+resumes. The main resume download is the ML/data version, balancing current
+research, quantitative evaluation, and shipped software for development and
+research internships. Preserve the newer project documentation behind the
+Wasserstein and Aster entries when a shorter resume omits those findings. Keep
+evaluation qualifications with the results: Quantiv's 31% weighted mean absolute
+error improvement is from development validation; Amazon's comparison-time
+reduction is survey-based; retrieval quality, latency, and storage figures describe
+specific benchmarks. The lab's detector is implemented, with scientific evaluation
+still pending. Previously removed awards should not be restored during resume syncs.
 
 ## Checks
 

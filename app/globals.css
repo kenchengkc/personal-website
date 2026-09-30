@@ -1212,6 +1212,14 @@ a:focus-visible .link-arrow { opacity: 1; }
   align-items: center;
 }
 
+.contact-interest {
+  max-width: 600px;
+  margin: 0 0 24px;
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 .contact-email {
   display: inline-block;
   color: var(--ink-2);
