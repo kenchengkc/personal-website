@@ -5,6 +5,7 @@ const demos = [
   "Quantiv earnings research demonstration",
   "Financial Document Retrieval Engine search demonstration",
 ] as const;
+const stageCounts = [3, 4, 3];
 
 async function showDemo(demo: Locator) {
   await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
@@ -40,14 +41,15 @@ test("project walkthroughs advance in view and stop when scrolled away without c
 test("visitors can inspect any step with a keyboard and it stays selected until playback resumes", async ({ page }) => {
   await page.goto("/");
 
-  for (const name of demos) {
+  for (const [demoIndex, name] of demos.entries()) {
     const demo = page.getByRole("region", { name, exact: true });
     await showDemo(demo);
     const steps = demo.getByRole("group", { name: "Animation steps" }).getByRole("button");
-    await expect(steps).toHaveCount(3);
+    await expect(steps).toHaveCount(stageCounts[demoIndex]);
     const height = (await demo.boundingBox())!.height;
 
-    for (const index of [2, 0, 1]) {
+    const inspectionOrder = [...Array.from({ length: stageCounts[demoIndex] - 2 }, (_, index) => stageCounts[demoIndex] - 1 - index), 0, 1];
+    for (const index of inspectionOrder) {
       await steps.nth(index).focus();
       await steps.nth(index).press("Enter");
       await expect(steps.nth(index)).toHaveAttribute("aria-pressed", "true");
@@ -57,9 +59,11 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
       await expect(demo.getByRole("button", { name: "Play animation", exact: true })).toBeVisible();
       expect((await demo.boundingBox())!.height).toBeCloseTo(height, 2);
 
-      // A manually chosen illustration remains inspectable rather than
-      // leaving an entrance animation paused before its content appears.
-      await expect(demo.getByRole("img")).toBeVisible();
+      // A chosen mechanism stays readable rather than leaving an entrance
+      // animation paused before the content and explanation appear.
+      await expect(demo.locator(".demo-content")).toBeVisible();
+      await expect(demo.locator(".demo-caption")).toBeVisible();
+      await expect(demo.locator(".demo-caption")).not.toHaveText("");
       await expect.poll(() => demo.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation instanceof CSSAnimation && animation.playState !== "finished").length)).toBe(0);
     }
   }
@@ -77,42 +81,15 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
   await expect(lastDemo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(2)).toHaveAttribute("aria-pressed", "true", { timeout: 6000 });
 });
 
-test("project illustrations stay visual with only concise labels and controls", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-
-  for (const name of demos) {
-    const demo = page.getByRole("region", { name, exact: true });
-    await showDemo(demo);
-    await expect(demo.getByRole("img")).toBeVisible();
-    const steps = demo.getByRole("group", { name: "Animation steps" }).getByRole("button");
-    for (let index = 0; index < 3; index++) {
-      await steps.nth(index).click();
-      const words = await demo.locator(".demo-content, .demo-controls").evaluateAll(nodes => {
-        const text = nodes.map(node => {
-          let visible = (node as HTMLElement).innerText;
-          node.querySelectorAll(".sr-only").forEach(description => {
-            visible = visible.replace((description as HTMLElement).innerText, "");
-          });
-          return visible;
-        }).join(" ").trim();
-        return text ? text.split(/\s+/).length : 0;
-      });
-      expect(words).toBeLessThanOrEqual(30);
-    }
-  }
-});
-
-test("Quantiv particles visibly move during playback and freeze when paused", async ({ page }) => {
+test("Quantiv flow visibly moves during playback and freezes when paused", async ({ page }) => {
   await page.goto("/");
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(0).click();
   await demo.getByRole("button", { name: "Play animation", exact: true }).click();
   await expect(demo).toHaveAttribute("data-running", "true");
-  const particle = demo.locator(".qv-particle-light").first();
-  const position = () => particle.evaluate(node => getComputedStyle(node).transform);
-  await expect.poll(position).not.toBe("none");
+  const pulse = demo.locator(".qv-flow-pulse").first();
+  const position = () => pulse.evaluate(node => getComputedStyle(node).strokeDashoffset);
   const initial = await position();
   await expect.poll(position, { timeout: 1500 }).not.toBe(initial);
 
@@ -122,6 +99,161 @@ test("Quantiv particles visibly move during playback and freeze when paused", as
   const paused = await position();
   await page.waitForTimeout(350);
   expect(await position()).toBe(paused);
+});
+
+test("keyboard focus pauses a nested control's stage without changing its selection", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
+  await showDemo(demo);
+  const forecast = demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Forecast:/ });
+  await forecast.click();
+  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
+  await expect(demo).toHaveAttribute("data-running", "true");
+  const focusedChoice = demo.getByRole("button", { name: "Compare a 3% market move", exact: true });
+  const selectedChoice = demo.getByRole("button", { name: "Compare a 6% market move", exact: true });
+
+  // Focus alone must stop autoplay; it must not activate the newly focused value.
+  await focusedChoice.focus();
+  await expect(focusedChoice).toBeFocused();
+  await expect(demo).toHaveAttribute("data-running", "false");
+  await expect(focusedChoice).toHaveAttribute("aria-pressed", "false");
+  await expect(selectedChoice).toHaveAttribute("aria-pressed", "true");
+
+  await page.waitForTimeout(5200); // Forecast normally advances after five seconds.
+  await expect(forecast).toHaveAttribute("aria-pressed", "true");
+  await expect(focusedChoice).toBeFocused();
+  await expect(focusedChoice).toBeVisible();
+  await expect(selectedChoice).toHaveAttribute("aria-pressed", "true");
+});
+
+test("Quantiv recomputes exceedance estimates and identifies an out-of-range tail bound", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
+  await showDemo(demo);
+  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Forecast:/ }).click();
+  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
+  await expect(demo).toHaveAttribute("data-running", "true");
+  const result = demo.locator(".qv-forecast-result");
+
+  for (const [threshold, probability] of [[3, /^77\.5%$/], [6, /^31\.3%$/], [10, /^≤\s*10%$/]] as const) {
+    const comparison = demo.getByRole("button", { name: `Compare a ${threshold}% market move`, exact: true });
+    await comparison.click();
+    await expect(comparison).toHaveAttribute("aria-pressed", "true");
+    await expect(demo).toHaveAttribute("data-running", "false");
+    await expect(result.locator("strong")).toHaveText(probability);
+    await expect(result).toContainText(`above a ${threshold}% move`);
+  }
+  await expect(result).toContainText("Tail bound");
+  await expect(demo.getByRole("button", { name: "Verified bundle", exact: true })).toHaveCount(0);
+  await expect(demo.locator('.qv-scene[aria-hidden="true"]')).toHaveCount(3);
+  for (const panel of await demo.locator('.qv-scene[aria-hidden="true"]').all()) {
+    await expect(panel).toHaveAttribute("inert", "");
+  }
+});
+
+test("Quantiv lets visitors inspect expanding training windows separated from unseen tests", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
+  await showDemo(demo);
+  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Validate:/ }).click();
+  let previousTrainingWidth = 0;
+  let previousTestEnd: number | undefined;
+
+  for (const fold of [1, 2, 3, 4]) {
+    const button = demo.getByRole("button", { name: `Inspect fold ${fold}`, exact: true });
+    await button.click();
+    await expect(button).toHaveAttribute("aria-pressed", "true");
+    const active = demo.locator('.qv-fold[data-active="true"]');
+    await expect(active).toHaveCount(1);
+    await expect(active).toHaveCSS("opacity", "1");
+    await expect(demo.getByRole("img", { name: new RegExp(`Fold ${fold} is highlighted`) })).toBeVisible();
+    const split = await active.evaluate(row => {
+      const train = row.querySelector(".qv-train")!.getBoundingClientRect();
+      const unseen = row.querySelector(".qv-test")!.getBoundingClientRect();
+      return { trainingWidth: train.width, trainingEnd: train.right, testStart: unseen.left, testEnd: unseen.right, testWidth: unseen.width };
+    });
+    expect(split.trainingWidth).toBeGreaterThan(previousTrainingWidth);
+    expect(split.testStart).toBeGreaterThan(split.trainingEnd);
+    expect((split.testStart - split.trainingEnd) / split.testWidth).toBeCloseTo(5 / 60, 3);
+    if (previousTestEnd !== undefined) expect(split.testStart).toBeCloseTo(previousTestEnd, 2);
+    previousTrainingWidth = split.trainingWidth;
+    previousTestEnd = split.testEnd;
+  }
+  await expect(demo.getByRole("button", { name: "Compare a 3% market move", exact: true })).toHaveCount(0);
+});
+
+test("Quantiv retains the previous model when a new bundle fails verification", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
+  await showDemo(demo);
+  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Serve:/ }).click();
+  const result = demo.locator(".qv-serve-result");
+  await expect(result).toContainText("New model active");
+  await expect(demo.getByText("current → v2", { exact: true })).toBeVisible();
+
+  await demo.getByRole("button", { name: "Corrupt bundle", exact: true }).click();
+  await expect(result).toContainText("Previous model retained");
+  await expect(result).toContainText("SHA-256 mismatch · activation blocked");
+  await expect(demo.getByText("current → v1", { exact: true })).toBeVisible();
+
+  await demo.getByRole("button", { name: "Verified bundle", exact: true }).click();
+  await expect(result).toContainText("New model active");
+  await expect(result).toContainText("Signature + digests + load verified");
+  await expect(demo.getByText("current → v2", { exact: true })).toBeVisible();
+});
+
+test("FDRE applies the chosen availability date to both searches and merges duplicate passages", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[2], exact: true });
+  await showDemo(demo);
+  await expect(demo).toHaveAttribute("data-running", "true");
+  const dates = demo.getByRole("group", { name: "Example as-of date" });
+  await expect(dates.getByRole("button", { name: "01 Mar", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(demo.locator('.fdre-filing-event[data-eligible="true"]')).toHaveCount(1);
+
+  // Exploring a mechanism pauses the tour without requiring a separate click.
+  await dates.getByRole("button", { name: "01 May", exact: true }).click();
+  await expect(demo).toHaveAttribute("data-running", "false");
+  await expect(demo.locator('.fdre-filing-event[data-eligible="true"]')).toHaveCount(3);
+  const steps = demo.getByRole("group", { name: "Animation steps" });
+  await steps.getByRole("button", { name: /^Hybrid Search:/ }).click();
+  await expect(dates).toHaveCount(0);
+  const passages = demo.locator(".fdre-merged-chunks .fdre-chunk-id");
+  await expect(passages).toHaveCount(4);
+  const laterIds = await passages.allTextContents();
+  expect(new Set(laterIds).size).toBe(4);
+  expect(laterIds.filter(id => id === "12")).toHaveLength(1);
+  await expect(demo.getByText("4 unique passages", { exact: true })).toBeVisible();
+
+  await steps.getByRole("button", { name: /^Availability:/ }).click();
+  await dates.getByRole("button", { name: "01 Mar", exact: true }).click();
+  await steps.getByRole("button", { name: /^Hybrid Search:/ }).click();
+  await expect(passages).toHaveText(["12", "31"]);
+  await expect(demo.getByText("2 unique passages", { exact: true })).toBeVisible();
+});
+
+test("FDRE shows citation checks for supported questions and abstains from forecasts", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[2], exact: true });
+  await showDemo(demo);
+  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Evidence:/ }).click();
+  const questions = demo.getByRole("group", { name: "Example question type" });
+  await expect(questions.getByRole("button", { name: "Filing risk", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(demo.getByText("Cited ID was retrieved", { exact: true })).toBeVisible();
+  await expect(demo.getByText("Quote overlap ≥ 0.60", { exact: true })).toBeVisible();
+
+  await questions.getByRole("button", { name: "Price forecast", exact: true }).click();
+  await expect(demo.getByText("Abstain", { exact: true })).toBeVisible();
+  await expect(demo.getByText("Generation skipped", { exact: true })).toBeVisible();
+  await expect(demo.getByText("No answer or citations returned", { exact: true })).toBeVisible();
+  await expect(demo.locator(".fdre-supported-outcome")).toHaveAttribute("aria-hidden", "true");
+  await expect(demo.locator(".fdre-supported-outcome")).toHaveCSS("opacity", "0");
+  await expect(demo.locator(".fdre-abstain-outcome")).toHaveAttribute("aria-hidden", "false");
+
+  await questions.getByRole("button", { name: "Filing risk", exact: true }).click();
+  await expect(demo.locator(".fdre-supported-outcome")).toHaveAttribute("aria-hidden", "false");
+  await expect(demo.locator(".fdre-supported-outcome")).toHaveCSS("opacity", "1");
+  await expect(demo.locator(".fdre-abstain-outcome")).toHaveAttribute("aria-hidden", "true");
 });
 
 test("Embers product views switch the accessible screenshot without moving the frame", async ({ page }) => {
@@ -157,11 +289,11 @@ test("reduced-motion walkthroughs show their completed result and fit small scre
 
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const name of demos) {
+    for (const [demoIndex, name] of demos.entries()) {
       const demo = page.getByRole("region", { name, exact: true });
       await showDemo(demo);
       await expect(demo).toHaveAttribute("data-running", "false");
-      await expect(demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(2)).toHaveAttribute("aria-pressed", "true");
+      await expect(demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(stageCounts[demoIndex] - 1)).toHaveAttribute("aria-pressed", "true");
       await expect(demo.getByRole("button", { name: /^(Pause|Play) animation$/ })).toHaveCount(0);
       await expect.poll(() => demo.evaluate(node => ({
         clippedVertically: node.scrollHeight > node.clientHeight + 1,

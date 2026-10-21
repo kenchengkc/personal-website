@@ -57,7 +57,7 @@ export function DemoPlayer({ className, label, eyebrow, title, stages, note, dur
   useEffect(() => {
     // CSS transitions also need to stop when a visitor pauses halfway through
     // a transformation. Direct step selection reveals its completed composition.
-    const frame = requestAnimationFrame(() => {
+    const updateTransitions = () => {
       root.current?.getAnimations({ subtree: true }).forEach(animation => {
         if (selected !== null && !playing) {
           if (animation instanceof CSSTransition) animation.finish();
@@ -66,14 +66,32 @@ export function DemoPlayer({ className, label, eyebrow, title, stages, note, dur
           else animation.pause();
         }
       });
-    });
+    };
+    // A hidden tab may never deliver another frame. Stop immediately; only
+    // defer starting so newly rendered transitions can first be discovered.
+    if (!running) {
+      updateTransitions();
+      return;
+    }
+    const frame = requestAnimationFrame(updateTransitions);
     return () => cancelAnimationFrame(frame);
   }, [playing, running, selected, stage]);
 
   return (
     <div ref={root} className={`project-demo demo-player ${className}`} role="region" aria-label={label} data-running={running} data-stage={stage} data-inspecting={selected !== null && !playing}>
       <span className="sr-only">{[eyebrow, title, note].filter(Boolean).join(". ")}</span>
-      <div className="demo-content">{children({ stage, reducedMotion })}</div>
+      <div className="demo-content" onFocus={event => {
+        if (event.target.closest("[data-demo-interaction]")) {
+          setSelected(stage);
+          setPlaying(false);
+        }
+      }} onClick={event => {
+        if ((event.target as HTMLElement).closest("[data-demo-interaction]")) {
+          setSelected(stage);
+          setPlaying(false);
+        }
+      }}>{children({ stage, reducedMotion })}</div>
+      <p className="demo-caption">{stages[stage].detail}</p>
       <div className="demo-controls">
         <div className="demo-steps" role="group" aria-label="Animation steps">
           {stages.map((item, index) => <button key={item.label} type="button" aria-label={item.detail ? `${item.label}: ${item.detail}` : item.label} aria-pressed={stage === index} onClick={() => { setSelected(index); setPlaying(false); }}>

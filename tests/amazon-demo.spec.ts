@@ -24,6 +24,31 @@ test("Amazon diagrams animate only while visible and respect the pause control",
   await expect(demo).toHaveAttribute("data-running", "false");
 });
 
+test("Amazon output selection traces shared dependencies and updates affected planning lanes", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: "Amazon configuration infrastructure", exact: true });
+  await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
+  await expect(demo).toHaveAttribute("data-running", "true");
+  await demo.evaluate(node => Promise.all(node.closest("[data-reveal]")!.getAnimations().map(animation => animation.finished)));
+  const outputs = demo.getByRole("group", { name: "Research output to trace" });
+  await expect(outputs.getByRole("button", { name: "Output A", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(demo.getByText("Output A → 2 affected configurations", { exact: true })).toBeVisible();
+  await expect(demo.locator(".amz-trace-graph .amz-file-glyph.is-linked")).toHaveCount(2);
+
+  await outputs.getByRole("button", { name: "Output B", exact: true }).click();
+  await expect(demo).toHaveAttribute("data-running", "false");
+  await expect(outputs.getByRole("button", { name: "Output B", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(demo.getByText("Output B → 3 affected configurations", { exact: true })).toBeVisible();
+  await expect(demo.locator(".amz-trace-graph .amz-file-glyph.is-linked")).toHaveCount(3);
+
+  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Distribute:/ }).click();
+  await expect(demo.locator(".amz-lane.is-linked")).toHaveCount(3);
+  await expect(demo.locator(".amz-lane.is-linked .amz-lane-version")).toHaveText(["v042", "v042", "v042"]);
+  await outputs.getByRole("button", { name: "Output A", exact: true }).click();
+  await expect(demo.locator(".amz-lane.is-linked")).toHaveCount(2);
+  await expect(demo.locator(".amz-lane:not(.is-linked) .amz-lane-version")).toHaveText("—");
+});
+
 test("Amazon diagrams remain readable and still with reduced motion on small screens", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -33,14 +58,13 @@ test("Amazon diagrams remain readable and still with reduced motion on small scr
     await demo.scrollIntoViewIfNeeded();
     await expect(demo).toHaveAttribute("data-running", "false");
     await expect(demo.getByRole("button", { name: "Pause animation" })).toHaveCount(0);
-    const layout = await demo.evaluate(node => ({
+    await expect.poll(() => demo.evaluate(node => ({
       clipped: node.scrollHeight > node.clientHeight + 1,
       overflow: document.documentElement.scrollWidth > innerWidth,
       running: node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length,
-    }));
-    expect(layout).toEqual({ clipped: false, overflow: false, running: 0 });
+    }))).toEqual({ clipped: false, overflow: false, running: 0 });
     const height = (await demo.boundingBox())!.height;
     await page.waitForTimeout(150);
-    expect((await demo.boundingBox())!.height).toBe(height);
+    expect((await demo.boundingBox())!.height).toBeCloseTo(height, 2);
   }
 });

@@ -7,15 +7,16 @@
   overflow: hidden;
   color: var(--demo-ink);
   background: var(--demo-bg);
-  font-family: var(--font-sans), Arial, sans-serif;
+  font-family: var(--demo-font, var(--font-sans)), Arial, sans-serif;
 }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .demo-content { min-width: 0; }
+.demo-caption { display: flex; align-items: center; justify-content: center; height: 64px; margin: 0; padding: 4px 28px 14px; color: var(--demo-muted); text-align: center; font-size: 12px; line-height: 1.5; }
 .motion-artwork { position: relative; width: 100%; aspect-ratio: 2 / 1; overflow: hidden; }
 .motion-artwork > svg { display: block; width: 100%; height: 100%; }
 .demo-controls { display: flex; align-items: center; justify-content: center; gap: 22px; padding: 4px 20px 26px; }
 .demo-steps { display: flex; align-items: center; gap: 26px; }
-.demo-steps button { padding: 8px 0; border: 0; border-bottom: 1px solid transparent; background: none; color: var(--demo-muted); font: 11px/1.3 var(--font-sans), Arial, sans-serif; cursor: pointer; transition: color .25s, border-color .25s; }
+.demo-steps button { padding: 8px 0; border: 0; border-bottom: 1px solid transparent; background: none; color: var(--demo-muted); font: 11px/1.3 var(--demo-font, var(--font-sans)), Arial, sans-serif; cursor: pointer; transition: color .25s, border-color .25s; }
 .demo-steps button[aria-pressed="true"] { color: var(--demo-ink); border-bottom-color: var(--demo-accent); }
 .demo-steps button:hover { color: var(--demo-ink); }
 .demo-play-control { display: grid; place-items: center; flex: 0 0 30px; height: 30px; padding: 0; border: 0; background: none; color: var(--demo-muted); cursor: pointer; }
@@ -23,9 +24,11 @@
 .demo-player button:focus-visible, .embers-demo button:focus-visible { outline: 1px solid var(--demo-accent); outline-offset: 4px; }
 .demo-player[data-running="false"] *, .demo-player[data-running="false"] *::before, .demo-player[data-running="false"] *::after { animation-play-state: paused !important; }
 .demo-player[data-inspecting="true"] *, .demo-player[data-inspecting="true"] *::before, .demo-player[data-inspecting="true"] *::after { animation: none !important; }
+.demo-player[data-inspecting="true"] * { transition: none !important; }
 @media (max-width: 620px) {
   .motion-artwork { aspect-ratio: 1.25; }
   .demo-controls { gap: 16px; padding: 0 12px 20px; }
+  .demo-caption { height: 74px; padding: 4px 18px 12px; font-size: 11px; }
   .demo-steps { gap: 20px; }
   .demo-steps button { font-size: 10px; }
 }
