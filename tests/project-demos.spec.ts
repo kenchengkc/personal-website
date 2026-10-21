@@ -51,20 +51,16 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
       await steps.nth(index).focus();
       await steps.nth(index).press("Enter");
       await expect(steps.nth(index)).toHaveAttribute("aria-pressed", "true");
+      await expect(demo).toHaveAttribute("data-stage", String(index));
       await expect(demo).toHaveAttribute("data-running", "false");
+      await expect(demo).toHaveAttribute("data-inspecting", "true");
       await expect(demo.getByRole("button", { name: "Play animation", exact: true })).toBeVisible();
       expect((await demo.boundingBox())!.height).toBeCloseTo(height, 2);
 
-      // Inspection shows the finished step, rather than freezing an entrance
-      // animation before the traced paths or historical observations appear.
-      if (index === 1 && name === demos[0]) {
-        await expect(demo.locator(".amz-route-progress")).toHaveCount(3);
-        await expect.poll(() => demo.locator(".amz-route-progress").evaluateAll(paths => paths.map(path => getComputedStyle(path).clipPath))).toEqual(["inset(0px)", "inset(0px)", "inset(0px)"]);
-      }
-      if (index === 1 && name === demos[1]) {
-        await expect(demo.locator(".qv-observation")).toHaveCount(8);
-        await expect.poll(() => demo.locator(".qv-history-layer, .qv-observation").evaluateAll(nodes => nodes.every(node => getComputedStyle(node).opacity === "1"))).toBe(true);
-      }
+      // A manually chosen illustration remains inspectable rather than
+      // leaving an entrance animation paused before its content appears.
+      await expect(demo.getByRole("img")).toBeVisible();
+      await expect.poll(() => demo.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation instanceof CSSAnimation && animation.playState !== "finished").length)).toBe(0);
     }
   }
 
@@ -79,6 +75,53 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
   await lastDemo.getByRole("button", { name: "Play animation", exact: true }).click();
   await expect(lastDemo).toHaveAttribute("data-running", "true");
   await expect(lastDemo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(2)).toHaveAttribute("aria-pressed", "true", { timeout: 6000 });
+});
+
+test("project illustrations stay visual with only concise labels and controls", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+
+  for (const name of demos) {
+    const demo = page.getByRole("region", { name, exact: true });
+    await showDemo(demo);
+    await expect(demo.getByRole("img")).toBeVisible();
+    const steps = demo.getByRole("group", { name: "Animation steps" }).getByRole("button");
+    for (let index = 0; index < 3; index++) {
+      await steps.nth(index).click();
+      const words = await demo.locator(".demo-content, .demo-controls").evaluateAll(nodes => {
+        const text = nodes.map(node => {
+          let visible = (node as HTMLElement).innerText;
+          node.querySelectorAll(".sr-only").forEach(description => {
+            visible = visible.replace((description as HTMLElement).innerText, "");
+          });
+          return visible;
+        }).join(" ").trim();
+        return text ? text.split(/\s+/).length : 0;
+      });
+      expect(words).toBeLessThanOrEqual(30);
+    }
+  }
+});
+
+test("Quantiv particles visibly move during playback and freeze when paused", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
+  await showDemo(demo);
+  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(0).click();
+  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
+  await expect(demo).toHaveAttribute("data-running", "true");
+  const particle = demo.locator(".qv-particle-light").first();
+  const position = () => particle.evaluate(node => getComputedStyle(node).transform);
+  await expect.poll(position).not.toBe("none");
+  const initial = await position();
+  await expect.poll(position, { timeout: 1500 }).not.toBe(initial);
+
+  await demo.getByRole("button", { name: "Pause animation", exact: true }).click();
+  await expect(demo).toHaveAttribute("data-running", "false");
+  await page.waitForTimeout(100);
+  const paused = await position();
+  await page.waitForTimeout(350);
+  expect(await position()).toBe(paused);
 });
 
 test("Embers product views switch the accessible screenshot without moving the frame", async ({ page }) => {

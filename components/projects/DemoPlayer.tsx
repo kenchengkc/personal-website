@@ -54,25 +54,39 @@ export function DemoPlayer({ className, label, eyebrow, title, stages, note, dur
     return () => window.clearTimeout(timer);
   }, [duration, running, stage, stages.length]);
 
+  useEffect(() => {
+    // CSS transitions also need to stop when a visitor pauses halfway through
+    // a transformation. Direct step selection reveals its completed composition.
+    const frame = requestAnimationFrame(() => {
+      root.current?.getAnimations({ subtree: true }).forEach(animation => {
+        if (selected !== null && !playing) {
+          if (animation instanceof CSSTransition) animation.finish();
+        } else if (animation instanceof CSSTransition) {
+          if (running) animation.play();
+          else animation.pause();
+        }
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [playing, running, selected, stage]);
+
   return (
     <div ref={root} className={`project-demo demo-player ${className}`} role="region" aria-label={label} data-running={running} data-stage={stage} data-inspecting={selected !== null && !playing}>
-      <header className="demo-heading">
-        <div><p className="demo-eyebrow">{eyebrow}</p><h4>{title}</h4></div>
+      <span className="sr-only">{[eyebrow, title, note].filter(Boolean).join(". ")}</span>
+      <div className="demo-content">{children({ stage, reducedMotion })}</div>
+      <div className="demo-controls">
+        <div className="demo-steps" role="group" aria-label="Animation steps">
+          {stages.map((item, index) => <button key={item.label} type="button" aria-label={item.detail ? `${item.label}: ${item.detail}` : item.label} aria-pressed={stage === index} onClick={() => { setSelected(index); setPlaying(false); }}>
+            {item.label}
+          </button>)}
+        </div>
         {!reducedMotion && <button className="demo-play-control" type="button" onClick={() => {
           if (!playing) { setAutomaticStage(stage); setSelected(null); }
           setPlaying(value => !value);
         }} aria-label={playing ? "Pause animation" : "Play animation"}>
           {playing ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}
         </button>}
-      </header>
-      <div className="demo-content">{children({ stage, reducedMotion })}</div>
-      <div className="demo-steps" role="group" aria-label="Animation steps">
-        {stages.map((item, index) => <button key={item.label} type="button" aria-pressed={stage === index} onClick={() => { setSelected(index); setPlaying(false); }}>
-          <span className="demo-step-number">{String(index + 1).padStart(2, "0")}</span>
-          <span><strong>{item.label}</strong><small>{item.detail}</small></span>
-        </button>)}
       </div>
-      <div className="demo-footnote"><span>{note}</span><span>Select a step to inspect</span></div>
     </div>
   );
 }
