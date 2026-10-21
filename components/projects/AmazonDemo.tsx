@@ -1,133 +1,123 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { DemoPlayer } from "./DemoPlayer";
 
-function ConfigVisual() {
+const STAGES = [
+  { label: "Edit", detail: "Version a configuration change" },
+  { label: "Trace", detail: "Resolve the affected dependencies" },
+  { label: "Deliver", detail: "Distribute a consistent version" },
+] as const;
+
+const DEPENDENCIES = [
+  { name: "Forecast inputs", detail: "Model → configuration", path: "M18 50H38Q43 50 43 45V24Q43 19 48 19H66" },
+  { name: "Model settings", detail: "Configuration → model", path: "M18 50H66" },
+  { name: "Planning outputs", detail: "Model → downstream", path: "M18 50H38Q43 50 43 55V76Q43 81 48 81H66" },
+] as const;
+
+function VersionDiff() {
   return (
-    <svg viewBox="0 0 320 190" role="img" aria-label="Version-controlled JSON configuration">
-      <path className="amazon-file-outline" d="M69 18H233L251 36V172H69Z M233 18V36H251" />
-      <text x="85" y="44" className="amazon-file-name">config.json</text>
-      <path className="amazon-rule" d="M85 56H235" />
-      <g className="amazon-code">
-        <text x="85" y="78">{'{'}</text>
-        <text x="98" y="99">model</text><path className="amazon-code-value" d="M170 95H222" />
-        <text x="98" y="120">inputs</text><path className="amazon-code-value" d="M170 116H211" />
-        <text x="98" y="141">overrides</text><path className="amazon-code-value" d="M170 137H224" />
-        <text x="85" y="160">{'}'}</text>
-      </g>
-      <path className="amazon-config-edit" d="M170 116H223" />
-      <circle className="amazon-commit" cx="233" cy="44" r="3" />
-    </svg>
+    <div className="amz-source">
+      <div className="amz-pane-label"><span>01</span> Configuration</div>
+      <div className="amz-file-header">
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="none" aria-hidden="true"><path d="M2 1H8L12 5V15H2Z M8 1V5H12" stroke="currentColor" /></svg>
+        <span>config.json</span>
+        <small>JSON</small>
+      </div>
+      <div className="amz-code" aria-label="Illustrative JSON configuration changes the model input version from v041 to v042">
+        <div><span>1</span><code>{"{"}</code></div>
+        <div><span>2</span><code><b>&quot;model&quot;</b>: <em>&quot;forecast&quot;</em>,</code></div>
+        <div><span>3</span><code><b>&quot;inputs&quot;</b>: {"{"}</code></div>
+        <div className="amz-code-removed"><span>−</span><code><b>&quot;version&quot;</b>: <em>&quot;v041&quot;</em></code></div>
+        <div className="amz-code-added"><span>+</span><code><b>&quot;version&quot;</b>: <em>&quot;v042&quot;</em></code><i aria-hidden="true" /></div>
+        <div><span>5</span><code>{"}"},</code></div>
+        <div><span>6</span><code><b>&quot;overrides&quot;</b>: {"{}"}</code></div>
+        <div><span>7</span><code>{"}"}</code></div>
+      </div>
+      <div className="amz-change-summary"><span><i />1 change</span><span>Version-controlled inputs</span></div>
+    </div>
   );
 }
 
-const DEPENDENCY_PATHS = [
-  "M38 95C68 95 72 52 108 52",
-  "M38 95C68 95 72 138 108 138",
-  "M108 52C140 52 143 95 177 95",
-  "M108 138C140 138 143 95 177 95",
-  "M177 95C210 95 215 40 264 40",
-  "M177 95H264",
-  "M177 95C210 95 215 150 264 150",
-];
-const DEPENDENCY_NODES = [[38, 95], [108, 52], [108, 138], [177, 95], [264, 40], [264, 95], [264, 150]];
-
-function DependencyVisual() {
+function DependencyTrace({ stage }: { stage: number }) {
   return (
-    <svg viewBox="0 0 320 190" role="img" aria-label="Dependencies traced from model outputs to downstream configurations">
-      {DEPENDENCY_PATHS.map((path, index) => (
-        <g key={path}>
-          <path d={path} className="amazon-dependency-path" />
-          <path d={path} pathLength="1" className="amazon-dependency-signal" style={{ "--delay": `${index < 2 ? 0 : index < 4 ? 1.2 : 2.4}s` } as CSSProperties} />
-        </g>
-      ))}
-      {DEPENDENCY_NODES.map(([x, y], index) => (
-        <g key={`${x}-${y}`}>
-          <circle className="amazon-node" cx={x} cy={y} r={index === 3 ? 6 : 4} />
-          <circle className="amazon-node-arrival" cx={x} cy={y} r={index === 3 ? 6 : 4}
-            style={{ "--delay": `${index === 0 ? 0 : index < 3 ? 1.2 : index === 3 ? 2.4 : 3.6}s` } as CSSProperties} />
-        </g>
-      ))}
-      <text x="38" y="179" textAnchor="middle">models</text>
-      <text x="264" y="179" textAnchor="middle">configs</text>
-    </svg>
+    <div className="amz-trace">
+      <div className="amz-pane-label"><span>02</span> Dependency trace</div>
+      <div className="amz-map">
+        <svg className="amz-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {DEPENDENCIES.map(({ path, name }, index) => (
+            <g key={name}>
+              <path className="amz-route" d={path} vectorEffect="non-scaling-stroke" />
+              <path className={`amz-route-progress amz-route-${index}`} d={path} vectorEffect="non-scaling-stroke" />
+            </g>
+          ))}
+        </svg>
+        <div className="amz-origin">
+          <span className="amz-origin-mark" aria-hidden="true"><i /><i /><i /></span>
+          <strong>v042</strong>
+          <small>Config bundle</small>
+        </div>
+        {DEPENDENCIES.map(({ name, detail }, index) => (
+          <div className={`amz-dependency amz-dependency-${index}`} key={name}>
+            <i className="amz-node" aria-hidden="true" />
+            <strong>{name}</strong>
+            <small>{detail}</small>
+          </div>
+        ))}
+      </div>
+      <div className="amz-trace-status"><span className="amz-status-dot" />{stage === 0 ? "Change ready to trace" : stage === 1 ? "Following model and configuration links" : "Dependencies resolved"}</div>
+    </div>
   );
 }
 
-function DeliveryVisual() {
+function DeliveryReceipt({ stage }: { stage: number }) {
   return (
-    <svg viewBox="0 0 320 190" role="img" aria-label="Configuration delivery through Lambda, S3, and Coral APIs">
-      <path className="amazon-delivery-rail" d="M58 88H142M178 88H262" />
-      <path className="amazon-delivery-signal amazon-delivery-first" d="M58 88H142" pathLength="1" />
-      <path className="amazon-delivery-signal amazon-delivery-second" d="M178 88H262" pathLength="1" />
-      <g className="amazon-service-mark">
-        <path d="M33 75H40L55 101 M43 80L32 101" />
-        <ellipse cx="160" cy="75" rx="17" ry="6" />
-        <path d="M143 75V99C143 107 177 107 177 99V75 M143 87C143 95 177 95 177 87" />
-        <path d="M273 78L263 88L273 98 M289 78L299 88L289 98 M284 74L278 102" />
-      </g>
-      <text x="43" y="132" textAnchor="middle">Lambda</text>
-      <text x="160" y="132" textAnchor="middle">S3</text>
-      <text x="281" y="132" textAnchor="middle">Coral APIs</text>
-    </svg>
+    <div className="amz-delivery">
+      <div className="amz-delivery-heading">
+        <div className="amz-pane-label"><span>03</span> Distribution</div>
+        <p>One version across planning lanes</p>
+      </div>
+      <div className="amz-release-path" aria-label="Configuration distribution uses AWS Lambda, S3, and internal APIs">
+        <span>Lambda</span><i aria-hidden="true" /><span>S3</span><i aria-hidden="true" /><span>Internal APIs</span>
+      </div>
+      <div className="amz-receipts">
+        {["A", "B", "C"].map((lane, index) => (
+          <div className={`amz-receipt amz-receipt-${index}`} key={lane}>
+            <span className="amz-lane">Planning lane {lane}</span>
+            <span className="amz-receipt-status">
+              <i aria-hidden="true" />
+              {stage === 2 ? "v042" : stage === 1 ? "Resolved" : "Pending"}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
-}
-
-function subscribeMotion(notify: () => void) {
-  const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-  query.addEventListener("change", notify);
-  return () => query.removeEventListener("change", notify);
-}
-
-function subscribeVisibility(notify: () => void) {
-  document.addEventListener("visibilitychange", notify);
-  return () => document.removeEventListener("visibilitychange", notify);
 }
 
 export function AmazonDemo() {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useSyncExternalStore(subscribeMotion, () => window.matchMedia("(prefers-reduced-motion: reduce)").matches, () => false);
-  const tabVisible = useSyncExternalStore(subscribeVisibility, () => !document.hidden, () => false);
-  const [playing, setPlaying] = useState(true);
-  const [inView, setInView] = useState(false);
-  const running = playing && inView && tabVisible && !reducedMotion;
-
-  useEffect(() => {
-    if (!rootRef.current) return;
-    const observer = new IntersectionObserver(([entry]) => setInView(entry.intersectionRatio >= 0.2), { threshold: 0.2 });
-    observer.observe(rootRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div ref={rootRef} className="project-demo amazon-demo" role="region" aria-label="Amazon configuration infrastructure" data-running={running}>
-      <div className="demo-topline">
-        <span>Amazon SCOT · configuration infrastructure</span>
-        {!reducedMotion && (
-          <button className="amazon-motion-control" type="button" onClick={() => setPlaying(value => !value)}
-            aria-label={playing ? "Pause animation" : "Play animation"}>
-            {playing ? <Pause size={12} aria-hidden="true" /> : <Play size={12} aria-hidden="true" />}
-          </button>
-        )}
-      </div>
-      <div className="amazon-panels">
-        <article>
-          <div className="amazon-diagram"><ConfigVisual /></div>
-          <span>Configuration</span>
-          <h4>Version-controlled JSON</h4>
-        </article>
-        <article>
-          <div className="amazon-diagram"><DependencyVisual /></div>
-          <span>Dependencies</span>
-          <h4>Trace model outputs to configs</h4>
-        </article>
-        <article>
-          <div className="amazon-diagram"><DeliveryVisual /></div>
-          <span>Distribution</span>
-          <h4>Deliver across planning lanes</h4>
-        </article>
-      </div>
-    </div>
+    <DemoPlayer
+      className="amazon-demo"
+      label="Amazon configuration infrastructure"
+      eyebrow="Amazon / Configuration Infrastructure"
+      title="A change, traced end to end."
+      stages={STAGES}
+      note="Illustrative workflow"
+      duration={3200}
+    >
+      {({ stage }) => (
+        <div className="amz-workspace" data-stage={stage}>
+          <div className="amz-workspace-bar">
+            <span><i aria-hidden="true" /> Configuration workspace</span>
+            <span className="amz-version-change">v041 <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true"><path d="M1 5H16M12 1L16 5L12 9" stroke="currentColor" /></svg> <strong>v042</strong></span>
+          </div>
+          <div className="amz-change-grid">
+            <VersionDiff />
+            <DependencyTrace stage={stage} />
+          </div>
+          <DeliveryReceipt stage={stage} />
+        </div>
+      )}
+    </DemoPlayer>
   );
 }

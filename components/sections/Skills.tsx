@@ -82,13 +82,13 @@ export function Skills() {
       <div className="reading-column">
         <h2 className="section-kicker" data-reveal>Skills</h2>
         <div className="skills-field" data-reveal>
-          {skillGroups.map((group, groupIndex) => (
+          {skillGroups.map((group) => (
             <div className="skill-row" key={group.label}>
               <span className="skill-group-label">{group.label}</span>
               <div className="skill-items">
-                {group.skills.map((skill, index) => (
+                {group.skills.map((skill) => (
                   <span
-                    className={`skill-item skill-motion-${(index + groupIndex) % 3}`}
+                    className="skill-item"
                     key={skill}
                   >
                     <i aria-hidden="true" />

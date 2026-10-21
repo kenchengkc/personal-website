@@ -691,8 +691,6 @@ a:focus-visible .link-arrow { opacity: 1; }
 }
 
 .skill-item {
-  --skill-x: 0px;
-  --skill-r: 0deg;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -702,8 +700,6 @@ a:focus-visible .link-arrow { opacity: 1; }
   color: var(--silver);
   font-size: 12px;
   line-height: 1;
-  transform: translateX(var(--skill-x)) rotate(var(--skill-r));
-  transform-origin: center;
   cursor: default;
   transition:
     color 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -722,39 +718,11 @@ a:focus-visible .link-arrow { opacity: 1; }
   z-index: 2;
   border-color: var(--gold-dim);
   color: var(--silver-bright);
-  animation: skill-wiggle-a 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .skill-item:hover i {
   background: var(--gold-metal);
 }
-
-.skill-motion-1:hover {
-  animation-name: skill-wiggle-b;
-}
-
-.skill-motion-2:hover {
-  animation-name: skill-wiggle-c;
-}
-
-@keyframes skill-wiggle-a {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  35% { transform: translate(3px, -2px) rotate(1.1deg); }
-  70% { transform: translate(-2px, 1px) rotate(-0.7deg); }
-}
-
-@keyframes skill-wiggle-b {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  35% { transform: translate(-3px, -1px) rotate(-1deg); }
-  70% { transform: translate(2px, 2px) rotate(0.8deg); }
-}
-
-@keyframes skill-wiggle-c {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  35% { transform: translate(2px, 2px) rotate(-0.8deg); }
-  70% { transform: translate(-2px, -2px) rotate(0.9deg); }
-}
-
 
 /* Platinum award treatment */
 
@@ -1088,28 +1056,12 @@ a:focus-visible .link-arrow { opacity: 1; }
   isolation: isolate;
 }
 
-.project-result::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 10% 3% -4%;
-  border-radius: 28px;
-  background: rgba(238, 238, 232, 0.07);
-  filter: blur(38px);
-  opacity: 0.95;
-  pointer-events: none;
-}
-
 .project-visual {
   width: 100%;
-  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border: 1px solid #1e1e1e;
-  border-radius: 16px;
+  border: 1px solid #2a2c2e;
+  border-radius: 8px;
   background: var(--paper);
-  box-shadow:
-    0 28px 82px rgba(235, 235, 230, 0.13),
-    0 0 0 1px rgba(255, 255, 255, 0.018);
 }
 
 .project-caption {
@@ -1565,15 +1517,8 @@ a:focus-visible .link-arrow { opacity: 1; }
     margin-top: 34px;
   }
 
-  .project-result::before {
-    inset: 14% 4% -2%;
-    filter: blur(28px);
-  }
-
   .project-visual {
-    aspect-ratio: 4 / 3;
-    border-radius: 12px;
-    box-shadow: 0 18px 48px rgba(235, 235, 230, 0.09);
+    border-radius: 6px;
   }
 
   .research-row {
