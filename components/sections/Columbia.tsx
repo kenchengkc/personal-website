@@ -1,15 +1,8 @@
 export function Columbia() {
   const coursework = [
-    "Machine Learning",
-    "Natural Language Processing",
-    "Artificial Intelligence",
-    "Advanced Programming in C",
-    "Data Structures and Algorithms",
-    "Databases",
-    "Probability Theory",
-    "Statistical Inference",
-    "Linear Algebra",
-    "Linear Regression",
+    ["Machine Learning", "Natural Language Processing", "Artificial Intelligence"],
+    ["Advanced Programming in C", "Data Structures and Algorithms", "Databases"],
+    ["Probability Theory", "Statistical Inference", "Linear Algebra", "Linear Regression"],
   ];
 
   return (
@@ -20,8 +13,6 @@ export function Columbia() {
       data-scroll-label="COLUMBIA"
     >
       <div className="reading-column">
-        <p className="section-kicker" data-reveal>Columbia</p>
-
         <div className="columbia-heading" data-reveal>
           <div>
             <h2>Columbia University</h2>
@@ -43,13 +34,10 @@ export function Columbia() {
         </div>
 
         <div className="coursework-block" data-reveal>
-          <span className="coursework-label">Selected Coursework</span>
-          <div className="coursework-grid">
-            {coursework.map((course, index) => (
-              <span key={course}>
-                <i>{String(index + 1).padStart(2, "0")}</i>
-                {course}
-              </span>
+          <h3 className="coursework-label">Selected coursework</h3>
+          <div className="coursework-list">
+            {coursework.map(courses => (
+              <p key={courses[0]}>{courses.join(", ")}</p>
             ))}
           </div>
         </div>
