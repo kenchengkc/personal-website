@@ -8,7 +8,7 @@ declare global {
 
 test("rain keeps moving while assembly waits for scrolling past 30%", async ({ page }) => {
   // Keep the initial artwork below the trigger so both sides can be reached by scrolling.
-  await page.setViewportSize({ width: 1440, height: 800 });
+  await page.setViewportSize({ width: 1440, height: 400 });
   await page.goto("/");
   const artwork = page.locator(".hero-binary-art");
   const canvas = page.locator(".hero-brain-canvas");

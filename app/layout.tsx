@@ -1,14 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Manrope, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
 import "./project-demos.css";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
+  display: "swap",
+});
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -16,7 +23,7 @@ const isVercel = process.env.VERCEL === "1";
 
 export const viewport: Viewport = {
   colorScheme: "dark",
-  themeColor: "#0a0a0a",
+  themeColor: "#111a16",
 };
 
 export const metadata: Metadata = {
@@ -40,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable} style={{ backgroundColor: "#0a0a0a", color: "#e7e7e4", colorScheme: "dark" }}>
+    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} style={{ backgroundColor: "#111a16", color: "#e1e6d9", colorScheme: "dark" }}>
       <body>
         <ScrollExperience />
         {children}
