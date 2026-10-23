@@ -1,16 +1,34 @@
 "use client";
 
-import { useId, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { DemoPlayer } from "./DemoPlayer";
 
 const STAGES = [
-  { label: "Trace", detail: "Follow one research output through shared dependencies to affected downstream configurations." },
-  { label: "Compare", detail: "Compare the versioned JSON inputs used by the affected configuration." },
-  { label: "Distribute", detail: "Follow one configuration version through Lambda, S3, and internal APIs to planning lanes." },
+  { label: "Trace", detail: "Shared inputs connect each research output to the configurations it affects." },
+  { label: "Compare", detail: "The selected configuration retains both JSON versions for comparison." },
+  { label: "Distribute", detail: "Version v042 moves through Lambda, S3, and internal APIs to the affected planning lanes." },
 ] as const;
 
 type Point = readonly [number, number];
 type Selection = "A" | "B";
+type LayoutName = "wide" | "compact" | "narrow";
+type Layout = {
+  width: number;
+  height: number;
+  graph: readonly Point[];
+  verticalGraph: boolean;
+  previous: Point;
+  comparison: Point;
+  departure: Point;
+  services: readonly Point[];
+  lanes: readonly Point[];
+  delivered: Point;
+  traceScale: number;
+  comparisonScale: number;
+  deliveryScale: number;
+};
+
+// These illustrative relationships are unchanged when the artwork recomposes.
 const EDGES = [
   { from: 0, to: 2, outputs: "A" },
   { from: 0, to: 3, outputs: "A" },
@@ -22,13 +40,37 @@ const EDGES = [
   { from: 4, to: 7, outputs: "B" },
 ] as const;
 
-function subscribeSmallScreen(notify: () => void) {
-  const query = window.matchMedia("(max-width: 620px)");
-  query.addEventListener("change", notify);
-  return () => query.removeEventListener("change", notify);
-}
+const LAYOUTS: Record<LayoutName, Layout> = {
+  wide: {
+    width: 900, height: 550,
+    graph: [[73, 96], [73, 278], [235, 62], [235, 187], [235, 311], [435, 77], [435, 196], [435, 315]],
+    verticalGraph: false,
+    previous: [621, 152], comparison: [790, 152], departure: [82, 374],
+    services: [[155, 430], [330, 430], [505, 430]],
+    lanes: [[805, 366], [805, 437], [805, 508]], delivered: [645, 430],
+    traceScale: .65, comparisonScale: 1, deliveryScale: .52,
+  },
+  compact: {
+    width: 580, height: 560,
+    graph: [[58, 82], [58, 235], [191, 57], [191, 164], [191, 270], [342, 70], [342, 177], [342, 284]],
+    verticalGraph: false,
+    previous: [491, 83], comparison: [491, 249], departure: [43, 370],
+    services: [[80, 427], [212, 427], [344, 427]],
+    lanes: [[510, 375], [510, 451], [510, 527]], delivered: [421, 451],
+    traceScale: .65, comparisonScale: .88, deliveryScale: .44,
+  },
+  narrow: {
+    width: 400, height: 742,
+    graph: [[99, 47], [301, 47], [65, 151], [200, 151], [335, 151], [65, 272], [200, 272], [335, 272]],
+    verticalGraph: true,
+    previous: [105, 424], comparison: [290, 424], departure: [42, 527],
+    services: [[70, 586], [200, 586], [330, 586]],
+    lanes: [[70, 701], [200, 701], [330, 701]], delivered: [200, 645],
+    traceScale: .6, comparisonScale: .93, deliveryScale: .44,
+  },
+};
 
-function route(from: Point, to: Point, vertical: boolean) {
+function connection(from: Point, to: Point, vertical = false) {
   const [x1, y1] = from;
   const [x2, y2] = to;
   return vertical
@@ -36,186 +78,195 @@ function route(from: Point, to: Point, vertical: boolean) {
     : `M${x1} ${y1}C${(x1 + x2) / 2} ${y1} ${(x1 + x2) / 2} ${y2} ${x2} ${y2}`;
 }
 
-function FileGlyph({ prefix, name, version, active = true }: { prefix: string; name: string; version?: string; active?: boolean }) {
+function ConfigurationPaper({ prefix, version, current }: { prefix: string; version: string; current: boolean }) {
   return (
-    <g className={`amz-file-glyph ${active ? "is-linked" : ""}`}>
-      <path d="M-45-32H33L46-19V40H-45Z" transform="translate(-5 5)" fill="#0a1523" stroke="#37516b" strokeWidth=".8" />
-      <path d="M-45-32H33L46-19V40H-45Z" fill={`url(#${prefix}-paper)`} stroke="currentColor" strokeWidth=".8" />
-      <path d="M33-32V-19H46" fill="#263e53" stroke="currentColor" strokeWidth=".6" />
-      <path d="M-29-11H20M-29-3H11M-29 5H25" stroke="#9eb5c6" strokeOpacity=".36" strokeWidth="2" strokeLinecap="round" />
-      <path className="amz-file-accent" d="M-29 14H25" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-      <text x="0" y="31" textAnchor="middle" className="amz-file-name">{version ?? name}</text>
-      {version && <text x="0" y="59" textAnchor="middle" className="amz-small-label">{name}</text>}
+    <g className={current ? "amz-current-paper" : "amz-previous-paper"}>
+      <path d="M-70-76H48L70-54V76H-70Z" transform="translate(-4 5)" fill="#091522" stroke="#304658" strokeWidth=".8" />
+      <path d="M-70-76H48L70-54V76H-70Z" fill={`url(#${prefix}-paper)`} stroke={current ? "#e4ae63" : "#647d91"} />
+      <path d="M48-76V-54H70" fill="#263c4f" stroke={current ? "#caa370" : "#647d91"} strokeWidth=".7" />
+      <text x="-55" y="-48" className="amz-actor-filename">config-a.json</text>
+      <text x="-55" y="-25" className="amz-actor-version">{version}</text>
+      <path d="M-54-13H54" stroke="#a2b4c1" strokeOpacity=".18" />
+      <g className="amz-paper-code">
+        <text x="-55" y="8" className="amz-code-brace">{"{"}</text>
+        <text x="-40" y="28" className="amz-code-key">&quot;input&quot;:</text>
+        <path d="M-43 35H49V56H-43Z" fill={current ? "#e99a32" : "#91a7bb"} fillOpacity={current ? ".12" : ".06"} />
+        <text x="-30" y="51" className="amz-code-value">&quot;{version}&quot;</text>
+        <text x="-55" y="67" className="amz-code-brace">{"}"}</text>
+      </g>
     </g>
   );
 }
 
-function TraceGraph({ selected, small, prefix }: { selected: Selection; small: boolean; prefix: string }) {
-  const positions: Point[] = small
-    ? [[145, 104], [335, 104], [80, 300], [240, 300], [400, 300], [80, 520], [240, 520], [400, 520]]
-    : [[110, 157], [110, 342], [350, 112], [350, 250], [350, 388], [700, 128], [700, 260], [700, 392]];
-  const outputs = ["A", "B"] as const;
-  const dependencyNames = ["Input A", "Shared input", "Input B"];
+function SecondaryConfiguration({ name, active, prefix }: { name: string; active: boolean; prefix: string }) {
+  return (
+    <g className={`amz-secondary-config ${active ? "is-linked" : ""}`}>
+      <path d="M-34-23H23L34-12V24H-34Z" fill={`url(#${prefix}-paper)`} stroke="currentColor" strokeWidth=".8" />
+      <path d="M23-23V-12H34M-22-6H18M-22 2H10M-22 10H19" fill="none" stroke="currentColor" strokeWidth=".8" />
+      <text x="0" y="42" textAnchor="middle" className="amz-config-label">{name}</text>
+    </g>
+  );
+}
+
+function DependencyMap({ selected, layout, prefix }: { selected: Selection; layout: Layout; prefix: string }) {
   const activeNodes = selected === "A" ? [0, 2, 3, 5, 6] : [1, 3, 4, 5, 6, 7];
   return (
-    <g className="amz-trace-graph">
-      <g className="amz-column-labels">
-        <text x={small ? 240 : 110} y={small ? 35 : 50} textAnchor="middle">Research outputs</text>
-        <text x={small ? 240 : 350} y={small ? 224 : 50} textAnchor="middle">Dependencies</text>
-        <text x={small ? 240 : 700} y={small ? 437 : 50} textAnchor="middle">Downstream configurations</text>
-      </g>
+    <g className="amz-dependency-map">
       {EDGES.map((edge, index) => {
-        const active = edge.outputs.includes(selected);
-        const path = route(positions[edge.from], positions[edge.to], small);
+        const path = connection(layout.graph[edge.from], layout.graph[edge.to], layout.verticalGraph);
         return (
-          <g key={`${edge.from}-${edge.to}`} className={`amz-edge ${active ? "is-linked" : ""}`}>
+          <g className={`amz-edge ${edge.outputs.includes(selected) ? "is-linked" : ""}`} key={`${edge.from}-${edge.to}`}>
             <path d={path} className="amz-edge-base" />
-            <path d={path} className={`amz-edge-signal amz-edge-signal-${index % 3}`} pathLength="100" />
+            <path d={path} pathLength="100" className={`amz-edge-signal amz-signal-${index % 3}`} />
           </g>
         );
       })}
-      {outputs.map((output, index) => {
-        const [x, y] = positions[index];
+      {(["A", "B"] as const).map((output, index) => {
+        const [x, y] = layout.graph[index];
         return (
-          <g key={output} transform={`translate(${x} ${y})`} className={`amz-output ${selected === output ? "is-linked" : ""}`}>
-            <path d="M-42 5 0-18 42 5 0 28Z" fill="#0a1525" stroke="currentColor" strokeWidth=".7" />
-            <path d="M-42-3 0-26 42-3 0 20Z" fill={`url(#${prefix}-paper)`} stroke="currentColor" strokeWidth=".8" />
-            <path d="M-42-11 0-34 42-11 0 12Z" fill={`url(#${prefix}-plane)`} stroke="currentColor" strokeWidth=".8" />
-            <path d="M-21-10-9-17 0-12 12-25 24-18" className="amz-output-plot" />
-            <text x="0" y="53" textAnchor="middle" className="amz-output-label">Output {output}</text>
+          <g transform={`translate(${x} ${y})`} className={`amz-output ${selected === output ? "is-linked" : ""}`} key={output}>
+            <path d="M-29 4 0-11 29 4 0 19Z" fill="#0b1a29" stroke="currentColor" strokeWidth=".8" />
+            <path d="M-29-3 0-18 29-3 0 12Z" fill={`url(#${prefix}-plane)`} stroke="currentColor" strokeWidth=".8" />
+            <path d="M-16-3-7-8 0-4 8-12 17-7" className="amz-output-plot" />
+            <text x="0" y="37" textAnchor="middle" className="amz-output-label">Output {output}</text>
           </g>
         );
       })}
-      {dependencyNames.map((name, index) => {
-        const [x, y] = positions[index + 2];
+      {["Input A", "Shared input", "Input B"].map((label, index) => {
+        const [x, y] = layout.graph[index + 2];
         return (
-          <g key={name} transform={`translate(${x} ${y})`} className={`amz-dependency ${activeNodes.includes(index + 2) ? "is-linked" : ""}`}>
-            <path d="M-33-20H33V20H-33Z" transform="translate(0 4)" fill="#081421" stroke="#263c52" />
-            <path d="M-33-20H33V20H-33Z" fill={`url(#${prefix}-plane)`} stroke="currentColor" strokeWidth=".8" />
-            <path d="M-17-5H17M-17 2H9M-17 9H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            <text x="0" y="43" textAnchor="middle" className="amz-node-label">{name}</text>
-            {index === 1 && <text x="0" y="60" textAnchor="middle" className="amz-shared-label">2 outputs · 2 configs</text>}
+          <g transform={`translate(${x} ${y})`} className={`amz-dependency ${activeNodes.includes(index + 2) ? "is-linked" : ""}`} key={label}>
+            <path d="M-25-16H25V16H-25Z" fill={`url(#${prefix}-plane)`} stroke="currentColor" strokeWidth=".8" />
+            <path d="M-13-5H13M-13 2H7M-13 8H10" fill="none" stroke="currentColor" strokeWidth="1.2" />
+            <text x="0" y="34" textAnchor="middle" className="amz-node-label">{label}</text>
+            {index === 1 && <text x="0" y="49" textAnchor="middle" className="amz-shared-label">2 outputs · 2 configs</text>}
           </g>
         );
       })}
-      {["config-a.json", "config-b.json", "config-c.json"].map((file, index) => {
-        const [x, y] = positions[index + 5];
-        return <g transform={`translate(${x} ${y})`} key={file}><FileGlyph prefix={prefix} name={small ? `Config ${String.fromCharCode(65 + index)}` : file} active={activeNodes.includes(index + 5)} /></g>;
+      <circle cx={layout.graph[5][0]} cy={layout.graph[5][1]} r="3" fill="#dca35c" className="amz-configuration-origin" />
+      <text x={layout.graph[5][0]} y={layout.graph[5][1] + 62} textAnchor="middle" className="amz-config-label">Config A</text>
+      {["config-b.json", "config-c.json"].map((file, index) => {
+        const [x, y] = layout.graph[index + 6];
+        return <g transform={`translate(${x} ${y})`} key={file}><SecondaryConfiguration name={file} active={activeNodes.includes(index + 6)} prefix={prefix} /></g>;
       })}
-      <text x={small ? 240 : 438} y={small ? 622 : 461} className="amz-selection-summary" textAnchor="middle">
-        Output {selected} → {selected === "A" ? "2" : "3"} affected configurations
-      </text>
     </g>
   );
 }
 
-function ConfigurationVersion({ prefix, version, current }: { prefix: string; version: string; current: boolean }) {
-  return (
-    <g className={`amz-version-sheet ${current ? "is-current" : ""}`}>
-      <path d="M0 0H149L173 24V224H0Z" transform="translate(-7 8)" fill="#091321" stroke="#344c61" />
-      <path d="M0 0H149L173 24V224H0Z" fill={`url(#${prefix}-paper)`} stroke={current ? "#e5ae60" : "#66829a"} strokeWidth=".9" />
-      <path d="M149 0V24H173" fill="#253e54" stroke="#66829a" strokeWidth=".6" />
-      <text x="18" y="32" className="amz-code-file">config-a.json</text>
-      <text x="18" y="55" className="amz-version-number">{version}</text>
-      <path d="M18 71H153" stroke="#8fa5b4" strokeOpacity=".18" />
-      <text x="18" y="97" className="amz-code-brace">{"{"}</text>
-      <text x="29" y="120" className="amz-code-key">&quot;input&quot;:</text>
-      <path d="M25 131H148V158H25Z" fill={current ? "#eb9a28" : "#9aadc0"} fillOpacity={current ? ".12" : ".05"} />
-      <text x="39" y="149" className="amz-code-value">&quot;{version}&quot;</text>
-      <text x="18" y="184" className="amz-code-brace">{"}"}</text>
-      <path className="amz-sheet-underline" d="M39 158H96" stroke={current ? "#ffac40" : "#8398aa"} strokeWidth="2" />
-    </g>
-  );
-}
-
-function CompareScene({ small, prefix }: { small: boolean; prefix: string }) {
-  return (
-    <g className="amz-compare-scene">
-      <text x={small ? 240 : 594} y={small ? 282 : 72} textAnchor="middle" className="amz-scene-label">One affected configuration. Two input versions.</text>
-      <g transform={small ? "translate(48 329) rotate(-4)" : "translate(394 132) rotate(-4)"}>
-        <ConfigurationVersion prefix={prefix} version="v041" current={false} />
-      </g>
-      <g transform={small ? "translate(261 337) rotate(4)" : "translate(639 142) rotate(4)"}>
-        <ConfigurationVersion prefix={prefix} version="v042" current />
-      </g>
-      <path d={small ? "M215 454H253M244 449 253 454 244 459" : "M570 257H623M614 252 623 257 614 262"} fill="none" stroke="#ffac40" strokeWidth="1.5" />
-      <text x={small ? 240 : 604} y={small ? 614 : 420} textAnchor="middle" className="amz-comparison-note">Compare the input revision; preserve the configuration identity.</text>
-    </g>
-  );
-}
-
-function Service({ type, prefix }: { type: "Lambda" | "S3" | "Internal APIs"; prefix: string }) {
+function Service({ kind, prefix }: { kind: "Lambda" | "S3" | "Internal APIs"; prefix: string }) {
   return (
     <g className="amz-service">
-      <path d="M-38-27H28L38-17V33H-28L-38 23Z" transform="translate(0 7)" fill="#071422" stroke="#274159" />
-      <path d="M-38-27H28L38-17V33H-28L-38 23Z" fill={`url(#${prefix}-service)`} stroke="#cf913c" strokeWidth=".8" />
-      {type === "Lambda" ? <path d="M-15-14H-6L12 21H19M-6-5-21 21M3 5-6 21" fill="none" stroke="#ffbc62" strokeWidth="3" strokeLinecap="square" /> : type === "S3" ? <g fill="none" stroke="#ffbc62" strokeWidth="1.7"><ellipse cy="-12" rx="19" ry="6" /><path d="M-19-12-14 17Q0 26 14 17L19-12M-17 0Q0 9 17 0" /></g> : <g fill="none" stroke="#ffbc62" strokeWidth="2"><path d="M-12-10-23 2-12 14M12-10 23 2 12 14M5-15-5 19" /></g>}
-      <text x="0" y="62" textAnchor="middle" className="amz-service-label">{type}</text>
+      <path d="M-25-24H18L26-16V25H-18L-25 18Z" transform="translate(0 4)" fill="#091725" stroke="#2e4659" strokeWidth=".7" />
+      <path d="M-25-24H18L26-16V25H-18L-25 18Z" fill={`url(#${prefix}-service)`} stroke="#b8813c" strokeWidth=".8" />
+      {kind === "Lambda" ? <path d="M-10-12H-3L10 16H16M-3-5-15 16M3 5-4 16" fill="none" stroke="#ffbb68" strokeWidth="2.2" /> : kind === "S3" ? <g fill="none" stroke="#ffbb68" strokeWidth="1.5"><ellipse cy="-10" rx="14" ry="4.5" /><path d="M-14-10-10 13Q0 19 10 13L14-10M-12-1Q0 5 12-1" /></g> : <path d="M-10-8-18 1-10 10M10-8 18 1 10 10M4-12-4 14" fill="none" stroke="#ffbb68" strokeWidth="1.7" />}
+      <text x="0" y="-37" textAnchor="middle" className="amz-service-label">{kind}</text>
     </g>
   );
 }
 
-function Distribution({ selected, small, prefix }: { selected: Selection; small: boolean; prefix: string }) {
-  const points: Point[] = small ? [[240, 67], [240, 199], [240, 330], [240, 461], [80, 620], [240, 620], [400, 620]] : [[97, 240], [275, 240], [445, 240], [615, 240], [796, 132], [796, 240], [796, 348]];
-  const edges = [[0, 1], [1, 2], [2, 3], [3, 4], [3, 5], [3, 6]];
+function ServiceMap({ selected, layout, prefix }: { selected: Selection; layout: Layout; prefix: string }) {
+  const arrival = layout.delivered;
   return (
-    <g className="amz-distribution-scene">
-      {edges.map(([from, to], index) => {
-        const active = to !== 6 || selected === "B";
-        const path = route(points[from], points[to], small);
-        return (
-          <g key={`${from}-${to}`} className={`amz-delivery-edge ${active ? "is-linked" : ""}`}>
-            <path d={path} className="amz-edge-base" />
-            <path d={path} className={`amz-delivery-packet amz-delivery-packet-${index}`} pathLength="100" />
-          </g>
-        );
+    <g className="amz-service-map">
+      {layout.services.slice(0, -1).map((point, index) => <path key={index} d={connection(point, layout.services[index + 1])} className="amz-service-rail" />)}
+      <path d={connection(layout.services[2], arrival, layout.verticalGraph)} className="amz-service-rail" />
+      {layout.lanes.map((point, index) => {
+        const active = index !== 2 || selected === "B";
+        return <g className={`amz-lane-route ${active ? "is-linked" : ""}`} key={index}><path d={connection(arrival, point, layout.verticalGraph)} className="amz-edge-base" /><path d={connection(arrival, point, layout.verticalGraph)} className="amz-lane-packet" pathLength="100" /></g>;
       })}
-      <g transform={`translate(${points[0][0]} ${points[0][1]})`}><FileGlyph name="config-a.json" version="v042" prefix={prefix} /></g>
-      {(["Lambda", "S3", "Internal APIs"] as const).map((type, index) => <g key={type} transform={`translate(${points[index + 1][0]} ${points[index + 1][1]})`}><Service type={type} prefix={prefix} /></g>)}
-      {["A", "B", "C"].map((lane, index) => {
-        const [x, y] = points[index + 4];
+      {(["Lambda", "S3", "Internal APIs"] as const).map((kind, index) => <g transform={`translate(${layout.services[index][0]} ${layout.services[index][1]})`} key={kind}><Service kind={kind} prefix={prefix} /></g>)}
+      {(["A", "B", "C"] as const).map((lane, index) => {
+        const [x, y] = layout.lanes[index];
         const active = index !== 2 || selected === "B";
         return (
-          <g key={lane} transform={`translate(${x} ${y})`} className={`amz-lane ${active ? "is-linked" : ""}`}>
-            <path d="M-47-23H47V29H-47Z" fill={`url(#${prefix}-paper)`} stroke="currentColor" strokeWidth=".8" />
-            <path d="M-47 29 0 36 47 29" fill="#152a3e" stroke="#344e63" strokeWidth=".6" />
+          <g transform={`translate(${x} ${y})`} className={`amz-lane ${active ? "is-linked" : ""}`} key={lane}>
+            <path d="M-35-22H35V24H-35Z" fill={`url(#${prefix}-paper)`} stroke="currentColor" strokeWidth=".8" />
             <text x="0" y="-4" textAnchor="middle" className="amz-lane-label">Lane {lane}</text>
-            <text x="0" y="16" textAnchor="middle" className="amz-lane-version">{active ? "v042" : "—"}</text>
+            <text x="0" y="14" textAnchor="middle" className="amz-lane-version">{active ? "v042" : "—"}</text>
           </g>
         );
       })}
-      {!small && <text x="796" y="427" textAnchor="middle" className="amz-small-label">Planning lanes</text>}
     </g>
   );
+}
+
+function layoutProperties(layout: Layout): CSSProperties {
+  const points = {
+    trace: layout.graph[5], compare: layout.comparison, previous: layout.previous,
+    departure: layout.departure, lambda: layout.services[0], storage: layout.services[1],
+    api: layout.services[2], delivered: layout.delivered,
+  };
+  const properties: Record<string, string | number> = {
+    "--amz-trace-scale": layout.traceScale,
+    "--amz-compare-scale": layout.comparisonScale,
+    "--amz-delivery-scale": layout.deliveryScale,
+  };
+  Object.entries(points).forEach(([name, [x, y]]) => {
+    properties[`--amz-${name}-x`] = `${x}px`;
+    properties[`--amz-${name}-y`] = `${y}px`;
+  });
+  return properties as CSSProperties;
 }
 
 export function AmazonDemo() {
   const prefix = `amz${useId().replaceAll(":", "")}`;
-  const smallScreen = useSyncExternalStore(subscribeSmallScreen, () => window.matchMedia("(max-width: 620px)").matches, () => false);
+  const container = useRef<HTMLDivElement>(null);
+  const history = useRef<SVGPathElement>(null);
+  const [layoutName, setLayoutName] = useState<LayoutName>("compact");
   const [selected, setSelected] = useState<Selection>("A");
+
+  useEffect(() => {
+    const observer = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      setLayoutName(width < 400 ? "narrow" : width < 720 ? "compact" : "wide");
+    });
+    if (container.current) observer.observe(container.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const layout = LAYOUTS[layoutName];
+  const historyPath = connection(layout.graph[5], layout.comparison, layout.verticalGraph);
+  const [compareX, compareY] = layout.comparison;
+  const [departX, departY] = layout.departure;
+  const [lambdaX, lambdaY] = layout.services[0];
+  const departurePath = `M${compareX} ${compareY}C${compareX} ${departY} ${departX} ${departY - 35} ${departX} ${departY}S${lambdaX} ${lambdaY - 25} ${lambdaX} ${lambdaY}`;
+  const flowPath = [
+    historyPath,
+    departurePath,
+    ...layout.services.slice(0, -1).map((point, index) => connection(point, layout.services[index + 1])),
+    connection(layout.services[2], layout.delivered, layout.verticalGraph),
+  ].map((path, index) => index === 0 ? path : path.slice(path.indexOf("C"))).join("");
+
+  useLayoutEffect(() => {
+    if (history.current) {
+      container.current?.style.setProperty("--amz-compare-distance", `${history.current.getTotalLength()}px`);
+    }
+  }, [layout]);
+
   return (
     <DemoPlayer className="amazon-demo" label="Amazon configuration infrastructure" eyebrow="Amazon SCOT" title="Configuration dependencies and distribution" stages={STAGES} note="Illustrative nodes and values" duration={4200}>
       {({ stage }) => (
-        <div className="amz-explainer" data-stage={stage}>
+        <div ref={container} className="amz-explainer" data-stage={stage} data-layout={layoutName} style={layoutProperties(layout)}>
           <div className="amz-explainer-toolbar">
             <div className="amz-output-picker" role="group" aria-label="Research output to trace">
-              <span>Trace</span>
               {(["A", "B"] as const).map(output => <button key={output} type="button" data-demo-interaction aria-pressed={selected === output} onClick={() => setSelected(output)}>Output {output}</button>)}
             </div>
             <span className="amz-illustration-label">Illustrative nodes &amp; values</span>
           </div>
-          <div className="motion-artwork amz-artwork">
-            <svg viewBox={smallScreen ? "0 0 480 700" : "0 0 900 490"} className="amz-art" role="img" aria-label={`Output ${selected} affects ${selected === "A" ? "two" : "three"} configurations through shared dependencies. Compare an illustrative input revision and follow version v042 through AWS Lambda, S3, and internal APIs to planning lanes.`}>
+          <p className="amz-selection-summary">Output {selected} → {selected === "A" ? "2" : "3"} affected configurations</p>
+          <div className="motion-artwork amz-artwork" style={{ aspectRatio: `${layout.width} / ${layout.height}` }}>
+            <svg viewBox={`0 0 ${layout.width} ${layout.height}`} className="amz-art" role="img" aria-label={`Output ${selected} affects ${selected === "A" ? "two" : "three"} configurations through shared dependencies. The same config-a.json document is compared with v041, then carries v042 through Lambda, S3, and internal APIs to planning lanes.`}>
               <defs>
-                <linearGradient id={`${prefix}-paper`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#2b485f" /><stop offset=".42" stopColor="#152c42" /><stop offset="1" stopColor="#102135" /></linearGradient>
-                <linearGradient id={`${prefix}-plane`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#3c5a70" /><stop offset=".5" stopColor="#233d54" /><stop offset="1" stopColor="#172b40" /></linearGradient>
-                <linearGradient id={`${prefix}-service`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#644423" /><stop offset=".48" stopColor="#3d2e20" /><stop offset="1" stopColor="#25282a" /></linearGradient>
-                <radialGradient id={`${prefix}-floor`}><stop stopColor="#365675" stopOpacity=".17" /><stop offset="1" stopColor="#091725" stopOpacity="0" /></radialGradient>
+                <linearGradient id={`${prefix}-paper`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#263d50" /><stop offset=".5" stopColor="#14293d" /><stop offset="1" stopColor="#102033" /></linearGradient>
+                <linearGradient id={`${prefix}-plane`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#344c60" /><stop offset="1" stopColor="#1a3045" /></linearGradient>
+                <linearGradient id={`${prefix}-service`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#523b25" /><stop offset="1" stopColor="#25282b" /></linearGradient>
               </defs>
-              <ellipse cx={smallScreen ? 240 : 460} cy={smallScreen ? 385 : 257} rx={smallScreen ? 240 : 425} ry={smallScreen ? 330 : 235} fill={`url(#${prefix}-floor)`} />
-              <TraceGraph selected={selected} small={smallScreen} prefix={prefix} />
-              <CompareScene small={smallScreen} prefix={prefix} />
-              <Distribution selected={selected} small={smallScreen} prefix={prefix} />
+              <path ref={history} d={historyPath} className="amz-history-link" />
+              <path d={departurePath} className="amz-departure-rail" />
+              <DependencyMap selected={selected} layout={layout} prefix={prefix} />
+              <ServiceMap selected={selected} layout={layout} prefix={prefix} />
+              <g className="amz-previous-version"><ConfigurationPaper prefix={prefix} version="v041" current={false} /></g>
+              <g data-flow-id="amazon-config" className="amz-config-actor" style={{ offsetPath: `path("${flowPath}")` }}><ConfigurationPaper prefix={prefix} version="v042" current /></g>
             </svg>
           </div>
         </div>

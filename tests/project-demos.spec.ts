@@ -81,22 +81,27 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
   await expect(lastDemo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(2)).toHaveAttribute("aria-pressed", "true", { timeout: 6000 });
 });
 
-test("Quantiv flow visibly moves during playback and freezes when paused", async ({ page }) => {
+test("Quantiv's model visibly travels during playback and freezes when paused", async ({ page }) => {
   await page.goto("/");
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(0).click();
   await demo.getByRole("button", { name: "Play animation", exact: true }).click();
   await expect(demo).toHaveAttribute("data-running", "true");
-  const pulse = demo.locator(".qv-flow-pulse").first();
-  const position = () => pulse.evaluate(node => getComputedStyle(node).strokeDashoffset);
+  await expect(demo).toHaveAttribute("data-stage", "1", { timeout: 6000 });
+  const model = demo.locator('[data-flow-id="quantiv-model"]');
+  const position = () => model.evaluate(node => Number.parseFloat(getComputedStyle(node).offsetDistance));
+  const destination = await model.evaluate(node => Number.parseFloat((node as SVGElement).style.offsetDistance));
   const initial = await position();
-  await expect.poll(position, { timeout: 1500 }).not.toBe(initial);
+  // Catch the model in flight, before it arrives at the forecast branch.
+  await expect.poll(position, { timeout: 1200 }).toBeGreaterThan(initial);
 
   await demo.getByRole("button", { name: "Pause animation", exact: true }).click();
   await expect(demo).toHaveAttribute("data-running", "false");
   await page.waitForTimeout(100);
   const paused = await position();
+  expect(paused).toBeGreaterThan(0);
+  expect(paused).toBeLessThan(destination);
   await page.waitForTimeout(350);
   expect(await position()).toBe(paused);
 });
@@ -145,9 +150,9 @@ test("Quantiv recomputes exceedance estimates and identifies an out-of-range tai
   }
   await expect(result).toContainText("Tail bound");
   await expect(demo.getByRole("button", { name: "Verified bundle", exact: true })).toHaveCount(0);
-  await expect(demo.locator('.qv-scene[aria-hidden="true"]')).toHaveCount(3);
-  for (const panel of await demo.locator('.qv-scene[aria-hidden="true"]').all()) {
-    await expect(panel).toHaveAttribute("inert", "");
+  await expect(demo.locator(".qv-dock-panel[hidden]")).toHaveCount(3);
+  for (const panel of await demo.locator(".qv-dock-panel[hidden]").all()) {
+    await expect(panel).toBeHidden();
   }
 });
 
@@ -166,7 +171,7 @@ test("Quantiv lets visitors inspect expanding training windows separated from un
     const active = demo.locator('.qv-fold[data-active="true"]');
     await expect(active).toHaveCount(1);
     await expect(active).toHaveCSS("opacity", "1");
-    await expect(demo.getByRole("img", { name: new RegExp(`Fold ${fold} is highlighted`) })).toBeVisible();
+    await expect(demo.getByRole("img", { name: new RegExp(`Fold ${fold} is (selected|highlighted)`) })).toBeVisible();
     const split = await active.evaluate(row => {
       const train = row.querySelector(".qv-train")!.getBoundingClientRect();
       const unseen = row.querySelector(".qv-test")!.getBoundingClientRect();
@@ -217,10 +222,11 @@ test("FDRE applies the chosen availability date to both searches and merges dupl
   await expect(demo.locator('.fdre-filing-event[data-eligible="true"]')).toHaveCount(3);
   const steps = demo.getByRole("group", { name: "Animation steps" });
   await steps.getByRole("button", { name: /^Hybrid Search:/ }).click();
-  await expect(dates).toHaveCount(0);
-  const passages = demo.locator(".fdre-merged-chunks .fdre-chunk-id");
-  await expect(passages).toHaveCount(4);
-  const laterIds = await passages.allTextContents();
+  await expect(dates).toBeVisible();
+  const trackedPassage = demo.locator('[data-flow-id="fdre-passage"] strong');
+  const remainingPassages = demo.locator('.fdre-remaining-chunks .fdre-chunk-id[data-excluded="false"]');
+  await expect(remainingPassages).toHaveCount(3);
+  const laterIds = [await trackedPassage.innerText(), ...await remainingPassages.allTextContents()];
   expect(new Set(laterIds).size).toBe(4);
   expect(laterIds.filter(id => id === "12")).toHaveLength(1);
   await expect(demo.getByText("4 unique passages", { exact: true })).toBeVisible();
@@ -228,7 +234,8 @@ test("FDRE applies the chosen availability date to both searches and merges dupl
   await steps.getByRole("button", { name: /^Availability:/ }).click();
   await dates.getByRole("button", { name: "01 Mar", exact: true }).click();
   await steps.getByRole("button", { name: /^Hybrid Search:/ }).click();
-  await expect(passages).toHaveText(["12", "31"]);
+  await expect(trackedPassage).toHaveText("12");
+  await expect(remainingPassages).toHaveText(["31"]);
   await expect(demo.getByText("2 unique passages", { exact: true })).toBeVisible();
 });
 
@@ -246,14 +253,18 @@ test("FDRE shows citation checks for supported questions and abstains from forec
   await expect(demo.getByText("Abstain", { exact: true })).toBeVisible();
   await expect(demo.getByText("Generation skipped", { exact: true })).toBeVisible();
   await expect(demo.getByText("No answer or citations returned", { exact: true })).toBeVisible();
-  await expect(demo.locator(".fdre-supported-outcome")).toHaveAttribute("aria-hidden", "true");
-  await expect(demo.locator(".fdre-supported-outcome")).toHaveCSS("opacity", "0");
-  await expect(demo.locator(".fdre-abstain-outcome")).toHaveAttribute("aria-hidden", "false");
+  await expect(demo.locator(".fdre-source-checks")).toBeHidden();
+  await expect(demo.locator(".fdre-abstention-note")).toBeVisible();
+  await expect(demo.getByRole("img", { name: /unsupported.*skips generation.*no answer or citations/ })).toBeVisible();
+  await expect(demo.locator('[data-flow-id="fdre-passage"] strong')).toHaveText("12");
+  const actor = (await demo.locator('[data-flow-id="fdre-passage"]').boundingBox())!;
+  const gate = (await demo.locator(".fdre-gate-mark").boundingBox())!;
+  expect(Math.abs(actor.y + actor.height / 2 - gate.y - gate.height / 2)).toBeLessThan(2);
 
   await questions.getByRole("button", { name: "Filing risk", exact: true }).click();
-  await expect(demo.locator(".fdre-supported-outcome")).toHaveAttribute("aria-hidden", "false");
-  await expect(demo.locator(".fdre-supported-outcome")).toHaveCSS("opacity", "1");
-  await expect(demo.locator(".fdre-abstain-outcome")).toHaveAttribute("aria-hidden", "true");
+  await expect(demo.locator(".fdre-source-checks")).toBeVisible();
+  await expect(demo.locator(".fdre-abstention-note")).toBeHidden();
+  await expect(demo.locator('[data-flow-id="fdre-passage"] strong')).toHaveText("[12]");
 });
 
 test("Embers product views switch the accessible screenshot without moving the frame", async ({ page }) => {

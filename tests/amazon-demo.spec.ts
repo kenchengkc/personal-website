@@ -33,13 +33,14 @@ test("Amazon output selection traces shared dependencies and updates affected pl
   const outputs = demo.getByRole("group", { name: "Research output to trace" });
   await expect(outputs.getByRole("button", { name: "Output A", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(demo.getByText("Output A → 2 affected configurations", { exact: true })).toBeVisible();
-  await expect(demo.locator(".amz-trace-graph .amz-file-glyph.is-linked")).toHaveCount(2);
+  await expect(demo.locator('[data-flow-id="amazon-config"]')).toHaveCount(1);
+  await expect(demo.locator(".amz-secondary-config.is-linked")).toHaveCount(1);
 
   await outputs.getByRole("button", { name: "Output B", exact: true }).click();
   await expect(demo).toHaveAttribute("data-running", "false");
   await expect(outputs.getByRole("button", { name: "Output B", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(demo.getByText("Output B → 3 affected configurations", { exact: true })).toBeVisible();
-  await expect(demo.locator(".amz-trace-graph .amz-file-glyph.is-linked")).toHaveCount(3);
+  await expect(demo.locator(".amz-secondary-config.is-linked")).toHaveCount(2);
 
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Distribute:/ }).click();
   await expect(demo.locator(".amz-lane.is-linked")).toHaveCount(3);

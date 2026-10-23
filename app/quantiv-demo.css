@@ -1,97 +1,160 @@
-.quantiv-demo { --demo-bg: #030609; --demo-ink: #eff8ff; --demo-muted: #8e9dab; --demo-accent: #139fff; --demo-font: var(--qv-font); --demo-mono: var(--qv-mono); background: radial-gradient(ellipse at 50% 65%, #061625 0%, #030609 68%); }
-.qv-identity { display: flex; align-items: center; justify-content: space-between; padding: 22px 28px 0; }
-.qv-wordmark { color: #fff; font-size: 21px; font-weight: 800; letter-spacing: -.8px; }
-.qv-wordmark span { color: #119fff; }
-.qv-identity > span:last-child { font: 9px var(--demo-mono), monospace; color: #91a3b1; }
-.qv-research { position: relative; height: 440px; margin: 0 4%; }
-.qv-scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .55s, visibility .55s; }
-.qv-scene[aria-hidden="false"] { opacity: 1; visibility: visible; }
-.qv-scene svg { width: 100%; height: 360px; overflow: visible; }
-.qv-scene-heading { position: absolute; top: 21px; left: 5%; }
-.qv-scene-heading > span { color: #319ee7; font: 9px var(--demo-mono), monospace; letter-spacing: .1em; }
-.qv-scene-heading h4 { font: 700 clamp(21px, 2vw, 29px)/1.25 var(--demo-font), sans-serif; letter-spacing: -.6px; margin: 7px 0 0; color: #f1f7fc; }
-.qv-label, .qv-axis-label, .qv-premium > text, .qv-checkpoint text { fill: #90a7ba; font: 11px var(--demo-mono), monospace; }
-.qv-premium .qv-price-number { fill: #d3eafb; font-size: 26px; }
-.qv-implied { fill: #fff; font: 800 62px var(--demo-font), sans-serif; letter-spacing: -3px; }
-.qv-flow-rail { fill: none; stroke: #183e5d; stroke-width: 1; }
-.qv-flow-pulse { fill: none; stroke: #40bfff; stroke-width: 2; stroke-dasharray: 8 92; animation: qv-flow 3s linear infinite; }
-.qv-axis { fill: none; stroke: #30506a; }
-.qv-priced-range { fill: #138ae9; opacity: .42; }
-.qv-market-beacon { fill: #b5eaff; filter: drop-shadow(0 0 6px #119fff); animation: qv-beacon 2s ease-in-out infinite; }
-.qv-interaction { height: 45px; position: absolute; bottom: 9px; inset-inline: 0; display: flex; align-items: center; justify-content: center; gap: 9px; font: 10px var(--demo-mono), monospace; color: #899cad; }
-.qv-interaction button { padding: 7px 12px; color: #b3c2ce; background: transparent; border: 1px solid #24394a; border-radius: 3px; cursor: pointer; }
-.qv-interaction button[aria-pressed="true"] { color: #e3f4ff; background: #0c2d46; border-color: #1788d5; }
-.qv-interaction button:hover { border-color: #5ca9dc; }
-.qv-price-footnote { font-size: 10px; }
-.qv-gridline { stroke: #12283a; stroke-width: 1; fill: none; stroke-dasharray: 3 5; }
-.qv-cdf { stroke: #38b0ff; stroke-width: 2.2; fill: none; stroke-dasharray: 100; stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s ease-out; }
-.qv-scene[aria-hidden="true"] .qv-cdf { stroke-dashoffset: 100; }
-.qv-quantile-drop { stroke: #1a4a6c; stroke-dasharray: 2 5; }
-.qv-quantile-dot { fill: #d9f0ff; }
-.qv-quantile-label { fill: #b0d9f5; font: 10px var(--demo-mono), monospace; }
-.qv-threshold { transition: transform .5s ease; }
-.qv-threshold path { stroke: #ffce70; stroke-width: 1; stroke-dasharray: 3 4; }
-.qv-threshold circle { fill: #ffce70; stroke: #030609; stroke-width: 2; transition: cy .5s ease; }
-.qv-forecast-result { position: absolute; right: 5%; top: 21px; text-align: right; }
-.qv-forecast-result strong { display: block; color: #ffd27c; font: 600 27px/1.3 var(--demo-font), sans-serif; letter-spacing: -.6px; }
-.qv-forecast-result span { display: block; color: #aab9c6; font-size: 10px; }
-.qv-fold { opacity: .32; transition: opacity .3s; }
-.qv-fold[data-active="true"] { opacity: 1; }
-.qv-future { stroke: #284151; stroke-width: 1; stroke-dasharray: 2 4; }
-.qv-train { fill: #168cd9; }
-.qv-test { fill: #4bd6af; }
-.qv-test-label { fill: #052a22; font: 10px var(--demo-mono), monospace; }
-.qv-fold-scan { stroke: #b4e8ff; stroke-width: 2; stroke-dasharray: 8 92; fill: none; animation: qv-flow 3.5s linear infinite; }
-.qv-time-arrow { fill: none; stroke: #3a5264; }
-.qv-legend { display: flex; gap: 18px; position: absolute; top: 93px; left: 10%; font: 10px var(--demo-mono), monospace; }
-.qv-legend span::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 6px; background: currentColor; }
-.qv-key-train { color: #42a9ed; } .qv-key-purge { color: #f5ba72; } .qv-key-test { color: #4bd6af; }
-.qv-bundle { animation: qv-bundle-float 4s ease-in-out infinite; }
-.qv-bundle path:first-child { fill: #133b5a; stroke: #63b9f0; stroke-width: .8; }
-.qv-bundle path:nth-child(2) { fill: #0b2133; stroke: #1e5f8a; stroke-width: .8; }
-.qv-checkpoint circle { fill: #042a26; stroke: #3bb898; }
-.qv-checkpoint .qv-check { fill: none; stroke: #74f0c9; stroke-width: 1.5; }
-.qv-cross { display: none; stroke: #ff9a8f; fill: none; stroke-width: 1.5; }
-.qv-activation-route { fill: none; stroke: #2b8c78; stroke-width: 1; stroke-dasharray: 5 5; animation: qv-route 4s linear infinite; }
-.qv-serving-ring { fill: #071d24; stroke: #2e746e; }
-.qv-serving-dot { fill: #71f4d2; animation: qv-beacon 2s ease-in-out infinite; }
-.qv-serve-result { position: absolute; left: 5%; top: 95px; font: 700 14px var(--demo-font), sans-serif; color: #91ead2; }
-.qv-serve-result span { display: block; margin-top: 5px; color: #7c9aa8; font: 9px var(--demo-mono), monospace; }
-.qv-scene[data-corrupt="true"] .qv-checkpoint-1 circle { fill: #321b23; stroke: #dc786e; }
-.qv-scene[data-corrupt="true"] .qv-checkpoint-1 .qv-check { display: none; }
-.qv-scene[data-corrupt="true"] .qv-cross { display: block; }
-.qv-scene[data-corrupt="true"] .qv-checkpoint-2 { opacity: .25; }
-.qv-scene[data-corrupt="true"] .qv-activation-route { opacity: .16; animation-play-state: paused; }
-.qv-scene[data-corrupt="true"] .qv-serve-result { color: #ffbc8b; }
-.qv-scene[aria-hidden="true"] * { animation-play-state: paused; }
-@keyframes qv-flow { to { stroke-dashoffset: -100; } }
-@keyframes qv-route { to { stroke-dashoffset: -100; } }
-@keyframes qv-beacon { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
-@keyframes qv-bundle-float { 0%,100% { translate: 0 0; } 50% { translate: 0 -5px; } }
-@media (max-width: 620px) {
-  .qv-identity { padding: 20px 18px 0; }
-  .qv-wordmark { font-size: 20px; }
-  .qv-identity > span:last-child { font-size: 8px; }
-  .qv-research { height: 455px; margin: 0; }
-  .qv-scene svg { height: 360px; margin-top: 40px; }
-  .qv-scene-heading { left: 7%; top: 20px; }
-  .qv-scene-heading > span { font-size: 8px; }
-  .qv-scene-heading h4 { font-size: 22px; }
-  .qv-forecast-result { top: 91px; right: 8%; }
-  .qv-forecast-result strong { font-size: 24px; }
-  .qv-forecast-result span { font-size: 9px; }
-  .qv-interaction { gap: 7px; font-size: 9px; }
-  .qv-interaction button { padding: 7px 10px; }
-  .qv-price-footnote { font-size: 8px; }
-  .qv-implied { font-size: 52px; }
-  .qv-premium .qv-price-number { font-size: 23px; }
-  .qv-label, .qv-axis-label { font-size: 14px; }
-  .qv-quantile-label, .qv-checkpoint text { font-size: 13px; }
-  .qv-test-label { font-size: 12px; }
-  .qv-legend { top: 110px; left: 9%; gap: 12px; font-size: 8px; }
-  .qv-serve-result { top: 99px; left: 7%; font-size: 13px; }
-  .qv-serve-result span { font-size: 8px; }
+.quantiv-demo {
+  --demo-bg: #050b12;
+  --demo-ink: #e7f3fc;
+  --demo-muted: #9db0c0;
+  --demo-accent: #43b6ff;
+  --demo-font: var(--font-sans);
+  --demo-mono: var(--font-mono);
+  container: quantiv / inline-size;
+  background: radial-gradient(ellipse at 82% 28%, #0b2033 0%, #050b12 66%);
+  font-family: var(--font-sans), sans-serif;
 }
-@media (max-width: 380px) {
-  .qv-scene-heading h4 { font-size: 20px; }
+.qv-research { min-width: 0; }
+.qv-identity { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 24px 26px 12px; }
+.qv-wordmark { color: #edf7ff; font-size: 24px; font-weight: 700; letter-spacing: -.9px; }
+.qv-wordmark > span { color: #32aaff; }
+.qv-identity > span:last-child { color: #99acbc; font: 10px/1.4 var(--font-mono), monospace; }
+.qv-continuous-map { display: block; width: 100%; height: auto; overflow: visible; }
+.qv-continuous-map text { font-family: var(--font-mono), monospace; font-style: normal; }
+.qv-landmark { fill: #b7cfdf; font-size: 14px; font-weight: 500; letter-spacing: -.3px; }
+.qv-spine-label { fill: #7b9cb4; font-size: 10px; letter-spacing: 1px; }
+.qv-model-spine { fill: none; stroke: #1a3a51; stroke-width: 1.5; }
+.qv-forecast-link { fill: none; stroke: #3c83b0; stroke-width: 1.4; }
+.qv-market-pricing { opacity: 1; transition: opacity 750ms ease; }
+.qv-premium-label { fill: #8da8bc; font-size: 11px; }
+.qv-price-number { fill: #e4f3fc; font-family: var(--font-sans), sans-serif !important; font-size: 26px; font-weight: 600; letter-spacing: -.8px; }
+.qv-plus { fill: #638da9; font-size: 21px; }
+.qv-price-route { fill: none; stroke: #215270; stroke-width: 1; }
+.qv-flow-pulse { fill: none; stroke: #7bd2ff; stroke-width: 2; stroke-dasharray: 8 92; animation: qv-flow 3s linear infinite; }
+.qv-price-equation { fill: #9ab7cb; font-size: 11px; }
+.qv-forecast-field { opacity: .72; transition: opacity 800ms ease; }
+.qv-gridline { fill: none; stroke: #173045; stroke-width: 1; stroke-dasharray: 2 5; }
+.qv-cdf { fill: none; stroke: #42b6fb; stroke-width: 2; }
+.qv-quantile-drop { fill: none; stroke: #2e5673; stroke-dasharray: 2 5; }
+.qv-quantile-dot { fill: #b9e5ff; stroke: #07111b; stroke-width: 1.5; }
+.qv-quantile-label { fill: #a4cbe4; font-size: 11px; }
+.qv-axis { fill: none; stroke: #46677e; stroke-width: 1; }
+.qv-axis-tick { fill: none; stroke: #46677e; }
+.qv-axis-label { fill: #98afc1; font-size: 12px; }
+.qv-axis-title { fill: #91a7b9; font-size: 10px; }
+.qv-priced-range { fill: none; stroke: #2378af; stroke-width: 3; }
+.qv-market-beacon { fill: #64c8ff; stroke: #091c2b; stroke-width: 1.5; }
+.qv-market-label { fill: #6dcfff; font-size: 12px; }
+.qv-threshold { opacity: .55; transition: transform 650ms ease, opacity 750ms ease; }
+.qv-threshold > path { fill: none; stroke: #e3bd78; stroke-width: 1.4; stroke-dasharray: 3 4; }
+.qv-threshold > circle { fill: #e9c27d; stroke: #07121d; stroke-width: 2; transition: cy 650ms ease; }
+.qv-validation { opacity: .7; transition: opacity 800ms ease; }
+.qv-map-legend text { fill: #96afc1; font-size: 11px; }
+.qv-fold { opacity: .62; transition: opacity 450ms ease; }
+.qv-fold[data-active="true"] { opacity: 1; }
+.qv-fold-link { fill: none; stroke: #264b67; stroke-width: 1; }
+.qv-fold[data-active="true"] .qv-fold-link { stroke: #69b7e7; }
+.qv-fold-number { fill: #94b3c9; font-size: 10px; }
+.qv-future { fill: none; stroke: #254257; stroke-width: 1; stroke-dasharray: 2 4; }
+.qv-train { fill: #277fb6; }
+.qv-test { fill: #70c6b9; }
+.qv-test-label { fill: #08251f; font-size: 10px; font-weight: 600; }
+.qv-time-arrow { fill: none; stroke: #39556b; stroke-width: 1; }
+.qv-time-label { fill: #8aa5b9; font-size: 10px; }
+.qv-verification { opacity: .7; transition: opacity 800ms ease; }
+.qv-check-route { fill: none; stroke: #2a536c; stroke-width: 1.5; }
+.qv-checkpoint > circle { fill: #0b2429; stroke: #4b9d9d; stroke-width: 1; }
+.qv-check { fill: none; stroke: #8cdbca; stroke-width: 1.6; }
+.qv-cross { display: none; fill: none; stroke: #ffad99; stroke-width: 1.6; }
+.qv-checkpoint text { fill: #a9c1d1; font-size: 11px; }
+.qv-activation-route { fill: none; stroke: #3b7e83; stroke-width: 1.4; stroke-dasharray: 4 4; }
+.qv-serving-dot { fill: #82cdbf; }
+.qv-current-model { fill: #a5c9cc; font-size: 13px; }
+.qv-model {
+  offset-path: path("M54 126V486H450V543");
+  offset-anchor: 0px 0px;
+  offset-position: 0px 0px;
+  offset-rotate: 0deg;
+  transform-box: view-box;
+  transition: offset-distance 1400ms cubic-bezier(.22,.75,.2,1);
+}
+.qv-research[data-stage="3"] .qv-model { transition-duration: 5000ms; transition-timing-function: linear; }
+.qv-model-symbol { transform-origin: 0 0; transition: transform 1100ms ease; }
+.qv-model[data-form="bundle"] .qv-model-symbol { transform: scale(.72); }
+.qv-model-halo { fill: #071522; stroke: #2d6a91; stroke-width: 1; }
+.qv-model-layer { fill: #154264; stroke: #74c4f2; stroke-width: 1; }
+.qv-model-layer-back { fill: #0b263e; transform: translateY(2px); transition: transform 1100ms ease; }
+.qv-model-face { fill: none; stroke: #4b91bb; stroke-width: 1; }
+.qv-model-mark { fill: none; stroke: #a2e1ff; stroke-width: 1.4; stroke-linecap: round; }
+.qv-model-rejection { display: none; fill: none; stroke: #ffc2ad; stroke-width: 2; }
+.qv-model[data-rejected="true"] .qv-model-layer { fill: #3a2432; stroke: #e5a095; }
+.qv-model[data-rejected="true"] .qv-model-halo { stroke: #d28b84; }
+.qv-model[data-rejected="true"] .qv-model-mark { display: none; }
+.qv-model[data-rejected="true"] .qv-model-rejection { display: block; }
+.qv-model-label-plate { fill: #07111b; }
+.qv-model-label { fill: #b4d3e7; font-size: 11px; }
+.qv-model[data-form="bundle"] .qv-model-layer-back { transform: translateY(7px); }
+.qv-research[data-stage="0"] .qv-market-beacon { animation: qv-market-glow 2.8s ease-in-out infinite; }
+.qv-research:not([data-stage="0"]) .qv-price-pulse { animation-play-state: paused; }
+.qv-research[data-stage="1"] .qv-forecast-field,
+.qv-research[data-stage="1"] .qv-threshold,
+.qv-research[data-stage="2"] .qv-validation,
+.qv-research[data-stage="3"] .qv-verification { opacity: 1; }
+.qv-research[data-stage="1"] .qv-quantile-dot { animation: qv-quantile-glow 3s ease-in-out infinite; }
+.qv-research[data-corrupt="true"] .qv-checkpoint-1 > circle { fill: #30202c; stroke: #d88e87; }
+.qv-research[data-corrupt="true"] .qv-checkpoint-1 .qv-check { display: none; }
+.qv-research[data-corrupt="true"] .qv-cross { display: block; }
+.qv-research[data-corrupt="true"] .qv-checkpoint-2 { opacity: .55; }
+.qv-research[data-corrupt="true"] .qv-activation-route { stroke: #735365; stroke-dasharray: 2 5; }
+.qv-inspection-dock { min-height: 113px; margin: 0 26px; border-top: 1px solid #1c3448; }
+.qv-dock-panel { display: flex; flex-direction: column; justify-content: center; gap: 12px; min-height: 113px; padding: 14px 0; }
+.qv-dock-panel[hidden] { display: none; }
+.qv-price-note { gap: 5px; }
+.qv-price-note > span { color: #b0c4d3; font-size: 12px; }
+.qv-price-note > strong { color: #83cfff; font: 500 18px/1.3 var(--font-mono), monospace; }
+.qv-price-note > small { color: #93aabb; font-size: 10px; }
+.qv-forecast-result,
+.qv-fold-result,
+.qv-serve-result { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.qv-forecast-result strong { color: #eac786; font-size: 24px; font-weight: 600; line-height: 1; letter-spacing: -.6px; }
+.qv-fold-result strong,
+.qv-serve-result strong { color: #bbd9e7; font-size: 13px; font-weight: 600; }
+.qv-forecast-result span,
+.qv-fold-result span,
+.qv-serve-result span { color: #9eb5c5; font-size: 11px; }
+.qv-research[data-corrupt="true"] .qv-serve-result strong { color: #edb2a1; }
+.qv-interaction { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; color: #a0b7c7; font: 11px/1.4 var(--font-mono), monospace; }
+.qv-interaction > span { margin-right: 5px; }
+.qv-interaction .qv-threshold-key { color: #eac786; }
+.qv-interaction button { min-height: 31px; padding: 5px 10px; border: 1px solid #35536b; border-radius: 2px; background: transparent; color: #c1d5e3; font: inherit; cursor: pointer; }
+.qv-interaction button[aria-pressed="true"] { border-color: #4dafe6; background: #102d43; color: #e3f4ff; }
+.qv-interaction button:hover { border-color: #80cbf7; }
+@keyframes qv-flow { to { stroke-dashoffset: -100; } }
+@keyframes qv-market-glow { 0%, 100% { filter: drop-shadow(0 0 2px #209bdd55); } 50% { filter: drop-shadow(0 0 6px #37b8ffbb); } }
+@keyframes qv-quantile-glow { 0%, 100% { fill: #b9e5ff; } 50% { fill: #f0faff; } }
+@container quantiv (max-width: 420px) {
+  .qv-identity { padding: 20px 17px 8px; gap: 10px; }
+  .qv-wordmark { font-size: 22px; }
+  .qv-identity > span:last-child { font-size: 9px; }
+  .qv-landmark { font-size: 16px; }
+  .qv-premium-label,
+  .qv-quantile-label,
+  .qv-axis-label,
+  .qv-market-label,
+  .qv-current-model { font-size: 17px; }
+  .qv-price-equation,
+  .qv-map-legend text,
+  .qv-checkpoint text,
+  .qv-model-label,
+  .qv-time-label,
+  .qv-test-label { font-size: 15px; }
+  .qv-axis-title, .qv-spine-label, .qv-fold-number { font-size: 14px; }
+  .qv-inspection-dock { margin-inline: 17px; min-height: 125px; }
+  .qv-dock-panel { min-height: 125px; }
+  .qv-forecast-result span,
+  .qv-fold-result span,
+  .qv-serve-result span { font-size: 10px; }
+  .qv-interaction { gap: 6px; font-size: 10px; }
+  .qv-interaction button { min-height: 32px; padding: 6px 9px; }
+  .quantiv-demo .demo-steps { gap: 16px; }
+  .quantiv-demo .demo-controls { padding-inline: 14px; gap: 16px; }
+  .quantiv-demo .demo-caption { height: 74px; padding-inline: 18px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qv-research *, .qv-research *::before, .qv-research *::after { animation: none !important; transition: none !important; }
 }
