@@ -23,7 +23,7 @@ const isVercel = process.env.VERCEL === "1";
 
 export const viewport: Viewport = {
   colorScheme: "dark",
-  themeColor: "#111a16",
+  themeColor: "#211d19",
 };
 
 export const metadata: Metadata = {
@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} style={{ backgroundColor: "#111a16", color: "#e1e6d9", colorScheme: "dark" }}>
+    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} style={{ backgroundColor: "#211d19", color: "#f0e8da", colorScheme: "dark" }}>
       <body>
         <ScrollExperience />
         {children}

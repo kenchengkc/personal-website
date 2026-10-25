@@ -9,7 +9,7 @@ test("the initial document stays dark before external styles or scripts load", a
     background: getComputedStyle(element).backgroundColor,
     scheme: getComputedStyle(element).colorScheme,
   }));
-  expect(colors).toEqual({ background: "rgb(17, 26, 22)", scheme: "dark" });
+  expect(colors).toEqual({ background: "rgb(33, 29, 25)", scheme: "dark" });
   await expect(page.locator(".hero-copy h1")).toBeVisible();
   await context.close();
 });
