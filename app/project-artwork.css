@@ -9,6 +9,7 @@
   container-type: inline-size;
 }
 .artwork-content { position: absolute; inset: 0; }
+.project-artwork:has(.has-playground) { aspect-ratio: 1.05; min-height: 390px; }
 .artwork-content > img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 500ms; }
 .project-artwork:hover .artwork-content > img { transform: scale(1.025); }
 .artwork-note {
@@ -67,6 +68,7 @@
 @media (max-width: 700px) {
   .project-artwork { aspect-ratio: 1.5; }
   .project-artwork:has(.animated-artwork) { aspect-ratio: 1.08; }
+  .project-artwork:has(.has-playground) { aspect-ratio: 1; min-height: 360px; }
   .artwork-action { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,171 +1,122 @@
-import { expect, test, type Locator } from "@playwright/test";
-import { openProjectWalkthrough } from "./helpers/gallery";
+import { expect, test } from "@playwright/test";
+import { openProjectAnimation } from "./helpers/gallery";
 
-type ActorFrame = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  opacity: number;
-  visible: boolean;
-  retained: boolean;
-};
-type Frame = { time: number; stage: number; height: number; actors: Record<string, ActorFrame> };
-
+type Frame = { time: number; stage: number; x: number; y: number; retained: boolean; visible: boolean; height: number };
 const flows = [
-  { name: "Amazon configuration infrastructure", actors: ["amazon-config"], moving: "amazon-config", finalStage: 2, finalDwell: 5700 },
-  { name: "Financial Document Retrieval Engine search demonstration", actors: ["fdre-passage"], moving: "fdre-passage", finalStage: 2, finalDwell: 2200 },
+  { kind: "fdre", actor: "fdre-gallery-passage" },
+  { kind: "quantiv", actor: "quantiv-gallery-event" },
 ] as const;
 
-async function showSettledDemo(demo: Locator) {
-  await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
-  // The reveal observer may not have started its transition when scrolling
-  // returns. Wait for the visible composition, not an empty animation list.
-  await expect.poll(() => demo.evaluate(node => {
-    const reveal = node.closest("[data-reveal]") ?? node;
-    return getComputedStyle(reveal).opacity === "1" && reveal.getAnimations().every(animation => animation.playState === "finished");
-  })).toBe(true);
-}
-
-// The tall viewport keeps the complete continuous map visible during sampling.
-test.use({ viewport: { width: 1440, height: 1400 } });
-
 for (const flow of flows) {
-  test(`${flow.name} carries the same actor through visible intermediate frames`, async ({ page }) => {
-    test.setTimeout(35000);
+  test(`${flow.kind} keeps the same visible data object through intermediate animation frames`, async ({ page }) => {
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
-    await openProjectWalkthrough(page, flow.name);
-    const demo = page.getByRole("region", { name: flow.name, exact: true });
-    await expect(demo).toHaveAttribute("data-running", "false");
-    await showSettledDemo(demo);
-    await expect(demo).toHaveAttribute("data-stage", "0");
-    await expect(demo).toHaveAttribute("data-running", "true");
+    const animation = await openProjectAnimation(page, flow.kind);
+    const steps = animation.getByRole("group", { name: "Animation steps" }).getByRole("button");
+    await steps.first().click();
+    await expect(animation).toHaveAttribute("data-running", "false");
+    const actor = await animation.locator(`[data-flow-id="${flow.actor}"]`).elementHandle();
+    if (!actor) throw new Error(`Missing data object: ${flow.actor}`);
 
-    // Retain actual DOM references before playback advances. A replacement with
-    // the same selector must fail, as must a fade-out/cut to the destination.
-    const frames: Frame[] = await demo.evaluate(async (root, options) => {
-      const references = options.actors.map(id => {
-        const node = root.querySelector(`[data-flow-id="${id}"]`);
-        if (!node) throw new Error(`Missing persistent actor: ${id}`);
-        return { id, node };
-      });
+    const capture = actor.evaluate(async node => {
+      const root = node.closest(".animated-artwork")!;
       const samples: Frame[] = [];
       const start = performance.now();
-      let finalStageAt: number | undefined;
-
+      let movedAt: number | undefined;
       return new Promise<Frame[]>(resolve => {
         const sample = (now: number) => {
           const stage = Number(root.getAttribute("data-stage"));
-          if (stage === options.finalStage && finalStageAt === undefined) finalStageAt = now;
-          const actors: Record<string, ActorFrame> = {};
-          for (const { id, node } of references) {
-            const rect = node.getBoundingClientRect();
-            const anchor = node instanceof SVGGraphicsElement
-              ? new DOMPoint(0, 0).matrixTransform(node.getScreenCTM()!)
-              : { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-            let opacity = 1;
-            let visible = rect.width > 0 && rect.height > 0;
-            for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement) {
-              const style = getComputedStyle(ancestor);
-              opacity *= Number(style.opacity);
-              visible &&= style.visibility !== "hidden" && style.display !== "none";
-            }
-            actors[id] = {
-              x: anchor.x,
-              y: anchor.y,
-              width: rect.width,
-              height: rect.height,
-              opacity,
-              visible: visible && rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth,
-              retained: node.isConnected && root.querySelector(`[data-flow-id="${id}"]`) === node,
-            };
+          if (stage === 1 && movedAt === undefined) movedAt = now;
+          const rect = node.getBoundingClientRect();
+          const anchor = new DOMPoint().matrixTransform((node as SVGGraphicsElement).getScreenCTM()!);
+          let visible = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight;
+          for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement) {
+            const style = getComputedStyle(ancestor);
+            visible &&= style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity) > .2;
           }
-          samples.push({ time: now - start, stage, height: root.getBoundingClientRect().height, actors });
-          if ((finalStageAt !== undefined && now - finalStageAt >= options.finalDwell) || now - start > 26000) {
-            resolve(samples);
-          } else {
-            requestAnimationFrame(sample);
-          }
-        };
-        requestAnimationFrame(sample);
-      });
-    }, { actors: [...flow.actors], finalStage: flow.finalStage, finalDwell: flow.finalDwell });
-
-    expect([...new Set(frames.map(frame => frame.stage))]).toEqual(Array.from({ length: flow.finalStage + 1 }, (_, index) => index));
-    expect(Math.max(...frames.map(frame => frame.height)) - Math.min(...frames.map(frame => frame.height))).toBeLessThan(1);
-    for (const id of flow.actors) {
-      expect(frames.every(frame => frame.actors[id].retained), `${id} must remain the same connected DOM element`).toBe(true);
-      const invisibleFrames = frames.filter(frame => !frame.actors[id].visible || frame.actors[id].opacity <= 0.2);
-      expect(invisibleFrames.slice(0, 3).map(frame => ({ time: frame.time, stage: frame.stage, actor: frame.actors[id] })), `${id} must stay visible instead of fading between scenes`).toEqual([]);
-    }
-
-    for (let stage = 1; stage <= flow.finalStage; stage++) {
-      const before = frames.filter(frame => frame.stage === stage - 1).at(-1)!.actors[flow.moving];
-      const movement = frames.filter(frame => frame.stage === stage);
-      const after = movement.at(-1)!.actors[flow.moving];
-      const dx = after.x - before.x;
-      const dy = after.y - before.y;
-      const distanceSquared = dx * dx + dy * dy;
-      expect(Math.sqrt(distanceSquared), `${flow.moving} should travel between stages ${stage - 1} and ${stage}`).toBeGreaterThan(8);
-      const intermediate = movement.filter(frame => {
-        const point = frame.actors[flow.moving];
-        const progress = ((point.x - before.x) * dx + (point.y - before.y) * dy) / distanceSquared;
-        return progress > 0.08 && progress < 0.92;
-      });
-      const positions = new Set(intermediate.map(frame => {
-        const point = frame.actors[flow.moving];
-        return `${Math.round(point.x * 2)},${Math.round(point.y * 2)}`;
-      }));
-      expect(positions.size, `${flow.moving} must render intermediate positions, not jump to stage ${stage}`).toBeGreaterThanOrEqual(4);
-    }
-
-    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-    await expect(demo).toHaveAttribute("data-running", "false");
-    await expect.poll(() => demo.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
-  });
-}
-
-for (const flow of [flows[0]]) {
-  test(`${flow.name} keeps its delivered actor in place when inspection resumes`, async ({ page }) => {
-    await page.goto("/");
-    await openProjectWalkthrough(page, flow.name);
-    const demo = page.getByRole("region", { name: flow.name, exact: true });
-    await showSettledDemo(demo);
-    await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(flow.finalStage).click();
-    await expect(demo).toHaveAttribute("data-inspecting", "true");
-    const actor = await demo.locator(`[data-flow-id="${flow.moving}"]`).elementHandle();
-    if (!actor) throw new Error(`Missing persistent actor: ${flow.moving}`);
-
-    // Start capturing before the real Play click, so even the first resumed
-    // frame is compared with the completed composition the visitor inspected.
-    const capture = actor.evaluate(async node => {
-      const root = node.closest(".demo-player")!;
-      const position = () => {
-        const rect = node.getBoundingClientRect();
-        const container = root.getBoundingClientRect();
-        return { x: rect.left + rect.width / 2 - container.left, y: rect.top + rect.height / 2 - container.top };
-      };
-      const start = performance.now();
-      const initial = position();
-      let maxDistance = 0;
-      let retained = true;
-      return new Promise<{ maxDistance: number; retained: boolean }>(resolve => {
-        const sample = (now: number) => {
-          const current = position();
-          maxDistance = Math.max(maxDistance, Math.hypot(current.x - initial.x, current.y - initial.y));
-          retained &&= node.isConnected && root.querySelector(`[data-flow-id="${node.getAttribute("data-flow-id")}"]`) === node;
-          if (now - start >= 1400) resolve({ maxDistance, retained });
+          samples.push({ time: now - start, stage, x: anchor.x, y: anchor.y, height: root.getBoundingClientRect().height, visible,
+            retained: node.isConnected && root.querySelector(`[data-flow-id="${node.getAttribute("data-flow-id")}"]`) === node });
+          if ((movedAt !== undefined && now - movedAt >= 2200) || now - start > 10000) resolve(samples);
           else requestAnimationFrame(sample);
         };
         requestAnimationFrame(sample);
       });
     });
-    await demo.getByRole("button", { name: "Play animation", exact: true }).click();
-    await expect(demo).toHaveAttribute("data-running", "true");
-    const result = await capture;
-    expect(result.retained).toBe(true);
-    expect(result.maxDistance, "Play must hold the delivered actor, not restart its trip from the previous stage").toBeLessThan(1);
-    await expect(demo).toHaveAttribute("data-stage", String(flow.finalStage));
+    await animation.getByRole("button", { name: "Play animation", exact: true }).click();
+    const frames = await capture;
+    expect(new Set(frames.map(frame => frame.stage))).toEqual(new Set([0, 1]));
+    expect(frames.every(frame => frame.retained && frame.visible)).toBe(true);
+    expect(Math.max(...frames.map(frame => frame.height)) - Math.min(...frames.map(frame => frame.height))).toBeLessThan(1);
+    const before = frames.filter(frame => frame.stage === 0).at(-1)!;
+    const movement = frames.filter(frame => frame.stage === 1);
+    const after = movement.at(-1)!;
+    expect(Math.hypot(after.x - before.x, after.y - before.y)).toBeGreaterThan(15);
+    const intermediate = movement.filter(frame => Math.hypot(frame.x - before.x, frame.y - before.y) > 3 && Math.hypot(frame.x - after.x, frame.y - after.y) > 3);
+    expect(new Set(intermediate.map(frame => `${Math.round(frame.x)},${Math.round(frame.y)}`)).size).toBeGreaterThan(5);
+
+    await animation.getByRole("button", { name: "Pause animation", exact: true }).click();
+    await expect(animation).toHaveAttribute("data-running", "false");
+    await expect.poll(() => animation.evaluate(node => node.getAnimations({ subtree: true }).filter(item => item.playState === "running").length)).toBe(0);
   });
 }
+
+test("Quantiv's bundle traverses verification checkpoints and a corrupt bundle stops at its digest check", async ({ page }) => {
+  test.setTimeout(20000);
+  await page.goto("/");
+  const animation = await openProjectAnimation(page, "quantiv");
+  const steps = animation.getByRole("group", { name: "Animation steps" });
+  const actor = await animation.locator('[data-flow-id="quantiv-gallery-event"]').elementHandle();
+  if (!actor) throw new Error("Missing persistent Quantiv bundle");
+
+  for (const corrupt of [false, true]) {
+    await steps.getByRole("button", { name: "Serve", exact: true }).click();
+    await animation.getByRole("button", { name: corrupt ? "Corrupt" : "Verified", exact: true }).click();
+    await steps.getByRole("button", { name: "Validate", exact: true }).click();
+    const capture = actor.evaluate(async node => {
+      const root = node.closest(".animated-artwork")!;
+      const center = (circle: SVGCircleElement) => {
+        const point = new DOMPoint(circle.cx.baseVal.value, circle.cy.baseVal.value).matrixTransform(circle.getScreenCTM()!);
+        return { x: point.x, y: point.y };
+      };
+      const checkpoints = [...root.querySelectorAll<SVGCircleElement>(".qflow-checkpoint, .qflow-rejected")].map(center);
+      const endpoint = center(root.querySelector<SVGCircleElement>(".qflow-active-model, .qflow-previous-model")!);
+      const frames: { x: number; y: number; retained: boolean }[] = [];
+      const start = performance.now();
+      let servingAt: number | undefined;
+      return new Promise<{ checkpoints: typeof checkpoints; endpoint: typeof endpoint; frames: typeof frames }>(resolve => {
+        const sample = (now: number) => {
+          if (root.getAttribute("data-stage") === "3") {
+            servingAt ??= now;
+            const point = new DOMPoint().matrixTransform((node as SVGGraphicsElement).getScreenCTM()!);
+            frames.push({ x: point.x, y: point.y, retained: node.isConnected && root.querySelector('[data-flow-id="quantiv-gallery-event"]') === node });
+          }
+          if ((servingAt !== undefined && now - servingAt >= 3100) || now - start >= 9000) resolve({ checkpoints, endpoint, frames });
+          else requestAnimationFrame(sample);
+        };
+        requestAnimationFrame(sample);
+      });
+    });
+    await animation.getByRole("button", { name: "Play animation", exact: true }).click();
+    const { checkpoints, endpoint, frames } = await capture;
+    expect(checkpoints).toHaveLength(3);
+    expect(frames.length).toBeGreaterThan(30);
+    expect(frames.every(frame => frame.retained)).toBe(true);
+    const nearest = (target: { x: number; y: number }) => Math.min(...frames.map(frame => Math.hypot(frame.x - target.x, frame.y - target.y)));
+    for (const checkpoint of checkpoints.slice(0, corrupt ? 2 : 3)) expect(nearest(checkpoint)).toBeLessThan(6);
+    const final = frames.at(-1)!;
+    const destination = corrupt ? checkpoints[1] : endpoint;
+    expect(Math.hypot(final.x - destination.x, final.y - destination.y)).toBeLessThan(1);
+    if (corrupt) {
+      expect(nearest(checkpoints[2])).toBeGreaterThan(20);
+      expect(nearest(endpoint)).toBeGreaterThan(40);
+      const onVerificationRail = frames.filter(frame => Math.abs(frame.y - checkpoints[1].y) < 2);
+      expect(Math.max(...onVerificationRail.map(frame => frame.x))).toBeLessThanOrEqual(checkpoints[1].x + 1);
+      await expect(animation.locator(".qflow-serve-result")).toContainText("Previous model v1 retained");
+    } else {
+      expect(nearest(endpoint)).toBeLessThan(1);
+      const arrivals = [...checkpoints, endpoint].map(target => frames.findIndex(frame => Math.hypot(frame.x - target.x, frame.y - target.y) < 6));
+      expect(arrivals.every((index, position) => position === 0 || index > arrivals[position - 1])).toBe(true);
+      await expect(animation.locator(".qflow-serve-result")).toContainText("Model v2 active");
+    }
+  }
+});

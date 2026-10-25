@@ -1,29 +1,22 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { ProjectArtwork, type ArtworkKind } from "@/components/projects/ProjectArtwork";
 import { featuredProjects, otherWork, type FeaturedProject } from "@/data/portfolio";
 import { site } from "@/lib/site";
 
-const ProjectDemo = dynamic(
-  () => import("@/components/projects/ProjectDemos").then(module => module.ProjectDemo),
-  { ssr: false, loading: () => <p className="walkthrough-loading">Loading walkthrough…</p> },
-);
 const categories = ["work", "research", "awards"] as const;
 type Category = typeof categories[number];
 const categoryLabels = { work: "Work", research: "Research", awards: "Awards" };
 const researchArtwork: ArtworkKind[] = ["cml", "wasserstein", "aster", "gcinf"];
 const awardArtwork: ArtworkKind[] = ["usaco", "speed", "cvrp"];
 
-function FeaturedEntry({ project, active }: { project: FeaturedProject; active: boolean }) {
-  const [expanded, setExpanded] = useState(false);
-  const [walkthrough, setWalkthrough] = useState(false);
+function FeaturedEntry({ project }: { project: FeaturedProject }) {
   return (
     <article className="portfolio-entry" data-project={project.demo}>
       <ProjectArtwork kind={project.demo} />
-      <details className="portfolio-details" onToggle={event => setExpanded(event.currentTarget.open)}>
+      <details className="portfolio-details">
         <summary><h3>{project.name}</h3><span className="portfolio-more" aria-hidden="true">+</span></summary>
         <div className="portfolio-description">
           <p>{project.summary}</p>
@@ -38,10 +31,6 @@ function FeaturedEntry({ project, active }: { project: FeaturedProject; active: 
               {project.secondaryHref && <a href={project.secondaryHref} target="_blank" rel="noopener noreferrer">{project.secondaryLabel}<ArrowUpRight /></a>}
             </div>
           )}
-          {project.demo !== "quantiv" && <details className="project-walkthrough" onToggle={event => setWalkthrough(event.currentTarget.open)}>
-            <summary>Interactive walkthrough</summary>
-            {expanded && walkthrough && active && <ProjectDemo kind={project.demo} />}
-          </details>}
         </div>
       </details>
       <p className="portfolio-meta">{project.eyebrow}<span>{project.date}</span></p>
@@ -124,7 +113,7 @@ export function Projects() {
         ))}
       </nav>
       <div className="portfolio-panel" id="portfolio-work" role="tabpanel" aria-labelledby="gallery-tab-work" hidden={category !== "work"}>
-        <div className="portfolio-grid">{featuredProjects.map(project => <FeaturedEntry project={project} active={category === "work"} key={project.name} />)}</div>
+        <div className="portfolio-grid">{featuredProjects.map(project => <FeaturedEntry project={project} key={project.name} />)}</div>
       </div>
       <div className="portfolio-panel" id="research" role="tabpanel" aria-labelledby="gallery-tab-research" hidden={category !== "research"}>
         <div className="portfolio-grid">{otherWork.slice(0, 4).map((item, index) => <ResearchEntry item={item} artwork={researchArtwork[index]} key={item.title} />)}</div>

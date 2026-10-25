@@ -13,13 +13,15 @@ function subscribeVisibility(callback: () => void) {
   return () => document.removeEventListener("visibilitychange", callback);
 }
 
-export function AnimatedArtwork({ label, steps, duration = 3400, children }: {
+export function AnimatedArtwork({ label, steps, duration = 3400, playground, children }: {
   label: string;
   steps: readonly { label: string; caption: string }[];
   duration?: number;
+  playground?: (stage: number) => ReactNode;
   children: (stage: number) => ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const inspectionFrame = useRef(0);
   const [inView, setInView] = useState(false);
   const [playing, setPlaying] = useState(true);
   const [automatic, setAutomatic] = useState(0);
@@ -56,10 +58,27 @@ export function AnimatedArtwork({ label, steps, duration = 3400, children }: {
     return () => cancelAnimationFrame(frame);
   }, [running, selected, playing, stage]);
 
-  return <div ref={root} className="animated-artwork" role="figure" aria-label={label} data-stage={stage} data-running={running}>
+  useEffect(() => () => cancelAnimationFrame(inspectionFrame.current), []);
+
+  function inspect() {
+    setSelected(stage);
+    setPlaying(false);
+    // A second option change can keep the same phase and pause state. Settle
+    // its new transitions after React commits that change as well.
+    cancelAnimationFrame(inspectionFrame.current);
+    inspectionFrame.current = requestAnimationFrame(() => {
+      if (root.current?.dataset.running !== "false") return;
+      root.current.getAnimations({ subtree: true }).forEach(animation => {
+        if (animation instanceof CSSTransition) animation.finish();
+      });
+    });
+  }
+
+  return <div ref={root} className={`animated-artwork${playground ? " has-playground" : ""}`} role="figure" aria-label={label} data-stage={stage} data-running={running}>
     <div className="animated-artwork-scene">{children(stage)}</div>
     <div className="animated-artwork-footer">
       <p>{steps[stage].caption}</p>
+      {playground && <div className="animated-artwork-playground" onFocusCapture={inspect} onClickCapture={inspect} onChangeCapture={inspect}>{playground(stage)}</div>}
       <div className="animated-artwork-controls">
         <div role="group" aria-label="Animation steps">{steps.map((step, index) => <button key={step.label} type="button" aria-pressed={stage === index} onClick={() => { setSelected(index); setPlaying(false); }}>{step.label}</button>)}</div>
         {!reducedMotion && <button type="button" className="animated-artwork-play" aria-label={playing ? "Pause animation" : "Play animation"} onClick={() => {

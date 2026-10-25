@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
-import "./project-demos.css";
 import "./project-artwork.css";
 import "./animated-artwork.css";
 import "./amazon-artwork.css";

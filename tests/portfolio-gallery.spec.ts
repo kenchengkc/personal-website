@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import { featuredProjects, otherWork } from "../data/portfolio";
-import { openProjectWalkthrough } from "./helpers/gallery";
 
 const categories = [
   { name: "Work", id: "portfolio-work", hash: "work" },
@@ -92,25 +91,17 @@ test("expanded gallery entries retain the full project evidence and original lin
   await expect(page.locator('#writing a[href*="researchgate.net/publication/371141171"]')).toBeAttached();
 });
 
-test("closing a walkthrough or leaving Work stops its animation until reopened", async ({ page }) => {
-  await page.goto("/");
-  const name = "Amazon configuration infrastructure";
-  const demo = await openProjectWalkthrough(page, name);
-  await demo.scrollIntoViewIfNeeded();
-  await expect(demo).toHaveAttribute("data-running", "true");
-  const entry = page.locator('.portfolio-entry[data-project="amazon"]');
-  const walkthrough = entry.locator(".project-walkthrough");
-  await walkthrough.locator(":scope > summary").click();
-  await expect(demo).toHaveCount(0);
-  await walkthrough.locator(":scope > summary").click();
-  await demo.scrollIntoViewIfNeeded();
-  await expect(demo).toHaveAttribute("data-running", "true");
-  await page.getByRole("tab", { name: "Research", exact: true }).click();
-  await expect(demo).toHaveCount(0);
-  await page.getByRole("tab", { name: "Work", exact: true }).click();
-  await openProjectWalkthrough(page, name);
-  await demo.scrollIntoViewIfNeeded();
-  await expect(demo).toHaveAttribute("data-running", "true");
+test("each featured project combines its animation and playground in one box", async ({ page }) => {
+  await page.goto("/#work");
+  for (const project of featuredProjects) {
+    const entry = page.locator(`.portfolio-entry[data-project="${project.demo}"]`);
+    await expect(entry.locator('.animated-artwork')).toHaveCount(1);
+    await expect(entry.locator('.animated-artwork-playground')).toHaveCount(1);
+    await entry.locator('.portfolio-details > summary').click();
+    await expect(entry.getByText('Interactive walkthrough', { exact: true })).toHaveCount(0);
+    await expect(entry.locator('.animated-artwork')).toHaveCount(1);
+    await entry.locator('.portfolio-details > summary').click();
+  }
 });
 
 test("gallery animations advance while visible, pause on demand, and stop in hidden categories", async ({ page }) => {

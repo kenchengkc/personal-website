@@ -48,9 +48,6 @@
 .portfolio-links { display: flex; flex-wrap: wrap; gap: 14px 20px; margin: 18px 0; color: var(--gold); }
 .portfolio-links a { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
 .portfolio-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.project-walkthrough { container: walkthrough / inline-size; margin-top: 22px; }
-.project-walkthrough > summary { width: fit-content; margin-bottom: 16px; cursor: pointer; color: var(--gold); font-size: 13px; font-weight: 500; }
-.walkthrough-loading { min-height: 180px; padding: 24px; color: var(--ink-2); }
 
 .narrative-section, .contact-section { padding-block: 48px; border-top: 1px solid var(--line); }
 .section-kicker { margin-bottom: 24px; font-size: 22px; color: var(--ink); }
