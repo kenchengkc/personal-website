@@ -132,7 +132,6 @@ export function Projects() {
       <div className="portfolio-panel" id="awards" role="tabpanel" aria-labelledby="gallery-tab-awards" hidden={category !== "awards"}>
         <div className="portfolio-grid">
           {otherWork.slice(4).map((item, index) => <ResearchEntry item={item} artwork={awardArtwork[index]} key={item.title} />)}
-          <ResearchEntry artwork="egleston" item={{ title: "Egleston Scholar", meta: "Columbia Engineering · Top 1%", detail: "Columbia Engineering scholar recognition for exceptional academic achievement and intellectual promise.", href: site.socials.columbiaEngineering }} />
         </div>
       </div>
       <noscript>

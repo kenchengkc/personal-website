@@ -47,7 +47,7 @@ test("every experience, research project, and award has accessible, loaded artwo
   for (const category of categories) {
     await page.getByRole("tab", { name: category.name, exact: true }).click();
     const entries = page.locator(`#${category.id} .portfolio-entry`);
-    await expect(entries).toHaveCount(4);
+    await expect(entries).toHaveCount(category.name === "Awards" ? 3 : 4);
     for (const entry of await entries.all()) {
       await entry.scrollIntoViewIfNeeded();
       const artwork = entry.locator(".project-artwork");
@@ -113,42 +113,50 @@ test("closing a walkthrough or leaving Work stops its animation until reopened",
   await expect(demo).toHaveAttribute("data-running", "true");
 });
 
-test("gallery artwork replay finishes instead of looping", async ({ page }) => {
+test("gallery animations advance while visible, pause on demand, and stop in hidden categories", async ({ page }) => {
   await page.goto("/#work");
-  const artwork = page.locator('.project-artwork[data-artwork="amazon"]');
-  await artwork.getByRole("button").click();
-  const running = () => artwork.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation instanceof CSSAnimation && animation.playState === "running").length);
-  await expect.poll(running).toBeGreaterThan(0);
-  await expect.poll(running, { timeout: 7000 }).toBe(0);
+  const artwork = page.locator('[data-artwork="amazon"] .animated-artwork');
+  await artwork.scrollIntoViewIfNeeded();
+  await expect(artwork).toHaveAttribute("data-running", "true");
+  await expect(artwork).toHaveAttribute("data-stage", "1", { timeout: 6500 });
+  await artwork.getByRole("button", { name: "Pause animation", exact: true }).click();
+  await expect(artwork).toHaveAttribute("data-running", "false");
+  const stage = await artwork.getAttribute("data-stage");
+  await page.waitForTimeout(350);
+  await expect(artwork).toHaveAttribute("data-stage", stage!);
+  await expect.poll(() => artwork.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
+  await artwork.getByRole("button", { name: "Play animation", exact: true }).click();
+  await expect(artwork).toHaveAttribute("data-running", "true");
+  await page.getByRole("tab", { name: "Research", exact: true }).click();
+  await expect(artwork).toHaveAttribute("data-running", "false");
 });
 
-test("research artifacts expose original figures and the saved allocation comparison", async ({ page }) => {
+test("research animations explain the saved allocation and current CML collection pipeline", async ({ page }) => {
   await page.goto("/#research");
   const aster = page.locator('[data-artwork="aster"]');
-  await expect(aster.getByRole("img")).toHaveAccessibleName(/72 evaluations.*candidate 00 receives 27/);
-  await aster.getByRole("button", { name: "Full budget", exact: true }).click();
-  await expect(aster.getByRole("img")).toHaveAccessibleName(/432 evaluations.*16 candidates receive 27/);
-  await aster.getByRole("button", { name: "Replication race", exact: true }).click();
-  await expect(aster.getByRole("img")).toHaveAccessibleName(/72 evaluations/);
+  await aster.getByRole("button", { name: "Refine", exact: true }).click();
+  await expect(aster.getByRole("img")).toHaveAccessibleName(/27 replications.*72 total search evaluations/);
+  await aster.getByRole("button", { name: "Audit", exact: true }).click();
+  await expect(aster).toContainText("100 new evaluations");
+  await expect(aster).toContainText("432 with full allocation");
 
-  const model = page.locator('[data-artwork="cml"]');
-  await model.getByRole("button", { name: "Feature shapes", exact: true }).click();
-  await expect(model).toContainText("[batch, 4, 4, 64]");
+  const cml = page.locator('.portfolio-entry[data-project="cml"]');
+  await cml.locator('.portfolio-details > summary').click();
+  await expect(cml).toContainText("1,602");
+  await expect(cml).toContainText("990");
+  await expect(cml).toContainText("provisional");
+  await expect(cml).toContainText("detector training");
+  await expect(cml.locator('.animated-artwork')).toBeVisible();
 
-  for (const [category, kind, view] of [["Research", "wasserstein", "Cross-asset"], ["Awards", "speed", "CFD results"]]) {
-    await page.getByRole("tab", { name: category, exact: true }).click();
-    const artwork = page.locator(`[data-artwork="${kind}"]`);
-    await artwork.getByRole("button", { name: view, exact: true }).click();
-    const enlarge = artwork.getByRole("button", { name: `Enlarge ${view} figure` });
-    await enlarge.click();
-    const dialog = page.getByRole("dialog");
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("img")).toBeVisible();
-    await expect(dialog.getByRole("link", { name: "View original source" })).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
-    await expect(enlarge).toBeFocused();
-  }
+  await page.getByRole("tab", { name: "Awards", exact: true }).click();
+  await expect(page.locator('#awards .portfolio-entry')).toHaveCount(3);
+  await expect(page.locator('#awards')).not.toContainText('Egleston');
+  const scholar = page.locator('#columbia .columbia-scholar-title');
+  await expect(scholar).toHaveText('Egleston Scholar');
+  expect(await scholar.evaluate(node => parseInt(getComputedStyle(node).fontWeight))).toBe(700);
+  expect(await scholar.evaluate(node => parseFloat(getComputedStyle(node).fontSize))).toBeGreaterThanOrEqual(22);
+  const logo = page.locator('.artwork-usaco-logo');
+  expect((await logo.boundingBox())!.width).toBeGreaterThan(200);
 });
 
 test("gallery fits compact screens and remains still with reduced motion", async ({ page }) => {
@@ -180,7 +188,7 @@ test("the gallery content and native disclosures remain available without JavaSc
   for (const category of categories) {
     const panel = page.locator(`#${category.id}`);
     await expect(panel).toBeVisible();
-    await expect(panel.locator(".portfolio-entry")).toHaveCount(4);
+    await expect(panel.locator(".portfolio-entry")).toHaveCount(category.name === "Awards" ? 3 : 4);
   }
   await page.getByRole("navigation", { name: "Portfolio categories", exact: true }).getByRole("link", { name: "Research", exact: true }).click();
   await expect(page).toHaveURL(/#research$/);

@@ -1,46 +1,42 @@
-.amazon-artifact {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  background: radial-gradient(ellipse at 100% 0, #273f50 0, transparent 65%), #111f2b;
-  color: #e2e7e9;
-}
-.amazon-artifact-heading {
-  position: absolute;
-  top: 5%;
-  left: 4.5%;
-  right: 4.5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  font-size: clamp(11px, 3cqw, 14px);
-}
-.amazon-artifact-heading > span:first-child { color: #f3be76; font-weight: 600; }
-.amazon-artifact-heading > span:last-child { color: #9fb1c0; font-size: 11px; }
-.amazon-artifact-scene { display: block; width: 100%; height: 100%; }
-.amazon-artifact-scene text { fill: #d4dfe6; font-family: var(--font-mono), monospace; }
-.amazon-artifact-filename { font-size: 10px; }
-.amazon-artifact-scene .amazon-artifact-small { fill: #8ea5b5; font-size: 8px; }
-.amazon-artifact-code { font-size: 10px; }
-.amazon-artifact-scene .amazon-artifact-lines text { fill: #536e80; font-size: 9px; }
-.amazon-artifact-scene .amazon-artifact-key { fill: #b1cce0; }
-.amazon-artifact-scene .amazon-artifact-node-id { fill: #a5bfce; font-size: 7px; }
-.amazon-artifact-trunk, .amazon-artifact-branch { opacity: 0; stroke-dasharray: 100; }
-.amazon-artifact-deployment { font-size: 9px; }
-.amazon-artifact-deployment path { fill: none; stroke: #708b9e; stroke-width: .8; }
-.amazon-artifact-caption { position: absolute; bottom: 13px; left: 4.5%; max-width: calc(100% - 145px); color: #92a9b9; font-size: 11px; line-height: 1.3; }
-.amazon-artifact.is-playing .amazon-artifact-change { animation: amazon-artifact-diff 3s ease both; }
-.amazon-artifact.is-playing .amazon-artifact-trunk { animation: amazon-artifact-trace 1.25s ease .35s both; }
-.amazon-artifact.is-playing .amazon-artifact-branch { animation: amazon-artifact-trace 1.3s ease calc(.75s + var(--consumer) * 40ms) both; }
-.amazon-artifact.is-playing .amazon-artifact-consumer { animation: amazon-artifact-arrive 1s ease calc(1.25s + var(--consumer) * 40ms) both; }
-@keyframes amazon-artifact-diff { 0%, 100% { fill-opacity: .15; } 25%, 50% { fill-opacity: .4; } }
-@keyframes amazon-artifact-trace { 0% { opacity: 0; stroke-dashoffset: 100; } 25% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: .55; stroke-dashoffset: 0; } }
-@keyframes amazon-artifact-arrive { from { fill: #192e3f; stroke: #547080; } to { fill: #473d2e; stroke: #d2a46a; } }
-@container (max-width: 340px) {
-  .amazon-artifact-heading > span:last-child { max-width: 150px; font-size: 10px; text-align: right; }
-  .amazon-artifact-caption { bottom: 15px; max-width: 110px; }
-}
+.amazon-artifact { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 100% 0, #283e50 0, transparent 70%), #101e2b; color: #e2e7e9; }
+.amazon-artifact-scene { height: 100%; min-height: 0; }
+.amazon-artifact-scene > svg { display: block; width: 100%; height: 100%; }
+.amazon-artifact-scene text { fill: #d1dce5; font-family: var(--font-mono), monospace; }
+.amazon-artifact-scene .amazon-artifact-brand { fill: #efbc78; font-family: var(--font-sans), sans-serif; font-size: 12px; font-weight: 600; }
+.amazon-artifact-scene .amazon-artifact-context { fill: #91a8ba; font-family: var(--font-sans), sans-serif; font-size: 8px; }
+.amazon-artifact-filename { font-size: 9px; }
+.amazon-artifact-scene .amazon-artifact-small { fill: #8fa7b9; font-size: 7px; }
+.amazon-artifact-code { font-size: 9px; }
+.amazon-artifact-scene .amazon-artifact-lines text { fill: #627e93; font-size: 8px; }
+.amazon-artifact-scene .amazon-artifact-key { fill: #abccdf; }
+.amazon-artifact-scene .amazon-artifact-removed { fill: #c58e86; }
+.amazon-artifact-scene .amazon-artifact-added { fill: #eed2a5; }
+.amazon-artifact-scene .amazon-artifact-node-id { fill: #9db5c6; font-size: 7px; transition: fill 500ms; }
+.amazon-artifact-trunk, .amazon-artifact-branch { stroke-dasharray: 100; stroke-dashoffset: 100; opacity: .25; transition: stroke-dashoffset 1.4s ease, opacity 500ms; }
+.amazon-artifact-branch { transition-delay: calc(var(--consumer) * 55ms); }
+.amazon-artifact-consumer { transition: fill 700ms, stroke 700ms; transition-delay: calc(var(--consumer) * 55ms); }
+.amazon-artifact-ack { opacity: 0; stroke-dasharray: 10; stroke-dashoffset: 10; transition: opacity 300ms, stroke-dashoffset 600ms; transition-delay: calc(var(--consumer) * 65ms + .6s); }
+.amazon-artifact-publish-base { fill: none; stroke: #4f6b7d; stroke-width: .8; }
+.amazon-artifact-publish-path { fill: none; stroke: #ecc28d; stroke-width: 1.5; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 2s ease; }
+.amazon-artifact-deployment rect { fill: #1b3041; stroke: #4b677b; stroke-width: .7; transition: stroke 500ms, fill 500ms; }
+.amazon-artifact-deployment text { font-size: 8px; }
+.amazon-artifact-scene .amazon-artifact-status { fill: #baa181; font-size: 7px; }
+.amazon-artifact-diff { animation: amazon-diff 3.6s ease infinite; animation-play-state: var(--artwork-play-state, paused); }
+.amazon-artifact-version-packet { opacity: 0; offset-path: path("M 110 178 L 110 212 L 354 212 L 354 165"); offset-rotate: 0deg; }
+.amazon-artifact-version-packet text { fill: #253341; font-size: 7px; font-weight: 500; }
+[data-amazon-stage="1"] .amazon-artifact-trunk, [data-amazon-stage="2"] .amazon-artifact-trunk,
+[data-amazon-stage="1"] .amazon-artifact-branch, [data-amazon-stage="2"] .amazon-artifact-branch { stroke-dashoffset: 0; opacity: .9; }
+[data-amazon-stage="1"] .amazon-artifact-consumer, [data-amazon-stage="2"] .amazon-artifact-consumer { stroke: #bc9c77; fill: #3b3934; }
+[data-amazon-stage="1"] .amazon-artifact-trunk { animation: amazon-trace 3.6s linear infinite; animation-play-state: var(--artwork-play-state, paused); }
+[data-amazon-stage="2"] .amazon-artifact-publish-path { stroke-dashoffset: 0; }
+[data-amazon-stage="2"] .amazon-artifact-deployment rect { stroke: #b79568; fill: #3a3832; }
+[data-amazon-stage="2"] .amazon-artifact-ack { opacity: 1; stroke-dashoffset: 0; }
+[data-amazon-stage="2"] .amazon-artifact-version-packet { animation: amazon-version-delivery 3.6s linear infinite; animation-play-state: var(--artwork-play-state, paused); }
+@keyframes amazon-diff { 0%, 100% { fill-opacity: .16; } 40%, 65% { fill-opacity: .38; } }
+@keyframes amazon-trace { from { stroke-dasharray: 8 92; stroke-dashoffset: 100; } to { stroke-dasharray: 8 92; stroke-dashoffset: -100; } }
+@keyframes amazon-version-delivery { 0% { opacity: 0; offset-distance: 0%; } 10%, 85% { opacity: 1; } 100% { opacity: 0; offset-distance: 100%; } }
 @media (prefers-reduced-motion: reduce) {
-  .amazon-artifact *, .amazon-artifact *::before, .amazon-artifact *::after { animation: none !important; }
+  .amazon-artifact *, .amazon-artifact *::before, .amazon-artifact *::after { animation: none !important; transition: none !important; }
+  .amazon-artifact-trunk, .amazon-artifact-branch, .amazon-artifact-publish-path { stroke-dashoffset: 0; opacity: .9; }
+  .amazon-artifact-ack { opacity: 1; stroke-dashoffset: 0; }
 }

@@ -6,9 +6,12 @@ import { site } from "@/lib/site";
 import "./globals.css";
 import "./project-demos.css";
 import "./project-artwork.css";
+import "./animated-artwork.css";
 import "./amazon-artwork.css";
 import "./model-artwork.css";
 import "./research-artwork.css";
+import "./speed-artwork.css";
+import "./product-flow-artwork.css";
 import "./portfolio.css";
 
 const manrope = Manrope({

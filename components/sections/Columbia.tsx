@@ -26,8 +26,8 @@ export function Columbia() {
 
         <div className="columbia-honor" data-reveal>
           <div>
-            <span>Egleston Scholar</span>
-            <strong>Top 1%</strong>
+            <strong className="columbia-scholar-title">Egleston Scholar</strong>
+            <span className="columbia-scholar-rank">Top 1%</span>
           </div>
           <p>
             Columbia Engineering scholar recognition for exceptional academic

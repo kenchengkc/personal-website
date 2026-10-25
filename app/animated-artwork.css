@@ -1,0 +1,20 @@
+.animated-artwork { --artwork-play-state: paused; position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; color: #d9e4ed; }
+.animated-artwork[data-running="true"] { --artwork-play-state: running; }
+.animated-artwork *, .animated-artwork *::before, .animated-artwork *::after { animation-play-state: var(--artwork-play-state) !important; }
+.animated-artwork-scene { position: relative; min-height: 0; overflow: hidden; }
+.animated-artwork-scene > svg { display: block; width: 100%; height: 100%; }
+.animated-artwork-scene svg text { font-family: var(--font-mono), monospace; }
+.animated-artwork-footer { position: relative; z-index: 1; padding: 9px 13px 7px; border-top: 1px solid #a1bdd029; background: #0a182859; }
+.animated-artwork-footer p { min-height: 2.5em; margin: 0 0 5px; font: 400 11px/1.3 var(--font-sans), sans-serif; color: inherit; }
+.animated-artwork-controls { display: flex; justify-content: space-between; align-items: center; gap: 5px; }
+.animated-artwork-controls > div { display: flex; gap: 3px; min-width: 0; }
+.animated-artwork-controls button { display: inline-flex; align-items: center; justify-content: center; min-height: 25px; padding: 4px 7px; border: 0; color: inherit; background: transparent; font: 400 10px/1.25 var(--font-sans), sans-serif; cursor: pointer; white-space: nowrap; }
+.animated-artwork-controls button[aria-pressed="true"] { background: #a9c3d426; }
+.animated-artwork-controls .animated-artwork-play { min-width: 28px; padding: 5px; }
+.animated-artwork-controls button:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+@container (max-width: 350px) {
+  .animated-artwork-footer { padding: 5px 9px; }
+  .animated-artwork-footer p { font-size: 10px; margin-bottom: 3px; }
+  .animated-artwork-controls button { padding: 3px 5px; font-size: 9px; min-height: 24px; }
+}
+@media (prefers-reduced-motion: reduce) { .animated-artwork *, .animated-artwork *::before, .animated-artwork *::after { animation: none !important; transition: none !important; } }

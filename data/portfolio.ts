@@ -170,7 +170,7 @@ export const otherWork: OtherWork[] = [
   {
     title: "Creative Machines Lab",
     meta: "Columbia · Undergraduate Deep Learning Researcher · Sep 2026 – Present",
-    detail: "Trained transformers with 3.18 million parameters and multilayer perceptrons to study deceptive communication. Compared output-head designs and factual retention under conflicting rewards across 18 training jobs and three seeds; verified paired CPU runs after diagnosing GPU numerical drift. Built resumable PyTorch evaluations, activation extraction, model-specific adapters, and a shared neural detector with leakage and serialization tests. Detector evaluation awaits independently validated examples.",
+    detail: "Built a reproducible pipeline for studying deceptive communication in language models, linking 1,602 recipient-answer records to factual-check evidence and 990 decoder-layer activation matrices. The latest controlled comparison collected 288 answers and 144 separate factual checks across Qwen3-8B reasoning modes and Llama-3.1-8B prompt styles, with unchanged model weights. Preserved prompts, token positions, model revisions, and activation checksums for review. Labels remain provisional pending human validation; principal component analysis and detector training have not yet been performed on this dataset.",
   },
   {
     title: "Wasserstein Regimes",
