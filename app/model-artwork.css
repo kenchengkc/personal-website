@@ -1,7 +1,7 @@
 .artwork-cml .animated-artwork { background: radial-gradient(ellipse at 75% 20%, #2a4052, transparent 70%), #13222f; color: #d4e2e8; }
 .cml-process { width: 100%; height: 100%; min-height: 0; }
 .cml-process svg { display: block; width: 100%; height: 100%; }
-.cml-process text { font-family: var(--font-mono), monospace; font-style: normal; }
+.cml-process text { font-family: var(--font-sans), sans-serif; font-style: normal; }
 .cml-process-title { fill: #dce7ed; font-size: 13px; }
 .cml-process-meta { fill: #8fa8b9; font-size: 10px; }
 .cml-process-label { fill: #acc0cc; font-size: 10px; }

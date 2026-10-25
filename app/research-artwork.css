@@ -22,7 +22,7 @@
 .wm-centroid.is-nearest { opacity: 1; stroke: #dfbe8c; }
 .wm-centroid.is-nearest text { fill: #efd0a5; }
 .artwork-aster { background: radial-gradient(ellipse at 100% 0, #28433e, transparent 70%), #172a28; }
-.aster-motion { position: absolute; inset: 0; padding: 12px 18px 7px; display: flex; flex-direction: column; color: #d5e5d9; font: 400 11px/1.25 var(--font-mono), monospace; }
+.aster-motion { position: absolute; inset: 0; padding: 12px 18px 7px; display: flex; flex-direction: column; color: #d5e5d9; font: 400 11px/1.25 var(--font-sans), sans-serif; }
 .aster-motion-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; color: #c1d6ca; }
 .aster-motion-header > span:first-child { font-size: 15px; }
 .aster-motion-header > span:last-child { font-size: 9px; color: #96b5a7; }

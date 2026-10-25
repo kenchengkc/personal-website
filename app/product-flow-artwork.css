@@ -4,7 +4,7 @@
 .product-flow-embers { background: #182c2b; }
 .product-flow-scene { height: 100%; }
 .product-flow-scene > svg { display: block; width: 100%; height: 100%; }
-.product-flow-scene text { fill: #c9d8e0; font-family: var(--font-mono), monospace; }
+.product-flow-scene text { fill: #c9d8e0; font-family: var(--font-sans), sans-serif; }
 .product-flow-scene .product-flow-brand { font: 600 12px var(--font-sans), sans-serif; fill: #e2eaf0; }
 .product-flow-scene .product-flow-note { fill: #99aeba; font: 400 7px var(--font-sans), sans-serif; }
 .product-flow-small { font-size: 7px; }
@@ -69,7 +69,7 @@
 .product-playground-row button { min-height: 26px; padding: 4px 8px; border: 1px solid transparent; background: transparent; color: #b7cad4; font: 400 10px/1.2 var(--font-sans), sans-serif; cursor: pointer; }
 .product-playground-row button[aria-pressed="true"] { color: #ecf2f4; background: #afcddd20; border-color: #9fbdcb3d; }
 .product-playground-row button:focus-visible { outline: 2px solid #c4d8db; outline-offset: 1px; }
-.product-playground-row output { margin-left: auto; font: 400 10px/1.3 var(--font-mono), monospace; color: #d9e6dd; }
+.product-playground-row output { margin-left: auto; font: 400 10px/1.3 var(--font-sans), sans-serif; color: #d9e6dd; }
 .product-playground-result { display: block; color: #a2b9c5; font: 400 10px/1.35 var(--font-sans), sans-serif; min-height: 1.35em; }
 .qflow-threshold { transition: transform 700ms ease; fill: #a9def5; }
 .qflow-threshold path { stroke: #9ccee7; stroke-width: .9; stroke-dasharray: 2 2; }

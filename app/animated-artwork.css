@@ -3,7 +3,7 @@
 .animated-artwork *, .animated-artwork *::before, .animated-artwork *::after { animation-play-state: var(--artwork-play-state) !important; }
 .animated-artwork-scene { position: relative; min-height: 0; overflow: hidden; }
 .animated-artwork-scene > svg { display: block; width: 100%; height: 100%; }
-.animated-artwork-scene svg text { font-family: var(--font-mono), monospace; }
+.animated-artwork-scene svg text { font-family: var(--font-sans), sans-serif; }
 .animated-artwork-footer { position: relative; z-index: 1; padding: 9px 13px 7px; border-top: 1px solid #a1bdd029; background: #0a182859; }
 .animated-artwork-footer p { min-height: 2.5em; margin: 0 0 5px; font: 400 11px/1.3 var(--font-sans), sans-serif; color: inherit; }
 .animated-artwork-playground { min-height: 72px; display: flex; flex-direction: column; justify-content: center; gap: 7px; margin: 0 0 8px; padding: 8px 0; border-bottom: 1px solid #a1bdd029; font: 400 11px/1.35 var(--font-sans), sans-serif; }
