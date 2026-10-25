@@ -5,6 +5,8 @@ import { ScrollExperience } from "@/components/motion/ScrollExperience";
 import { site } from "@/lib/site";
 import "./globals.css";
 import "./project-demos.css";
+import "./project-artwork.css";
+import "./portfolio.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -22,8 +24,8 @@ const geistMono = Geist_Mono({
 const isVercel = process.env.VERCEL === "1";
 
 export const viewport: Viewport = {
-  colorScheme: "dark",
-  themeColor: "#211d19",
+  colorScheme: "light",
+  themeColor: "#d8dfe3",
 };
 
 export const metadata: Metadata = {
@@ -47,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} style={{ backgroundColor: "#211d19", color: "#f0e8da", colorScheme: "dark" }}>
+    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} style={{ backgroundColor: "#d8dfe3", color: "#2e3c4c", colorScheme: "light" }}>
       <body>
         <ScrollExperience />
         {children}

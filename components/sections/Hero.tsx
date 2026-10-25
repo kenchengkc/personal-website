@@ -11,7 +11,8 @@ export function Hero() {
       data-scroll-section
       data-scroll-label="INTRO"
     >
-      <div className="hero-identity">
+      <div className="hero-header">
+        <div className="hero-identity">
         <Image
           src="/images/profile-photo.jpg"
           alt="Ken Cheng"
@@ -21,16 +22,16 @@ export function Hero() {
           priority
         />
         <strong>Ken Cheng</strong>
-        <span>Columbia Computer Science · Class of 2028</span>
-      </div>
-
-      <div className="scroll-prompt">
-        <span>SCROLL</span>
-        <i />
+        </div>
+        <div className="hero-top-links">
+          <a href={`mailto:${site.email}`}>Email<ArrowUpRight /></a>
+          <a href={site.resumePath} target="_blank" rel="noopener noreferrer"><Resume /><span>Resume</span><ArrowUpRight /></a>
+        </div>
       </div>
 
       <div className="hero-copy">
         <h1>Software engineering and machine learning research.</h1>
+        <p className="hero-education">Columbia Computer Science · Class of 2028</p>
         <p>
           I build earnings forecasts and financial search systems, and study
           deceptive communication in language models at Columbia’s Creative
@@ -46,11 +47,6 @@ export function Hero() {
       </div>
 
       <div className="hero-links" aria-label="Profile links">
-        <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
-          <Resume />
-          <span>Resume</span>
-          <ArrowUpRight />
-        </a>
         <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
           <GitHub />
           <span>GitHub</span>

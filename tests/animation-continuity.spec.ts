@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from "@playwright/test";
+import { openProjectWalkthrough } from "./helpers/gallery";
 
 type ActorFrame = {
   x: number;
@@ -22,7 +23,7 @@ async function showSettledDemo(demo: Locator) {
   // The reveal observer may not have started its transition when scrolling
   // returns. Wait for the visible composition, not an empty animation list.
   await expect.poll(() => demo.evaluate(node => {
-    const reveal = node.closest("[data-reveal]")!;
+    const reveal = node.closest("[data-reveal]") ?? node;
     return getComputedStyle(reveal).opacity === "1" && reveal.getAnimations().every(animation => animation.playState === "finished");
   })).toBe(true);
 }
@@ -47,6 +48,7 @@ for (const flow of flows) {
     test.setTimeout(35000);
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
+    await openProjectWalkthrough(page, flow.name);
     const demo = page.getByRole("region", { name: flow.name, exact: true });
     await expect(demo).toHaveAttribute("data-running", "false");
     await showSettledDemo(demo);
@@ -154,6 +156,7 @@ for (const flow of flows) {
 for (const flow of [flows[0], flows[2]]) {
   test(`${flow.name} keeps its delivered actor in place when inspection resumes`, async ({ page }) => {
     await page.goto("/");
+    await openProjectWalkthrough(page, flow.name);
     const demo = page.getByRole("region", { name: flow.name, exact: true });
     await showSettledDemo(demo);
     await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(flow.finalStage).click();
@@ -196,6 +199,7 @@ for (const flow of [flows[0], flows[2]]) {
 
 test("a corrupt Quantiv bundle travels to the digest check and stops before activation", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, flows[2].name);
   const demo = page.getByRole("region", { name: flows[2].name, exact: true });
   await showSettledDemo(demo);
   const steps = demo.getByRole("group", { name: "Animation steps" });

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("the initial document stays dark before external styles or scripts load", async ({ browser }) => {
+test("the initial document uses soft Mist before external styles or scripts load", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.route("**/*.css", route => route.abort());
@@ -9,7 +9,7 @@ test("the initial document stays dark before external styles or scripts load", a
     background: getComputedStyle(element).backgroundColor,
     scheme: getComputedStyle(element).colorScheme,
   }));
-  expect(colors).toEqual({ background: "rgb(33, 29, 25)", scheme: "dark" });
+  expect(colors).toEqual({ background: "rgb(216, 223, 227)", scheme: "light" });
   await expect(page.locator(".hero-copy h1")).toBeVisible();
   await context.close();
 });
@@ -46,7 +46,7 @@ test("hero does not hide or move when JavaScript hydrates", async ({ page }) => 
     sample();
   });
   release();
-  await expect(page.locator(".ruler-milestone")).toHaveCount(11);
+  await expect(page.locator(".ruler-milestone")).toHaveCount(6);
   await page.waitForTimeout(650);
   const samples = await page.evaluate(() => (window as unknown as { heroSamples: { y: number; opacity: number }[] }).heroSamples);
   expect(Math.min(...samples.map(sample => sample.opacity))).toBe(1);
@@ -65,7 +65,7 @@ test("the poster stays visible while the digit atlas loads", async ({ page }) =>
   const poster = page.locator(".hero-brain-poster");
   await expect(poster).toBeVisible();
   await expect(page.locator(".hero-brain-canvas")).toHaveCSS("opacity", "0");
-  await expect(page.locator(".ruler-milestone")).toHaveCount(11);
+  await expect(page.locator(".ruler-milestone")).toHaveCount(6);
   const before = await artwork.boundingBox();
   release();
   await expect(artwork).toHaveAttribute("data-ready", "true");

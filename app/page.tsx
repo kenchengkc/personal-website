@@ -11,9 +11,9 @@ export default function HomePage() {
     <>
       <main className="site-main">
         <Hero />
+        <Projects />
         <Columbia />
         <Skills />
-        <Projects />
         <BlogList />
         <Contact />
       </main>

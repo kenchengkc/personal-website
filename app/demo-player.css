@@ -26,7 +26,7 @@
 .demo-player[data-running="false"] *, .demo-player[data-running="false"] *::before, .demo-player[data-running="false"] *::after { animation-play-state: paused !important; }
 .demo-player[data-inspecting="true"] *, .demo-player[data-inspecting="true"] *::before, .demo-player[data-inspecting="true"] *::after { animation: none !important; }
 .demo-player[data-inspecting="true"] * { transition: none !important; }
-@media (max-width: 620px) {
+@container walkthrough (max-width: 620px) {
   .motion-artwork { aspect-ratio: 1.25; }
   .demo-controls { gap: 16px; padding: 0 12px 20px; }
   .demo-caption { height: 80px; padding: 8px 16px 16px; font-size: 10px; }

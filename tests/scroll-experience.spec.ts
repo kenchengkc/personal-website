@@ -4,7 +4,7 @@ test.use({ contextOptions: { reducedMotion: "reduce" } });
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".ruler-milestone")).toHaveCount(11);
+  await expect(page.locator(".ruler-milestone")).toHaveCount(6);
 });
 
 test("sidebar labels remain separated when hovered, including on short screens", async ({ page }) => {
@@ -20,7 +20,7 @@ test("sidebar labels remain separated when hovered, including on short screens",
     for (let i = 1; i < boxes.length; i++) {
       expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom);
     }
-    expect(boxes[4].left).toBeGreaterThan(boxes[3].left);
+    expect(new Set(boxes.map(box => box.left)).size).toBe(1);
     expect(boxes.at(-1)!.bottom).toBeLessThan(height);
   }
 });
@@ -44,13 +44,29 @@ test("section stops share the arrow's scroll scale and Contact reaches the botto
   })).toBeLessThan(1);
 });
 
-test("nested projects become active and navigation targets the correct project", async ({ page }) => {
-  const quantiv = page.locator('[data-scroll-label="QUANTIV"]');
-  await quantiv.evaluate(element => element.scrollIntoView({ behavior: "instant" }));
-  await expect(page.locator(".ruler-milestone.is-active")).toContainText(/Quantiv/i);
-  await page.locator(".ruler-milestone").filter({ hasText: /Embers/i }).click();
-  await expect(page.locator(".ruler-milestone.is-active")).toContainText(/Embers/i);
-  await expect.poll(() => page.locator('[data-scroll-label="EMBERS"]').evaluate(element => Math.abs(element.getBoundingClientRect().top))).toBeLessThan(2);
+test("the gallery has one Portfolio stop across categories and expanded project details", async ({ page }) => {
+  await page.locator(".ruler-milestone").filter({ hasText: "Portfolio" }).click();
+  await expect(page.locator(".ruler-milestone.is-active")).toContainText("Portfolio");
+  await expect.poll(() => page.locator(".portfolio-gallery").evaluate(element => Math.abs(element.getBoundingClientRect().top))).toBeLessThan(2);
+
+  for (const category of ["Research", "Awards", "Work"]) {
+    await page.getByRole("tab", { name: category, exact: true }).click();
+    await expect(page.locator(".ruler-milestone")).toHaveCount(6);
+    await expect(page.locator(".ruler-stop[data-label=WORK]")).toHaveCount(1);
+  }
+  const initialHeight = await page.locator(".portfolio-gallery").evaluate(element => element.getBoundingClientRect().height);
+  await page.locator('.portfolio-entry[data-project="amazon"] .portfolio-details > summary').click();
+  await expect.poll(() => page.locator(".portfolio-gallery").evaluate(element => element.getBoundingClientRect().height)).toBeGreaterThan(initialHeight);
+  await expect.poll(() => page.locator(".ruler-stop").evaluateAll(elements => {
+    const rail = document.querySelector(".ruler-track")!.getBoundingClientRect();
+    const scrollable = document.documentElement.scrollHeight - innerHeight;
+    return Math.max(...elements.map(element => {
+      const section = document.querySelector(`[data-scroll-label="${element.getAttribute("data-label")}"]`)!;
+      const expected = Math.min(1, (section.getBoundingClientRect().top + scrollY) / scrollable);
+      const stop = element.getBoundingClientRect();
+      return Math.abs((stop.top + stop.height / 2 - rail.top) / rail.height - expected);
+    }));
+  })).toBeLessThan(0.005);
 });
 
 test("scroll marker follows the scrollable page, including after layout growth", async ({ page }) => {
@@ -94,7 +110,7 @@ test("sidebar stays outside project content on narrow desktops", async ({ page }
     await expect.poll(() => page.evaluate(() => {
       const right = document.querySelector(".scroll-ruler")!.getBoundingClientRect().right;
       return {
-        projectClear: document.querySelector(".project-result")!.getBoundingClientRect().left > right,
+        projectClear: document.querySelector(".portfolio-entry")!.getBoundingClientRect().left > right,
         footerClear: document.querySelector(".site-footer")!.getBoundingClientRect().left > right,
         overflow: document.documentElement.scrollWidth > innerWidth,
       };

@@ -1,13 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { openProjectWalkthrough } from "./helpers/gallery";
 
 test("Amazon diagrams animate only while visible and respect the pause control", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, "Amazon configuration infrastructure");
   const demo = page.getByRole("region", { name: "Amazon configuration infrastructure" });
   await expect(demo).toHaveAttribute("data-running", "false");
   await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
   await expect(demo).toHaveAttribute("data-running", "true");
   // Let the section's entrance finish before Playwright scrolls to its control.
-  await demo.evaluate(node => Promise.all(node.closest("[data-reveal]")!.getAnimations().map(animation => animation.finished)));
+  await demo.evaluate(node => Promise.all((node.closest("[data-reveal]") ?? node).getAnimations().map(animation => animation.finished)));
   const animationTimes = () => demo.evaluate(node => node.getAnimations({ subtree: true }).map(animation => Number(animation.currentTime)));
   const initial = await animationTimes();
   expect(initial.length).toBeGreaterThan(0);
@@ -26,10 +28,11 @@ test("Amazon diagrams animate only while visible and respect the pause control",
 
 test("Amazon output selection traces shared dependencies and updates affected planning lanes", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, "Amazon configuration infrastructure");
   const demo = page.getByRole("region", { name: "Amazon configuration infrastructure", exact: true });
   await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
   await expect(demo).toHaveAttribute("data-running", "true");
-  await demo.evaluate(node => Promise.all(node.closest("[data-reveal]")!.getAnimations().map(animation => animation.finished)));
+  await demo.evaluate(node => Promise.all((node.closest("[data-reveal]") ?? node).getAnimations().map(animation => animation.finished)));
   const outputs = demo.getByRole("group", { name: "Research output to trace" });
   await expect(outputs.getByRole("button", { name: "Output A", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(demo.getByText("Output A → 2 affected configurations", { exact: true })).toBeVisible();
@@ -53,6 +56,7 @@ test("Amazon output selection traces shared dependencies and updates affected pl
 test("Amazon diagrams remain readable and still with reduced motion on small screens", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await openProjectWalkthrough(page, "Amazon configuration infrastructure");
   const demo = page.getByRole("region", { name: "Amazon configuration infrastructure" });
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });

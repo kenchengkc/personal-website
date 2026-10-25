@@ -5,5 +5,5 @@
 .embers-image { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform: translateY(12px) rotateX(-3deg); transition: opacity .7s ease, transform .7s ease, visibility .7s; background: #080908; border: 1px solid #444a3c; box-shadow: 0 22px 40px -24px #000; }
 .embers-image[data-active="true"] { opacity: 1; visibility: visible; transform: translateY(0) rotateX(0); }
 .embers-image img { object-fit: contain; }
-@media (max-width: 620px) { .embers-gallery { padding: 30px 20px; } }
+@container walkthrough (max-width: 620px) { .embers-gallery { padding: 30px 20px; } }
 @media (prefers-reduced-motion: reduce) { .embers-image { transition: none; } }

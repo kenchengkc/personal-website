@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 type Milestone = { label: string; title: string; parent: string | null; number: number; position: number; labelY: number };
 const TITLES: Record<string, string> = {
   INTRO: "Introduction", COLUMBIA: "Education", SKILLS: "Skills",
-  WORK: "Selected Work", AMAZON: "Amazon", QUANTIV: "Quantiv",
+  WORK: "Portfolio", AMAZON: "Amazon", QUANTIV: "Quantiv",
   RETRIEVAL: "SEC Retrieval", EMBERS: "Embers", RESEARCH: "Research",
   PAPERS: "Publications", CONTACT: "Contact",
 };

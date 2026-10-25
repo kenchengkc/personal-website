@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from "@playwright/test";
+import { openProjectWalkthrough } from "./helpers/gallery";
 
 const demos = [
   "Amazon configuration infrastructure",
@@ -9,24 +10,37 @@ const stageCounts = [3, 4, 3];
 
 async function showDemo(demo: Locator) {
   await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
-  await demo.evaluate(node => Promise.all(node.closest("[data-reveal]")!.getAnimations().map(animation => animation.finished)));
+  await demo.evaluate(node => Promise.all((node.closest("[data-reveal]") ?? node).getAnimations().map(animation => animation.finished)));
 }
 
 test("project walkthroughs advance in view and stop when scrolled away without changing frame height", async ({ page }) => {
   await page.goto("/");
-  const stopped: { demo: Locator; stage: string | null }[] = [];
+  const opened: Locator[] = [];
 
   for (const name of demos) {
+    await openProjectWalkthrough(page, name);
     const demo = page.getByRole("region", { name, exact: true });
     await expect(demo).toHaveAttribute("data-running", "false");
     await showDemo(demo);
     await expect(demo).toHaveAttribute("data-running", "true");
     const height = (await demo.boundingBox())!.height;
+    // Adjacent gallery walkthroughs can both be visible. Only an off-screen
+    // walkthrough must remain stopped while this one advances.
+    const stopped: { demo: Locator; stage: string | null }[] = [];
+    for (const previous of opened) {
+      const visibility = await previous.evaluate(node => {
+        const bounds = node.getBoundingClientRect();
+        return Math.max(0, Math.min(bounds.bottom, innerHeight) - Math.max(bounds.top, 0)) / bounds.height;
+      });
+      if (visibility < 0.2) {
+        await expect(previous).toHaveAttribute("data-running", "false");
+        stopped.push({ demo: previous, stage: await previous.getAttribute("data-stage") });
+      }
+    }
     const initialStep = await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { pressed: true }).innerText();
     await expect.poll(() => demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { pressed: true }).innerText(), { timeout: 6000 }).not.toBe(initialStep);
     expect((await demo.boundingBox())!.height).toBeCloseTo(height, 2);
 
-    // A previous demo must not keep cycling while another is on screen.
     for (const previous of stopped) {
       await expect(previous.demo).toHaveAttribute("data-stage", previous.stage!);
     }
@@ -34,7 +48,7 @@ test("project walkthroughs advance in view and stop when scrolled away without c
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     await expect(demo).toHaveAttribute("data-running", "false");
     await expect.poll(() => demo.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
-    stopped.push({ demo, stage: await demo.getAttribute("data-stage") });
+    opened.push(demo);
   }
 });
 
@@ -42,6 +56,7 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
   await page.goto("/");
 
   for (const [demoIndex, name] of demos.entries()) {
+    await openProjectWalkthrough(page, name);
     const demo = page.getByRole("region", { name, exact: true });
     await showDemo(demo);
     const steps = demo.getByRole("group", { name: "Animation steps" }).getByRole("button");
@@ -71,6 +86,7 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
   // Longer than a normal step duration: manual inspection must not time out.
   await page.waitForTimeout(5200);
   for (const name of demos) {
+    await openProjectWalkthrough(page, name);
     const demo = page.getByRole("region", { name, exact: true });
     await expect(demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(1)).toHaveAttribute("aria-pressed", "true");
   }
@@ -83,6 +99,7 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
 
 test("Quantiv's model visibly travels during playback and freezes when paused", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[1]);
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(0).click();
@@ -108,6 +125,7 @@ test("Quantiv's model visibly travels during playback and freezes when paused", 
 
 test("keyboard focus pauses a nested control's stage without changing its selection", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[1]);
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   const forecast = demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Forecast:/ });
@@ -133,6 +151,7 @@ test("keyboard focus pauses a nested control's stage without changing its select
 
 test("Quantiv recomputes exceedance estimates and identifies an out-of-range tail bound", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[1]);
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Forecast:/ }).click();
@@ -158,6 +177,7 @@ test("Quantiv recomputes exceedance estimates and identifies an out-of-range tai
 
 test("Quantiv lets visitors inspect expanding training windows separated from unseen tests", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[1]);
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Validate:/ }).click();
@@ -189,6 +209,7 @@ test("Quantiv lets visitors inspect expanding training windows separated from un
 
 test("Quantiv retains the previous model when a new bundle fails verification", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[1]);
   const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Serve:/ }).click();
@@ -209,6 +230,7 @@ test("Quantiv retains the previous model when a new bundle fails verification", 
 
 test("FDRE applies the chosen availability date to both searches and merges duplicate passages", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[2]);
   const demo = page.getByRole("region", { name: demos[2], exact: true });
   await showDemo(demo);
   await expect(demo).toHaveAttribute("data-running", "true");
@@ -241,6 +263,7 @@ test("FDRE applies the chosen availability date to both searches and merges dupl
 
 test("FDRE shows citation checks for supported questions and abstains from forecasts", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, demos[2]);
   const demo = page.getByRole("region", { name: demos[2], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Evidence:/ }).click();
@@ -269,6 +292,7 @@ test("FDRE shows citation checks for supported questions and abstains from forec
 
 test("Embers product views switch the accessible screenshot without moving the frame", async ({ page }) => {
   await page.goto("/");
+  await openProjectWalkthrough(page, "Embers product walkthrough");
   const demo = page.getByRole("region", { name: "Embers product walkthrough", exact: true });
   const views = demo.getByRole("group", { name: "Product views" }).getByRole("button");
   const screenshots = [
@@ -301,6 +325,7 @@ test("reduced-motion walkthroughs show their completed result and fit small scre
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
     for (const [demoIndex, name] of demos.entries()) {
+      await openProjectWalkthrough(page, name);
       const demo = page.getByRole("region", { name, exact: true });
       await showDemo(demo);
       await expect(demo).toHaveAttribute("data-running", "false");

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function Columbia() {
   const coursework = [
     ["Machine Learning", "Natural Language Processing", "Artificial Intelligence"],
@@ -13,6 +15,7 @@ export function Columbia() {
       data-scroll-label="COLUMBIA"
     >
       <div className="reading-column">
+        <Image src="/images/butler-library.jpg" alt="Butler Library at Columbia University" width={960} height={640} sizes="(max-width: 720px) 90vw, 360px" className="columbia-photo" />
         <div className="columbia-heading" data-reveal>
           <div>
             <h2>Columbia University</h2>
@@ -22,7 +25,6 @@ export function Columbia() {
         </div>
 
         <div className="columbia-honor" data-reveal>
-          <div className="honor-mark" aria-hidden="true">✦</div>
           <div>
             <span>Egleston Scholar</span>
             <strong>Top 1%</strong>
