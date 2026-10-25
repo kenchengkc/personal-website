@@ -1,0 +1,9 @@
+# Research figure sources
+
+- `f1-optimized-cad.png`: Ken Cheng, “A Need For Speed: Enhancing F1 Race Cars with a Novel Computational Fluid Dynamics and Machine Learning Method,” Figure 15 (right), p. 11. The author's optimized SolidWorks rear-wing model. https://drpress.org/ojs/index.php/HSET/article/view/8388
+- `f1-cfd-comparison.png`: The same paper, Figure 17, p. 11. Original ANSYS Fluent velocity and pressure comparisons at 33 m/s, with and without the optimized rear wing. Extracted from the published PDF; no synthetic simulation results added.
+- `wasserstein-joint-validation.png`: Exact published aggregate figure at https://wasserstein-regimes.vercel.app/assets/joint-validation.png. Descriptive joint-regime validation and synthetic controls, with no predictive claim.
+- `wasserstein-cross-asset-comparison.png`: Exact published figure at https://wasserstein-regimes.vercel.app/assets/cross-asset-comparison.png. Explanation: https://wasserstein-regimes.vercel.app/cross-asset-results/.
+- `aster-summary.json`: Saved experiment summary from https://aster-hpo.vercel.app/evidence/smoke/summary.json. Allocation visual follows https://aster-hpo.vercel.app/assets/replication-race.svg and https://aster-hpo.vercel.app/assets/full-budget.svg: 16 candidates, 27 replications each under full budget; the race gives 27 to candidate 00 and 3 to each other candidate. One noisy-quadratic experiment, seed 17. The 100 independent audit evaluations per selected candidate are excluded from the allocation totals.
+
+The gallery retains original figure pixels. The allocation grid is rendered from the published counts using the site's typography. No unpublished market prices, per-window assignments, research records, or activation values are included.

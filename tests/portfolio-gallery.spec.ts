@@ -52,7 +52,7 @@ test("every experience, research project, and award has accessible, loaded artwo
       await entry.scrollIntoViewIfNeeded();
       const artwork = entry.locator(".project-artwork");
       await expect(artwork).toBeVisible();
-      await expect(artwork.getByRole("img").first()).toHaveAccessibleName(/\S/);
+      await expect(artwork.getByRole("img").or(artwork.getByRole("figure")).first()).toHaveAccessibleName(/\S/);
       await expect.poll(() => artwork.locator("img").evaluateAll(images => images.every(image => {
         const img = image as HTMLImageElement;
         return img.complete && img.naturalWidth > 0;
@@ -120,6 +120,35 @@ test("gallery artwork replay finishes instead of looping", async ({ page }) => {
   const running = () => artwork.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation instanceof CSSAnimation && animation.playState === "running").length);
   await expect.poll(running).toBeGreaterThan(0);
   await expect.poll(running, { timeout: 7000 }).toBe(0);
+});
+
+test("research artifacts expose original figures and the saved allocation comparison", async ({ page }) => {
+  await page.goto("/#research");
+  const aster = page.locator('[data-artwork="aster"]');
+  await expect(aster.getByRole("img")).toHaveAccessibleName(/72 evaluations.*candidate 00 receives 27/);
+  await aster.getByRole("button", { name: "Full budget", exact: true }).click();
+  await expect(aster.getByRole("img")).toHaveAccessibleName(/432 evaluations.*16 candidates receive 27/);
+  await aster.getByRole("button", { name: "Replication race", exact: true }).click();
+  await expect(aster.getByRole("img")).toHaveAccessibleName(/72 evaluations/);
+
+  const model = page.locator('[data-artwork="cml"]');
+  await model.getByRole("button", { name: "Feature shapes", exact: true }).click();
+  await expect(model).toContainText("[batch, 4, 4, 64]");
+
+  for (const [category, kind, view] of [["Research", "wasserstein", "Cross-asset"], ["Awards", "speed", "CFD results"]]) {
+    await page.getByRole("tab", { name: category, exact: true }).click();
+    const artwork = page.locator(`[data-artwork="${kind}"]`);
+    await artwork.getByRole("button", { name: view, exact: true }).click();
+    const enlarge = artwork.getByRole("button", { name: `Enlarge ${view} figure` });
+    await enlarge.click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("img")).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "View original source" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(enlarge).toBeFocused();
+  }
 });
 
 test("gallery fits compact screens and remains still with reduced motion", async ({ page }) => {
