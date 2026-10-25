@@ -2,7 +2,6 @@ import { expect, type Page } from "@playwright/test";
 
 const projectsByDemo: Record<string, string> = {
   "Amazon configuration infrastructure": "amazon",
-  "Quantiv earnings research demonstration": "quantiv",
   "Financial Document Retrieval Engine search demonstration": "fdre",
   "Embers product walkthrough": "embers",
 };

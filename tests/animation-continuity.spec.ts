@@ -15,7 +15,6 @@ type Frame = { time: number; stage: number; height: number; actors: Record<strin
 const flows = [
   { name: "Amazon configuration infrastructure", actors: ["amazon-config"], moving: "amazon-config", finalStage: 2, finalDwell: 5700 },
   { name: "Financial Document Retrieval Engine search demonstration", actors: ["fdre-passage"], moving: "fdre-passage", finalStage: 2, finalDwell: 2200 },
-  { name: "Quantiv earnings research demonstration", actors: ["quantiv-market", "quantiv-model"], moving: "quantiv-model", stationary: "quantiv-market", finalStage: 3, finalDwell: 6300 },
 ] as const;
 
 async function showSettledDemo(demo: Locator) {
@@ -26,18 +25,6 @@ async function showSettledDemo(demo: Locator) {
     const reveal = node.closest("[data-reveal]") ?? node;
     return getComputedStyle(reveal).opacity === "1" && reveal.getAnimations().every(animation => animation.playState === "finished");
   })).toBe(true);
-}
-
-async function quantivLandmarks(demo: Locator) {
-  return demo.evaluate(root => {
-    const point = (node: SVGGraphicsElement, x = 0, y = 0) => {
-      const position = new DOMPoint(x, y).matrixTransform(node.getScreenCTM()!);
-      return { x: position.x, y: position.y };
-    };
-    const checks = [...root.querySelectorAll<SVGGraphicsElement>(".qv-checkpoint")].map(node => point(node));
-    const serving = root.querySelector<SVGCircleElement>(".qv-serving-dot")!;
-    return [...checks, point(serving, serving.cx.baseVal.value, serving.cy.baseVal.value)];
-  });
 }
 
 // The tall viewport keeps the complete continuous map visible during sampling.
@@ -133,27 +120,13 @@ for (const flow of flows) {
       expect(positions.size, `${flow.moving} must render intermediate positions, not jump to stage ${stage}`).toBeGreaterThanOrEqual(4);
     }
 
-    if ("stationary" in flow) {
-      const anchor = frames[0].actors[flow.stationary];
-      expect(Math.max(...frames.map(frame => Math.hypot(frame.actors[flow.stationary].x - anchor.x, frame.actors[flow.stationary].y - anchor.y))), "The market reference must stay fixed while the model travels").toBeLessThan(1);
-
-      const landmarks = await quantivLandmarks(demo);
-      const delivery = frames.filter(frame => frame.stage === flow.finalStage).map(frame => frame.actors[flow.moving]);
-      for (const [index, landmark] of landmarks.entries()) {
-        expect(Math.min(...delivery.map(point => Math.hypot(point.x - landmark.x, point.y - landmark.y))), `The same bundle must pass verification checkpoint ${index + 1}`).toBeLessThan(4);
-      }
-      await expect(demo.locator('[data-flow-id="quantiv-model"]')).toHaveAttribute("data-flow-stop", "activation");
-      const delivered = delivery.at(-1)!;
-      expect(Math.hypot(delivered.x - landmarks[3].x, delivered.y - landmarks[3].y), "Verified bundle must reach the active serving endpoint").toBeLessThan(1);
-    }
-
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     await expect(demo).toHaveAttribute("data-running", "false");
     await expect.poll(() => demo.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
   });
 }
 
-for (const flow of [flows[0], flows[2]]) {
+for (const flow of [flows[0]]) {
   test(`${flow.name} keeps its delivered actor in place when inspection resumes`, async ({ page }) => {
     await page.goto("/");
     await openProjectWalkthrough(page, flow.name);
@@ -196,40 +169,3 @@ for (const flow of [flows[0], flows[2]]) {
     await expect(demo).toHaveAttribute("data-stage", String(flow.finalStage));
   });
 }
-
-test("a corrupt Quantiv bundle travels to the digest check and stops before activation", async ({ page }) => {
-  await page.goto("/");
-  await openProjectWalkthrough(page, flows[2].name);
-  const demo = page.getByRole("region", { name: flows[2].name, exact: true });
-  await showSettledDemo(demo);
-  const steps = demo.getByRole("group", { name: "Animation steps" });
-  await steps.getByRole("button", { name: /^Serve:/ }).click();
-  await demo.getByRole("button", { name: "Corrupt bundle", exact: true }).click();
-  await steps.getByRole("button", { name: /^Validate:/ }).click();
-  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
-  await expect(demo).toHaveAttribute("data-stage", "3", { timeout: 6000 });
-  const actor = demo.locator('[data-flow-id="quantiv-model"]');
-  await expect(actor).toHaveAttribute("data-flow-stop", "digest");
-  await expect(actor).toHaveAttribute("data-rejected", "true");
-  const samples = await actor.evaluate(async node => {
-    const start = performance.now();
-    const frames: { x: number; y: number }[] = [];
-    return new Promise<typeof frames>(resolve => {
-      const sample = (now: number) => {
-        const point = new DOMPoint(0, 0).matrixTransform((node as SVGGraphicsElement).getScreenCTM()!);
-        frames.push({ x: point.x, y: point.y });
-        if (now - start >= 5500) resolve(frames);
-        else requestAnimationFrame(sample);
-      };
-      requestAnimationFrame(sample);
-    });
-  });
-  const [signature, digest, , serving] = await quantivLandmarks(demo);
-  expect(Math.min(...samples.map(point => Math.hypot(point.x - signature.x, point.y - signature.y))), "The rejected bundle must still travel through the signature check").toBeLessThan(4);
-  expect(Math.max(...samples.map(point => point.x)), "A digest failure must not pass into native loading or activation").toBeLessThanOrEqual(digest.x + 1);
-  const stopped = samples.at(-1)!;
-  expect(Math.hypot(stopped.x - digest.x, stopped.y - digest.y)).toBeLessThan(1);
-  expect(Math.hypot(stopped.x - serving.x, stopped.y - serving.y)).toBeGreaterThan(20);
-  await expect(demo.locator(".qv-serve-result")).toContainText("Previous model retained");
-  await expect(demo.getByText("current → v1", { exact: true })).toBeVisible();
-});

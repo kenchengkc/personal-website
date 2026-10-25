@@ -38,10 +38,10 @@ function FeaturedEntry({ project, active }: { project: FeaturedProject; active: 
               {project.secondaryHref && <a href={project.secondaryHref} target="_blank" rel="noopener noreferrer">{project.secondaryLabel}<ArrowUpRight /></a>}
             </div>
           )}
-          <details className="project-walkthrough" onToggle={event => setWalkthrough(event.currentTarget.open)}>
+          {project.demo !== "quantiv" && <details className="project-walkthrough" onToggle={event => setWalkthrough(event.currentTarget.open)}>
             <summary>Interactive walkthrough</summary>
             {expanded && walkthrough && active && <ProjectDemo kind={project.demo} />}
-          </details>
+          </details>}
         </div>
       </details>
       <p className="portfolio-meta">{project.eyebrow}<span>{project.date}</span></p>

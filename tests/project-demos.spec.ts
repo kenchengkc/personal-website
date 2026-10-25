@@ -3,10 +3,9 @@ import { openProjectWalkthrough } from "./helpers/gallery";
 
 const demos = [
   "Amazon configuration infrastructure",
-  "Quantiv earnings research demonstration",
   "Financial Document Retrieval Engine search demonstration",
 ] as const;
-const stageCounts = [3, 4, 3];
+const stageCounts = [3, 3];
 
 async function showDemo(demo: Locator) {
   await demo.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
@@ -91,147 +90,16 @@ test("visitors can inspect any step with a keyboard and it stays selected until 
     await expect(demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(1)).toHaveAttribute("aria-pressed", "true");
   }
 
-  const lastDemo = page.getByRole("region", { name: demos[2], exact: true });
+  const lastDemo = page.getByRole("region", { name: demos[1], exact: true });
   await lastDemo.getByRole("button", { name: "Play animation", exact: true }).click();
   await expect(lastDemo).toHaveAttribute("data-running", "true");
   await expect(lastDemo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(2)).toHaveAttribute("aria-pressed", "true", { timeout: 6000 });
 });
 
-test("Quantiv's model visibly travels during playback and freezes when paused", async ({ page }) => {
-  await page.goto("/");
-  await openProjectWalkthrough(page, demos[1]);
-  const demo = page.getByRole("region", { name: demos[1], exact: true });
-  await showDemo(demo);
-  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(0).click();
-  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
-  await expect(demo).toHaveAttribute("data-running", "true");
-  await expect(demo).toHaveAttribute("data-stage", "1", { timeout: 6000 });
-  const model = demo.locator('[data-flow-id="quantiv-model"]');
-  const position = () => model.evaluate(node => Number.parseFloat(getComputedStyle(node).offsetDistance));
-  const destination = await model.evaluate(node => Number.parseFloat((node as SVGElement).style.offsetDistance));
-  const initial = await position();
-  // Catch the model in flight, before it arrives at the forecast branch.
-  await expect.poll(position, { timeout: 1200 }).toBeGreaterThan(initial);
-
-  await demo.getByRole("button", { name: "Pause animation", exact: true }).click();
-  await expect(demo).toHaveAttribute("data-running", "false");
-  await page.waitForTimeout(100);
-  const paused = await position();
-  expect(paused).toBeGreaterThan(0);
-  expect(paused).toBeLessThan(destination);
-  await page.waitForTimeout(350);
-  expect(await position()).toBe(paused);
-});
-
-test("keyboard focus pauses a nested control's stage without changing its selection", async ({ page }) => {
-  await page.goto("/");
-  await openProjectWalkthrough(page, demos[1]);
-  const demo = page.getByRole("region", { name: demos[1], exact: true });
-  await showDemo(demo);
-  const forecast = demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Forecast:/ });
-  await forecast.click();
-  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
-  await expect(demo).toHaveAttribute("data-running", "true");
-  const focusedChoice = demo.getByRole("button", { name: "Compare a 3% market move", exact: true });
-  const selectedChoice = demo.getByRole("button", { name: "Compare a 6% market move", exact: true });
-
-  // Focus alone must stop autoplay; it must not activate the newly focused value.
-  await focusedChoice.focus();
-  await expect(focusedChoice).toBeFocused();
-  await expect(demo).toHaveAttribute("data-running", "false");
-  await expect(focusedChoice).toHaveAttribute("aria-pressed", "false");
-  await expect(selectedChoice).toHaveAttribute("aria-pressed", "true");
-
-  await page.waitForTimeout(5200); // Forecast normally advances after five seconds.
-  await expect(forecast).toHaveAttribute("aria-pressed", "true");
-  await expect(focusedChoice).toBeFocused();
-  await expect(focusedChoice).toBeVisible();
-  await expect(selectedChoice).toHaveAttribute("aria-pressed", "true");
-});
-
-test("Quantiv recomputes exceedance estimates and identifies an out-of-range tail bound", async ({ page }) => {
-  await page.goto("/");
-  await openProjectWalkthrough(page, demos[1]);
-  const demo = page.getByRole("region", { name: demos[1], exact: true });
-  await showDemo(demo);
-  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Forecast:/ }).click();
-  await demo.getByRole("button", { name: "Play animation", exact: true }).click();
-  await expect(demo).toHaveAttribute("data-running", "true");
-  const result = demo.locator(".qv-forecast-result");
-
-  for (const [threshold, probability] of [[3, /^77\.5%$/], [6, /^31\.3%$/], [10, /^≤\s*10%$/]] as const) {
-    const comparison = demo.getByRole("button", { name: `Compare a ${threshold}% market move`, exact: true });
-    await comparison.click();
-    await expect(comparison).toHaveAttribute("aria-pressed", "true");
-    await expect(demo).toHaveAttribute("data-running", "false");
-    await expect(result.locator("strong")).toHaveText(probability);
-    await expect(result).toContainText(`above a ${threshold}% move`);
-  }
-  await expect(result).toContainText("Tail bound");
-  await expect(demo.getByRole("button", { name: "Verified bundle", exact: true })).toHaveCount(0);
-  await expect(demo.locator(".qv-dock-panel[hidden]")).toHaveCount(3);
-  for (const panel of await demo.locator(".qv-dock-panel[hidden]").all()) {
-    await expect(panel).toBeHidden();
-  }
-});
-
-test("Quantiv lets visitors inspect expanding training windows separated from unseen tests", async ({ page }) => {
-  await page.goto("/");
-  await openProjectWalkthrough(page, demos[1]);
-  const demo = page.getByRole("region", { name: demos[1], exact: true });
-  await showDemo(demo);
-  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Validate:/ }).click();
-  let previousTrainingWidth = 0;
-  let previousTestEnd: number | undefined;
-
-  for (const fold of [1, 2, 3, 4]) {
-    const button = demo.getByRole("button", { name: `Inspect fold ${fold}`, exact: true });
-    await button.click();
-    await expect(button).toHaveAttribute("aria-pressed", "true");
-    const active = demo.locator('.qv-fold[data-active="true"]');
-    await expect(active).toHaveCount(1);
-    await expect(active).toHaveCSS("opacity", "1");
-    await expect(demo.getByRole("img", { name: new RegExp(`Fold ${fold} is (selected|highlighted)`) })).toBeVisible();
-    const split = await active.evaluate(row => {
-      const train = row.querySelector(".qv-train")!.getBoundingClientRect();
-      const unseen = row.querySelector(".qv-test")!.getBoundingClientRect();
-      return { trainingWidth: train.width, trainingEnd: train.right, testStart: unseen.left, testEnd: unseen.right, testWidth: unseen.width };
-    });
-    expect(split.trainingWidth).toBeGreaterThan(previousTrainingWidth);
-    expect(split.testStart).toBeGreaterThan(split.trainingEnd);
-    expect((split.testStart - split.trainingEnd) / split.testWidth).toBeCloseTo(5 / 60, 3);
-    if (previousTestEnd !== undefined) expect(split.testStart).toBeCloseTo(previousTestEnd, 2);
-    previousTrainingWidth = split.trainingWidth;
-    previousTestEnd = split.testEnd;
-  }
-  await expect(demo.getByRole("button", { name: "Compare a 3% market move", exact: true })).toHaveCount(0);
-});
-
-test("Quantiv retains the previous model when a new bundle fails verification", async ({ page }) => {
-  await page.goto("/");
-  await openProjectWalkthrough(page, demos[1]);
-  const demo = page.getByRole("region", { name: demos[1], exact: true });
-  await showDemo(demo);
-  await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Serve:/ }).click();
-  const result = demo.locator(".qv-serve-result");
-  await expect(result).toContainText("New model active");
-  await expect(demo.getByText("current → v2", { exact: true })).toBeVisible();
-
-  await demo.getByRole("button", { name: "Corrupt bundle", exact: true }).click();
-  await expect(result).toContainText("Previous model retained");
-  await expect(result).toContainText("SHA-256 mismatch · activation blocked");
-  await expect(demo.getByText("current → v1", { exact: true })).toBeVisible();
-
-  await demo.getByRole("button", { name: "Verified bundle", exact: true }).click();
-  await expect(result).toContainText("New model active");
-  await expect(result).toContainText("Signature + digests + load verified");
-  await expect(demo.getByText("current → v2", { exact: true })).toBeVisible();
-});
-
 test("FDRE applies the chosen availability date to both searches and merges duplicate passages", async ({ page }) => {
   await page.goto("/");
-  await openProjectWalkthrough(page, demos[2]);
-  const demo = page.getByRole("region", { name: demos[2], exact: true });
+  await openProjectWalkthrough(page, demos[1]);
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await expect(demo).toHaveAttribute("data-running", "true");
   const dates = demo.getByRole("group", { name: "Example as-of date" });
@@ -263,8 +131,8 @@ test("FDRE applies the chosen availability date to both searches and merges dupl
 
 test("FDRE shows citation checks for supported questions and abstains from forecasts", async ({ page }) => {
   await page.goto("/");
-  await openProjectWalkthrough(page, demos[2]);
-  const demo = page.getByRole("region", { name: demos[2], exact: true });
+  await openProjectWalkthrough(page, demos[1]);
+  const demo = page.getByRole("region", { name: demos[1], exact: true });
   await showDemo(demo);
   await demo.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: /^Evidence:/ }).click();
   const questions = demo.getByRole("group", { name: "Example question type" });
