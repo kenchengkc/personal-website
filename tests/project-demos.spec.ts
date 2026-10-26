@@ -54,23 +54,30 @@ test("combined animations remain usable without motion or overflow on compact sc
   }
 });
 
-test("Embers switches between tracking and its actual saved inventory inside one fixed box", async ({ page }) => {
+test("Embers carries one tracked object into its actual inventory within the same window", async ({ page }) => {
   await page.goto("/");
   const animation = await openProjectAnimation(page, "embers");
-  const views = animation.getByRole("group", { name: "Product views", exact: true });
+  const steps = animation.getByRole("group", { name: "Animation steps" });
+  await expect(animation.getByRole("group", { name: "Product views", exact: true })).toHaveCount(0);
   const actor = await animation.locator('[data-flow-id="embers-gallery-track"]').elementHandle();
+  const images = await animation.locator("image").elementHandles();
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
     await animation.scrollIntoViewIfNeeded();
     const height = (await animation.boundingBox())!.height;
-    await views.getByRole("button", { name: "Inventory", exact: true }).click();
-    await expect(animation.getByRole("img")).toHaveAccessibleName(/Actual Embers saved inventory dashboard/);
+    await steps.getByRole("button", { name: "Detect", exact: true }).click();
+    await expect(animation.locator(".eflow-detection-view")).toHaveCSS("opacity", "1");
+    await expect(animation.locator(".eflow-inventory-view")).toHaveCSS("opacity", "0");
+    const detected = await actor!.evaluate(node => node.getBoundingClientRect().toJSON());
+    await steps.getByRole("button", { name: "Track", exact: true }).click();
+    await expect(animation).toHaveAttribute("data-stage", "1");
+    await steps.getByRole("button", { name: "Save", exact: true }).click();
     await expect(animation.locator(".eflow-inventory-view")).toHaveCSS("opacity", "1");
     await expect(animation.locator(".eflow-detection-view")).toHaveCSS("opacity", "0");
-    await views.getByRole("button", { name: "Detection", exact: true }).click();
-    await expect(animation.getByRole("img")).toHaveAccessibleName(/Refrigerator track 4 persists/);
-    await expect(animation.locator(".eflow-detection-view")).toHaveCSS("opacity", "1");
+    const saved = await actor!.evaluate(node => node.getBoundingClientRect().toJSON());
+    expect(Math.abs(saved.x - detected.x) + Math.abs(saved.y - detected.y)).toBeGreaterThan(5);
     expect((await animation.boundingBox())!.height).toBeCloseTo(height, 2);
   }
   expect(await actor!.evaluate(node => node.isConnected)).toBe(true);
+  for (const image of images) expect(await image.evaluate(node => node.isConnected)).toBe(true);
 });

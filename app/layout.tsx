@@ -13,6 +13,7 @@ import "./speed-artwork.css";
 import "./cvrp-artwork.css";
 import "./product-flow-artwork.css";
 import "./product-browser-preview.css";
+import "./artwork-window.css";
 import "./portfolio.css";
 
 const manrope = Manrope({

@@ -2,6 +2,7 @@
 
 import { useId, useState, type CSSProperties } from "react";
 import { AnimatedArtwork } from "./AnimatedArtwork";
+import { ArtworkWindow } from "./ArtworkWindow";
 
 const steps = [
   { label: "Compare", caption: "A versioned JSON diff isolates the changed forecasting input." },
@@ -38,6 +39,7 @@ export function AmazonArtwork() {
   const [output, setOutput] = useState<Output>("A");
   const affected = affectedByOutput[output];
   return (
+    <ArtworkWindow name="Amazon" title="Amazon · Configuration">
     <div className="amazon-artifact">
       <AnimatedArtwork label="Amazon configuration infrastructure" steps={steps} duration={3600} playground={() => <div className="amazon-output-playground">
         <div role="group" aria-label="Research output"><span>Trace</span>{(["A", "B"] as const).map(value => <button key={value} type="button" aria-pressed={output === value} onClick={() => setOutput(value)}>Output {value}</button>)}</div>
@@ -97,5 +99,6 @@ export function AmazonArtwork() {
         )}
       </AnimatedArtwork>
     </div>
+    </ArtworkWindow>
   );
 }

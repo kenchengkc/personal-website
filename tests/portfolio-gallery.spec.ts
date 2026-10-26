@@ -98,7 +98,7 @@ test("each featured project has one visual with no duplicate walkthrough", async
     const recorded = project.demo === "quantiv" || project.demo === "fdre";
     await expect(entry.locator('.product-browser-preview')).toHaveCount(recorded ? 1 : 0);
     await expect(entry.locator('.animated-artwork')).toHaveCount(recorded ? 0 : 1);
-    await expect(entry.locator('.animated-artwork-playground')).toHaveCount(recorded ? 0 : 1);
+    await expect(entry.locator('.animated-artwork-playground')).toHaveCount(project.demo === "amazon" ? 1 : 0);
     await entry.locator('.portfolio-details > summary').click();
     await expect(entry.getByText('Interactive walkthrough', { exact: true })).toHaveCount(0);
     await expect(entry.locator('.animated-artwork, .product-browser-preview')).toHaveCount(1);
