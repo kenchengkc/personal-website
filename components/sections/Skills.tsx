@@ -30,12 +30,10 @@ const skillGroups = [
       "Embeddings",
       "GPU Profiling",
       "Activation Probing",
-      "Computer Vision (YOLOv11)",
+      "Computer Vision",
       "Feature Engineering",
       "Walk-Forward Validation",
-      "Quantile Regression",
       "Backtesting",
-      "Options Pricing",
     ],
   },
   {
