@@ -120,8 +120,6 @@ a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
 .coursework-block { margin-top: 34px; }
 .coursework-label { margin: 0 0 18px; color: var(--ink); font-size: 18px; font-weight: 500; line-height: 1.35; letter-spacing: -.02em; }
 .coursework-list { max-width: 48ch; color: var(--ink-2); font-size: 13px; line-height: 1.85; }
-.coursework-list p { margin: 0; }
-.coursework-list p + p { margin-top: 14px; }
 .skills-section { padding-block: 48px 64px; }
 .skills-field { border-top: 1px solid var(--line); }
 .skill-row { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }

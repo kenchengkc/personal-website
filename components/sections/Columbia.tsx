@@ -1,10 +1,29 @@
 import Image from "next/image";
+import {
+  BrainCircuit,
+  ChartNoAxesCombined,
+  ChartScatter,
+  Database,
+  Dices,
+  GitBranch,
+  Grid2X2,
+  MessageSquareText,
+  Network,
+  SquareTerminal,
+} from "lucide-react";
 
 export function Columbia() {
   const coursework = [
-    ["Machine Learning", "Natural Language Processing", "Artificial Intelligence"],
-    ["Advanced Programming in C", "Data Structures and Algorithms", "Databases"],
-    ["Probability Theory", "Statistical Inference", "Linear Algebra", "Linear Regression"],
+    { name: "Machine Learning", icon: BrainCircuit },
+    { name: "Natural Language Processing", icon: MessageSquareText },
+    { name: "Artificial Intelligence", icon: Network },
+    { name: "Advanced Programming in C", icon: SquareTerminal },
+    { name: "Data Structures and Algorithms", icon: GitBranch },
+    { name: "Databases", icon: Database },
+    { name: "Probability Theory", icon: Dices },
+    { name: "Statistical Inference", icon: ChartScatter },
+    { name: "Linear Algebra", icon: Grid2X2 },
+    { name: "Linear Regression", icon: ChartNoAxesCombined },
   ];
 
   return (
@@ -36,12 +55,15 @@ export function Columbia() {
         </div>
 
         <div className="coursework-block" data-reveal>
-          <h3 className="coursework-label">Selected coursework</h3>
-          <div className="coursework-list">
-            {coursework.map(courses => (
-              <p key={courses[0]}>{courses.join(", ")}</p>
+          <h3 className="coursework-label" id="coursework-heading">Selected coursework</h3>
+          <ul className="coursework-list" aria-labelledby="coursework-heading" role="list">
+            {coursework.map(({ name, icon: Icon }) => (
+              <li key={name}>
+                <Icon size={16} strokeWidth={1.5} aria-hidden="true" />
+                <span>{name}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </section>
