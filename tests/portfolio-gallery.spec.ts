@@ -91,15 +91,17 @@ test("expanded gallery entries retain the full project evidence and original lin
   await expect(page.locator('#writing a[href*="researchgate.net/publication/371141171"]')).toBeAttached();
 });
 
-test("each featured project combines its animation and playground in one box", async ({ page }) => {
+test("each featured project has one visual with no duplicate walkthrough", async ({ page }) => {
   await page.goto("/#work");
   for (const project of featuredProjects) {
     const entry = page.locator(`.portfolio-entry[data-project="${project.demo}"]`);
-    await expect(entry.locator('.animated-artwork')).toHaveCount(1);
-    await expect(entry.locator('.animated-artwork-playground')).toHaveCount(1);
+    const recorded = project.demo === "quantiv" || project.demo === "fdre";
+    await expect(entry.locator('.product-browser-preview')).toHaveCount(recorded ? 1 : 0);
+    await expect(entry.locator('.animated-artwork')).toHaveCount(recorded ? 0 : 1);
+    await expect(entry.locator('.animated-artwork-playground')).toHaveCount(recorded ? 0 : 1);
     await entry.locator('.portfolio-details > summary').click();
     await expect(entry.getByText('Interactive walkthrough', { exact: true })).toHaveCount(0);
-    await expect(entry.locator('.animated-artwork')).toHaveCount(1);
+    await expect(entry.locator('.animated-artwork, .product-browser-preview')).toHaveCount(1);
     await entry.locator('.portfolio-details > summary').click();
   }
 });

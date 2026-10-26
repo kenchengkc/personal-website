@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { openProjectAnimation, type FeaturedAnimation } from "./helpers/gallery";
 
-const projects: FeaturedAnimation[] = ["amazon", "quantiv", "fdre", "embers"];
+const projects: FeaturedAnimation[] = ["amazon", "embers"];
 
 test("each project has one combined animation whose keyboard-selected step stays in place", async ({ page }) => {
   await page.goto("/");
@@ -52,87 +52,6 @@ test("combined animations remain usable without motion or overflow on compact sc
       }
     }
   }
-});
-
-test("FDRE playground filters both searches and deduplicates eligible passage IDs in the same scene", async ({ page }) => {
-  await page.goto("/");
-  const animation = await openProjectAnimation(page, "fdre");
-  const dates = animation.getByRole("group", { name: "Example as-of date", exact: true });
-  const actor = await animation.locator('[data-flow-id="fdre-gallery-passage"]').elementHandle();
-  if (!actor) throw new Error("Missing passage 12");
-  await expect(animation.locator('[data-filing][data-eligible="true"]')).toHaveCount(1);
-  await dates.getByRole("button", { name: "01 May", exact: true }).click();
-  await expect(animation).toHaveAttribute("data-running", "false");
-  await expect(animation.locator('[data-filing][data-eligible="true"]')).toHaveCount(3);
-  await animation.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: "Retrieve", exact: true }).click();
-  await expect(animation.getByRole("img")).toHaveAccessibleName(/four unique passages/);
-  const keyword = animation.locator('[data-search="keyword"] .fflow-hit[data-excluded="false"]');
-  const vector = animation.locator('[data-search="vector"] .fflow-hit[data-excluded="false"]');
-  expect(await keyword.allTextContents()).toEqual(["12", "31", "57"]);
-  expect(await vector.allTextContents()).toEqual(["12", "57", "84"]);
-  expect(new Set([...await keyword.allTextContents(), ...await vector.allTextContents()]).size).toBe(4);
-  await dates.getByRole("button", { name: "01 Mar", exact: true }).click();
-  expect(await keyword.allTextContents()).toEqual(["12", "31"]);
-  expect(await vector.allTextContents()).toEqual(["12"]);
-  await expect(animation.getByRole("img")).toHaveAccessibleName(/two unique passages/);
-  expect(await actor.evaluate(node => node.isConnected)).toBe(true);
-});
-
-test("FDRE playground changes the answer to abstention without replacing the passage", async ({ page }) => {
-  await page.goto("/");
-  const animation = await openProjectAnimation(page, "fdre");
-  await animation.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: "Cite", exact: true }).click();
-  const questions = animation.getByRole("group", { name: "Example question type", exact: true });
-  const passage = await animation.locator('[data-flow-id="fdre-gallery-passage"]').elementHandle();
-  await questions.getByRole("button", { name: "Price forecast", exact: true }).click();
-  await expect(animation.getByRole("img")).toHaveAccessibleName(/generation skipped, no answer or citations/);
-  await expect(animation.locator(".fflow-answer")).toHaveText("Generation skipped");
-  await expect(animation.locator(".fflow-abstention")).toHaveCSS("opacity", "1");
-  await expect(animation.locator(".fflow-source-check")).toHaveCSS("opacity", "0");
-  await questions.getByRole("button", { name: "Filing risk", exact: true }).click();
-  await expect(animation.locator(".fflow-source-check")).toHaveCSS("opacity", "1");
-  await expect(animation.locator(".fflow-abstention")).toHaveCSS("opacity", "0");
-  await expect(animation.locator(".fflow-answer")).toHaveText("Changes need time and resources.");
-  expect(await passage!.evaluate(node => node.isConnected)).toBe(true);
-});
-
-test("Quantiv's combined playground calculates tail estimates, selects validation folds, and rejects corrupt bundles", async ({ page }) => {
-  await page.goto("/");
-  const animation = await openProjectAnimation(page, "quantiv");
-  const steps = animation.getByRole("group", { name: "Animation steps" });
-  const height = (await animation.boundingBox())!.height;
-  await steps.getByRole("button", { name: "Estimate", exact: true }).click();
-  const market = await animation.locator(".qflow-market-line").getAttribute("d");
-  for (const [threshold, label] of [[3, "77.5% above 3%"], [6, "31.3% above 6%"], [10, "≤ 10% above 10%"]] as const) {
-    await animation.getByRole("button", { name: `Compare a ${threshold}% market move`, exact: true }).click();
-    await expect(animation.locator(".qflow-probability")).toHaveText(label);
-    await expect(animation.locator(".qflow-market-line")).toHaveAttribute("d", market!);
-    await expect(animation).toHaveAttribute("data-running", "false");
-  }
-  await expect(animation).toContainText("Tail bound beyond the model’s P90 quantile.");
-  await steps.getByRole("button", { name: "Validate", exact: true }).click();
-  let previousWidth = 0;
-  for (const fold of [1, 2, 3, 4]) {
-    await animation.getByRole("button", { name: `Inspect fold ${fold}`, exact: true }).click();
-    const selected = animation.locator('.qflow-fold[data-active="true"]');
-    await expect(selected).toHaveCount(1);
-    const bounds = await selected.evaluate(node => {
-      const train = node.querySelector(".qflow-train")!.getBoundingClientRect();
-      const test = node.querySelector(".qflow-test")!.getBoundingClientRect();
-      return { width: train.width, gap: test.left - train.right, testWidth: test.width };
-    });
-    expect(bounds.width).toBeGreaterThan(previousWidth);
-    expect(bounds.gap / bounds.testWidth).toBeCloseTo(5 / 60, 3);
-    previousWidth = bounds.width;
-  }
-  await steps.getByRole("button", { name: "Serve", exact: true }).click();
-  await animation.getByRole("button", { name: "Corrupt", exact: true }).click();
-  await expect(animation.locator(".qflow-serve-result")).toHaveText("SHA-256 mismatch · Previous model v1 retained");
-  await expect(animation.locator(".qflow-active-model")).toHaveCount(0);
-  await animation.getByRole("button", { name: "Verified", exact: true }).click();
-  await expect(animation.locator(".qflow-serve-result")).toHaveText("Signature + digest + load passed · Model v2 active");
-  await expect(animation.locator(".qflow-active-model")).toHaveCount(1);
-  expect((await animation.boundingBox())!.height).toBeCloseTo(height, 2);
 });
 
 test("Embers switches between tracking and its actual saved inventory inside one fixed box", async ({ page }) => {

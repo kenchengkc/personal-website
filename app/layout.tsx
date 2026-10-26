@@ -11,6 +11,7 @@ import "./model-artwork.css";
 import "./research-artwork.css";
 import "./speed-artwork.css";
 import "./product-flow-artwork.css";
+import "./product-browser-preview.css";
 import "./portfolio.css";
 
 const manrope = Manrope({

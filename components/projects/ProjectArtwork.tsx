@@ -6,6 +6,7 @@ import { ModelArtwork } from "./ModelArtwork";
 import { AsterArtwork, WassersteinArtwork } from "./ResearchArtwork";
 import { SpeedArtwork } from "./SpeedArtwork";
 import { ProductFlowArtwork } from "./ProductFlowArtwork";
+import { ProductBrowserPreview } from "./ProductBrowserPreview";
 
 export type ArtworkKind =
   | "amazon" | "quantiv" | "fdre" | "embers"
@@ -29,7 +30,8 @@ export function ProjectArtwork({ kind }: { kind: ArtworkKind }) {
   function content() {
     switch (kind) {
       case "amazon": return <AmazonArtwork />;
-      case "quantiv": case "fdre": case "embers": return <ProductFlowArtwork kind={kind} />;
+      case "quantiv": case "fdre": return <ProductBrowserPreview kind={kind} />;
+      case "embers": return <ProductFlowArtwork kind={kind} />;
       case "cml": return <ModelArtwork />;
       case "wasserstein": return <WassersteinArtwork />;
       case "aster": return <AsterArtwork />;
