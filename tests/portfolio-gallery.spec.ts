@@ -180,7 +180,7 @@ test("gallery fits compact screens and remains still with reduced motion", async
         running: node.getAnimations({ subtree: true }).filter(animation => animation instanceof CSSAnimation && animation.playState === "running").length,
       }))).toEqual({ pageOverflow: false, panelOverflow: false, running: 0 });
       for (const artwork of await panel.locator(".project-artwork").all()) {
-        const button = artwork.getByRole("button").first();
+        const button = artwork.locator('button:not([aria-haspopup="dialog"])').first();
         if (await button.count() && await button.isVisible() && await button.isEnabled()) await button.click();
         await expect.poll(() => artwork.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation instanceof CSSAnimation && animation.playState === "running").length)).toBe(0);
       }

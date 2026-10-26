@@ -7,6 +7,62 @@ const products = [
 ] as const;
 
 for (const product of products) {
+  test(`${product.name} expands from the green button with playback continuity and keyboard dismissal`, async ({ page }) => {
+    await page.goto("/#work");
+    const preview = await openProductRecording(page, product.kind);
+    const inlineVideo = preview.locator("video");
+    await expect.poll(() => inlineVideo.evaluate((node: HTMLVideoElement) => node.readyState >= 2 && !node.paused)).toBe(true);
+    await preview.getByRole("button", { name: `Pause ${product.name} demo`, exact: true }).click();
+    await inlineVideo.evaluate((node: HTMLVideoElement) => { node.currentTime = 4; });
+    const scrollY = await page.evaluate(() => window.scrollY);
+    const expand = preview.getByRole("button", { name: `Expand ${product.name} preview`, exact: true });
+    await expect(expand).toBeVisible();
+    await expand.click();
+    const dialog = page.getByRole("dialog", { name: `${product.name} enlarged preview`, exact: true });
+    await expect(dialog).toBeVisible();
+    expect(await dialog.evaluate(node => node.matches(":modal"))).toBe(true);
+    const modalVideo = dialog.locator("video");
+    await expect.poll(() => modalVideo.evaluate((node: HTMLVideoElement) => node.currentTime)).toBeCloseTo(4, 1);
+    expect(await modalVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+    expect(await inlineVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+    const bounds = (await dialog.boundingBox())!;
+    expect(bounds.width).toBeGreaterThan((await preview.boundingBox())!.width);
+    expect(bounds.x + bounds.width / 2).toBeCloseTo(720, 0);
+    expect(bounds.y + bounds.height / 2).toBeCloseTo(500, 0);
+    await page.mouse.wheel(0, 400);
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
+    for (let index = 0; index < 7; index++) {
+      await page.keyboard.press("Tab");
+      // Native dialogs allow Tab into browser chrome, but never into the background page.
+      expect(await dialog.evaluate(node => !document.hasFocus() || node.contains(document.activeElement))).toBe(true);
+    }
+    await dialog.getByRole("button", { name: `Play ${product.name} demo`, exact: true }).click();
+    await expect.poll(() => modalVideo.evaluate((node: HTMLVideoElement) => node.currentTime)).toBeGreaterThan(4.2);
+    expect(await inlineVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+    await dialog.getByRole("button", { name: `Pause ${product.name} demo`, exact: true }).click();
+    const closedAt = await modalVideo.evaluate((node: HTMLVideoElement) => node.currentTime);
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+    await expect(expand).toBeFocused();
+    await expect.poll(() => inlineVideo.evaluate((node: HTMLVideoElement) => node.currentTime)).toBeCloseTo(closedAt, 1);
+    expect(await inlineVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
+    await expand.click();
+    await expect(dialog).toBeVisible();
+    await page.mouse.click(2, 2);
+    await expect(dialog).toHaveCount(0);
+    await expect(expand).toBeFocused();
+
+    await preview.getByRole("button", { name: `Play ${product.name} demo`, exact: true }).click();
+    await expect.poll(() => inlineVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(false);
+    await expand.click();
+    await expect.poll(() => modalVideo.evaluate((node: HTMLVideoElement, time) => node.currentTime > time && !node.paused, closedAt)).toBe(true);
+    const restoredAt = await modalVideo.evaluate((node: HTMLVideoElement) => node.currentTime);
+    await dialog.getByRole("button", { name: `Restore ${product.name} preview`, exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect.poll(() => inlineVideo.evaluate((node: HTMLVideoElement, time) => node.currentTime > time && !node.paused, restoredAt)).toBe(true);
+  });
+
   test(`${product.name} plays its real recording only while visible and respects playback controls`, async ({ page }) => {
     await page.goto("/#work");
     const preview = await openProductRecording(page, product.kind);
@@ -95,5 +151,26 @@ test("recorded previews and controls fit narrow screens", async ({ page }) => {
         };
       })).toEqual({ pageOverflow: false, previewOverflow: false, videoFits: true, controlsFit: true });
     }
+  }
+});
+
+test("enlarged previews fit mobile and landscape without starting reduced-motion playback", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/#work");
+  for (const viewport of [{ width: 320, height: 640 }, { width: 844, height: 390 }]) {
+    await page.setViewportSize(viewport);
+    const preview = await openProductRecording(page, "fdre");
+    await preview.getByRole("button", { name: "Expand FDRE preview", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "FDRE enlarged preview", exact: true });
+    await expect(dialog).toBeVisible();
+    const bounds = (await dialog.boundingBox())!;
+    expect(bounds.x).toBeGreaterThanOrEqual(8);
+    expect(bounds.y).toBeGreaterThanOrEqual(8);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(viewport.width - 8);
+    expect(bounds.y + bounds.height).toBeLessThanOrEqual(viewport.height - 8);
+    expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+    expect(await dialog.locator("video").evaluate((node: HTMLVideoElement) => node.paused && node.currentTime === 0)).toBe(true);
+    await dialog.getByRole("button", { name: "Close FDRE preview", exact: true }).click();
+    await expect(dialog).toHaveCount(0);
   }
 });

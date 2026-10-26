@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type SyntheticEvent } from "react";
+import { createPortal } from "react-dom";
 import { ArrowUpRight, Pause, Play, RotateCcw } from "lucide-react";
 
 const products = {
@@ -23,12 +24,44 @@ export function ProductBrowserPreview({ kind }: { kind: keyof typeof products })
   const product = products[kind];
   const root = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const enlargedVideo = useRef<HTMLVideoElement>(null);
+  const expandButton = useRef<HTMLButtonElement>(null);
+  const resumeTime = useRef(0);
+  const [expanded, setExpanded] = useState(false);
   const [inView, setInView] = useState(false);
   const [intent, setIntent] = useState<"auto" | "play" | "pause">("auto");
   const [playing, setPlaying] = useState(false);
   const reducedMotion = useSyncExternalStore(subscribeMotion, () => window.matchMedia("(prefers-reduced-motion: reduce)").matches, () => true);
   const visible = useSyncExternalStore(subscribeVisibility, () => !document.hidden, () => false);
-  const shouldPlay = inView && visible && (intent === "play" || (intent === "auto" && !reducedMotion));
+  const shouldPlay = (expanded || inView) && visible && (intent === "play" || (intent === "auto" && !reducedMotion));
+
+  function activeVideo() {
+    return dialog.current?.open ? enlargedVideo.current : video.current;
+  }
+
+  function restorePosition(player: HTMLVideoElement | null) {
+    if (!player) return;
+    if (player.readyState >= 1) player.currentTime = resumeTime.current;
+    else if (resumeTime.current > 0) player.load();
+  }
+
+  useLayoutEffect(() => {
+    if (!expanded || !dialog.current) return;
+    const modal = dialog.current;
+    const page = document.documentElement;
+    const overflow = page.style.overflow;
+    const gutter = page.style.scrollbarGutter;
+    page.style.setProperty("scrollbar-gutter", "stable");
+    page.style.setProperty("overflow", "hidden");
+    modal.showModal();
+    restorePosition(enlargedVideo.current);
+    return () => {
+      if (modal.open) modal.close();
+      page.style.setProperty("overflow", overflow);
+      page.style.setProperty("scrollbar-gutter", gutter);
+    };
+  }, [expanded]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -39,7 +72,7 @@ export function ProductBrowserPreview({ kind }: { kind: keyof typeof products })
   }, []);
 
   useEffect(() => {
-    const player = video.current;
+    const player = expanded ? enlargedVideo.current : video.current;
     if (!player) return;
     if (shouldPlay) {
       // A browser may decline automatic playback; the explicit play control remains available.
@@ -48,26 +81,73 @@ export function ProductBrowserPreview({ kind }: { kind: keyof typeof products })
       player.pause();
     }
     return () => player.pause();
-  }, [shouldPlay]);
+  }, [shouldPlay, expanded]);
+
+  function expand() {
+    const player = video.current;
+    if (player && player.readyState >= 1) resumeTime.current = player.currentTime;
+    setIntent(player?.paused ? "pause" : "play");
+    player?.pause();
+    setPlaying(false);
+    setExpanded(true);
+  }
+
+  function restorePreview() {
+    const player = enlargedVideo.current;
+    if (player && player.readyState >= 1) resumeTime.current = player.currentTime;
+    setIntent(player?.paused ? "pause" : "play");
+    player?.pause();
+    restorePosition(video.current);
+    setPlaying(false);
+    setExpanded(false);
+    expandButton.current?.focus({ preventScroll: true });
+  }
+
+  function updatePlaying(event: SyntheticEvent<HTMLVideoElement>, value: boolean) {
+    if (event.currentTarget === activeVideo()) setPlaying(value);
+  }
+
+  function pause() {
+    activeVideo()?.pause();
+    setIntent("pause");
+  }
 
   function play(restart = false) {
-    const player = video.current;
-    if (restart && player) player.currentTime = 0;
+    const player = activeVideo();
+    if (restart && player) {
+      resumeTime.current = 0;
+      player.currentTime = 0;
+    }
     setIntent("play");
     // Keep an explicit click in the browser's user-activation event, including
     // retrying when it declined an earlier automatic playback request.
-    if (player && inView && visible) void player.play().catch(() => {});
+    if (player && (expanded || inView) && visible) void player.play().catch(() => {});
   }
 
-  return (
-    <div ref={root} className="product-browser-preview" data-preview={kind} data-playing={playing} role="figure" aria-label={`${product.name} recorded product demo`}>
+  function windowContent(enlarged: boolean) {
+    return <div ref={enlarged ? undefined : root} className="product-browser-preview" data-preview={kind} data-playing={playing} role={enlarged ? undefined : "figure"} aria-label={enlarged ? undefined : `${product.name} recorded product demo`}>
       <div className="product-browser-titlebar">
-        <div className="product-browser-dots" aria-hidden="true"><span /><span /><span /></div>
+        <div className="product-browser-dots">
+          {enlarged
+            ? <button type="button" className="product-browser-dot" aria-label={`Close ${product.name} preview`} title="Close preview" onClick={() => dialog.current?.close()}><span className="product-browser-light is-red" /></button>
+            : <span className="product-browser-dot" aria-hidden="true"><span className="product-browser-light is-red" /></span>}
+          <span className="product-browser-dot" aria-hidden="true"><span className="product-browser-light is-yellow" /></span>
+          <button
+            ref={enlarged ? undefined : expandButton}
+            type="button"
+            className="product-browser-dot"
+            aria-label={`${enlarged ? "Restore" : "Expand"} ${product.name} preview`}
+            aria-haspopup={enlarged ? undefined : "dialog"}
+            aria-expanded={enlarged ? undefined : expanded}
+            title={enlarged ? "Restore preview" : "Expand preview"}
+            onClick={enlarged ? () => dialog.current?.close() : expand}
+          ><span className="product-browser-light is-green" /></button>
+        </div>
         <span className="product-browser-domain">{product.domain}</span>
       </div>
       <div className="product-browser-screen">
         <video
-          ref={video}
+          ref={enlarged ? enlargedVideo : video}
           src={`/media/${kind}-preview.mp4`}
           poster={`/media/${kind}-preview-poster.jpg`}
           preload="none"
@@ -75,13 +155,16 @@ export function ProductBrowserPreview({ kind }: { kind: keyof typeof products })
           playsInline
           loop
           aria-label={`Silent recording of ${product.name} in use`}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
+          onLoadedMetadata={event => {
+            if (event.currentTarget === activeVideo()) event.currentTarget.currentTime = resumeTime.current;
+          }}
+          onPlay={event => updatePlaying(event, true)}
+          onPause={event => updatePlaying(event, false)}
         />
       </div>
       <div className="product-browser-footer">
         <div className="product-browser-controls">
-          <button type="button" aria-label={`${playing ? "Pause" : "Play"} ${product.name} demo`} onClick={() => playing ? setIntent("pause") : play()}>
+          <button type="button" aria-label={`${playing ? "Pause" : "Play"} ${product.name} demo`} onClick={() => playing ? pause() : play()}>
             {playing ? <Pause size={13} aria-hidden="true" /> : <Play size={13} aria-hidden="true" />}
           </button>
           <button type="button" aria-label={`Replay ${product.name} demo`} onClick={() => play(true)}><RotateCcw size={13} aria-hidden="true" /></button>
@@ -89,6 +172,28 @@ export function ProductBrowserPreview({ kind }: { kind: keyof typeof products })
         </div>
         <a href={product.url} target="_blank" rel="noopener noreferrer">Open {product.name}<ArrowUpRight size={13} aria-hidden="true" /></a>
       </div>
-    </div>
+    </div>;
+  }
+
+  return (
+    <>
+      {windowContent(false)}
+      {expanded && createPortal(
+        <dialog
+          ref={dialog}
+          className="product-browser-dialog"
+          aria-label={`${product.name} enlarged preview`}
+          onClose={restorePreview}
+          onClick={event => {
+            if (event.target !== event.currentTarget) return;
+            const bounds = event.currentTarget.getBoundingClientRect();
+            if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) event.currentTarget.close();
+          }}
+        >
+          {windowContent(true)}
+        </dialog>,
+        document.body,
+      )}
+    </>
   );
 }
