@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles";
 import { createBrainRenderer } from "./brain-renderer";
 import { loadBrainAtlas } from "./load-brain-atlas";
+import { BRAIN_ASSET_PATH, SMALL_POSTER_MEDIA, brainPosterMedia, type AtlasScale } from "./brain-assets";
 
 const PLAYBACK_RATE = 1.2;
 
@@ -30,6 +30,29 @@ export function BinaryRainArtwork() {
     let started = lastScrollX !== 0 || lastScrollY !== 0;
     let complete = false;
     let disposed = false;
+    let atlasScale: AtlasScale | undefined;
+    let requestedScale: AtlasScale | undefined;
+
+    function prepareRenderer() {
+      if (disposed || reducedMotion.matches) return;
+      const pixels = canvas!.getBoundingClientRect().width * Math.min(window.devicePixelRatio || 1, 2);
+      const scale: AtlasScale = pixels > BRAIN_WIDTH ? 2 : 1;
+      if (atlasScale === scale || requestedScale === scale) return;
+      requestedScale = scale;
+      loadBrainAtlas(scale).then(atlas => {
+        if (disposed || requestedScale !== scale) return;
+        requestedScale = undefined;
+        if (reducedMotion.matches) return;
+        atlasScale = scale;
+        renderer = createBrainRenderer(canvas!, context!, atlas);
+        node!.dataset.atlasScale = String(scale);
+        resize();
+        syncAnimation();
+      }).catch(() => {
+        if (requestedScale === scale) requestedScale = undefined;
+        // The matching server-rendered poster remains visible on a load failure.
+      });
+    }
 
     function tick(time: number) {
       // A busy frame must not fast-forward the visible rain by a large distance.
@@ -47,15 +70,20 @@ export function BinaryRainArtwork() {
       cancelAnimationFrame(frame);
       frame = 0;
       lastTime = 0;
-      if (!renderer) return;
       if (reducedMotion.matches) {
         complete = true;
         elapsed = ASSEMBLY_DURATION;
         node!.dataset.phase = "complete";
-        renderer.resize();
-        renderer!.draw(elapsed, rainLeadIn);
-      } else if ((visible || started) && !document.hidden && !complete) {
-        frame = requestAnimationFrame(tick);
+        // The responsive finished poster needs no atlas, bitmap crops, or canvas.
+        if (renderer) {
+          renderer.resize();
+          renderer.draw(elapsed, rainLeadIn);
+        }
+      } else {
+        prepareRenderer();
+        if (renderer && (visible || started) && !document.hidden && !complete) {
+          frame = requestAnimationFrame(tick);
+        }
       }
     }
 
@@ -84,23 +112,17 @@ export function BinaryRainArtwork() {
     }
 
     function resize() {
-      if (!renderer) return;
-      renderer.resize();
-      renderer!.draw(elapsed, rainLeadIn);
-      node!.dataset.ready = "true";
+      if (renderer) {
+        renderer.resize();
+        renderer.draw(elapsed, rainLeadIn);
+        node!.dataset.ready = "true";
+      }
       updateVisibility();
+      prepareRenderer();
     }
 
-    // Keep the matching poster visible while decoding; no glyph generation
-    // or thousands of text paints run on the page's first animation frame.
-    loadBrainAtlas().then(atlas => {
-      if (disposed) return;
-      renderer = createBrainRenderer(canvas, context, atlas);
-      resize();
-      syncAnimation();
-    }).catch(() => {
-      // The server-rendered artwork remains visible if its atlas cannot load.
-    });
+    // Prioritize the matching poster, then prepare the animation at its final
+    // resolution. The 2x desktop atlas is never requested by a small phone.
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
     const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 1] });
@@ -127,21 +149,23 @@ export function BinaryRainArtwork() {
 
   return (
     <div ref={ref} className="hero-binary-art" data-phase="raining" aria-hidden="true">
-      <link rel="preload" as="image" href="/images/brain-rain.webp" media="(prefers-reduced-motion: no-preference)" fetchPriority="high" />
-      <link rel="preload" as="image" href="/images/brain-still.webp" media="(prefers-reduced-motion: reduce)" fetchPriority="high" />
-      <link rel="preload" as="image" href="/images/brain-atlas.webp" />
+      {([1, 2] as const).map(scale => <link key={`rain-${scale}`} rel="preload" as="image" href={`${BRAIN_ASSET_PATH}/rain-${scale}x.webp`} media={brainPosterMedia("no-preference", scale)} fetchPriority="high" />)}
+      {([1, 2] as const).map(scale => <link key={`still-${scale}`} rel="preload" as="image" href={`${BRAIN_ASSET_PATH}/still-${scale}x.webp`} media={brainPosterMedia("reduce", scale)} fetchPriority="high" />)}
       <div className="hero-brain-stage">
         <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/brain-still.webp" />
-          <Image
+          <source media={brainPosterMedia("reduce", 1)} srcSet={`${BRAIN_ASSET_PATH}/still-1x.webp`} />
+          <source media="(prefers-reduced-motion: reduce)" srcSet={`${BRAIN_ASSET_PATH}/still-2x.webp`} />
+          <source media={SMALL_POSTER_MEDIA} srcSet={`${BRAIN_ASSET_PATH}/rain-1x.webp`} />
+          {/* Native picture URLs match the preload exactly, including on deployed builds. */}
+          <img
             className="hero-brain-poster"
-            src="/images/brain-rain.webp"
+            src={`${BRAIN_ASSET_PATH}/rain-2x.webp`}
             alt=""
             width={BRAIN_WIDTH}
             height={BRAIN_HEIGHT}
             loading="eager"
             fetchPriority="high"
-            unoptimized
+            decoding="async"
           />
         </picture>
         <canvas ref={canvasRef} width={BRAIN_WIDTH} height={BRAIN_HEIGHT} className="hero-brain-canvas" />

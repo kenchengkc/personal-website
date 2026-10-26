@@ -65,9 +65,25 @@
 .artwork-speed { background: #b6c1d0; }
 .artwork-cvrp { background: #f4f3ef; }
 .artwork-cvrp img { object-position: center; }
+/* The deferred slots use the loaded scene's geometry from the first paint. */
+.project-artwork.artwork-deferred:is(.artwork-amazon, .artwork-embers, .artwork-quantiv, .artwork-fdre) { aspect-ratio: auto; min-height: 0; border-radius: 6px; }
+.artwork-deferred:is(.artwork-amazon, .artwork-embers, .artwork-quantiv, .artwork-fdre) > .artwork-content { position: relative; inset: auto; }
+.artwork-placeholder-window { overflow: hidden; border: 1px solid #9ba6ae; border-radius: 6px; background: #101e2b; color: #d9e4ed; }
+.artwork-placeholder-screen { aspect-ratio: 400 / 244; }
+.artwork-embers .artwork-placeholder-screen { aspect-ratio: 400 / 289.0625; background: #152021; }
+.artwork-placeholder-controls { height: 25px; }
+.artwork-placeholder-routing-map { aspect-ratio: 640 / 370; }
+.artwork-placeholder-result { color: #303c4b; }
+.artwork-placeholder-recording { display: grid; grid-template-rows: 32px auto 38px; }
+.artwork-placeholder-recording .artwork-placeholder-screen { aspect-ratio: 1000 / 680; background: #050505; }
+.artwork-fdre .artwork-placeholder-screen { background: #f3eee8; }
+@container (max-width: 350px) {
+  .artwork-placeholder-controls { height: 24px; }
+  .artwork-placeholder-recording { grid-template-rows: 28px auto 40px; }
+}
 @media (max-width: 700px) {
   .project-artwork { aspect-ratio: 1.5; }
-  .project-artwork:has(.animated-artwork) { aspect-ratio: 1.08; }
+  .project-artwork:has(.animated-artwork), .project-artwork.artwork-deferred { aspect-ratio: 1.08; }
   .project-artwork:has(.has-playground) { aspect-ratio: 1; min-height: 360px; }
   .artwork-action { min-height: 44px; }
 }

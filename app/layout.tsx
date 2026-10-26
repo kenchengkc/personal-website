@@ -43,8 +43,11 @@ export const metadata: Metadata = {
   description: site.description,
   metadataBase: new URL(site.url),
   icons: {
-    icon: [{ url: "/images/kclogo.png", type: "image/png" }],
-    apple: [{ url: "/images/kclogo.png", type: "image/png" }],
+    icon: [
+      { url: "/images/icons/v1/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/icons/v1/favicon-48.png", sizes: "48x48", type: "image/png" },
+    ],
+    apple: [{ url: "/images/icons/v1/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     title: site.name,

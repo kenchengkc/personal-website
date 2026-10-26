@@ -96,6 +96,7 @@ test("each featured project has one visual with no duplicate walkthrough", async
   for (const project of featuredProjects) {
     const entry = page.locator(`.portfolio-entry[data-project="${project.demo}"]`);
     const recorded = project.demo === "quantiv" || project.demo === "fdre";
+    await entry.locator('.project-artwork').scrollIntoViewIfNeeded();
     await expect(entry.locator('.product-browser-preview')).toHaveCount(recorded ? 1 : 0);
     await expect(entry.locator('.animated-artwork')).toHaveCount(recorded ? 0 : 1);
     await expect(entry.locator('.animated-artwork-playground')).toHaveCount(project.demo === "amazon" ? 1 : 0);
@@ -108,6 +109,7 @@ test("each featured project has one visual with no duplicate walkthrough", async
 
 test("gallery animations advance while visible, pause on demand, and stop in hidden categories", async ({ page }) => {
   await page.goto("/#work");
+  await page.locator('[data-artwork="amazon"]').scrollIntoViewIfNeeded();
   const artwork = page.locator('[data-artwork="amazon"] .animated-artwork');
   await artwork.scrollIntoViewIfNeeded();
   await expect(artwork).toHaveAttribute("data-running", "true");
@@ -139,10 +141,10 @@ test("research shows published results and keeps only the CML animation", async 
   await expect(aster).toContainText('100 independent audit evaluations');
   await expect(aster).toContainText('One synthetic experiment');
   await expect(aster.getByRole('img')).toHaveCount(2);
-  await expect(aster.getByRole('img').nth(0)).toHaveAttribute('src', '/media/research/aster-full-budget.svg');
-  await expect(aster.getByRole('img').nth(1)).toHaveAttribute('src', '/media/research/aster-replication-race.svg');
+  await expect(aster.getByRole('img').nth(0)).toHaveAttribute('src', /^\/media\/research\/aster-full-budget\.svg(?:\?|$)/);
+  await expect(aster.getByRole('img').nth(1)).toHaveAttribute('src', /^\/media\/research\/aster-replication-race\.svg(?:\?|$)/);
   const gcinf = page.locator('[data-artwork="gcinf"]');
-  await expect(gcinf.getByRole('img')).toHaveAttribute('src', '/media/research/gcinf-model-architecture.png');
+  await expect(gcinf.getByRole('img')).toHaveAttribute('src', /^\/media\/research\/gcinf-model-architecture\.png(?:\?|$)/);
   await expect(gcinf).toContainText('Figure 5');
   for (const artwork of [wasserstein, aster, gcinf]) {
     await expect(artwork.locator('.animated-artwork')).toHaveCount(0);

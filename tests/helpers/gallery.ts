@@ -7,6 +7,7 @@ export type ProductRecording = "quantiv" | "fdre";
 export async function openProjectAnimation(page: Page, project: FeaturedAnimation) {
   const work = page.getByRole("tab", { name: "Work", exact: true });
   if (await work.getAttribute("aria-selected") !== "true") await work.click();
+  await page.locator(`.portfolio-entry[data-project="${project}"] .project-artwork`).scrollIntoViewIfNeeded();
   const animation = page.locator(`.portfolio-entry[data-project="${project}"] .animated-artwork`);
   await expect(animation).toBeAttached();
   await animation.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
@@ -17,6 +18,7 @@ export async function openProjectAnimation(page: Page, project: FeaturedAnimatio
 export async function openProductRecording(page: Page, project: ProductRecording) {
   const work = page.getByRole("tab", { name: "Work", exact: true });
   if (await work.getAttribute("aria-selected") !== "true") await work.click();
+  await page.locator(`.portfolio-entry[data-project="${project}"] .project-artwork`).scrollIntoViewIfNeeded();
   const preview = page.locator(`.portfolio-entry[data-project="${project}"] .product-browser-preview`);
   await expect(preview).toBeAttached();
   await preview.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));

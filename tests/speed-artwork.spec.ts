@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 async function openSpeed(page: Page) {
   await page.goto("/#awards");
   await page.getByRole("tab", { name: "Awards", exact: true }).click();
+  await page.locator('.artwork-speed').scrollIntoViewIfNeeded();
   const artwork = page.locator('.artwork-speed .animated-artwork');
   await artwork.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
   return artwork;
@@ -20,8 +21,8 @@ test("Need for Speed uses original CFD fields in one persistent viewport", async
   await expect(scene).toHaveAttribute("data-field", "pressure");
   const pressure = artwork.locator('img[data-cfd-field="pressure"]');
   const velocity = artwork.locator('img[data-cfd-field="velocity"]');
-  await expect(pressure).toHaveAttribute("src", "/media/research/f1-optimized-pressure.png");
-  await expect(velocity).toHaveAttribute("src", "/media/research/f1-optimized-velocity.png");
+  await expect(pressure).toHaveAttribute("src", /^\/media\/research\/f1-optimized-pressure\.png(?:\?|$)/);
+  await expect(velocity).toHaveAttribute("src", /^\/media\/research\/f1-optimized-velocity\.png(?:\?|$)/);
   for (const image of [pressure, velocity]) {
     await expect(image).toHaveAttribute("alt", /\S/);
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
@@ -61,6 +62,7 @@ test("CFD tracers move, pause, and suspend when the gallery is hidden", async ({
   await expect.poll(times).not.toEqual(initial);
   await artwork.getByRole("button", { name: "Pause animation", exact: true }).click();
   await expect.poll(() => artwork.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
+  await artwork.evaluate(node => Promise.all(node.getAnimations({ subtree: true }).map(animation => animation.ready)).then(() => undefined));
   const paused = await times();
   await page.waitForTimeout(200);
   expect(await times()).toEqual(paused);

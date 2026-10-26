@@ -37,7 +37,7 @@ test("visible rainfall keeps moving until the first scroll", async ({ page }) =>
 test("a first scroll while the atlas loads is remembered", async ({ page }) => {
   let release!: () => void;
   const ready = new Promise<void>(resolve => { release = resolve; });
-  await page.route("**/images/brain-atlas.webp", async route => {
+  await page.route("**/images/brain/v2/atlas-*.webp*", async route => {
     await ready;
     await route.continue();
   });
@@ -110,26 +110,27 @@ test("Retina artwork keeps the same sharp resolution through the final assembly 
   }
 });
 
-test("reduced motion paints a stable brain and preserves it after mobile resize", async ({ page }) => {
+test("reduced motion shows a stable brain poster without loading the animation atlas", async ({ page }) => {
+  const atlasRequests: string[] = [];
+  page.on("request", request => {
+    if (/\/images\/brain\/v2\/atlas-/.test(request.url())) atlasRequests.push(request.url());
+  });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".hero-binary-art")).toHaveAttribute("data-phase", "complete");
-  await expect.poll(() => page.locator(".hero-brain-canvas").evaluate((element: HTMLCanvasElement) => {
-    const pixels = element.getContext("2d")!.getImageData(0, 0, element.width, element.height).data;
-    let visible = 0;
-    for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) visible++;
-    return visible;
-  })).toBeGreaterThan(5000);
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect.poll(() => page.locator(".hero-brain-canvas").evaluate((element: HTMLCanvasElement) => {
-    const pixels = element.getContext("2d")!.getImageData(0, 0, element.width, element.height).data;
-    let visible = 0;
-    for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) visible++;
-    return visible;
-  })).toBeGreaterThan(5000);
-  const before = await page.locator(".hero-brain-canvas").evaluate((element: HTMLCanvasElement) => element.toDataURL());
-  await page.waitForTimeout(150);
-  expect(await page.locator(".hero-brain-canvas").evaluate((element: HTMLCanvasElement) => element.toDataURL())).toBe(before);
+  const artwork = page.locator(".hero-binary-art");
+  const poster = page.locator(".hero-brain-poster");
+  await expect(artwork).toHaveAttribute("data-phase", "complete");
+  await expect(poster).toBeVisible();
+  await expect(page.locator(".hero-brain-canvas")).toHaveCSS("opacity", "0");
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    await expect.poll(() => poster.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
+    expect(await poster.evaluate((image: HTMLImageElement) => new URL(image.currentSrc).pathname)).toMatch(/\/still-[12]x\.webp$/);
+    const before = await poster.evaluate((image: HTMLImageElement) => ({ source: image.currentSrc, width: image.width, height: image.height }));
+    await page.waitForTimeout(150);
+    expect(await poster.evaluate((image: HTMLImageElement) => ({ source: image.currentSrc, width: image.width, height: image.height }))).toEqual(before);
+  }
+  expect(atlasRequests).toEqual([]);
 });
 
 test("rain wraps outside the image and does not jump after a delayed frame", async ({ page }) => {

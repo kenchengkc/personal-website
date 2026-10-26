@@ -56,7 +56,7 @@ test("hero does not hide or move when JavaScript hydrates", async ({ page }) => 
 test("the poster stays visible while the digit atlas loads", async ({ page }) => {
   let release!: () => void;
   const ready = new Promise<void>(resolve => { release = resolve; });
-  await page.route("**/images/brain-atlas.webp", async route => {
+  await page.route("**/images/brain/v2/atlas-*.webp*", async route => {
     await ready;
     await route.continue();
   });

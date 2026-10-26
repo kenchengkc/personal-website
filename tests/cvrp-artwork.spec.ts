@@ -4,6 +4,7 @@ import { cvrpNodes, cvrpCapacity, cvrpRoutes, cvrpCandidates } from "../data/cvr
 async function openRouting(page: Page) {
   await page.goto("/#awards");
   await page.getByRole("tab", { name: "Awards", exact: true }).click();
+  await page.locator('.artwork-cvrp').scrollIntoViewIfNeeded();
   const artwork = page.locator(".artwork-cvrp .animated-artwork");
   await expect(artwork).toBeAttached({ timeout: 2500 });
   await artwork.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
