@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { publications } from "@/data/portfolio";
 
@@ -10,19 +11,33 @@ export function BlogList() {
       data-scroll-label="PAPERS"
     >
       <div className="reading-column">
-        <p className="section-kicker" data-reveal>Publications</p>
+        <h2 className="section-kicker" data-reveal>Publications</h2>
 
         <div className="publication-list">
           {publications.map((publication) => (
-            <a
+            <article
               className="publication-row"
-              href={publication.href}
               key={publication.href}
-              target="_blank"
-              rel="noopener noreferrer"
               data-reveal
             >
-              <div>
+              <a
+                className="publication-figure"
+                href={publication.figure.src}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open original ${publication.figure.label} figure`}
+              >
+                <Image
+                  src={publication.figure.src}
+                  alt={publication.figure.alt}
+                  width={publication.figure.width}
+                  height={publication.figure.height}
+                  sizes="(max-width: 680px) calc(100vw - 40px), 310px"
+                  unoptimized
+                />
+                <span>{publication.figure.caption}<ArrowUpRight /></span>
+              </a>
+              <div className="publication-copy">
                 <div className="publication-meta">
                   <span>
                     {publication.venue} · {publication.date}
@@ -32,10 +47,13 @@ export function BlogList() {
                     {publication.citations} citation{publication.citations === 1 ? "" : "s"}
                   </span>
                 </div>
-                <h3>{publication.title}</h3>
+                <h3>
+                  <a href={publication.href} target="_blank" rel="noopener noreferrer">
+                    <span>{publication.title}</span><ArrowUpRight className="publication-arrow" />
+                  </a>
+                </h3>
               </div>
-              <ArrowUpRight className="publication-arrow" />
-            </a>
+            </article>
           ))}
         </div>
       </div>

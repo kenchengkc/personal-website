@@ -217,6 +217,14 @@ export const publications = [
     authorship: "Sole Author",
     href:
       "https://ieeexplore.ieee.org/abstract/document/10422188",
+    figure: {
+      src: "/media/research/gcinf-model-architecture.png",
+      width: 816,
+      height: 528,
+      alt: "Original GC-INF architecture: spatial and temporal inputs feed graph convolutional networks and Informer layers to predict traffic.",
+      caption: "Figure 5 · Model architecture",
+      label: "GC-INF model architecture",
+    },
   },
   {
     title:
@@ -227,5 +235,13 @@ export const publications = [
     authorship: null,
     href:
       "https://www.researchgate.net/publication/371141171_A_Need_For_Speed_Enhancing_F1_Race_Cars_with_a_Novel_Computational_Fluid_Dynamics_and_Machine_Learning_Method",
+    figure: {
+      src: "/media/research/f1-optimized-pressure.png",
+      width: 515,
+      height: 327,
+      alt: "Original ANSYS Fluent pressure field around the F1 car with the optimized rear wing, including its color scale.",
+      caption: "Figure 17 · Optimized rear-wing pressure field",
+      label: "Need for Speed pressure field",
+    },
   },
 ] as const;

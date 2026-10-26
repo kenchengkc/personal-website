@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const skillGroups = [
   {
     label: "Languages",
@@ -71,6 +73,36 @@ const skillGroups = [
   },
 ] as const;
 
+const skillLogos: Record<string, string> = {
+  Python: "python",
+  "C++": "cplusplus",
+  TypeScript: "typescript",
+  Java: "java",
+  Go: "go",
+  JavaScript: "javascript",
+  C: "c",
+  Bash: "bash",
+  PyTorch: "pytorch",
+  CUDA: "nvidia",
+  "scikit-learn": "scikitlearn",
+  NumPy: "numpy",
+  Pandas: "pandas",
+  FastAPI: "fastapi",
+  PostgreSQL: "postgresql",
+  Redis: "redis",
+  DuckDB: "duckdb",
+  Flask: "flask",
+  Supabase: "supabase",
+  Linux: "linux",
+  Docker: "docker",
+  "AWS (Lambda, S3, EC2, CDK)": "amazonwebservices",
+  React: "react",
+  "Next.js": "nextjs",
+  Git: "git",
+  "CI/CD (GitHub Actions)": "githubactions",
+  pytest: "pytest",
+};
+
 export function Skills() {
   return (
     <section
@@ -86,13 +118,20 @@ export function Skills() {
             <div className="skill-row" key={group.label}>
               <span className="skill-group-label">{group.label}</span>
               <div className="skill-items">
-                {group.skills.map((skill) => (
+                {group.skills.map((skill, index) => (
                   <span
-                    className="skill-item"
+                    className={`skill-item${index < 3 ? " skill-item-priority" : ""}`}
                     key={skill}
                   >
-                    <i aria-hidden="true" />
-                    {skill}
+                    {skillLogos[skill] && <Image
+                      className="skill-logo"
+                      src={`/images/skills/${skillLogos[skill]}.svg`}
+                      alt=""
+                      aria-hidden="true"
+                      width={20}
+                      height={20}
+                    />}
+                    <span>{skill}</span>
                   </span>
                 ))}
               </div>

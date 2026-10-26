@@ -1,0 +1,17 @@
+.publication-row { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 34px; padding-block: 28px; }
+.publication-figure { display: block; min-width: 0; color: var(--ink-3); }
+.publication-figure img { display: block; width: 100%; height: auto; }
+.publication-figure > span { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 10px; font-size: 11px; line-height: 1.5; }
+.publication-figure > span svg { flex: 0 0 13px; }
+.publication-copy { padding-top: 4px; }
+.publication-row h3 { margin-top: 13px; font-size: clamp(20px, 1.8vw, 24px); line-height: 1.4; }
+.publication-row h3 a { display: grid; grid-template-columns: minmax(0, 1fr) 13px; align-items: baseline; gap: 12px; color: inherit; }
+.publication-row .publication-arrow { margin: 0; }
+.publication-figure:hover, .publication-row h3 a:hover { color: var(--ink); }
+.publication-figure:focus-visible, .publication-row h3 a:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
+@media (max-width: 680px) {
+  .publication-row { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 26px; }
+  .publication-figure { max-width: 420px; }
+  .publication-copy { padding-top: 0; }
+  .publication-row h3 { font-size: 20px; }
+}

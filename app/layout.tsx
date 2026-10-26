@@ -15,6 +15,8 @@ import "./product-flow-artwork.css";
 import "./product-browser-preview.css";
 import "./artwork-window.css";
 import "./portfolio.css";
+import "./skills.css";
+import "./publications.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
