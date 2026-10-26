@@ -6,47 +6,50 @@ declare global {
   }
 }
 
-test("rain keeps moving while assembly waits for scrolling past 30%", async ({ page }) => {
-  // Keep the initial artwork below the trigger so both sides can be reached by scrolling.
+test("one pixel of scrolling starts assembly even before the artwork enters the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 400 });
   await page.goto("/");
   const artwork = page.locator(".hero-binary-art");
-  const canvas = page.locator(".hero-brain-canvas");
   await expect(artwork).toHaveAttribute("data-ready", "true");
-  await canvas.evaluate(element => {
-    const bounds = element.getBoundingClientRect();
-    const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
-    const top = Math.max(bounds.top, container.top);
-    const height = Math.min(bounds.bottom, container.bottom) - top;
-    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.29, behavior: "instant" });
-  });
-  const firstFrame = await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
-  await expect.poll(async () => (await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL())) !== firstFrame).toBe(true);
-  // Rain must keep looping beyond the entire assembly duration without forming a brain.
-  await page.waitForTimeout(2800);
   await expect(artwork).toHaveAttribute("data-phase", "raining");
-  await canvas.evaluate(element => {
-    const bounds = element.getBoundingClientRect();
-    const container = element.closest(".hero-binary-art")!.getBoundingClientRect();
-    const top = Math.max(bounds.top, container.top);
-    const height = Math.min(bounds.bottom, container.bottom) - top;
-    window.scrollTo({ top: window.scrollY + top - window.innerHeight + height * 0.31, behavior: "instant" });
-  });
+  expect(await artwork.evaluate(element => element.getBoundingClientRect().top >= innerHeight)).toBe(true);
+  await page.evaluate(() => window.scrollTo({ top: 1, behavior: "instant" }));
+  expect(await page.evaluate(() => window.scrollY)).toBe(1);
   await expect(artwork).toHaveAttribute("data-phase", "assembling");
-  // The threshold starts the transition once; it does not interrupt it afterward.
-  await page.evaluate(() => window.scrollBy({ top: -30, behavior: "instant" }));
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await expect(artwork).toHaveAttribute("data-phase", "complete", { timeout: 5000 });
 });
 
-test("a tall viewport still waits for the first scroll", async ({ page }) => {
+test("visible rainfall keeps moving until the first scroll", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1800 });
   await page.goto("/");
   const artwork = page.locator(".hero-binary-art");
   await expect(artwork).toHaveAttribute("data-ready", "true");
-  await page.waitForTimeout(400);
+  const canvas = page.locator(".hero-brain-canvas");
+  const firstFrame = await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
+  await expect.poll(async () => (await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL())) !== firstFrame).toBe(true);
+  await page.waitForTimeout(2800);
   await expect(artwork).toHaveAttribute("data-phase", "raining");
-  await page.evaluate(() => window.scrollTo({ top: 10, behavior: "instant" }));
+  await page.keyboard.press("ArrowDown");
   await expect(artwork).toHaveAttribute("data-phase", "assembling");
+});
+
+test("a first scroll while the atlas loads is remembered", async ({ page }) => {
+  let release!: () => void;
+  const ready = new Promise<void>(resolve => { release = resolve; });
+  await page.route("**/images/brain-atlas.webp", async route => {
+    await ready;
+    await route.continue();
+  });
+  await page.setViewportSize({ width: 1440, height: 400 });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator(".ruler-milestone")).toHaveCount(6);
+  await page.evaluate(() => window.scrollTo({ top: 1, behavior: "instant" }));
+  release();
+  const artwork = page.locator(".hero-binary-art");
+  await expect(artwork).toHaveAttribute("data-ready", "true");
+  await expect(artwork).toHaveAttribute("data-phase", "assembling");
+  await expect(artwork).toHaveAttribute("data-phase", "complete", { timeout: 5000 });
 });
 
 test("brain assembly bounds repaint work and stops drawing after completion", async ({ page }) => {

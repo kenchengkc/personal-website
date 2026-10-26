@@ -6,8 +6,6 @@ import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles"
 import { createBrainRenderer } from "./brain-renderer";
 import { loadBrainAtlas } from "./load-brain-atlas";
 
-const ASSEMBLY_VISIBILITY_THRESHOLD = 0.3;
-
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -24,7 +22,10 @@ export function BinaryRainArtwork() {
     let rainLeadIn = 0;
     let lastTime = 0;
     let visible = false;
-    let started = false;
+    let lastScrollX = window.scrollX;
+    let lastScrollY = window.scrollY;
+    // Preserve a scroll that happened before this component hydrated.
+    let started = lastScrollX !== 0 || lastScrollY !== 0;
     let complete = false;
     let disposed = false;
 
@@ -51,7 +52,7 @@ export function BinaryRainArtwork() {
         node!.dataset.phase = "complete";
         renderer.resize();
         renderer!.draw(elapsed, rainLeadIn);
-      } else if (visible && !document.hidden && !complete) {
+      } else if ((visible || started) && !document.hidden && !complete) {
         frame = requestAnimationFrame(tick);
       }
     }
@@ -64,11 +65,20 @@ export function BinaryRainArtwork() {
       const bottom = Math.min(bounds.bottom, container.bottom);
       const visibleHeight = Math.max(0, Math.min(bottom, window.innerHeight) - Math.max(top, 0));
       const nextVisible = visibleHeight > 0;
-      const nextStarted = started || (window.scrollY > 0 && visibleHeight > (bottom - top) * ASSEMBLY_VISIBILITY_THRESHOLD);
-      if (visible === nextVisible && started === nextStarted) return;
+      if (visible === nextVisible) return;
       visible = nextVisible;
-      started = nextStarted;
       syncAnimation();
+    }
+
+    function handleScroll() {
+      const moved = window.scrollX !== lastScrollX || window.scrollY !== lastScrollY;
+      lastScrollX = window.scrollX;
+      lastScrollY = window.scrollY;
+      if (!started && moved) {
+        started = true;
+        syncAnimation();
+      }
+      updateVisibility();
     }
 
     function resize() {
@@ -91,9 +101,9 @@ export function BinaryRainArtwork() {
     });
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, ASSEMBLY_VISIBILITY_THRESHOLD, 1] });
+    const observer = new IntersectionObserver(updateVisibility, { threshold: [0, 1] });
     observer.observe(canvas);
-    window.addEventListener("scroll", updateVisibility, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     reducedMotion.addEventListener("change", syncAnimation);
     document.addEventListener("visibilitychange", syncAnimation);
     // A restored tab should get a fresh backing store if its pixel ratio changed.
@@ -105,7 +115,7 @@ export function BinaryRainArtwork() {
       disposed = true;
       cancelAnimationFrame(frame);
       observer.disconnect();
-      window.removeEventListener("scroll", updateVisibility);
+      window.removeEventListener("scroll", handleScroll);
       resizeObserver.disconnect();
       reducedMotion.removeEventListener("change", syncAnimation);
       document.removeEventListener("visibilitychange", syncAnimation);
