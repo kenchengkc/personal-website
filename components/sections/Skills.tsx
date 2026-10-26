@@ -44,6 +44,7 @@ const skillGroups = [
     skills: [
       "AWS Lambda",
       "S3",
+      "AWS EC2",
       "AWS CDK",
       "React",
       "Next.js",
