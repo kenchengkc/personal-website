@@ -122,14 +122,27 @@ test("gallery animations advance while visible, pause on demand, and stop in hid
   await expect(artwork).toHaveAttribute("data-running", "false");
 });
 
-test("research animations explain the saved allocation and current CML collection pipeline", async ({ page }) => {
+test("research shows published results and keeps only the CML animation", async ({ page }) => {
   await page.goto("/#research");
+  const wasserstein = page.locator('[data-artwork="wasserstein"]');
+  await expect(wasserstein.getByRole('img')).toHaveAttribute('src', /wasserstein-cross-asset-comparison/);
+  await expect(wasserstein).toContainText('600 five-session forecasts');
+  await expect(wasserstein).toContainText('no advantage over four simpler baselines');
+  await expect(wasserstein.getByRole('link')).toHaveAttribute('href', '/media/research/wasserstein-cross-asset-comparison.png');
+
   const aster = page.locator('[data-artwork="aster"]');
-  await aster.getByRole("button", { name: "Refine", exact: true }).click();
-  await expect(aster.getByRole("img")).toHaveAccessibleName(/27 replications.*72 total search evaluations/);
-  await aster.getByRole("button", { name: "Audit", exact: true }).click();
-  await expect(aster).toContainText("100 new evaluations");
-  await expect(aster).toContainText("432 with full allocation");
+  await expect(aster).toContainText('72');
+  await expect(aster).toContainText('432');
+  await expect(aster).toContainText('Same selected candidate');
+  await expect(aster).toContainText('100 independent audit evaluations');
+  await expect(aster).toContainText('One synthetic experiment');
+  const barWidths = await aster.locator('.research-comparison-fill').evaluateAll(bars => bars.map(bar => bar.getBoundingClientRect().width));
+  expect(barWidths[1] / barWidths[0]).toBeCloseTo(72 / 432, 3);
+  for (const artwork of [wasserstein, aster]) {
+    await expect(artwork.locator('.animated-artwork')).toHaveCount(0);
+    await expect(artwork.getByRole('button')).toHaveCount(0);
+    expect(await artwork.evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);
+  }
 
   const cml = page.locator('.portfolio-entry[data-project="cml"]');
   await cml.locator('.portfolio-details > summary').click();
@@ -138,6 +151,7 @@ test("research animations explain the saved allocation and current CML collectio
   await expect(cml).toContainText("provisional");
   await expect(cml).toContainText("detector training");
   await expect(cml.locator('.animated-artwork')).toBeVisible();
+  await expect(page.locator('#research .animated-artwork')).toHaveCount(1);
 
   await page.getByRole("tab", { name: "Awards", exact: true }).click();
   await expect(page.locator('#awards .portfolio-entry')).toHaveCount(3);
