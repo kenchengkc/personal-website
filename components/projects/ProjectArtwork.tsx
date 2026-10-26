@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { AmazonArtwork } from "./AmazonArtwork";
 import { ModelArtwork } from "./ModelArtwork";
-import { AsterArtwork, WassersteinArtwork } from "./ResearchArtwork";
+import { AsterArtwork, GcinfArtwork, WassersteinArtwork } from "./ResearchArtwork";
 import { SpeedArtwork } from "./SpeedArtwork";
 import { ProductFlowArtwork } from "./ProductFlowArtwork";
 import { ProductBrowserPreview } from "./ProductBrowserPreview";
@@ -35,10 +35,7 @@ export function ProjectArtwork({ kind }: { kind: ArtworkKind }) {
       case "cml": return <ModelArtwork />;
       case "wasserstein": return <WassersteinArtwork />;
       case "aster": return <AsterArtwork />;
-      case "gcinf": return <>
-        <Image src="/images/gc-inf/ieeeconf.png" alt="Ken Cheng presenting his traffic forecasting research at IEEE ITSC 2023" fill sizes={imageSizes} />
-        <span className="artwork-photo-note">IEEE ITSC · 2023</span>
-      </>;
+      case "gcinf": return <GcinfArtwork />;
       case "usaco": return <UsacoArtwork />;
       case "speed": return <SpeedArtwork />;
       case "cvrp": return <Image src="/media/cvrp-visualizer.png" alt="Vehicle routing problem visualizer with optimized routes" fill sizes={imageSizes} />;

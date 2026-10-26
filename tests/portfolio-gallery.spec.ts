@@ -138,12 +138,19 @@ test("research shows published results and keeps only the CML animation", async 
   await expect(aster).toContainText('Same selected candidate');
   await expect(aster).toContainText('100 independent audit evaluations');
   await expect(aster).toContainText('One synthetic experiment');
-  const barWidths = await aster.locator('.research-comparison-fill').evaluateAll(bars => bars.map(bar => bar.getBoundingClientRect().width));
-  expect(barWidths[1] / barWidths[0]).toBeCloseTo(72 / 432, 3);
-  for (const artwork of [wasserstein, aster]) {
+  await expect(aster.getByRole('img')).toHaveCount(2);
+  await expect(aster.getByRole('img').nth(0)).toHaveAttribute('src', '/media/research/aster-full-budget.svg');
+  await expect(aster.getByRole('img').nth(1)).toHaveAttribute('src', '/media/research/aster-replication-race.svg');
+  const gcinf = page.locator('[data-artwork="gcinf"]');
+  await expect(gcinf.getByRole('img')).toHaveAttribute('src', '/media/research/gcinf-model-architecture.png');
+  await expect(gcinf).toContainText('Figure 5');
+  for (const artwork of [wasserstein, aster, gcinf]) {
     await expect(artwork.locator('.animated-artwork')).toHaveCount(0);
     await expect(artwork.getByRole('button')).toHaveCount(0);
     expect(await artwork.evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);
+    for (const figure of await artwork.getByRole('img').all()) {
+      expect(await figure.evaluate(node => ({ blend: getComputedStyle(node).mixBlendMode, filter: getComputedStyle(node).filter }))).toEqual({ blend: 'normal', filter: 'none' });
+    }
   }
 
   const cml = page.locator('.portfolio-entry[data-project="cml"]');
