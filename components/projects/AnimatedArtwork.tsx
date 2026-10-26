@@ -13,10 +13,11 @@ function subscribeVisibility(callback: () => void) {
   return () => document.removeEventListener("visibilitychange", callback);
 }
 
-export function AnimatedArtwork({ label, steps, duration = 3400, playground, children }: {
+export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = true, playground, children }: {
   label: string;
   steps: readonly { label: string; caption: string }[];
   duration?: number;
+  cycleSteps?: boolean;
   playground?: (stage: number) => ReactNode;
   children: (stage: number) => ReactNode;
 }) {
@@ -38,13 +39,13 @@ export function AnimatedArtwork({ label, steps, duration = 3400, playground, chi
   }, []);
 
   useEffect(() => {
-    if (!running) return;
+    if (!running || !cycleSteps) return;
     const timer = window.setTimeout(() => {
       setSelected(null);
       setAutomatic((stage + 1) % steps.length);
     }, duration * (stage === steps.length - 1 ? 1.4 : 1));
     return () => window.clearTimeout(timer);
-  }, [duration, running, stage, steps.length]);
+  }, [duration, cycleSteps, running, stage, steps.length]);
 
   useEffect(() => {
     const updateTransitions = () => root.current?.getAnimations({ subtree: true }).forEach(animation => {
