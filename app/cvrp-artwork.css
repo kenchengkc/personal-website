@@ -1,0 +1,47 @@
+.project-artwork.artwork-cvrp { aspect-ratio: auto; background: #f7f9fb; }
+.artwork-cvrp > .artwork-content { position: relative; inset: auto; }
+.artwork-cvrp .animated-artwork { position: relative; inset: auto; background: #f7f9fb; color: #303c4b; }
+.cvrp-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 15px 8px; font-size: 11px; line-height: 1.4; }
+.cvrp-heading > span:last-child { color: #687584; }
+.cvrp-heading strong { margin-left: 5px; color: #303c4b; font-weight: 600; }
+.cvrp-heading-separator { margin-inline: 7px; color: #b6c0ca; }
+.cvrp-map { display: block; width: 100%; height: auto; }
+.cvrp-regions { opacity: 0; transition: opacity 900ms; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-regions { opacity: .06; }
+.cvrp-route { stroke: var(--route-color); stroke-width: 2; opacity: .24; transition: opacity 900ms, stroke-width 900ms; }
+.cvrp-scene[data-phase="0"] .cvrp-route { stroke-dasharray: 1.2 1.5; animation: cvrp-explore 4s ease-in-out var(--candidate-delay) infinite; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-alternative { opacity: 0; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-selected-route { opacity: .88; stroke-width: 3; }
+.cvrp-node-halo { fill: var(--route-color); opacity: 0; transition: opacity 800ms; }
+.cvrp-node { fill: #f7f9fb; stroke: #8792a0; stroke-width: 1.5; transition: fill 800ms, stroke 800ms; }
+.cvrp-map .cvrp-demand { font-size: 17px; font-weight: 600; fill: #3b4757; transition: fill 800ms; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-node-halo { opacity: .09; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-node { fill: var(--route-color); stroke: #f7f9fb; stroke-width: 2; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-demand { fill: #fff; }
+.cvrp-depot rect { fill: #303c4b; stroke: #f7f9fb; stroke-width: 4; }
+.cvrp-map .cvrp-depot > text { fill: #fff; font-size: 20px; font-weight: 600; }
+.cvrp-map .cvrp-depot .cvrp-depot-label { fill: #303c4b; font-size: 16px; font-weight: 500; paint-order: stroke; stroke: #f7f9fb; stroke-width: 5; stroke-linejoin: round; }
+.cvrp-map .cvrp-map-note, .cvrp-map .cvrp-map-status { fill: #75818f; font-size: 15px; }
+.cvrp-vehicle { stroke: var(--route-color); stroke-width: 9; stroke-dasharray: .05 99.95; stroke-dashoffset: 0; opacity: 0; }
+.cvrp-scene[data-phase="2"] .cvrp-vehicle { opacity: 1; animation: cvrp-deliver var(--trip-duration) linear infinite; }
+.cvrp-loads { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding: 10px 15px 11px; }
+.cvrp-load-label { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 7px; font-size: 10px; line-height: 1.4; color: #687584; }
+.cvrp-load-label > span:first-child { color: var(--route-color); }
+.cvrp-load-label strong { color: #303c4b; font-weight: 600; }
+.cvrp-capacity-track { height: 4px; background: #e1e6eb; }
+.cvrp-capacity-track > span { display: block; height: 100%; background: var(--route-color); opacity: .35; transition: opacity 900ms; }
+.cvrp-scene:not([data-phase="0"]) .cvrp-capacity-track > span { opacity: 1; }
+.cvrp-provenance { display: flex; justify-content: space-between; gap: 12px; padding: 0 15px 12px; color: #75818f; font-size: 10px; line-height: 1.4; }
+.artwork-cvrp .animated-artwork-footer { background: #edf1f5; border-color: #dce3e9; }
+.artwork-cvrp .animated-artwork-controls button[aria-pressed="true"] { background: #dce4ee; }
+@keyframes cvrp-explore { 0%, 100% { opacity: .12; stroke-dashoffset: 0; } 45% { opacity: .7; } 70% { opacity: .24; stroke-dashoffset: -10; } }
+@keyframes cvrp-deliver { to { stroke-dashoffset: -100; } }
+@container (max-width: 350px) {
+  .cvrp-heading { padding: 10px 10px 6px; font-size: 10px; }
+  .cvrp-heading-separator { margin-inline: 4px; }
+  .cvrp-loads { gap: 12px; padding: 8px 10px 10px; }
+  .cvrp-load-label { flex-wrap: wrap; gap: 0 4px; font-size: 9px; }
+  .cvrp-provenance { padding: 0 10px 10px; font-size: 9px; }
+  .cvrp-map .cvrp-map-note, .cvrp-map .cvrp-map-status { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { .cvrp-vehicle { display: none; } }

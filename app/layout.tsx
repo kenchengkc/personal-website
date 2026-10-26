@@ -10,6 +10,7 @@ import "./amazon-artwork.css";
 import "./model-artwork.css";
 import "./research-artwork.css";
 import "./speed-artwork.css";
+import "./cvrp-artwork.css";
 import "./product-flow-artwork.css";
 import "./product-browser-preview.css";
 import "./portfolio.css";

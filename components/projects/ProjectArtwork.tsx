@@ -7,13 +7,12 @@ import { AsterArtwork, GcinfArtwork, WassersteinArtwork } from "./ResearchArtwor
 import { SpeedArtwork } from "./SpeedArtwork";
 import { ProductFlowArtwork } from "./ProductFlowArtwork";
 import { ProductBrowserPreview } from "./ProductBrowserPreview";
+import { CvrpArtwork } from "./CvrpArtwork";
 
 export type ArtworkKind =
   | "amazon" | "quantiv" | "fdre" | "embers"
   | "cml" | "wasserstein" | "aster" | "gcinf"
   | "usaco" | "speed" | "cvrp";
-
-const imageSizes = "(max-width: 700px) calc(100vw - 40px), (max-width: 1200px) 44vw, 480px";
 
 function UsacoArtwork() {
   return (
@@ -38,7 +37,7 @@ export function ProjectArtwork({ kind }: { kind: ArtworkKind }) {
       case "gcinf": return <GcinfArtwork />;
       case "usaco": return <UsacoArtwork />;
       case "speed": return <SpeedArtwork />;
-      case "cvrp": return <Image src="/media/cvrp-visualizer.png" alt="Vehicle routing problem visualizer with optimized routes" fill sizes={imageSizes} />;
+      case "cvrp": return <CvrpArtwork />;
     }
   }
 
