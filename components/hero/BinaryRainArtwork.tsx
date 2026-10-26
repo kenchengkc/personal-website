@@ -6,6 +6,8 @@ import { ASSEMBLY_DURATION, BRAIN_HEIGHT, BRAIN_WIDTH } from "./brain-particles"
 import { createBrainRenderer } from "./brain-renderer";
 import { loadBrainAtlas } from "./load-brain-atlas";
 
+const PLAYBACK_RATE = 1.2;
+
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,7 +33,7 @@ export function BinaryRainArtwork() {
 
     function tick(time: number) {
       // A busy frame must not fast-forward the visible rain by a large distance.
-      const delta = lastTime ? Math.min(time - lastTime, 34) : 0;
+      const delta = lastTime ? Math.min((time - lastTime) * PLAYBACK_RATE, 34) : 0;
       if (started) elapsed += delta;
       else rainLeadIn += delta;
       lastTime = time;
