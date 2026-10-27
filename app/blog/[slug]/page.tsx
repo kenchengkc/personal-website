@@ -53,13 +53,7 @@ export default async function BlogPostPage({ params }: Props) {
             ← All writing
           </Link>
 
-          <header
-            style={{
-              borderBottom: "1px solid var(--color-border)",
-              paddingBottom: 28,
-              marginBottom: 32,
-            }}
-          >
+          <header className="v2-article-header">
             <div className="v2-blog-meta">
               {post.data.tags?.[0] && (
                 <span className="v2-blog-tag">{post.data.tags[0]}</span>
@@ -103,13 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
             <MDXRemote source={post.content} components={mdxComponents} />
           </div>
 
-          <div
-            style={{
-              marginTop: 48,
-              borderTop: "1px solid var(--color-border)",
-              paddingTop: 28,
-            }}
-          >
+          <div className="v2-article-footer">
             <Link href="/blog" className="v2-btn v2-btn--ghost">
               ← All writing
             </Link>

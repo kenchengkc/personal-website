@@ -19,6 +19,8 @@
   --reading: 1120px;
   --result: 1120px;
   --gutter: clamp(28px, 4.5vw, 80px);
+  --section-space: 48px;
+  --subsection-space: 24px;
   --color-bg: var(--page);
   --color-surface: var(--paper);
   --color-text: var(--ink);
@@ -224,7 +226,13 @@ a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
 }
 
 .v2-main {
-  padding: 96px 0 76px;
+  padding-block: var(--section-space);
+}
+
+.v2-main + .site-footer {
+  width: min(calc(100% - 48px), 860px);
+  padding-block: var(--section-space);
+  border-top: 1px solid var(--line);
 }
 
 .v2-section {
@@ -232,7 +240,7 @@ a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
 }
 
 .v2-sec-head {
-  margin-bottom: 48px;
+  margin-bottom: var(--subsection-space);
 }
 
 .v2-sec-title {
@@ -257,16 +265,23 @@ a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
 }
 
 .v2-blog {
-  border-top: 1px solid var(--line);
+  border-top: 0;
 }
 
 .v2-blog-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 18px;
-  padding: 24px 0;
-  border-bottom: 1px solid var(--line);
+  padding: var(--subsection-space) 0;
 }
+
+.v2-blog-row + .v2-blog-row { border-top: 1px solid var(--line); }
+.v2-blog-row:first-child { padding-top: 0; }
+.v2-blog-row:last-child { padding-bottom: 0; }
+.v2-article-header { border-bottom: 1px solid var(--line); padding-bottom: var(--subsection-space); margin-bottom: var(--subsection-space); }
+.v2-article-footer { border-top: 1px solid var(--line); margin-top: var(--section-space); padding-top: var(--section-space); }
+.prose-v2 > :first-child { margin-top: 0; }
+.prose-v2 > :last-child { margin-bottom: 0; }
 
 .v2-blog-meta {
   display: flex;
@@ -395,7 +410,7 @@ a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
   .hero-copy p { max-width: 48ch; }
 }
 @media (max-width: 720px) {
-  :root { --gutter: 22px; }
+  :root { --gutter: 22px; --section-space: 36px; }
   .hero { padding-top: 26px; padding-bottom: 24px; }
   .hero-identity { min-height: 88px; padding-right: 80px; }
   .hero-avatar { width: 62px; height: 78px; }
@@ -431,7 +446,7 @@ a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
   .research-row:first-child h3 { font-size: 22px; }
   .contact-section { padding-block: 64px; }
   .contact-links { gap: 20px; }
-  .site-footer, .site-header, .v2-main { width: calc(100% - 44px); }
+  .site-footer, .site-header, .v2-main, .v2-main + .site-footer { width: calc(100% - 40px); }
   .site-nav { gap: 12px; overflow-x: auto; white-space: nowrap; }
 }
 @media (prefers-reduced-motion: reduce) {
