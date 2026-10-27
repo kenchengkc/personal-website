@@ -12,9 +12,11 @@ button.product-browser-dot:focus-visible { outline: 2px solid #3c627f; outline-o
 .product-browser-light.is-yellow { background: #e4b84f; }
 .product-browser-light.is-green { background: #6bb574; }
 .product-browser-domain { padding-inline: 86px; font-size: 10px; line-height: 1.4; color: #54616c; }
-.product-browser-screen { min-width: 0; aspect-ratio: 1000 / 680; overflow: hidden; background: #050505; }
+.product-browser-screen { position: relative; min-width: 0; aspect-ratio: 1000 / 680; overflow: hidden; background: #050505; }
 .product-browser-preview[data-preview="fdre"] .product-browser-screen { background: #f3eee8; }
 .product-browser-screen video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.product-browser-poster { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.product-browser-screen video[data-frame-ready="true"] + .product-browser-poster { visibility: hidden; }
 .product-browser-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-inline: 8px 12px; border-top: 1px solid #aab2b8; background: #d3d9de; font-size: 10px; line-height: 1.3; }
 .product-browser-controls { display: flex; align-items: center; gap: 2px; min-width: 0; }
 .product-browser-controls button { display: inline-flex; align-items: center; justify-content: center; width: 28px; min-height: 30px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }

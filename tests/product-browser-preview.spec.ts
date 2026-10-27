@@ -24,6 +24,7 @@ for (const product of products) {
     const modalVideo = dialog.locator("video");
     await expect.poll(() => modalVideo.evaluate((node: HTMLVideoElement) => node.currentTime)).toBeCloseTo(4, 1);
     expect(await modalVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+    await expect(dialog.locator(".product-browser-poster")).toBeHidden();
     expect(await inlineVideo.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
     const bounds = (await dialog.boundingBox())!;
     expect(bounds.width).toBeGreaterThan((await preview.boundingBox())!.width);
@@ -69,7 +70,7 @@ for (const product of products) {
     const video = preview.locator("video");
     await expect(preview).toHaveAccessibleName(`${product.name} recorded product demo`);
     await expect(preview.getByRole("link", { name: `Open ${product.name}`, exact: true })).toHaveAttribute("href", product.href);
-    await expect(video).toHaveAttribute("poster", `/media/${product.kind}-preview-poster.jpg`);
+    await expect(preview.locator(".product-browser-poster")).toHaveAttribute("src", `/media/${product.kind}-preview-poster.jpg`);
     await expect.poll(() => video.evaluate((node: HTMLVideoElement) => node.readyState >= 2 && !node.paused)).toBe(true);
     const media = await video.evaluate((node: HTMLVideoElement) => ({
       source: new URL(node.currentSrc).pathname,
@@ -118,12 +119,9 @@ for (const product of products) {
     const video = preview.locator("video");
     await expect(preview.getByRole("button", { name: `Play ${product.name} demo`, exact: true })).toBeVisible();
     expect(await video.evaluate((node: HTMLVideoElement) => ({ paused: node.paused, time: node.currentTime }))).toEqual({ paused: true, time: 0 });
-    expect(await video.evaluate(async (node: HTMLVideoElement) => {
-      const poster = new Image();
-      poster.src = node.poster;
-      await poster.decode();
-      return poster.naturalWidth > 0 && poster.naturalHeight > 0;
-    })).toBe(true);
+    const poster = preview.locator(".product-browser-poster");
+    await expect(poster).toBeVisible();
+    await expect.poll(() => poster.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0 && node.naturalHeight > 0)).toBe(true);
 
     await preview.getByRole("button", { name: `Play ${product.name} demo`, exact: true }).click();
     await expect.poll(() => video.evaluate((node: HTMLVideoElement) => node.readyState >= 2 && !node.paused && node.currentTime > .1)).toBe(true);

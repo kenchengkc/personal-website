@@ -20,6 +20,20 @@ function subscribeVisibility(callback: () => void) {
   return () => document.removeEventListener("visibilitychange", callback);
 }
 
+function revealPresentedFrame(player: HTMLVideoElement) {
+  const reveal = () => {
+    if (player.readyState >= 2 && !player.seeking) player.dataset.frameReady = "true";
+  };
+  const afterPaint = () => requestAnimationFrame(() => requestAnimationFrame(reveal));
+  // A loaded/playing event can precede the first presented frame. Keep the
+  // poster over each player until the browser can actually show its video.
+  // A paused seek may have already presented its only frame, so it cannot
+  // depend on another video-frame callback. Allow the decoded seek one paint.
+  if (player.paused && player.readyState >= 2 && !player.seeking) afterPaint();
+  else if (typeof player.requestVideoFrameCallback === "function") player.requestVideoFrameCallback(reveal);
+  else if (player.readyState >= 2) afterPaint();
+}
+
 export function ProductBrowserPreview({ kind }: { kind: keyof typeof products }) {
   const product = products[kind];
   const root = useRef<HTMLDivElement>(null);
@@ -149,17 +163,29 @@ export function ProductBrowserPreview({ kind }: { kind: keyof typeof products })
         <video
           ref={enlarged ? enlargedVideo : video}
           src={`/media/${kind}-preview.mp4`}
-          poster={`/media/${kind}-preview-poster.jpg`}
           preload="none"
           muted
           playsInline
           loop
           aria-label={`Silent recording of ${product.name} in use`}
+          onLoadStart={event => { delete event.currentTarget.dataset.frameReady; }}
           onLoadedMetadata={event => {
             if (event.currentTarget === activeVideo()) event.currentTarget.currentTime = resumeTime.current;
+            revealPresentedFrame(event.currentTarget);
           }}
+          onLoadedData={event => revealPresentedFrame(event.currentTarget)}
+          onSeeked={event => revealPresentedFrame(event.currentTarget)}
           onPlay={event => updatePlaying(event, true)}
           onPause={event => updatePlaying(event, false)}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- Preserve the recording's native poster URL and browser-controlled lazy loading. */}
+        <img
+          className="product-browser-poster"
+          src={`/media/${kind}-preview-poster.jpg`}
+          width={1000} height={680} alt=""
+          loading={enlarged ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={enlarged ? "auto" : "low"}
         />
       </div>
       <div className="product-browser-footer">

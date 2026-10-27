@@ -12,6 +12,14 @@ const categoryLabels = { work: "Work", research: "Research", awards: "Awards" };
 const researchArtwork: ArtworkKind[] = ["cml", "wasserstein", "aster", "gcinf"];
 const awardArtwork: ArtworkKind[] = ["usaco", "speed", "cvrp"];
 
+function prepareFigures(root: ParentNode | null) {
+  root?.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach(image => {
+    image.fetchPriority = "low";
+    image.loading = "eager";
+    void image.decode().catch(() => {});
+  });
+}
+
 function FeaturedEntry({ project }: { project: FeaturedProject }) {
   return (
     <article className="portfolio-entry" data-project={project.demo}>
@@ -60,6 +68,27 @@ export function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   const tabRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   useEffect(() => {
+    // The atlas can finish decoding after window.load. Keep background figure
+    // preparation behind the actual hero handoff, not just document loading.
+    const brain = document.querySelector<HTMLElement>(".hero-binary-art");
+    const observer = new MutationObserver(prepare);
+    function prepare() {
+      if (document.readyState !== "complete") return;
+      if (brain && brain.dataset.ready !== "true" && brain.dataset.phase !== "complete") return;
+      prepareFigures(sectionRef.current);
+      observer.disconnect();
+      window.removeEventListener("load", prepare);
+    }
+    if (brain) observer.observe(brain, { attributes: true, attributeFilter: ["data-ready", "data-phase"] });
+    window.addEventListener("load", prepare, { once: true });
+    prepare();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("load", prepare);
+    };
+  }, []);
+
+  useEffect(() => {
     let frame = 0;
     function readLocation() {
       const hash = window.location.hash.slice(1);
@@ -84,8 +113,13 @@ export function Projects() {
   }, []);
 
   function selectCategory(next: Category) {
+    prepareCategory(next);
     setCategory(next);
     if (window.location.hash !== `#${next}`) window.history.pushState(window.history.state, "", `#${next}`);
+  }
+
+  function prepareCategory(next: Category) {
+    prepareFigures(document.getElementById(next === "work" ? "portfolio-work" : next));
   }
 
   function handleKey(event: KeyboardEvent<HTMLAnchorElement>, index: number) {
@@ -107,6 +141,7 @@ export function Projects() {
         {categories.map((name, index) => (
           <a key={name} ref={element => { tabRefs.current[index] = element; }} href={`#${name}`} id={`gallery-tab-${name}`} role="tab"
             aria-selected={category === name} aria-controls={name === "work" ? "portfolio-work" : name} tabIndex={category === name ? 0 : -1}
+            onPointerEnter={() => prepareCategory(name)} onFocus={() => prepareCategory(name)}
             onClick={event => { event.preventDefault(); selectCategory(name); }} onKeyDown={event => handleKey(event, index)}>
             {categoryLabels[name]}
           </a>
