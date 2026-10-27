@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Database } from "lucide-react";
 
 const skillGroups = [
   {
@@ -81,6 +82,7 @@ const skillLogos: Record<string, string> = {
   C: "c",
   Bash: "bash",
   PyTorch: "pytorch",
+  "Hugging Face Transformers": "huggingface",
   CUDA: "nvidia",
   "scikit-learn": "scikitlearn",
   NumPy: "numpy",
@@ -121,6 +123,7 @@ export function Skills() {
                     className={`skill-item${index < 3 ? " skill-item-priority" : ""}`}
                     key={skill}
                   >
+                    {skill === "SQL" && <Database className="skill-logo" size={20} strokeWidth={1.75} aria-hidden="true" />}
                     {skillLogos[skill] && <Image
                       className="skill-logo"
                       src={`/images/skills/${skillLogos[skill]}.svg`}

@@ -32,3 +32,6 @@ Devicon is MIT licensed; the complete notice is included in `LICENSE-DEVICON.txt
 - `pytest.svg`: https://raw.githubusercontent.com/devicons/devicon/4fbcc685c9a85434bc01b1c236c9076f54806236/icons/pytest/pytest-original.svg
 
 - `nvidia.svg`: [Simple Icons NVIDIA mark](https://raw.githubusercontent.com/simple-icons/simple-icons/90646e4bf7f3b89df6c37e65baf3e7bc759a517c/icons/nvidia.svg), used beside CUDA. The original path is retained with NVIDIA green (`#76B900`) applied as the SVG fill. Simple Icons is CC0 licensed; the complete notice is included in `LICENSE-SIMPLE-ICONS.md`.
+
+- `huggingface.svg`: https://raw.githubusercontent.com/devicons/devicon/4fbcc685c9a85434bc01b1c236c9076f54806236/icons/huggingface/huggingface-original.svg — copied unchanged on October 27, 2026, under the Devicon license above.
+- SQL uses the `Database` icon from the existing `lucide-react` package, rendered inline in the site's text color.
