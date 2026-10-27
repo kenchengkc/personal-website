@@ -10,18 +10,18 @@ export function Contact() {
       data-scroll-label="CONTACT"
     >
       <div className="reading-column">
-        <h2 className="section-kicker" data-reveal>Contact</h2>
+        <h2 className="section-kicker">Contact</h2>
 
-        <p className="contact-interest" data-reveal>
+        <p className="contact-interest">
           Seeking software engineering, quantitative development, and machine
           learning research internships.
         </p>
 
-        <a className="contact-email" href={`mailto:${site.email}`} data-reveal>
+        <a className="contact-email" href={`mailto:${site.email}`}>
           {site.email}<ArrowUpRight />
         </a>
 
-        <div className="contact-links" data-reveal>
+        <div className="contact-links">
           <a href={site.socials.github} target="_blank" rel="noopener noreferrer">
             <GitHub />
             <span>GitHub</span>

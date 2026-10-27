@@ -24,22 +24,12 @@ export function ScrollExperience() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.add("motion-ready");
     let frame = 0;
     let active = "";
     let disposed = false;
     let positions: number[] = [];
     let scrollable = 0;
     let needsMeasure = true;
-    const observed = new WeakSet<Element>();
-
-    const revealObserver = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
-      }
-    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
 
     function measure() {
       const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-section]"));
@@ -68,11 +58,6 @@ export function ScrollExperience() {
         return { label, title: TITLES[label] ?? label, parent, number, position: stops[index], labelY: labelPositions[index] };
       });
       setMilestones(previous => JSON.stringify(previous) === JSON.stringify(nextMilestones) ? previous : nextMilestones);
-      document.querySelectorAll("[data-reveal]").forEach(element => {
-        if (observed.has(element)) return;
-        observed.add(element);
-        revealObserver.observe(element);
-      });
       needsMeasure = false;
     }
 
@@ -120,12 +105,10 @@ export function ScrollExperience() {
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
-      revealObserver.disconnect();
       resizeObserver.disconnect();
       mutationObserver.disconnect();
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", invalidate);
-      root.classList.remove("motion-ready");
     };
   }, [pathname]);
 

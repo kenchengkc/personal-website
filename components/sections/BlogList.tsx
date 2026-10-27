@@ -11,14 +11,13 @@ export function BlogList() {
       data-scroll-label="PAPERS"
     >
       <div className="reading-column">
-        <h2 className="section-kicker" data-reveal>Publications</h2>
+        <h2 className="section-kicker">Publications</h2>
 
         <div className="publication-list">
           {publications.map((publication) => (
             <article
               className="publication-row"
               key={publication.href}
-              data-reveal
             >
               <a
                 className="publication-figure"

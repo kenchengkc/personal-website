@@ -112,8 +112,8 @@ export function Skills() {
       data-scroll-label="SKILLS"
     >
       <div className="reading-column">
-        <h2 className="section-kicker" data-reveal>Skills</h2>
-        <div className="skills-field" data-reveal>
+        <h2 className="section-kicker">Skills</h2>
+        <div className="skills-field">
           {skillGroups.map((group) => (
             <div className="skill-row" key={group.label}>
               <span className="skill-group-label">{group.label}</span>

@@ -35,7 +35,7 @@ export function Columbia() {
     >
       <div className="reading-column">
         <Image src="/images/butler-library.jpg" alt="Butler Library at Columbia University" width={960} height={640} sizes="(max-width: 720px) 90vw, 360px" className="columbia-photo" />
-        <div className="columbia-heading" data-reveal>
+        <div className="columbia-heading">
           <div>
             <h2>Columbia University</h2>
             <p>B.S. Computer Science · Statistics Minor</p>
@@ -43,7 +43,7 @@ export function Columbia() {
           </div>
         </div>
 
-        <div className="columbia-honor" data-reveal>
+        <div className="columbia-honor">
           <div>
             <strong className="columbia-scholar-title">Egleston Scholar</strong>
             <span className="columbia-scholar-rank">Top 1%</span>
@@ -54,7 +54,7 @@ export function Columbia() {
           </p>
         </div>
 
-        <div className="coursework-block" data-reveal>
+        <div className="coursework-block">
           <h3 className="coursework-label" id="coursework-heading">Selected coursework</h3>
           <ul className="coursework-list" aria-labelledby="coursework-heading" role="list">
             {coursework.map(({ name, icon: Icon }) => (
