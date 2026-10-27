@@ -1,5 +1,7 @@
 .skills-section .skill-row { align-items: start; padding-block: 17px; }
 .skills-section .skill-row + .skill-row { border-top: 1px solid var(--line); }
+.skills-section .skill-row:first-child { padding-top: 0; }
+.skills-section .skill-row:last-child { padding-bottom: 0; }
 .skills-section .skill-group-label { padding-top: 2px; font-weight: 600; }
 .skills-section .skill-items { align-items: center; gap: 12px 22px; }
 .skills-section .skill-item { align-items: center; gap: 7px; min-height: 24px; max-width: 100%; line-height: 1.6; }

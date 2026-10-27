@@ -1,4 +1,8 @@
-.publication-row { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 34px; padding-block: 28px; }
+.publication-list { border-top: 0; }
+.publication-row { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 34px; padding-block: 28px; border-bottom: 0; }
+.publication-row + .publication-row { border-top: 1px solid var(--line); }
+.publication-row:first-child { padding-top: 0; }
+.publication-row:last-child { padding-bottom: 0; }
 .publication-figure { display: block; min-width: 0; color: var(--ink-3); }
 .publication-figure img { display: block; width: 100%; height: auto; }
 .publication-figure > span { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 10px; font-size: 11px; line-height: 1.5; }
