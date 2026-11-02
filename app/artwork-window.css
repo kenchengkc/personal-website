@@ -11,7 +11,29 @@
 .artwork-window-dialog::backdrop { background: #0b1522c4; backdrop-filter: blur(4px); }
 .artwork-window-dialog:modal .artwork-window-titlebar { position: sticky; top: 0; }
 .artwork-window-dialog:modal .product-browser-domain { font-size: 12px; }
+
+/* Inline previews share one window shape; expanded windows keep their natural
+   scene proportions. The flexible scene fits the full image above its controls. */
+.artwork-content { --work-window-ratio: 6 / 5; }
+.artwork-content > .product-browser-preview {
+  aspect-ratio: var(--work-window-ratio);
+  grid-template-rows: 32px minmax(0, 1fr) 38px;
+}
+.artwork-content > .product-browser-preview .product-browser-screen { min-height: 0; aspect-ratio: auto; }
+.artwork-window-dialog:not(:modal) {
+  display: grid;
+  aspect-ratio: var(--work-window-ratio);
+  grid-template-rows: 32px minmax(0, 1fr);
+}
+.artwork-window-dialog:not(:modal) .artwork-window-content { position: relative; min-height: 0; }
+.artwork-window-dialog:not(:modal) .artwork-window-content > div { position: absolute; inset: 0; }
+.artwork-window-dialog:not(:modal) .animated-artwork { position: absolute; inset: 0; grid-template-rows: minmax(0, 1fr) auto; }
+.artwork-window-dialog:not(:modal) .artwork-window-content .animated-artwork > .animated-artwork-scene { aspect-ratio: auto; }
+.artwork-window-dialog:not(:modal) .animated-artwork-playground { min-height: 0; margin-bottom: 6px; padding-block: 4px; }
 @container (max-width: 350px) {
+  .artwork-content { --work-window-ratio: 1.05; }
+  .artwork-content > .product-browser-preview { grid-template-rows: 28px minmax(0, 1fr) 40px; }
+  .artwork-window-dialog:not(:modal) { grid-template-rows: 28px minmax(0, 1fr); }
   .artwork-window-titlebar { height: 28px; }
 }
 @media (max-width: 520px) {
