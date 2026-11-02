@@ -51,6 +51,14 @@
 .portfolio-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 #awards .portfolio-grid { row-gap: 28px; }
+@media (min-width: 721px) {
+  /* Independent columns keep disclosures from moving the opposite column.
+     Floats preserve the USACO, Speed, Best Paper reading order on phones. */
+  #awards .portfolio-grid { display: flow-root; }
+  #awards .award-entry { float: left; clear: left; width: calc((100% - 28px) / 2); }
+  #awards .award-entry[data-project="speed"] { float: right; clear: none; }
+  #awards .award-entry[data-project="cvrp"] { margin-top: 28px; }
+}
 .award-entry .portfolio-details { margin-top: 10px; }
 .award-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 136px; padding-bottom: 14px; }
 .award-heading-copy { min-width: 0; }

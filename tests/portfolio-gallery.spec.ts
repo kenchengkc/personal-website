@@ -91,6 +91,54 @@ test("expanded gallery entries retain the full project evidence and original lin
   await expect(page.locator('#writing a[href*="researchgate.net/publication/371141171"]')).toBeAttached();
 });
 
+test("expanding Need for Speed keeps Best Paper anchored in the other award column", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [1440, 1024, 768, 721]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("/#awards");
+    await expect(page.locator("#awards")).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    const speed = page.locator('.award-entry[data-project="speed"]');
+    const bestPaper = page.locator('.award-entry[data-project="cvrp"]');
+    const top = () => bestPaper.evaluate(node => node.getBoundingClientRect().top + window.scrollY);
+    const before = await top();
+
+    await speed.locator("summary").click();
+    await expect(speed.getByRole("link", { name: "Read the paper" })).toBeVisible();
+    expect(await top(), `Best Paper moved when Need for Speed opened at ${width}px`).toBeCloseTo(before, 1);
+    await speed.locator("summary").click();
+    expect(await top()).toBeCloseTo(before, 1);
+
+    const bounds = await page.locator("#awards").evaluate(panel => {
+      const first = panel.querySelector('[data-project="usaco"]')!.getBoundingClientRect();
+      const third = panel.querySelector('[data-project="cvrp"]')!.getBoundingClientRect();
+      return { gap: third.top - first.bottom, containsLast: panel.getBoundingClientRect().bottom >= third.bottom };
+    });
+    expect(bounds.gap).toBeCloseTo(28, 1);
+    expect(bounds.containsLast).toBe(true);
+  }
+});
+
+test("award expansion preserves the single-column order without overlap on phones", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [720, 390, 320]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("/#awards");
+    const speed = page.locator('.award-entry[data-project="speed"]');
+    await speed.locator("summary").click();
+    const layout = await page.locator("#awards").evaluate(panel => {
+      const entries = [...panel.querySelectorAll<HTMLElement>(".award-entry")];
+      const boxes = entries.map(entry => entry.getBoundingClientRect());
+      return {
+        order: entries.map(entry => entry.dataset.project),
+        separated: boxes.slice(1).every((box, index) => box.top >= boxes[index].bottom + 23),
+        overflow: document.documentElement.scrollWidth > innerWidth,
+      };
+    });
+    expect(layout).toEqual({ order: ["usaco", "speed", "cvrp"], separated: true, overflow: false });
+  }
+});
+
 test("each featured project has one visual with no duplicate walkthrough", async ({ page }) => {
   await page.goto("/#work");
   for (const project of featuredProjects) {
