@@ -63,7 +63,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Quantiv",
-    eyebrow: "Founder & Lead Engineer",
+    eyebrow: "Founder & Lead Engineer · Earnings Forecasting with LightGBM",
     date: "Jul 2025 – Present",
     summary:
       "Built and launched an open-source earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
@@ -96,7 +96,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Financial Document Retrieval Engine",
-    eyebrow: "Financial Search & Research Infrastructure",
+    eyebrow: "SEC Filing Search · Vector Databases & Citation Verification",
     date: "Jun 2026 – Present",
     summary:
       "Built an open-source financial research platform over SEC filings, combining PostgreSQL full-text search and pgvector approximate nearest-neighbor search with citation verification, evidence-based abstention, and point-in-time filtering.",
@@ -174,13 +174,13 @@ export const otherWork: OtherWork[] = [
   },
   {
     title: "Wasserstein Regimes",
-    meta: "Optimal Transport & Risk Forecasting · Sep 2026 – Present",
+    meta: "Optimal Transport for Market Regime Clustering & Risk Forecasting · Sep 2026 – Present",
     detail: "Built a NumPy research platform for Wasserstein and joint sliced-Wasserstein clustering across five exchange-traded funds, with chronological validation, robustness controls, frozen-model scoring, and resumable parallel experiments. An exploratory study of 600 five-session risk forecasts did not demonstrate an advantage over four simpler baselines.",
     href: "https://wasserstein-regimes.vercel.app",
   },
   {
     title: "Aster",
-    meta: "Parallel Hyperparameter Optimization · Sep 2026 – Present",
+    meta: "Parallel Hyperparameter Tuning for Noisy Simulations · Sep 2026 – Present",
     detail: "Built an open-source Python prototype for tuning noisy simulations through parallel evaluation, adaptive replication, early stopping, and independent audits. In one 16-configuration synthetic experiment, it selected the same candidate as full-budget search using 72 rather than 432 search evaluations.",
     href: "https://aster-hpo.vercel.app",
   },
@@ -197,7 +197,7 @@ export const otherWork: OtherWork[] = [
   },
   {
     title: "Need for Speed",
-    meta: "Canada-Wide Science Fair · Gold Medal, 2022",
+    meta: "Formula 1 Aerodynamics · CFD & Neural Surrogates · Canada-Wide Science Fair Gold Medal, 2022",
     detail: "Computational fluid dynamics and neural surrogate modeling for Formula 1 aerodynamics, achieving a 43% drag reduction.",
   },
   {
