@@ -1,5 +1,13 @@
 # Award artwork
 
+## usaco-platinum-tree.webp
+
+A custom decorative platinum rendering of the binary-tree motif in the existing USACO logo, generated with the built-in image-generation tool on November 2, 2026. It does not depict an official physical medal or trophy. The original USACO logo is displayed separately without alteration. Exported with transparency as a 640-pixel-wide WebP.
+
+### Generation prompt
+
+Create a NEW photorealistic platinum sculptural emblem inspired by ONLY the binary-tree motif on the RIGHT side of the supplied USA Computing Olympiad logo. Reference is a design guide, not pixels to cut out. Exactly a complete balanced binary tree with 4 levels: 1 root, 2 children, 4 grandchildren, 8 evenly spaced leaves, 15 circular nodes total, 14 connecting diagonal branches, matching the reference topology. Make it a single beautifully manufactured solid platinum object: low-relief circular polished node bosses seamlessly joined to thin brushed platinum branch strips, chamfered edges, dimensional thickness, restrained reflections with graphite edge shading and bright silver highlights. Front view with a very slight dimensional angle, symmetrical recognizable tree silhouette, elegant crafted metal, realistic studio product rendering, not a flat icon or wireframe. Top root centered and leaves along bottom, compact roughly 1.4:1 width-to-height composition, plenty of transparent space so nothing is cropped. Transparent alpha background, isolated emblem with no surrounding scene or floor. NO text, logo lettering, dates, shield, coin, medal rim, ribbon, laurel, stars, pedestal, or glow. No golden tint; cool platinum and silver only. This is a custom decorative illustration for a portfolio's USACO Platinum achievement beside score text, not a representation of an official physical award. It must remain crisply legible at 180px wide against a pale blue-gray background. Favor realistic precision-machined solid metal relief over floating balls and sticks.
+
 ## cwsf-gold-medal.webp
 
 A newly generated illustration based on the user-provided medal reference, made with the built-in image-generation tool on November 2, 2026. It is a recreation, not a cropped photograph of the recipient's medal. The reference ribbon's 2018 date was deliberately omitted; the portfolio's award date remains 2022 in HTML.

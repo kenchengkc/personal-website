@@ -56,12 +56,20 @@
 .artwork-gcinf img { object-position: left center; }
 .artwork-wasserstein { background: #e9edf0; }
 .artwork-aster { background: #172a28; }
-.artwork-usaco { background: #dde1e5; }
-.artwork-usaco .artwork-usaco-logo { position: absolute; width: min(72%, 300px); height: auto; top: 22px; left: 20px; mix-blend-mode: multiply; }
-.artwork-score { position: absolute; left: 20px; top: 31%; color: #27384b; font-family: var(--font-mono), monospace; font-size: clamp(30px, 13cqw, 51px); font-weight: 500; line-height: 1; letter-spacing: -3px; }
-.artwork-score > span { color: #687886; }
-.artwork-score small { display: block; margin-top: 10px; font: 400 12px/1.4 var(--font-sans), sans-serif; letter-spacing: 0; }
-.artwork-division { position: absolute; left: 20px; bottom: 23px; color: #27384b; font-size: 15px; font-weight: 500; }
+.project-artwork.artwork-usaco { aspect-ratio: 1.36; background: radial-gradient(ellipse at 85% 48%, #f2f5f7 0, transparent 65%), linear-gradient(130deg, #dce4eb, #c3d0dc); color: #27384b; }
+.artwork-usaco > .artwork-content { display: flex; flex-direction: column; gap: 14px; padding: clamp(16px, 4cqw, 24px); }
+.usaco-brand { flex: 0 0 auto; }
+.artwork-usaco .artwork-usaco-logo { display: block; width: min(90%, 340px); height: auto; mix-blend-mode: multiply; }
+.usaco-result { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 8px; flex: 1 1 auto; min-height: 0; align-items: center; }
+.usaco-score { margin: 0; }
+.usaco-score strong { display: block; font-size: clamp(40px, 15cqw, 76px); font-weight: 600; line-height: 1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.usaco-score span { display: block; margin-top: 8px; font-size: clamp(11px, 2.8cqw, 14px); color: #42566b; }
+.usaco-score small { display: block; margin-top: 3px; font-size: clamp(9px, 2.4cqw, 12px); color: #52667a; }
+.usaco-platinum-tree { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 8px 8px #32485e25); }
+.usaco-promotion { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; padding-top: 13px; border-top: 1px solid #7f94a64d; font-size: clamp(12px, 3cqw, 15px); }
+.usaco-promotion > span { color: #79603a; }
+.usaco-promotion strong { font-weight: 600; }
+.usaco-promotion svg { flex: 1; min-width: 0; height: 12px; fill: none; stroke: #7e91a3; stroke-width: 1; }
 .artwork-speed { background: #b6c1d0; }
 .artwork-cvrp { background: #f4f3ef; }
 .artwork-cvrp img { object-position: center; }
