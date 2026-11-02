@@ -56,8 +56,8 @@
 .artwork-gcinf img { object-position: left center; }
 .artwork-wasserstein { background: #e9edf0; }
 .artwork-aster { background: #172a28; }
-.project-artwork.artwork-usaco { aspect-ratio: 1.36; background: radial-gradient(ellipse at 85% 48%, #f2f5f7 0, transparent 65%), linear-gradient(130deg, #dce4eb, #c3d0dc); color: #27384b; }
-.artwork-usaco > .artwork-content { display: flex; flex-direction: column; gap: 14px; padding: clamp(16px, 4cqw, 24px); }
+.project-artwork.artwork-usaco { aspect-ratio: 1.65; min-height: 200px; background: radial-gradient(ellipse at 85% 48%, #f2f5f7 0, transparent 65%), linear-gradient(130deg, #dce4eb, #c3d0dc); color: #27384b; }
+.artwork-usaco > .artwork-content { display: flex; flex-direction: column; gap: 10px; padding: clamp(12px, 3.2cqw, 18px); }
 .usaco-brand { flex: 0 0 auto; }
 .artwork-usaco .artwork-usaco-logo { display: block; width: min(90%, 340px); height: auto; mix-blend-mode: multiply; }
 .usaco-result { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 8px; flex: 1 1 auto; min-height: 0; align-items: center; }
