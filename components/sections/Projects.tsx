@@ -54,17 +54,31 @@ function FeaturedEntry({ project }: { project: FeaturedProject }) {
 
 function ResearchEntry({ item, artwork }: { item: typeof otherWork[number]; artwork: ArtworkKind }) {
   const paper = artwork === "speed" ? site.links.f1cfd : undefined;
+  const ProjectHeading = item.award ? "h4" : "h3";
   return (
-    <article className="portfolio-entry" data-project={artwork}>
+    <article className={`portfolio-entry${item.award ? " award-entry" : ""}`} data-project={artwork}>
+      {item.award && <header className="award-heading">
+        <div className="award-heading-copy">
+          <p className="award-year">{item.award.year}{item.award.highlight && <span>{item.award.highlight}</span>}</p>
+          <h3 className="award-distinction">{item.award.distinction}</h3>
+          <p className="award-organization">{item.award.organization}</p>
+        </div>
+        {artwork === "speed" && <Image
+          className="award-medal"
+          src="/images/awards/cwsf-gold-medal.webp"
+          alt="Recreated gold Au science fair medal with a purple ribbon"
+          width={375} height={600} sizes="110px" loading="lazy" unoptimized
+        />}
+      </header>}
       <ProjectArtwork kind={artwork} />
       <details className="portfolio-details">
-        <summary><h3>{item.title}</h3><span className="portfolio-more" aria-hidden="true">+</span></summary>
+        <summary><ProjectHeading>{item.title}</ProjectHeading><span className="portfolio-more" aria-hidden="true">+</span></summary>
         <div className="portfolio-description">
           <p>{item.detail}</p>
           {(item.href || paper) && <div className="portfolio-links"><a href={item.href || paper} target="_blank" rel="noopener noreferrer">{artwork === "gcinf" || paper ? "Read the paper" : "Explore the project"}<ArrowUpRight /></a></div>}
         </div>
       </details>
-      <p className="portfolio-meta">{item.meta}</p>
+      {item.meta && <p className="portfolio-meta">{item.meta}</p>}
     </article>
   );
 }

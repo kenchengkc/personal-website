@@ -164,7 +164,13 @@ export const featuredProjects: FeaturedProject[] = [
   },
 ];
 
-type OtherWork = { title: string; meta: string; detail: string; href?: string };
+type OtherWork = {
+  title: string;
+  meta: string;
+  detail: string;
+  href?: string;
+  award?: { distinction: string; organization: string; year: string; highlight?: string };
+};
 
 export const otherWork: OtherWork[] = [
   {
@@ -192,17 +198,20 @@ export const otherWork: OtherWork[] = [
   },
   {
     title: "USACO Platinum",
-    meta: "Top 1% nationally · 2023",
+    meta: "",
+    award: { distinction: "Platinum", organization: "USA Computing Olympiad", year: "2023", highlight: "Top 1% nationally" },
     detail: "Highest division of the USA Computing Olympiad, promoted from Gold with a 1000/1000 score.",
   },
   {
     title: "Need for Speed",
-    meta: "Formula 1 Aerodynamics · CFD & Neural Surrogates · Canada-Wide Science Fair Gold Medal, 2022",
+    meta: "Formula 1 Aerodynamics · CFD & Neural Surrogates",
+    award: { distinction: "Gold Medal", organization: "Canada-Wide Science Fair", year: "2022" },
     detail: "Computational fluid dynamics and neural surrogate modeling for Formula 1 aerodynamics, achieving a 43% drag reduction.",
   },
   {
     title: "Capacitated Vehicle Routing Problem Solver",
-    meta: "University of Florida Student Science Training Program · Best Paper, 2023",
+    meta: "",
+    award: { distinction: "Best Paper", organization: "University of Florida Student Science Training Program", year: "2023" },
     detail: "Machine learning-assisted column generation for vehicle routing, producing a 15% faster C++ solver.",
   },
 ];
