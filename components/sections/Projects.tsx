@@ -65,7 +65,7 @@ function ResearchEntry({ item, artwork }: { item: typeof otherWork[number]; artw
         </div>
         {artwork === "speed" && <Image
           className="award-medal"
-          src="/images/awards/cwsf-gold-medal.webp"
+          src="/images/awards/cwsf-gold-medal-v2.webp"
           alt="Recreated gold Au science fair medal with a purple ribbon"
           width={375} height={600} sizes="110px" loading="lazy" unoptimized
         />}

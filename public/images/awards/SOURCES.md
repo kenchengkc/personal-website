@@ -1,6 +1,16 @@
 # Award artwork
 
+## cwsf-gold-medal-v2.webp
+
+The active Need for Speed medal illustration, refined using the built-in image-generation tool on November 2, 2026. The first illustration was the edit target, with the user's original photograph as a material reference only. Reduced glossy highlights and rounded embossing; added natural stamped-metal grain and fabric texture. The reference's 2018 date remains omitted. Exported with transparency as a 375 × 600 WebP.
+
+### Refinement prompt
+
+Edit IMAGE 1, the isolated gold science-fair medal illustration, to look less AI-generated and smoothed. IMAGE 2 is the original real medal photo for MATERIAL and LOW-RELIEF craftsmanship reference only; never cut out or reuse its photographed pixels, carpet, or 2018 date. Keep Image1's compact pendant composition, circular medal, purple V ribbon, large 'Au', small 'CWSF' and 'ESPC' lettering with test-tube motif, and genuinely transparent background. Re-render it like a straightforward natural-light photograph of a real die-struck school science-fair medal: satin antique gold/brass rather than glowing yellow jewelry, subtle uneven fine grain, fine incidental hairline scratches, slight darkening in recessed edges, crisp shallow stamped relief and narrow sharp rims. The Au lettering and small lettering should have restrained low relief closer to Image2, not inflated rounded 3D typography; remove thick soft bevels and the bright bloom at the upper-left rim. Flat metal face with believable small manufacturing imperfections, not polished plastic, not dirty or corroded. Purple grosgrain ribbon with fine directional weave, visible stitched seam, mild natural wrinkles and uneven tension; slightly muted violet instead of oversaturated luminous purple. One broad diffuse daylight source, realistic subdued highlights and gentle self-shadow, no dramatic CGI rim lighting. Preserve a clean readable silhouette at 110px wide. No stars, new symbols, text changes, dates, surrounding scene, floor, detached cast shadow, fake background, fake blur, or smoothing. Keep complete ribbon ends and medal visible. Produce a newly refined high-resolution transparent asset, not a comparison image.
+
 ## usaco-platinum-tree-v2.webp
+
+Archived finish study; the site uses the original `usaco-platinum-tree.webp`.
 
 Refined using the built-in image-generation tool on November 2, 2026, using the first illustration as an edit reference. Flat machined faces, sharper joins, subtle tooling texture, and restrained reflections replace the original rounded finish. The tree retains 15 nodes and 14 branches. Exported with transparency as a 640-pixel-wide WebP; the first version remains archived alongside it.
 

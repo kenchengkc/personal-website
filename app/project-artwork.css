@@ -65,7 +65,7 @@
 .usaco-score strong { display: block; font-size: clamp(40px, 15cqw, 76px); font-weight: 600; line-height: 1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
 .usaco-score span { display: block; margin-top: 8px; font-size: clamp(11px, 2.8cqw, 14px); color: #42566b; }
 .usaco-score small { display: block; margin-top: 3px; font-size: clamp(9px, 2.4cqw, 12px); color: #52667a; }
-.usaco-platinum-tree { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 2px 2px #32485e20); }
+.usaco-platinum-tree { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 8px 8px #32485e25); }
 .usaco-promotion { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; padding-top: 13px; border-top: 1px solid #7f94a64d; font-size: clamp(12px, 3cqw, 15px); }
 .usaco-promotion > span { color: #79603a; }
 .usaco-promotion strong { font-weight: 600; }
