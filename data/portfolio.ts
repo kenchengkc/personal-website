@@ -131,7 +131,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     name: "Embers",
-    eyebrow: "Machine Learning",
+    eyebrow: "Computer Vision for Property Insurance",
     date: "Apr 2025 · LA Hacks",
     summary:
       "Led a four-person team building a video-to-inventory app with YOLO object tracking, cross-frame deduplication, Gemini valuation, and Supabase persistence.",
