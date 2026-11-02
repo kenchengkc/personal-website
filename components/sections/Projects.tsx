@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import Image from "next/image";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { ProjectArtwork, type ArtworkKind } from "@/components/projects/ProjectArtwork";
 import { featuredProjects, otherWork, type FeaturedProject } from "@/data/portfolio";
@@ -25,7 +26,12 @@ function FeaturedEntry({ project }: { project: FeaturedProject }) {
     <article className="portfolio-entry" data-project={project.demo}>
       <ProjectArtwork kind={project.demo} />
       <details className="portfolio-details">
-        <summary><h3>{project.name}</h3><span className="portfolio-more" aria-hidden="true">+</span></summary>
+        <summary>
+          <h3>{project.demo === "amazon" ? (
+            <Image className="portfolio-company-logo" src="/images/amazon/amazon-logo.svg" alt={project.name} width={96} height={32} />
+          ) : project.name}</h3>
+          <span className="portfolio-more" aria-hidden="true">+</span>
+        </summary>
         <div className="portfolio-description">
           <p>{project.summary}</p>
           <ul className="portfolio-metrics" aria-label={`${project.name} metrics`}>
