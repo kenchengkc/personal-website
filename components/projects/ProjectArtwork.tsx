@@ -22,7 +22,7 @@ function UsacoArtwork() {
       </div>
       <div className="usaco-result">
         <p className="usaco-score"><strong>1000</strong><span>out of 1000</span><small>Gold division score</small></p>
-        <Image className="usaco-platinum-tree" src="/images/awards/usaco-platinum-tree.webp" alt="Custom platinum rendering of the USACO binary-tree motif" width={640} height={461} loading="lazy" fetchPriority="low" unoptimized />
+        <Image className="usaco-platinum-tree" src="/images/awards/usaco-platinum-tree-v2.webp" alt="Custom platinum rendering of the USACO binary-tree motif" width={640} height={461} loading="lazy" fetchPriority="low" unoptimized />
       </div>
       <div className="usaco-promotion" aria-label="Promoted from Gold to Platinum">
         <span>Gold</span>

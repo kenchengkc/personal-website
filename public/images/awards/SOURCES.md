@@ -1,5 +1,13 @@
 # Award artwork
 
+## usaco-platinum-tree-v2.webp
+
+Refined using the built-in image-generation tool on November 2, 2026, using the first illustration as an edit reference. Flat machined faces, sharper joins, subtle tooling texture, and restrained reflections replace the original rounded finish. The tree retains 15 nodes and 14 branches. Exported with transparency as a 640-pixel-wide WebP; the first version remains archived alongside it.
+
+### Refinement prompt
+
+Refine this custom platinum binary-tree emblem to look like an actual small precision-machined metal object photographed for an archive, less like glossy AI-generated 3D artwork. Preserve the exact complete binary-tree topology: 15 circular nodes in levels 1/2/4/8, 14 straight diagonal branches, symmetrical silhouette, same front-facing composition. Change the finish and edge construction only. Use flat circular node faces with fine visible concentric lathe lines, crisp narrow bevels, uniform physical thickness, sharply cut straight branch sides, clear mechanical intersections rather than melted or swollen joins. Satin brushed platinum/nickel silver, restrained contrast; show subtle irregular tool marks, a few fine hairline scratches and tiny believable edge nicks at close inspection. The circles are flat machined discs, NOT convex shiny buttons or balls. Matte recessed sidewalls with light natural oxidation; one broad diffuse window light with subdued nonuniform highlights. Remove the broad glowing rims, plastic softness, cloudy smearing and artificial bloom. Avoid exaggerated grit, excessive wear, random dents or ornate ornament. No rim, ribbon, lettering, numbers, background, floor, detached cast shadow or extra branches. Preserve a genuinely transparent alpha background with clean antialiased edges, no white fringe or floating edge debris. Rebuild details sharply at high resolution, but retain the shape and proportions. Output a standalone horizontal image in the same framing, not a comparison or mockup.
+
 ## usaco-platinum-tree.webp
 
 A custom decorative platinum rendering of the binary-tree motif in the existing USACO logo, generated with the built-in image-generation tool on November 2, 2026. It does not depict an official physical medal or trophy. The original USACO logo is displayed separately without alteration. Exported with transparency as a 640-pixel-wide WebP.
