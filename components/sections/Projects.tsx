@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
-import { ArrowUpRight } from "@/components/icons/Icons";
+import { Arrow, ArrowUpRight } from "@/components/icons/Icons";
 import { ProjectArtwork, type ArtworkKind } from "@/components/projects/ProjectArtwork";
 import { featuredProjects, otherWork, type FeaturedProject } from "@/data/portfolio";
 import { site } from "@/lib/site";
@@ -12,6 +12,9 @@ type Category = typeof categories[number];
 const categoryLabels = { work: "Work", research: "Research", awards: "Awards" };
 const researchArtwork: ArtworkKind[] = ["cml", "wasserstein", "aster", "gcinf"];
 const awardArtwork: ArtworkKind[] = ["usaco", "speed", "cvrp"];
+const researchProjects = otherWork.slice(0, researchArtwork.length);
+const awardProjects = otherWork.slice(researchArtwork.length);
+const categoryCounts = { work: featuredProjects.length, research: researchProjects.length, awards: awardProjects.length };
 
 function prepareFigures(root: ParentNode | null) {
   root?.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach(image => {
@@ -87,6 +90,8 @@ export function Projects() {
   const [category, setCategory] = useState<Category>("work");
   const sectionRef = useRef<HTMLElement>(null);
   const tabRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const navigationFrame = useRef(0);
+  const nextCategories = [1, 2].map(offset => categories[(categories.indexOf(category) + offset) % categories.length]);
   useEffect(() => {
     // The atlas can finish decoding after window.load. Keep background figure
     // preparation behind the actual hero handoff, not just document loading.
@@ -109,8 +114,8 @@ export function Projects() {
   }, []);
 
   useEffect(() => {
-    let frame = 0;
     function readLocation() {
+      cancelAnimationFrame(navigationFrame.current);
       const hash = window.location.hash.slice(1);
       if (!hash) {
         setCategory("work");
@@ -118,15 +123,14 @@ export function Projects() {
       }
       if (!categories.includes(hash as Category)) return;
       setCategory(hash as Category);
-      cancelAnimationFrame(frame);
       // Hidden category deep links land at the shared gallery navigation.
-      frame = requestAnimationFrame(() => sectionRef.current?.scrollIntoView({ behavior: "instant", block: "start" }));
+      navigationFrame.current = requestAnimationFrame(() => sectionRef.current?.scrollIntoView({ behavior: "instant", block: "start" }));
     }
     readLocation();
     window.addEventListener("hashchange", readLocation);
     window.addEventListener("popstate", readLocation);
     return () => {
-      cancelAnimationFrame(frame);
+      cancelAnimationFrame(navigationFrame.current);
       window.removeEventListener("hashchange", readLocation);
       window.removeEventListener("popstate", readLocation);
     };
@@ -136,6 +140,12 @@ export function Projects() {
     prepareCategory(next);
     setCategory(next);
     if (window.location.hash !== `#${next}`) window.history.pushState(window.history.state, "", `#${next}`);
+    cancelAnimationFrame(navigationFrame.current);
+    // Wait for the selected panel to replace the old one before positioning it.
+    navigationFrame.current = requestAnimationFrame(() => {
+      sectionRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+      tabRefs.current[categories.indexOf(next)]?.focus({ preventScroll: true });
+    });
   }
 
   function prepareCategory(next: Category) {
@@ -151,35 +161,47 @@ export function Projects() {
     else return;
     event.preventDefault();
     selectCategory(categories[next]);
-    tabRefs.current[next]?.focus();
   }
 
   return (
     <section ref={sectionRef} className="portfolio-gallery" id="work" data-scroll-section data-scroll-label="WORK" aria-label="Work, research, and awards">
       <noscript><nav className="portfolio-fallback" aria-label="Portfolio categories"><a href="#work">Work</a><a href="#research">Research</a><a href="#awards">Awards</a></nav></noscript>
-      <nav className="portfolio-tabs" role="tablist" aria-label="Portfolio categories">
-        {categories.map((name, index) => (
-          <a key={name} ref={element => { tabRefs.current[index] = element; }} href={`#${name}`} id={`gallery-tab-${name}`} role="tab"
-            aria-selected={category === name} aria-controls={name === "work" ? "portfolio-work" : name} tabIndex={category === name ? 0 : -1}
-            onPointerEnter={() => prepareCategory(name)} onFocus={() => prepareCategory(name)}
-            onClick={event => { event.preventDefault(); selectCategory(name); }} onKeyDown={event => handleKey(event, index)}>
-            {categoryLabels[name]}
-          </a>
-        ))}
-      </nav>
+      <div className="portfolio-navigation">
+        <nav className="portfolio-tabs" role="tablist" aria-label="Portfolio categories">
+          {categories.map((name, index) => (
+            <a key={name} ref={element => { tabRefs.current[index] = element; }} href={`#${name}`} id={`gallery-tab-${name}`} role="tab"
+              aria-selected={category === name} aria-controls={name === "work" ? "portfolio-work" : name} tabIndex={category === name ? 0 : -1}
+              aria-describedby={`gallery-count-${name}`}
+              onPointerEnter={() => prepareCategory(name)} onFocus={() => prepareCategory(name)}
+              onClick={event => { event.preventDefault(); selectCategory(name); }} onKeyDown={event => handleKey(event, index)}>
+              {categoryLabels[name]}<span className="portfolio-tab-count" aria-hidden="true">{categoryCounts[name]}</span>
+              <span id={`gallery-count-${name}`} hidden>{categoryCounts[name]} {name === "awards" ? "awards" : "projects"}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
       <div className="portfolio-panel" id="portfolio-work" role="tabpanel" aria-labelledby="gallery-tab-work" hidden={category !== "work"}>
         <div className="portfolio-grid">{featuredProjects.map(project => <FeaturedEntry project={project} key={project.name} />)}</div>
       </div>
       <div className="portfolio-panel" id="research" role="tabpanel" aria-labelledby="gallery-tab-research" hidden={category !== "research"}>
-        <div className="portfolio-grid">{otherWork.slice(0, 4).map((item, index) => <ResearchEntry item={item} artwork={researchArtwork[index]} key={item.title} />)}</div>
+        <div className="portfolio-grid">{researchProjects.map((item, index) => <ResearchEntry item={item} artwork={researchArtwork[index]} key={item.title} />)}</div>
       </div>
       <div className="portfolio-panel" id="awards" role="tabpanel" aria-labelledby="gallery-tab-awards" hidden={category !== "awards"}>
         <div className="portfolio-grid">
-          {otherWork.slice(4).map((item, index) => <ResearchEntry item={item} artwork={awardArtwork[index]} key={item.title} />)}
+          {awardProjects.map((item, index) => <ResearchEntry item={item} artwork={awardArtwork[index]} key={item.title} />)}
         </div>
       </div>
+      <nav className="portfolio-continuation" aria-label="Explore more projects">
+        {nextCategories.map((name, index) => (
+          <a key={name} href={`#${name}`} className={index === 0 ? "portfolio-next" : undefined}
+            onPointerEnter={() => prepareCategory(name)} onFocus={() => prepareCategory(name)}
+            onClick={event => { event.preventDefault(); selectCategory(name); }}>
+            View {categoryLabels[name]}{index === 0 && <Arrow size={18} />}
+          </a>
+        ))}
+      </nav>
       <noscript>
-        <style>{`.portfolio-tabs { display: none; } .portfolio-panel[hidden] { display: block !important; } .portfolio-panel + .portfolio-panel { margin-top: 48px; }`}</style>
+        <style>{`.portfolio-navigation, .portfolio-continuation { display: none; } .portfolio-panel[hidden] { display: block !important; } .portfolio-panel + .portfolio-panel { margin-top: 48px; }`}</style>
       </noscript>
     </section>
   );

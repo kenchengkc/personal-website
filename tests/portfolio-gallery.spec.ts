@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { featuredProjects, otherWork } from "../data/portfolio";
 
 const categories = [
@@ -6,6 +6,20 @@ const categories = [
   { name: "Research", id: "research", hash: "research" },
   { name: "Awards", id: "awards", hash: "awards" },
 ] as const;
+
+async function openReadyGallery(page: Page) {
+  await page.goto("/#work");
+  await page.evaluate(() => document.fonts.ready);
+  // A changed category proves hydration has completed; fonts alone do not.
+  const research = page.getByRole("tab", { name: "Research", exact: true });
+  await research.click();
+  await expect(research).toHaveAttribute("aria-selected", "true");
+  const work = page.getByRole("tab", { name: "Work", exact: true });
+  await work.click();
+  await expect(work).toHaveAttribute("aria-selected", "true");
+  // Let the hash and category navigation frames finish before test-driven scrolling.
+  await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+}
 
 test("gallery categories support keyboard activation, deep links, reload, and browser history", async ({ page }) => {
   await page.goto("/#research");
@@ -39,6 +53,85 @@ test("gallery categories support keyboard activation, deep links, reload, and br
   await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole("tab", { name: "Work", exact: true })).toHaveAttribute("aria-selected", "true");
   await expect(page.locator("#portfolio-work")).toBeVisible();
+});
+
+test("category switcher stays within the gallery and exposes readable counts at every screen size", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await openReadyGallery(page);
+    const navigation = page.locator(".portfolio-navigation");
+    for (const category of categories) {
+      const tab = page.getByRole("tab", { name: category.name, exact: true });
+      await expect(tab.locator(".portfolio-tab-count")).toHaveText(category.name === "Awards" ? "3" : "4");
+      await expect(tab.locator(".portfolio-tab-count")).toBeVisible();
+      const box = (await tab.boundingBox())!;
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
+    }
+
+    await page.locator("#work").evaluate(gallery => window.scrollTo({
+      top: gallery.getBoundingClientRect().top + window.scrollY + 240,
+      behavior: "instant",
+    }));
+    await expect.poll(() => navigation.evaluate(node => Math.abs(node.getBoundingClientRect().top))).toBeLessThanOrEqual(1);
+    await page.evaluate(() => window.scrollBy({ top: 180, behavior: "instant" }));
+    await expect.poll(() => navigation.evaluate(node => Math.abs(node.getBoundingClientRect().top))).toBeLessThanOrEqual(1);
+
+    await page.locator("#work").evaluate(gallery => window.scrollTo({
+      top: gallery.getBoundingClientRect().bottom + window.scrollY + 32,
+      behavior: "instant",
+    }));
+    await expect.poll(() => navigation.evaluate(node => node.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+  }
+});
+
+test("switching a pinned category returns to its first entry without covering it", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await openReadyGallery(page);
+    for (const category of [categories[1], categories[2], categories[0]]) {
+      await page.locator("#work").evaluate(gallery => window.scrollTo({
+        top: gallery.getBoundingClientRect().top + window.scrollY + 420,
+        behavior: "instant",
+      }));
+      await expect.poll(() => page.locator("#work").evaluate(node => node.getBoundingClientRect().top)).toBeLessThan(-200);
+      await page.getByRole("tab", { name: category.name, exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`#${category.hash}$`));
+      await expect.poll(() => page.locator(`#${category.id}`).evaluate(panel => {
+        const gallery = document.getElementById("work")!.getBoundingClientRect();
+        const navigation = document.querySelector(".portfolio-navigation")!.getBoundingClientRect();
+        const entry = panel.querySelector(".portfolio-entry")!.getBoundingClientRect();
+        return Math.abs(gallery.top) <= 1 && entry.top >= navigation.bottom - 1 && entry.top < innerHeight;
+      })).toBe(true);
+    }
+  }
+});
+
+test("category continuation links reveal the next category and focus its active tab", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#work");
+    for (const [index, category] of categories.entries()) {
+      const next = categories[(index + 1) % categories.length];
+      const continuation = page.locator(".portfolio-continuation .portfolio-next");
+      await expect(continuation).toContainText(`View ${next.name}`);
+      await continuation.click();
+      const activeTab = page.getByRole("tab", { name: next.name, exact: true });
+      await expect(page).toHaveURL(new RegExp(`#${next.hash}$`));
+      await expect(activeTab).toHaveAttribute("aria-selected", "true");
+      await expect(activeTab).toBeFocused();
+      await expect(page.locator(`#${category.id}`)).toBeHidden();
+      await expect.poll(() => page.locator(`#${next.id} .portfolio-entry`).first().evaluate(entry => {
+        const navigation = document.querySelector(".portfolio-navigation")!.getBoundingClientRect();
+        const box = entry.getBoundingClientRect();
+        return box.top >= navigation.bottom - 1 && box.top < innerHeight;
+      })).toBe(true);
+    }
+  }
 });
 
 test("every experience, research project, and award has accessible, loaded artwork", async ({ page }) => {
