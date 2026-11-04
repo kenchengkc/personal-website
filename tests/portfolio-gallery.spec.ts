@@ -87,25 +87,31 @@ test("category switcher stays within the gallery and exposes readable counts at 
   }
 });
 
-test("switching a pinned category returns to its first entry without covering it", async ({ page }) => {
+test("switching a pinned category preserves scroll position with pointer and keyboard", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
     await openReadyGallery(page);
-    for (const category of [categories[1], categories[2], categories[0]]) {
+    for (const input of ["pointer", "keyboard"] as const) {
       await page.locator("#work").evaluate(gallery => window.scrollTo({
         top: gallery.getBoundingClientRect().top + window.scrollY + 420,
         behavior: "instant",
       }));
       await expect.poll(() => page.locator("#work").evaluate(node => node.getBoundingClientRect().top)).toBeLessThan(-200);
-      await page.getByRole("tab", { name: category.name, exact: true }).click();
-      await expect(page).toHaveURL(new RegExp(`#${category.hash}$`));
-      await expect.poll(() => page.locator(`#${category.id}`).evaluate(panel => {
-        const gallery = document.getElementById("work")!.getBoundingClientRect();
-        const navigation = document.querySelector(".portfolio-navigation")!.getBoundingClientRect();
-        const entry = panel.querySelector(".portfolio-entry")!.getBoundingClientRect();
-        return Math.abs(gallery.top) <= 1 && entry.top >= navigation.bottom - 1 && entry.top < innerHeight;
-      })).toBe(true);
+      for (const category of [categories[1], categories[2], categories[0]]) {
+        const scrollY = await page.evaluate(() => window.scrollY);
+        const tab = page.getByRole("tab", { name: category.name, exact: true });
+        if (input === "pointer") await tab.click();
+        else await page.getByRole("tab", { selected: true }).press("ArrowRight");
+        await expect(page).toHaveURL(new RegExp(`#${category.hash}$`));
+        await expect(tab).toHaveAttribute("aria-selected", "true");
+        await expect(page.locator(`#${category.id}`)).toBeVisible();
+        // Check after navigation frames settle, rather than before a delayed scroll can run.
+        await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+        await expect(tab).toBeFocused();
+        const change = await page.evaluate(before => Math.abs(window.scrollY - before), scrollY);
+        expect(change, `${input} switch to ${category.name} moved the page at ${width}px`).toBeLessThanOrEqual(1);
+      }
     }
   }
 });

@@ -156,14 +156,17 @@ export function Projects() {
     };
   }, []);
 
-  function selectCategory(next: Category) {
+  function selectCategory(next: Category, scrollToStart = false) {
+    const position = { top: window.scrollY, left: window.scrollX };
     prepareCategory(next);
     setCategory(next);
     if (window.location.hash !== `#${next}`) window.history.pushState(window.history.state, "", `#${next}`);
     cancelAnimationFrame(navigationFrame.current);
-    // Wait for the selected panel to replace the old one before positioning it.
+    // Keep menu switches in place after the panel's height changes. Continuation
+    // links explicitly navigate to the beginning of the next category.
     navigationFrame.current = requestAnimationFrame(() => {
-      sectionRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+      if (scrollToStart) sectionRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+      else window.scrollTo({ ...position, behavior: "instant" });
       tabRefs.current[categories.indexOf(next)]?.focus({ preventScroll: true });
     });
   }
@@ -215,7 +218,7 @@ export function Projects() {
         {nextCategories.map((name, index) => (
           <a key={name} href={`#${name}`} className={index === 0 ? "portfolio-next" : undefined}
             onPointerEnter={() => prepareCategory(name)} onFocus={() => prepareCategory(name)}
-            onClick={event => { event.preventDefault(); selectCategory(name); }}>
+            onClick={event => { event.preventDefault(); selectCategory(name, true); }}>
             View {categoryLabels[name]}{index === 0 && <Arrow size={18} />}
           </a>
         ))}
