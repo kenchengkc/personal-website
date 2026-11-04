@@ -173,7 +173,7 @@ test("expanded gallery entries retain the full project evidence and original lin
     const panel = page.locator(category === "Research" ? "#research" : "#awards");
     const items = category === "Research" ? otherWork.slice(0, 4) : otherWork.slice(4);
     for (const item of items) {
-      const details = panel.locator(".portfolio-details").filter({ has: page.locator("summary", { hasText: item.title }) });
+      const details = panel.locator(".portfolio-entry").filter({ has: page.getByRole("heading", { name: item.title, exact: true }) }).locator(".portfolio-details");
       await details.locator(":scope > summary").click();
       await expect(details).toContainText(item.detail);
       if (item.href) await expect(details.locator(`a[href="${item.href}"]`)).toBeVisible();
@@ -195,6 +195,11 @@ test("expanding Need for Speed keeps Best Paper anchored in the other award colu
     const bestPaper = page.locator('.award-entry[data-project="cvrp"]');
     const top = () => bestPaper.evaluate(node => node.getBoundingClientRect().top + window.scrollY);
     const before = await top();
+    expect(await page.locator("#awards").evaluate(panel => {
+      const speed = panel.querySelector('[data-project="speed"]')!.getBoundingClientRect();
+      const bestPaper = panel.querySelector('[data-project="cvrp"]')!.getBoundingClientRect();
+      return speed.top - bestPaper.top;
+    })).toBeCloseTo(0, 1);
 
     await speed.locator("summary").click();
     await expect(speed.getByRole("link", { name: "Read the paper" })).toBeVisible();

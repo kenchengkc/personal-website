@@ -18,17 +18,10 @@ function UsacoArtwork() {
   return (
     <>
       <div className="usaco-brand">
-        <Image className="artwork-usaco-logo" src="/images/usaco/usaco-logo.png" alt="USA Computing Olympiad" width={900} height={130} sizes="(max-width: 700px) 75vw, 340px" />
+        <Image className="artwork-usaco-logo" src="/images/usaco/usaco-logo.png" alt="USA Computing Olympiad" width={900} height={130} sizes="(max-width: 700px) 75vw, 300px" />
       </div>
-      <div className="usaco-result">
-        <p className="usaco-score"><strong>1000</strong><span>out of 1000</span><small>Gold division score</small></p>
-        <Image className="usaco-platinum-tree" src="/images/awards/usaco-platinum-tree.webp" alt="Custom platinum rendering of the USACO binary-tree motif" width={640} height={461} loading="lazy" fetchPriority="low" unoptimized />
-      </div>
-      <div className="usaco-promotion" aria-label="Promoted from Gold to Platinum">
-        <span>Gold</span>
-        <svg viewBox="0 0 100 12" aria-hidden="true"><path d="M0 6H98M93 1l5 5-5 5" /></svg>
-        <strong>Platinum</strong>
-      </div>
+      <p className="usaco-score"><strong>1000</strong><span> / 1000</span><small>Gold division score</small></p>
+      <Image className="usaco-platinum-tree" src="/images/awards/usaco-platinum-tree.webp" alt="Custom platinum rendering of the USACO binary-tree motif" width={640} height={461} loading="lazy" fetchPriority="low" unoptimized />
     </>
   );
 }

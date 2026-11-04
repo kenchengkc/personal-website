@@ -59,23 +59,33 @@
 .portfolio-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 #awards .portfolio-grid { row-gap: 28px; }
+.award-entry { padding: 20px; border-radius: 3px; background: #e2e8ec; }
+.award-entry .portfolio-details { margin-top: 16px; }
+.award-entry .portfolio-details > summary { align-items: center; min-height: 44px; font-size: 13px; color: var(--gold); }
+.award-entry .portfolio-more { font-size: 20px; }
+.award-heading { display: flex; align-items: flex-start; gap: 16px; min-height: 148px; padding-bottom: 20px; }
+.award-heading-copy { flex: 1; min-width: 0; }
+.award-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.award-distinction { margin: 0; color: var(--gold); font-size: 15px; font-weight: 600; }
+.award-year { color: var(--ink-2); font-size: 12px; }
+.award-project-title { margin: 0; color: var(--ink); font-size: 23px; font-weight: 600; line-height: 1.25; letter-spacing: -.035em; text-wrap: balance; }
+.award-organization { margin: 8px 0 0; color: var(--ink-2); font-size: 13px; line-height: 1.5; }
+.award-subject { margin: 8px 0 0; color: var(--ink-2); font-size: 12px; line-height: 1.5; }
+.award-entry[data-project="speed"] .award-distinction { color: #806020; }
+.award-medal { display: block; flex: 0 0 auto; width: 52px; height: auto; }
+.award-entry[data-project="usaco"] { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 0 32px; align-items: start; }
+.award-entry[data-project="usaco"] .award-heading { min-height: 0; padding: 0; }
+.award-entry[data-project="usaco"] .project-artwork { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+.award-entry[data-project="usaco"] .portfolio-details { grid-column: 1; margin-top: 8px; }
 @media (min-width: 721px) {
-  /* Independent columns keep disclosures from moving the opposite column.
-     Floats preserve the USACO, Speed, Best Paper reading order on phones. */
-  #awards .portfolio-grid { display: flow-root; }
-  #awards .award-entry { float: left; clear: left; width: calc((100% - 28px) / 2); }
-  #awards .award-entry[data-project="speed"] { float: right; clear: none; }
-  #awards .award-entry[data-project="cvrp"] { margin-top: 28px; }
+  /* Shared heading and visual rows keep the project awards aligned as text wraps. */
+  .award-entry:not([data-project="usaco"]) { display: grid; grid-template-rows: subgrid; grid-row: 2 / span 3; row-gap: 16px; }
+  .award-entry[data-project="speed"] { grid-column: 1; }
+  .award-entry[data-project="cvrp"] { grid-column: 2; }
+  .award-entry:not([data-project="usaco"]) .award-heading { min-height: 0; padding: 0; }
+  .award-entry:not([data-project="usaco"]) .project-artwork { align-self: start; }
+  .award-entry:not([data-project="usaco"]) .portfolio-details { margin-top: 0; }
 }
-.award-entry .portfolio-details { margin-top: 10px; }
-.award-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 136px; padding-bottom: 14px; }
-.award-heading-copy { min-width: 0; }
-.award-year { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 6px; color: var(--ink-2); font-size: 13px; }
-.award-year span { color: var(--gold); font-weight: 600; }
-.award-heading .award-distinction { margin: 0; color: var(--ink); font-size: 34px; font-weight: 600; line-height: 1.1; letter-spacing: -.045em; }
-.award-organization { max-width: 30ch; margin: 6px 0 0; color: var(--ink-2); font-size: 13px; line-height: 1.5; }
-.award-entry[data-project="speed"] .award-distinction { color: #816122; }
-.award-medal { display: block; flex: 0 0 auto; width: 76px; height: auto; }
 .award-entry .animated-artwork-footer { padding-block: 7px; }
 .award-entry .animated-artwork-footer p { min-height: 0; margin-bottom: 4px; }
 .award-entry .speed-scene-heading { padding-block: 7px; }
@@ -151,9 +161,11 @@
   .portfolio-continuation .portfolio-next { font-size: 18px; }
   .portfolio-details h3, .portfolio-details h4 { font-size: 20px; }
   #awards .portfolio-grid { row-gap: 24px; }
-  .award-heading { min-height: 120px; padding-bottom: 12px; }
-  .award-heading .award-distinction { font-size: 30px; }
-  .award-medal { width: 64px; }
+  .award-entry { padding: 16px; }
+  .award-heading { min-height: 0; padding-bottom: 18px; }
+  .award-project-title { font-size: 22px; }
+  .award-entry[data-project="usaco"] { display: block; }
+  .award-entry[data-project="usaco"] .project-artwork { margin-top: 18px; }
   .columbia-section > .reading-column { grid-template-columns: minmax(0, 1fr); }
   .columbia-photo { grid-column: 1; grid-row: 2; margin-top: 22px; }
   .columbia-honor { grid-row: 3; }

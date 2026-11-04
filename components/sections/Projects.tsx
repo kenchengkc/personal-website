@@ -56,32 +56,52 @@ function FeaturedEntry({ project }: { project: FeaturedProject }) {
 }
 
 function ResearchEntry({ item, artwork }: { item: typeof otherWork[number]; artwork: ArtworkKind }) {
-  const paper = artwork === "speed" ? site.links.f1cfd : undefined;
-  const ProjectHeading = item.award ? "h4" : "h3";
   return (
-    <article className={`portfolio-entry${item.award ? " award-entry" : ""}`} data-project={artwork}>
-      {item.award && <header className="award-heading">
+    <article className="portfolio-entry" data-project={artwork}>
+      <ProjectArtwork kind={artwork} />
+      <details className="portfolio-details">
+        <summary><h3>{item.title}</h3><span className="portfolio-more" aria-hidden="true">+</span></summary>
+        <div className="portfolio-description">
+          <p>{item.detail}</p>
+          {item.href && <div className="portfolio-links"><a href={item.href} target="_blank" rel="noopener noreferrer">{artwork === "gcinf" ? "Read the paper" : "Explore the project"}<ArrowUpRight /></a></div>}
+        </div>
+      </details>
+      {item.meta && <p className="portfolio-meta">{item.meta}</p>}
+    </article>
+  );
+}
+
+function AwardEntry({ item, artwork }: { item: typeof otherWork[number]; artwork: ArtworkKind }) {
+  const award = item.award;
+  if (!award) return null;
+  const href = item.href || (artwork === "speed" ? site.links.f1cfd : undefined);
+  return (
+    <article className="portfolio-entry award-entry" data-project={artwork}>
+      <header className="award-heading">
         <div className="award-heading-copy">
-          <p className="award-year">{item.award.year}{item.award.highlight && <span>{item.award.highlight}</span>}</p>
-          <h3 className="award-distinction">{item.award.distinction}</h3>
-          <p className="award-organization">{item.award.organization}</p>
+          <div className="award-label-row">
+            <p className="award-distinction">{award.highlight || award.distinction}</p>
+            <time className="award-year" dateTime={award.year}>{award.year}</time>
+          </div>
+          <h3 className="award-project-title">{item.title}</h3>
+          {artwork !== "usaco" && <p className="award-organization">{award.organization}</p>}
+          {item.meta && <p className="award-subject">{item.meta}</p>}
         </div>
         {artwork === "speed" && <Image
           className="award-medal"
           src="/images/awards/cwsf-gold-medal-v2.webp"
           alt="Recreated gold Au science fair medal with a purple ribbon"
-          width={375} height={600} sizes="110px" loading="lazy" unoptimized
+          width={375} height={600} sizes="52px" loading="lazy" unoptimized
         />}
-      </header>}
+      </header>
       <ProjectArtwork kind={artwork} />
       <details className="portfolio-details">
-        <summary><ProjectHeading>{item.title}</ProjectHeading><span className="portfolio-more" aria-hidden="true">+</span></summary>
+        <summary aria-label={`Details about ${item.title}`}><span>View details</span><span className="portfolio-more" aria-hidden="true">+</span></summary>
         <div className="portfolio-description">
           <p>{item.detail}</p>
-          {(item.href || paper) && <div className="portfolio-links"><a href={item.href || paper} target="_blank" rel="noopener noreferrer">{artwork === "gcinf" || paper ? "Read the paper" : "Explore the project"}<ArrowUpRight /></a></div>}
+          {href && <div className="portfolio-links"><a href={href} target="_blank" rel="noopener noreferrer">{artwork === "speed" ? "Read the paper" : "Explore the project"}<ArrowUpRight /></a></div>}
         </div>
       </details>
-      {item.meta && <p className="portfolio-meta">{item.meta}</p>}
     </article>
   );
 }
@@ -188,7 +208,7 @@ export function Projects() {
       </div>
       <div className="portfolio-panel" id="awards" role="tabpanel" aria-labelledby="gallery-tab-awards" hidden={category !== "awards"}>
         <div className="portfolio-grid">
-          {awardProjects.map((item, index) => <ResearchEntry item={item} artwork={awardArtwork[index]} key={item.title} />)}
+          {awardProjects.map((item, index) => <AwardEntry item={item} artwork={awardArtwork[index]} key={item.title} />)}
         </div>
       </div>
       <nav className="portfolio-continuation" aria-label="Explore more projects">

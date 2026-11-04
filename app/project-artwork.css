@@ -56,20 +56,22 @@
 .artwork-gcinf img { object-position: left center; }
 .artwork-wasserstein { background: #e9edf0; }
 .artwork-aster { background: #172a28; }
-.project-artwork.artwork-usaco { aspect-ratio: 1.65; min-height: 200px; background: radial-gradient(ellipse at 85% 48%, #f2f5f7 0, transparent 65%), linear-gradient(130deg, #dce4eb, #c3d0dc); color: #27384b; }
-.artwork-usaco > .artwork-content { display: flex; flex-direction: column; gap: 10px; padding: clamp(12px, 3.2cqw, 18px); }
-.usaco-brand { flex: 0 0 auto; }
-.artwork-usaco .artwork-usaco-logo { display: block; width: min(90%, 340px); height: auto; mix-blend-mode: multiply; }
-.usaco-result { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 8px; flex: 1 1 auto; min-height: 0; align-items: center; }
-.usaco-score { margin: 0; }
-.usaco-score strong { display: block; font-size: clamp(40px, 15cqw, 76px); font-weight: 600; line-height: 1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
-.usaco-score span { display: block; margin-top: 8px; font-size: clamp(11px, 2.8cqw, 14px); color: #42566b; }
-.usaco-score small { display: block; margin-top: 3px; font-size: clamp(9px, 2.4cqw, 12px); color: #52667a; }
-.usaco-platinum-tree { display: block; width: 100%; height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 8px 8px #32485e25); }
-.usaco-promotion { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; padding-top: 13px; border-top: 1px solid #7f94a64d; font-size: clamp(12px, 3cqw, 15px); }
-.usaco-promotion > span { color: #79603a; }
-.usaco-promotion strong { font-weight: 600; }
-.usaco-promotion svg { flex: 1; min-width: 0; height: 12px; fill: none; stroke: #7e91a3; stroke-width: 1; }
+.project-artwork.artwork-usaco { aspect-ratio: auto; min-height: 0; background: #e2e8ec; color: #27384b; }
+.artwork-usaco > .artwork-content { position: relative; inset: auto; display: grid; grid-template-columns: minmax(0, 1fr) clamp(96px, 25cqw, 150px); grid-template-areas: "brand tree" "score tree"; gap: 8px 20px; align-items: center; padding: 16px 20px; }
+.usaco-brand { grid-area: brand; min-width: 0; }
+.artwork-usaco .artwork-usaco-logo { display: block; width: min(100%, 300px); height: auto; mix-blend-mode: multiply; }
+.usaco-score { grid-area: score; margin: 0; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.usaco-score strong { font-size: clamp(36px, 7.4cqw, 44px); font-weight: 600; letter-spacing: -.05em; }
+.usaco-score span { font-size: clamp(16px, 3.5cqw, 20px); color: #42566b; }
+.usaco-score small { display: block; margin-top: 6px; font-size: 12px; line-height: 1.4; color: #52667a; }
+.artwork-usaco .usaco-platinum-tree { grid-area: tree; display: block; width: 100%; height: auto; object-fit: contain; filter: drop-shadow(0 8px 8px #32485e25); }
+.artwork-usaco:hover .usaco-platinum-tree { transform: none; }
+@container (max-width: 360px) {
+  .artwork-usaco > .artwork-content { grid-template-columns: minmax(0, 1fr) clamp(64px, 26cqw, 94px); grid-template-areas: "brand brand" "score tree"; gap: 12px 10px; padding: 14px 12px; }
+  .usaco-score strong { font-size: 36px; }
+  .usaco-score span { font-size: 16px; }
+  .usaco-score small { font-size: 11px; }
+}
 .artwork-speed { background: #b6c1d0; }
 .artwork-cvrp { background: #f4f3ef; }
 .artwork-cvrp img { object-position: center; }
