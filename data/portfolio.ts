@@ -84,9 +84,9 @@ export const featuredProjects: FeaturedProject[] = [
         count: { from: 0, to: 10, suffix: "k+", durationMs: 1800 },
       },
       {
-        value: "120+",
+        value: "250+",
         label: "monthly active users",
-        count: { from: 0, to: 120, suffix: "+", durationMs: 1900 },
+        count: { from: 0, to: 250, suffix: "+", durationMs: 1900 },
       },
     ],
     stack: "Next.js, TypeScript, Python, LightGBM, DuckDB, Parquet, PostgreSQL, Redis, FastAPI",
