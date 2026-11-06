@@ -1,5 +1,6 @@
 # Research figure sources
 
+- `f1-airfoil-pressure.png`: The author's original ANSYS R19.0 airfoil pressure-contour image, copied unchanged from `AnsysSS.png` (935 × 707). Selected for the Need for Speed Publications listing; its pressure legend, length scale, and original typography are retained. The Awards listing continues to use the full-car CFD fields.
 - `f1-optimized-cad.png`: Ken Cheng, “A Need For Speed: Enhancing F1 Race Cars with a Novel Computational Fluid Dynamics and Machine Learning Method,” Figure 15 (right), p. 11. The author's optimized SolidWorks rear-wing model. https://drpress.org/ojs/index.php/HSET/article/view/8388
 - `f1-cfd-comparison.png`: The same paper, Figure 17, p. 11. Original ANSYS Fluent velocity and pressure comparisons at 33 m/s, with and without the optimized rear wing. Extracted from the published PDF; no synthetic simulation results added.
 - `f1-cfd-source-comparison.png`: The author's higher-resolution original Figure 17 composite, copied unchanged from `TSF 3D Simulations (3).png` (1440 × 900). It compares no rear wing with the optimized rear wing at a 33 m/s inlet. Each panel retains its own original legend; the camera angles and color scales differ between cases.

@@ -245,12 +245,12 @@ export const publications = [
     href:
       "https://www.researchgate.net/publication/371141171_A_Need_For_Speed_Enhancing_F1_Race_Cars_with_a_Novel_Computational_Fluid_Dynamics_and_Machine_Learning_Method",
     figure: {
-      src: "/media/research/f1-optimized-pressure.png",
-      width: 515,
-      height: 327,
-      alt: "Original ANSYS Fluent pressure field around the F1 car with the optimized rear wing, including its color scale.",
-      caption: "Figure 17 · Optimized rear-wing pressure field",
-      label: "Need for Speed pressure field",
+      src: "/media/research/f1-airfoil-pressure.png",
+      width: 935,
+      height: 707,
+      alt: "Original ANSYS pressure contours around an airfoil cross-section, with a pressure legend in pascals and a length scale in metres.",
+      caption: "ANSYS · Airfoil pressure field",
+      label: "Need for Speed airfoil pressure field",
     },
   },
 ] as const;
