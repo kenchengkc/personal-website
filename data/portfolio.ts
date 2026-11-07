@@ -66,11 +66,11 @@ export const featuredProjects: FeaturedProject[] = [
     eyebrow: "Founder & Lead Engineer · Earnings Forecasting with LightGBM",
     date: "Jul 2025 – Present",
     summary:
-      "Built and launched an open-source earnings analytics platform with searchable calendars, watchlists, and point and quantile forecasts from six LightGBM models.",
+      "Built an open-source platform for researching earnings announcements. Users can screen upcoming earnings, save tickers to a watchlist, and compare the options-implied price move with the model forecast and past earnings reactions.",
     details: [
-      "Four-fold walk-forward validation with a five-day purge measured 31% lower weighted mean absolute error than the options-implied baseline on development data. Forecast pipelines include data-freshness checks and model-drift monitoring.",
-      "Nightly ingestion and batch inference run on DuckDB/Parquet and GitHub Actions. FastAPI serving uses signed artifacts, SHA-256 verification, atomic activation, and recovery to the previous verified model; Redis shares live quotes.",
-      "Regression tests cover corrupt downloads, mismatched bundles, missing features, and crossed prediction quantiles. Rejected model updates preserve the previously active model.",
+      "Trained six LightGBM models for point and quantile forecasts. On chronological development holdouts, weighted mean absolute error was 31% lower than the options-implied baseline. Also tested four walk-forward windows with a five-day purge and monitored model drift.",
+      "Nightly GitHub Actions jobs check market data for freshness and run batch forecasts using DuckDB and Parquet. The calendar, screener, and ticker pages read precomputed JSON, so users can browse the results without waiting for a database query or a model to run.",
+      "FastAPI verifies model signatures and SHA-256 digests before switching models. A failed update leaves the last verified model in service. Regression tests cover corrupt downloads, mismatched bundles, missing features, and crossed quantiles. Redis caches live quotes.",
     ],
     metrics: [
       {
@@ -134,9 +134,10 @@ export const featuredProjects: FeaturedProject[] = [
     eyebrow: "Computer Vision for Property Insurance",
     date: "Apr 2025 · LA Hacks",
     summary:
-      "Led a four-person team building a video-to-inventory app with YOLO object tracking, cross-frame deduplication, Gemini valuation, and Supabase persistence.",
+      "Led a four-person team that built Embers. A homeowner can record a 30-second walkthrough and get a photo inventory with estimated replacement values for an insurance claim.",
     details: [
-      "Integrated voice search and item snapshots into the inventory workflow. Placed Top 5 of 172 teams and won the Google Gemini and Financial Tech prizes at LA Hacks 2025.",
+      "YOLOv11 tracks items across frames so a chair seen from several angles gets one inventory entry. The app saves item snapshots in Supabase, uses Gemini to estimate replacement costs, and lets homeowners search their inventory by voice with Whisper.",
+      "Placed Top 5 of 172 teams and won the Google Gemini and Financial Tech prizes at LA Hacks 2025.",
     ],
     metrics: [
       {
@@ -193,7 +194,7 @@ export const otherWork: OtherWork[] = [
   {
     title: "GC-INF Traffic Forecasting",
     meta: "Sole-Author Publication · IEEE Intelligent Transportation Systems Conference, 2023",
-    detail: "Developed a graph-convolutional and Informer model, evaluating four baselines across three horizons. Reduced 15-minute turning-ratio root mean square error by 24% versus STGCN on SUMO-simulated traffic data. Served as a conference Session Chair and was a Team Canada finalist for the International Science and Engineering Fair (Top 30).",
+    detail: "Built a PyTorch model to predict the share of traffic turning in each direction at an intersection. Chebyshev graph convolutions capture relationships across the road network, and the Informer’s ProbSparse attention learns patterns in traffic history. Compared GC-INF with four baselines at 15, 30, and 45 minutes on SUMO-simulated traffic. At 15 minutes, GC-INF reduced turning-ratio root mean square error by 24% versus STGCN. Served as a conference Session Chair and was a Team Canada finalist for the International Science and Engineering Fair (Top 30).",
     href: "https://ieeexplore.ieee.org/abstract/document/10422188",
   },
   {
@@ -212,7 +213,7 @@ export const otherWork: OtherWork[] = [
     title: "Capacitated Vehicle Routing Problem Solver",
     meta: "",
     award: { distinction: "Best Paper", organization: "University of Florida Student Science Training Program", year: "2023" },
-    detail: "Machine learning-assisted column generation for vehicle routing, producing a 15% faster C++ solver.",
+    detail: "Used machine learning to guide column generation in a C++ vehicle routing solver, cutting runtime by 15%. Ran benchmark cases as Slurm batch jobs and built a JavaFX viewer to inspect each vehicle’s route and debug solver output.",
   },
 ];
 
