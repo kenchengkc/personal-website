@@ -26,7 +26,7 @@ const manrope = Manrope({
 });
 const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "variable",
   variable: "--font-mono",
   display: "swap",
 });
