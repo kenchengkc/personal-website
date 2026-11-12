@@ -71,9 +71,6 @@ export function BinaryRainArtwork() {
     }
 
     function syncAnimation() {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      lastTime = 0;
       if (reducedMotion.matches) {
         complete = true;
         elapsed = ASSEMBLY_DURATION;
@@ -86,9 +83,15 @@ export function BinaryRainArtwork() {
       } else {
         prepareRenderer();
         if (renderer && (visible || started) && !document.hidden && !complete) {
-          frame = requestAnimationFrame(tick);
+          // Scrolling changes where the rain is headed. Keep its pending frame
+          // and timestamp so the first gathering frame still advances.
+          if (!frame) frame = requestAnimationFrame(tick);
+          return;
         }
       }
+      cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
     }
 
     function updateVisibility() {

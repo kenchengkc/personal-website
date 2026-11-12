@@ -34,6 +34,33 @@ test("visible rainfall keeps moving until the first scroll", async ({ page }) =>
   await expect(artwork).toHaveAttribute("data-phase", "assembling");
 });
 
+test("the first scroll advances the digits on the first assembly frame", async ({ page }) => {
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    const artwork = page.locator(".hero-binary-art");
+    await expect(artwork).toHaveAttribute("data-ready", "true");
+    const advanced = await artwork.locator("canvas").evaluate(async (canvas: HTMLCanvasElement) => {
+      const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+      const context = canvas.getContext("2d")!;
+      const row = () => context.getImageData(0, Math.floor(canvas.height / 2), canvas.width, 1).data;
+      const inRain = () => canvas.closest<HTMLElement>(".hero-binary-art")!.dataset.phase === "raining";
+      await nextFrame();
+      await nextFrame();
+      let previous: Uint8ClampedArray;
+      window.scrollBy({ top: 1, behavior: "instant" });
+      // Scroll delivery can take another frame. Compare the two adjacent paints
+      // across the phase change, regardless of when the event arrived.
+      do {
+        previous = row();
+        await nextFrame();
+      } while (inRain());
+      return row().some((value, i) => value !== previous[i]);
+    });
+    expect(advanced, `repeated rain frame at ${viewport.width}px`).toBe(true);
+  }
+});
+
 test("a first scroll while the atlas loads is remembered", async ({ page }) => {
   let release!: () => void;
   const ready = new Promise<void>(resolve => { release = resolve; });
