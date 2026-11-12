@@ -2,6 +2,7 @@
 
 import { useId, type CSSProperties } from "react";
 import { AnimatedArtwork } from "./AnimatedArtwork";
+import { ArtworkWindow } from "./ArtworkWindow";
 
 const STEPS = [
   { label: "Prompt", caption: "The facts stay fixed while the actor’s goal changes." },
@@ -17,6 +18,7 @@ const answerTokens = [35, 23, 40, 27, 17, 34, 21, 29];
 export function ModelArtwork() {
   const id = useId().replace(/:/g, "");
   return (
+    <ArtworkWindow name="Creative Machines Lab">
     <AnimatedArtwork label="Creative Machines Lab answer and activation collection" steps={STEPS} duration={3700}>
       {stage => <div className="cml-process" data-cml-stage={stage}>
         <svg viewBox="0 0 480 244" role="img" aria-label="Animated collection method: the same actor prompt produces an answer and layer activations; separate factual checks join the record for provisional review, before human validation.">
@@ -76,5 +78,6 @@ export function ModelArtwork() {
         </svg>
       </div>}
     </AnimatedArtwork>
+    </ArtworkWindow>
   );
 }

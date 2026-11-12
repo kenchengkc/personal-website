@@ -1,7 +1,7 @@
-.project-artwork:has(.artwork-window-host) { aspect-ratio: auto; min-height: 0; border-radius: 6px; }
+.project-artwork:has(.artwork-window-host) { aspect-ratio: auto; min-height: 0; border-radius: var(--radius-frame); }
 .project-artwork:has(.artwork-window-host) > .artwork-content { position: relative; inset: auto; }
 .artwork-window-host { width: 100%; }
-.artwork-window-dialog { position: relative; inset: auto; display: block; width: 100%; max-width: none; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 1px solid #9ba6ae; border-radius: 6px; background: #101e2b; color: #d9e4ed; font-family: var(--font-sans), sans-serif; }
+.artwork-window-dialog { position: relative; inset: auto; display: block; width: 100%; max-width: none; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 1px solid #9ba6ae; border-radius: var(--radius-frame); background: #101e2b; color: #d9e4ed; font-family: var(--font-sans), sans-serif; }
 .artwork-window-titlebar { height: 32px; z-index: 2; flex: 0 0 auto; }
 .artwork-window-content { min-width: 0; }
 .artwork-window-content > .amazon-artifact, .artwork-window-content > .product-flow-artwork { position: relative; inset: auto; }

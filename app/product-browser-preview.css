@@ -1,6 +1,6 @@
-.project-artwork:has(.product-browser-preview) { aspect-ratio: auto; border-radius: 6px; }
+.project-artwork:has(.product-browser-preview) { aspect-ratio: auto; border-radius: var(--radius-frame); }
 .project-artwork:has(.product-browser-preview) > .artwork-content { position: relative; inset: auto; }
-.product-browser-preview { display: grid; grid-template-rows: 32px auto 38px; overflow: hidden; border: 1px solid #9ba6ae; border-radius: 6px; background: #cbd1d6; color: #42515e; font-family: var(--font-sans), sans-serif; }
+.product-browser-preview { display: grid; grid-template-rows: 32px auto 38px; overflow: hidden; border: 1px solid #9ba6ae; border-radius: var(--radius-frame); background: #cbd1d6; color: #42515e; font-family: var(--font-sans), sans-serif; }
 .product-browser-titlebar { position: relative; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #aab2b8; background: linear-gradient(#d3d7da, #c5cacf); }
 .product-browser-dots { position: absolute; left: 6px; display: flex; align-items: center; }
 .product-browser-dot { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; background: transparent; }
@@ -11,7 +11,7 @@ button.product-browser-dot:focus-visible { outline: 2px solid #3c627f; outline-o
 .product-browser-light.is-red { background: #ec6b62; }
 .product-browser-light.is-yellow { background: #e4b84f; }
 .product-browser-light.is-green { background: #6bb574; }
-.product-browser-domain { padding-inline: 86px; font-size: 10px; line-height: 1.4; color: #54616c; }
+.product-browser-domain { min-width: 0; padding-inline: 86px; overflow: hidden; font-size: 11px; line-height: 1.4; color: #54616c; white-space: nowrap; text-overflow: ellipsis; }
 .product-browser-screen { position: relative; min-width: 0; aspect-ratio: 1000 / 680; overflow: hidden; background: #050505; }
 .product-browser-preview[data-preview="fdre"] .product-browser-screen { background: #f3eee8; }
 .product-browser-screen video { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -29,7 +29,7 @@ button.product-browser-dot:focus-visible { outline: 2px solid #3c627f; outline-o
   .product-browser-preview { grid-template-rows: 28px auto 40px; }
   .product-browser-dots { left: 4px; }
   .product-browser-light { width: 7px; height: 7px; }
-  .product-browser-domain { font-size: 9px; }
+  .product-browser-domain { font-size: 10px; }
   .product-browser-controls button { width: 32px; min-height: 38px; }
   .product-browser-footer { gap: 6px; padding-inline: 4px 9px; }
   .product-browser-caption { display: none; }

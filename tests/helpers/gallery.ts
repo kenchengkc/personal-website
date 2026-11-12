@@ -14,6 +14,17 @@ export async function openProjectAnimation(page: Page, project: FeaturedAnimatio
   return animation;
 }
 
+/**
+ * Reduced motion gives every property a near-zero transition, so styles that
+ * depend on the viewport land one frame after a resize. Wait for those to finish
+ * before measuring, or a busy machine can read the previous width's layout.
+ */
+export async function resizedLayoutSettled(page: Page) {
+  await page.evaluate(() => Promise.all(document.getAnimations()
+    .filter(animation => animation instanceof CSSTransition)
+    .map(animation => animation.finished.catch(() => undefined))));
+}
+
 /** Select Work and bring the recorded product preview into view. */
 export async function openProductRecording(page: Page, project: ProductRecording) {
   const work = page.getByRole("tab", { name: "Work", exact: true });

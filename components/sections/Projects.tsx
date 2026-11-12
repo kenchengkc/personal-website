@@ -24,6 +24,8 @@ function prepareFigures(root: ParentNode | null) {
   });
 }
 
+// The role and date live in the summary so they stay under the title when an
+// entry is open, instead of dropping below the whole description.
 function FeaturedEntry({ project }: { project: FeaturedProject }) {
   return (
     <article className="portfolio-entry" data-project={project.demo}>
@@ -33,15 +35,17 @@ function FeaturedEntry({ project }: { project: FeaturedProject }) {
           <h3>{project.demo === "amazon" ? (
             <Image className="portfolio-company-logo" src="/images/amazon/amazon-logo.svg" alt={project.name} width={96} height={32} />
           ) : project.name}</h3>
-          <span className="portfolio-more" aria-hidden="true">+</span>
+          <span className="portfolio-more" aria-hidden="true" />
+          <span className="portfolio-meta">{project.eyebrow}</span>
+          <span className="portfolio-meta portfolio-date">{project.date}</span>
         </summary>
         <div className="portfolio-description">
-          <p>{project.summary}</p>
+          <p className="portfolio-lead">{project.summary}</p>
           <ul className="portfolio-metrics" aria-label={`${project.name} metrics`}>
-            {project.metrics.map(metric => <li key={metric.label}><strong>{metric.value}</strong> {metric.label}</li>)}
+            {project.metrics.map(metric => <li key={metric.label}><strong>{metric.value}</strong> <span>{metric.label}</span></li>)}
           </ul>
           {project.details?.map(detail => <p key={detail}>{detail}</p>)}
-          <p className="portfolio-stack">{project.stack}</p>
+          <p className="portfolio-stack"><span>Stack</span> {project.stack}</p>
           {(project.href || project.secondaryHref) && (
             <div className="portfolio-links">
               {project.href && <a href={project.href} target="_blank" rel="noopener noreferrer">{project.hrefLabel}<ArrowUpRight /></a>}
@@ -50,7 +54,6 @@ function FeaturedEntry({ project }: { project: FeaturedProject }) {
           )}
         </div>
       </details>
-      <p className="portfolio-meta">{project.eyebrow}<span>{project.date}</span></p>
     </article>
   );
 }
@@ -60,13 +63,16 @@ function ResearchEntry({ item, artwork }: { item: typeof otherWork[number]; artw
     <article className="portfolio-entry" data-project={artwork}>
       <ProjectArtwork kind={artwork} />
       <details className="portfolio-details">
-        <summary><h3>{item.title}</h3><span className="portfolio-more" aria-hidden="true">+</span></summary>
+        <summary>
+          <h3>{item.title}</h3>
+          <span className="portfolio-more" aria-hidden="true" />
+          {item.meta && <span className="portfolio-meta">{item.meta}</span>}
+        </summary>
         <div className="portfolio-description">
           <p>{item.detail}</p>
           {item.href && <div className="portfolio-links"><a href={item.href} target="_blank" rel="noopener noreferrer">{artwork === "gcinf" ? "Read the paper" : "Explore the project"}<ArrowUpRight /></a></div>}
         </div>
       </details>
-      {item.meta && <p className="portfolio-meta">{item.meta}</p>}
     </article>
   );
 }
@@ -96,7 +102,7 @@ function AwardEntry({ item, artwork }: { item: typeof otherWork[number]; artwork
       </header>
       <ProjectArtwork kind={artwork} />
       <details className="portfolio-details">
-        <summary aria-label={`Details about ${item.title}`}><span>View details</span><span className="portfolio-more" aria-hidden="true">+</span></summary>
+        <summary aria-label={`Details about ${item.title}`}><span>View details</span><span className="portfolio-more" aria-hidden="true" /></summary>
         <div className="portfolio-description">
           <p>{item.detail}</p>
           {href && <div className="portfolio-links"><a href={href} target="_blank" rel="noopener noreferrer">{artwork === "speed" ? "Read the paper" : "Explore the project"}<ArrowUpRight /></a></div>}

@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { featuredProjects, otherWork } from "../data/portfolio";
+import { resizedLayoutSettled } from "./helpers/gallery";
 
 const categories = [
   { name: "Work", id: "portfolio-work", hash: "work" },
@@ -190,6 +191,39 @@ test("expanded gallery entries retain the full project evidence and original lin
   await expect(page.locator('#writing a[href*="researchgate.net/publication/371141171"]')).toBeAttached();
 });
 
+test("an expanded entry keeps its role and date under the title and lists its metrics", async ({ page }) => {
+  // Motion stays on: with reduced motion every resized style lands one frame late,
+  // which would let a measurement taken right after a resize read the old layout.
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("/#work");
+    await page.evaluate(() => document.fonts.ready);
+    for (const project of featuredProjects) {
+      const details = page.locator(`.portfolio-entry[data-project="${project.demo}"] .portfolio-details`);
+      const closed = await details.locator("summary .portfolio-meta").first().evaluate(node => node.getBoundingClientRect().top - node.closest("summary")!.getBoundingClientRect().top);
+      await details.locator(":scope > summary").click();
+      await expect(details.locator(".portfolio-description")).toBeVisible();
+      const layout = await details.evaluate(node => {
+        const box = (selector: string) => node.querySelector(selector)!.getBoundingClientRect();
+        const summary = box("summary"), title = box("summary h3"), role = box("summary .portfolio-meta"), date = box("summary .portfolio-date");
+        const toggle = box("summary .portfolio-more"), description = box(".portfolio-description");
+        return {
+          roleOffset: role.top - summary.top,
+          roleFollowsTitle: role.top >= title.bottom && role.top - title.bottom < 12,
+          dateFollowsRole: date.top >= role.bottom && date.top - role.bottom < 12,
+          detailsFollowDate: description.top >= date.bottom,
+          toggleBesideTitle: toggle.left >= title.right - 1 && toggle.top < title.bottom && toggle.bottom > title.top,
+        };
+      });
+      expect(layout.roleOffset, `${project.name} role moved when opened at ${width}px`).toBeCloseTo(closed, 1);
+      expect(layout).toMatchObject({ roleFollowsTitle: true, dateFollowsRole: true, detailsFollowDate: true, toggleBesideTitle: true });
+      const metrics = details.getByRole("list", { name: `${project.name} metrics`, exact: true }).getByRole("listitem");
+      await expect(metrics).toHaveText(project.metrics.map(metric => `${metric.value} ${metric.label}`));
+      await details.locator(":scope > summary").click();
+    }
+  }
+});
+
 test("expanding Need for Speed keeps Best Paper anchored in the other award column", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [1440, 1024, 768, 721]) {
@@ -197,6 +231,7 @@ test("expanding Need for Speed keeps Best Paper anchored in the other award colu
     await page.goto("/#awards");
     await expect(page.locator("#awards")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
+    await resizedLayoutSettled(page);
     const speed = page.locator('.award-entry[data-project="speed"]');
     const bestPaper = page.locator('.award-entry[data-project="cvrp"]');
     const top = () => bestPaper.evaluate(node => node.getBoundingClientRect().top + window.scrollY);
@@ -325,6 +360,48 @@ test("research shows published results and keeps only the CML animation", async 
   expect(await scholar.evaluate(node => parseFloat(getComputedStyle(node).fontSize))).toBeGreaterThanOrEqual(22);
   const logo = page.locator('.artwork-usaco-logo');
   expect((await logo.boundingBox())!.width).toBeGreaterThan(200);
+});
+
+test("research previews share the window frame and align each row in two columns", async ({ page }) => {
+  // Motion stays on so each resized layout is final when it is measured (see the entry test above).
+  for (const width of [1440, 1024, 768, 721]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("/#research");
+    await expect(page.locator("#research")).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    const layout = await page.locator("#research").evaluate(panel => ({
+      overflow: document.documentElement.scrollWidth > innerWidth,
+      pairedPlots: [...panel.querySelectorAll(".research-original-plots > div")].map(plot => plot.getBoundingClientRect().top),
+      entries: [...panel.querySelectorAll<HTMLElement>(".portfolio-entry")].map(entry => {
+        const artwork = entry.querySelector(".project-artwork")!.getBoundingClientRect();
+        const frame = entry.querySelector(".figure-window, .artwork-window-dialog")!;
+        const title = entry.querySelector(".product-browser-domain")!;
+        return {
+          project: entry.dataset.project,
+          lights: frame.querySelectorAll(".product-browser-titlebar .product-browser-light").length,
+          titleFits: title.textContent !== "" && title.scrollWidth <= title.clientWidth,
+          figureFits: [...frame.querySelectorAll(".research-figure-link > span")].every(label => label.getBoundingClientRect().right <= frame.getBoundingClientRect().right),
+          top: artwork.top, bottom: artwork.bottom, frameBottom: frame.getBoundingClientRect().bottom,
+          heading: entry.querySelector(".portfolio-details h3")!.getBoundingClientRect().top,
+        };
+      }),
+    }));
+    expect(layout.overflow).toBe(false);
+    // Aster's paired plots stay side by side, so a tablet row is not twice its neighbor's height.
+    expect(layout.pairedPlots).toHaveLength(2);
+    expect(layout.pairedPlots[1]).toBeCloseTo(layout.pairedPlots[0], 0);
+    expect(layout.entries.map(entry => entry.project)).toEqual(["cml", "wasserstein", "aster", "gcinf"]);
+    for (const entry of layout.entries) {
+      expect(entry, `${entry.project} window at ${width}px`).toMatchObject({ lights: 3, titleFits: true, figureFits: true });
+      // The frame fills its row, so no window ends above the neighbor beside it.
+      expect(entry.frameBottom).toBeCloseTo(entry.bottom, 0);
+    }
+    for (const [left, right] of [[layout.entries[0], layout.entries[1]], [layout.entries[2], layout.entries[3]]]) {
+      expect(right.top, `${right.project} top at ${width}px`).toBeCloseTo(left.top, 0);
+      expect(right.bottom, `${right.project} height at ${width}px`).toBeCloseTo(left.bottom, 0);
+      expect(right.heading, `${right.project} title at ${width}px`).toBeCloseTo(left.heading, 0);
+    }
+  }
 });
 
 test("gallery fits compact screens and remains still with reduced motion", async ({ page }) => {

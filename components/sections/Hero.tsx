@@ -25,7 +25,7 @@ export function Hero() {
         </div>
         <div className="hero-top-links">
           <a href={`mailto:${site.email}`}>Email<ArrowUpRight /></a>
-          <a href={site.resumePath} target="_blank" rel="noopener noreferrer"><Resume /><span>Resume</span><ArrowUpRight /></a>
+          <a className="hero-resume" href={site.resumePath} target="_blank" rel="noopener noreferrer"><Resume /><span>Resume</span><ArrowUpRight /></a>
         </div>
       </div>
 
@@ -37,13 +37,11 @@ export function Hero() {
           deceptive communication in language models at Columbia’s Creative
           Machines Lab.
         </p>
-        <div className="hero-proof" aria-label="Selected credentials">
-          <span>Former Amazon Software Development Engineer Intern</span>
-          <i />
-          <span>IEEE Sole Author</span>
-          <i />
-          <span className="hero-platinum">USACO Platinum · 1000/1000 Gold</span>
-        </div>
+        <ul className="hero-proof" aria-label="Selected credentials">
+          <li>Former Amazon Software Development Engineer Intern</li>
+          <li>IEEE Sole Author</li>
+          <li>USACO Platinum · 1000/1000 Gold</li>
+        </ul>
       </div>
 
       <div className="hero-links" aria-label="Profile links">

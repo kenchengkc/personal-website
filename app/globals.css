@@ -16,6 +16,12 @@
   --gold-metal: linear-gradient(110deg, #b3915e, #ebd9b3 45%, #c9ad7f);
   --platinum-metal: linear-gradient(110deg, #a7aaa5, #efebe2 45%, #c8c6be);
   --rail-accent: var(--gold);
+  /* One raised surface and two radii keep cards, windows, and controls consistent. */
+  --surface: #e2e8ec;
+  --surface-sunken: #cdd6dc;
+  --navy: #253e55;
+  --radius-control: 6px;
+  --radius-frame: 8px;
   --reading: 1120px;
   --result: 1120px;
   --gutter: clamp(28px, 4.5vw, 80px);
@@ -39,7 +45,7 @@ body { margin: 0; min-height: 100vh; overflow-x: hidden; background: var(--page)
 a { color: inherit; text-decoration: none; }
 button, input, textarea { font: inherit; }
 em, i { font-style: normal; }
-:focus-visible { outline: 1px solid var(--gold-bright); outline-offset: 4px; }
+:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
 
 /* The ruler and its destinations retain the same measured coordinate scale. */
 .scroll-ruler { --scroll-progress: 0; position: fixed; inset: 32px auto 32px 18px; z-index: 60; width: 166px; }
@@ -82,9 +88,7 @@ em, i { font-style: normal; }
 .hero-copy { position: relative; z-index: 1; margin: 58px 0 0; }
 .hero h1 { max-width: 17ch; margin: 0; font-size: clamp(46px, 5.65vw, 86px); font-weight: 500; line-height: 1.025; letter-spacing: -.065em; text-wrap: balance; }
 .hero-copy p { max-width: 45ch; margin: 34px 0 0; color: var(--ink-2); font-size: 16px; line-height: 1.8; }
-.hero-proof { display: grid; gap: 7px; margin-top: 25px; color: var(--ink-3); font-size: 11px; }
-.hero-proof i { display: none; }
-.hero-platinum { color: var(--silver-bright); }
+.hero-proof { display: grid; gap: 7px; margin: 25px 0 0; padding: 0; list-style: none; color: var(--ink-3); font-size: 11px; }
 .hero-links { position: relative; z-index: 2; display: flex; align-items: center; flex-wrap: wrap; gap: 18px 22px; margin-top: 28px; color: var(--ink-2); font-size: 11px; }
 .hero-links a, .contact-links a { display: inline-flex; align-items: center; gap: 7px; line-height: 1; transition: color 180ms ease; }
 .hero-links svg, .contact-links svg { flex: 0 0 auto; }

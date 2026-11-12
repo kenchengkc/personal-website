@@ -1,6 +1,27 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import asterSummary from "@/public/media/research/aster-summary.json";
+
+/**
+ * Published figures share the gallery's window frame. The lights are
+ * decorative here: each figure links to its original instead of expanding.
+ */
+function FigureWindow({ title, label, children }: { title: string; label: string; children: ReactNode }) {
+  return (
+    <div className="figure-window">
+      <div className="product-browser-titlebar artwork-window-titlebar" aria-hidden="true">
+        <div className="product-browser-dots">
+          {(["red", "yellow", "green"] as const).map(light => (
+            <span key={light} className="product-browser-dot"><span className={`product-browser-light is-${light}`} /></span>
+          ))}
+        </div>
+        <span className="product-browser-domain">{title}</span>
+      </div>
+      <figure className="research-result" aria-label={label}>{children}</figure>
+    </div>
+  );
+}
 
 function OriginalFigure({ src, alt, width, height, label }: {
   src: string;
@@ -19,7 +40,7 @@ function OriginalFigure({ src, alt, width, height, label }: {
 
 export function WassersteinArtwork() {
   return (
-    <figure className="research-result" aria-label="Wasserstein Regimes published research results">
+    <FigureWindow title="Wasserstein · Results" label="Wasserstein Regimes published research results">
       <OriginalFigure
         src="/media/research/wasserstein-cross-asset-comparison.png"
         alt="Published comparison for QQQ, TLT, GLD, and HYG: scale dominates raw-regime separation, while shape-only stability varies across assets."
@@ -29,7 +50,7 @@ export function WassersteinArtwork() {
         <p className="research-result-finding">Scale dominated raw-regime differences; shape-only stability varied across assets.</p>
         <p className="research-result-note"><strong>Forecasting study:</strong> 600 five-session forecasts showed no advantage over four simpler baselines.</p>
       </figcaption>
-    </figure>
+    </FigureWindow>
   );
 }
 
@@ -38,7 +59,7 @@ export function AsterArtwork() {
   const race = asterSummary.race.search_replications;
 
   return (
-    <figure className="research-result" aria-label="Aster saved experiment: same selected candidate with 72 rather than 432 search evaluations">
+    <FigureWindow title="Aster · Experiment" label="Aster saved experiment: same selected candidate with 72 rather than 432 search evaluations">
       <div className="research-original-plots">
         <div>
           <h3>Full budget <span>{fullBudget} evaluations</span></h3>
@@ -61,19 +82,19 @@ export function AsterArtwork() {
         <p className="research-result-finding"><strong>Same selected candidate.</strong> Each filled square is one search evaluation. One synthetic experiment, seed 17; 16 configurations.</p>
         <p className="research-result-note">Search totals exclude 100 independent audit evaluations per selected candidate.</p>
       </figcaption>
-    </figure>
+    </FigureWindow>
   );
 }
 
 export function GcinfArtwork() {
   return (
-    <figure className="research-result" aria-label="GC-INF original published model architecture">
+    <FigureWindow title="GC-INF · Architecture" label="GC-INF original published model architecture">
       <OriginalFigure
         src="/media/research/gcinf-model-architecture.png"
         alt="Original GC-INF architecture: adjacency and time-indexed augmented matrices feed graph convolutional networks and Informer layers to produce traffic predictions."
         width={816} height={528} label="GC-INF model architecture figure"
       />
       <figcaption><p className="research-result-finding">Figure 5. GC-INF model architecture, IEEE ITSC 2023.</p></figcaption>
-    </figure>
+    </FigureWindow>
   );
 }

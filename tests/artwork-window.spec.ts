@@ -78,6 +78,50 @@ test("animation windows have evenly spaced lights and fit compact and landscape 
   }
 });
 
+test("Creative Machines Lab uses the same window, expanding and restoring in place", async ({ page }) => {
+  await page.goto("/#research");
+  // The selected tab proves hydration; then let the deep-link scroll frame finish.
+  await expect(page.getByRole("tab", { name: "Research", exact: true })).toHaveAttribute("aria-selected", "true");
+  await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+  const host = page.locator('[data-window="creative machines lab"]');
+  await host.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
+  const animation = host.locator(".animated-artwork");
+  const scene = await animation.elementHandle();
+  await animation.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(1).click();
+  const inline = (await host.boundingBox())!;
+  const scrollY = await page.evaluate(() => window.scrollY);
+  const expand = host.getByRole("button", { name: "Expand Creative Machines Lab preview", exact: true });
+
+  for (const dismiss of ["escape", "green", "red"]) {
+    await expand.click();
+    const dialog = page.getByRole("dialog", { name: "Creative Machines Lab enlarged preview", exact: true });
+    await expect(dialog).toBeVisible();
+    expect(await dialog.evaluate(node => node.matches(":modal"))).toBe(true);
+    await expect(animation).toHaveAttribute("data-stage", "1");
+    expect(await scene!.evaluate(node => node.isConnected)).toBe(true);
+    const enlarged = (await dialog.boundingBox())!;
+    expect(enlarged.width).toBeGreaterThan(inline.width);
+    expect(enlarged.x + enlarged.width / 2).toBeCloseTo(720, 0);
+    expect(enlarged.y).toBeGreaterThanOrEqual(8);
+    expect(enlarged.y + enlarged.height).toBeLessThanOrEqual(992);
+    // The enlarged diagram fills the window at its own proportions, without scrolling.
+    expect(await dialog.evaluate(node => {
+      const drawing = node.querySelector(".cml-process svg")!.getBoundingClientRect();
+      return { ratio: Math.round(drawing.width / drawing.height * 100) / 100, scrolls: node.scrollWidth > node.clientWidth + 1 || node.scrollHeight > node.clientHeight + 1 };
+    })).toEqual({ ratio: 1.97, scrolls: false });
+
+    if (dismiss === "escape") await page.keyboard.press("Escape");
+    else if (dismiss === "green") await dialog.getByRole("button", { name: "Restore Creative Machines Lab preview", exact: true }).click();
+    else await dialog.getByRole("button", { name: "Close Creative Machines Lab preview", exact: true }).click();
+    await expect(page.getByRole("dialog", { name: "Creative Machines Lab enlarged preview", exact: true })).toHaveCount(0);
+    await expect(expand).toBeFocused();
+    expect(await scene!.evaluate(node => node.isConnected)).toBe(true);
+    await expect(animation).toHaveAttribute("data-stage", "1");
+    expect((await host.boundingBox())!.height).toBeCloseTo(inline.height, 1);
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
+  }
+});
+
 test("Embers automatically tracks the object, places it in inventory, and pauses offscreen", async ({ page }) => {
   await page.goto("/#work");
   const animation = await openProjectAnimation(page, "embers");
