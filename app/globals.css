@@ -97,11 +97,15 @@ em, i { font-style: normal; }
 a:hover .link-arrow, a:focus-visible .link-arrow { opacity: 1; }
 .hero-links .link-arrow, .contact-links .link-arrow { margin-left: -3px; }
 .project-links .link-arrow, .research-row .link-arrow, .contact-email .link-arrow { margin-left: 5px; }
-.hero-binary-art { position: relative; width: 100%; max-width: 1000px; height: auto; aspect-ratio: 5 / 3; margin: 40px auto 0; overflow: hidden; background: transparent; }
-/* The visible brain spans y=60..580 in a 600px frame: shift both canvas and
-   poster up 20/600 of their height to center the silhouette at every size. */
-.hero-brain-stage { position: absolute; top: 50%; left: 50%; width: min(calc(100% - 32px), 940px); aspect-ratio: 5 / 3; transform: translate(-50%, -53.333333%); }
+.hero-binary-art { position: relative; display: grid; place-items: center; width: 100%; max-width: 1000px; height: auto; aspect-ratio: 5 / 3; margin: 40px auto 0; overflow: hidden; background: transparent; }
+/* The stage sets the settled brain's width. Rain fills the surrounding frame. */
+.hero-brain-stage { display: block; width: min(calc(100% - 32px), 940px); aspect-ratio: 5 / 3; }
 .hero-brain-canvas, .hero-brain-poster { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.hero-brain-poster { object-fit: cover; }
+@media (prefers-reduced-motion: reduce) {
+  /* Center the visible silhouette (y=60..580) in the 600-unit source image. */
+  .hero-brain-poster { position: static; transform: translateY(-3.333333%); }
+}
 .hero-brain-canvas { opacity: 0; }
 .hero-binary-art[data-ready="true"] .hero-brain-canvas { opacity: 1; }
 .hero-binary-art[data-ready="true"] .hero-brain-poster { visibility: hidden; }

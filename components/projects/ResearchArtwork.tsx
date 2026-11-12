@@ -2,24 +2,13 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import asterSummary from "@/public/media/research/aster-summary.json";
+import { ArtworkWindow } from "./ArtworkWindow";
 
-/**
- * Published figures share the gallery's window frame. The lights are
- * decorative here: each figure links to its original instead of expanding.
- */
-function FigureWindow({ title, label, children }: { title: string; label: string; children: ReactNode }) {
+function FigureWindow({ name, title, label, children }: { name: string; title: string; label: string; children: ReactNode }) {
   return (
-    <div className="figure-window">
-      <div className="product-browser-titlebar artwork-window-titlebar" aria-hidden="true">
-        <div className="product-browser-dots">
-          {(["red", "yellow", "green"] as const).map(light => (
-            <span key={light} className="product-browser-dot"><span className={`product-browser-light is-${light}`} /></span>
-          ))}
-        </div>
-        <span className="product-browser-domain">{title}</span>
-      </div>
+    <ArtworkWindow name={name} title={title}>
       <figure className="research-result" aria-label={label}>{children}</figure>
-    </div>
+    </ArtworkWindow>
   );
 }
 
@@ -40,7 +29,7 @@ function OriginalFigure({ src, alt, width, height, label }: {
 
 export function WassersteinArtwork() {
   return (
-    <FigureWindow title="Wasserstein · Results" label="Wasserstein Regimes published research results">
+    <FigureWindow name="Wasserstein Regimes" title="Wasserstein · Results" label="Wasserstein Regimes published research results">
       <OriginalFigure
         src="/media/research/wasserstein-cross-asset-comparison.png"
         alt="Published comparison for QQQ, TLT, GLD, and HYG: scale dominates raw-regime separation, while shape-only stability varies across assets."
@@ -59,7 +48,7 @@ export function AsterArtwork() {
   const race = asterSummary.race.search_replications;
 
   return (
-    <FigureWindow title="Aster · Experiment" label="Aster saved experiment: same selected candidate with 72 rather than 432 search evaluations">
+    <FigureWindow name="Aster" title="Aster · Experiment" label="Aster saved experiment: same selected candidate with 72 rather than 432 search evaluations">
       <div className="research-original-plots">
         <div>
           <h3>Full budget <span>{fullBudget} evaluations</span></h3>
@@ -88,7 +77,7 @@ export function AsterArtwork() {
 
 export function GcinfArtwork() {
   return (
-    <FigureWindow title="GC-INF · Architecture" label="GC-INF original published model architecture">
+    <FigureWindow name="GC-INF" title="GC-INF · Architecture" label="GC-INF original published model architecture">
       <OriginalFigure
         src="/media/research/gcinf-model-architecture.png"
         alt="Original GC-INF architecture: adjacency and time-indexed augmented matrices feed graph convolutional networks and Informer layers to produce traffic predictions."

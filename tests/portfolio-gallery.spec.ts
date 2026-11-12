@@ -335,7 +335,7 @@ test("research shows published results and keeps only the CML animation", async 
   await expect(gcinf).toContainText('Figure 5');
   for (const artwork of [wasserstein, aster, gcinf]) {
     await expect(artwork.locator('.animated-artwork')).toHaveCount(0);
-    await expect(artwork.getByRole('button')).toHaveCount(0);
+    await expect(artwork.getByRole('figure').getByRole('button')).toHaveCount(0);
     expect(await artwork.evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);
     for (const figure of await artwork.getByRole('img').all()) {
       expect(await figure.evaluate(node => ({ blend: getComputedStyle(node).mixBlendMode, filter: getComputedStyle(node).filter }))).toEqual({ blend: 'normal', filter: 'none' });
@@ -374,7 +374,7 @@ test("research previews share the window frame and align each row in two columns
       pairedPlots: [...panel.querySelectorAll(".research-original-plots > div")].map(plot => plot.getBoundingClientRect().top),
       entries: [...panel.querySelectorAll<HTMLElement>(".portfolio-entry")].map(entry => {
         const artwork = entry.querySelector(".project-artwork")!.getBoundingClientRect();
-        const frame = entry.querySelector(".figure-window, .artwork-window-dialog")!;
+        const frame = entry.querySelector(".artwork-window-dialog")!;
         const title = entry.querySelector(".product-browser-domain")!;
         return {
           project: entry.dataset.project,

@@ -1,8 +1,8 @@
-.project-artwork:has(.research-result) { aspect-ratio: auto; border-radius: var(--radius-frame); }
-.project-artwork:has(.research-result) > .artwork-content { position: relative; inset: auto; }
-/* Published figures use the project previews' window frame. When a row is taller
-   than a figure, the caption settles at the bottom and the figure stays at the top. */
-.figure-window { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid #9ba6ae; border-radius: var(--radius-frame); background: #fff; color: #34383e; font-family: var(--font-sans), sans-serif; }
+/* Let original figures set their own height. The caption fills any extra
+   space when the inline gallery stretches a window to match its neighbor. */
+.artwork-window-dialog:has(.research-result) { --work-window-ratio: auto; background: #fff; color: #34383e; }
+.artwork-window-dialog:has(.research-result):modal { width: min(940px, calc(100vw - 32px)); }
+.artwork-window-content:has(> .research-result) { display: flex; }
 .research-result { display: flex; flex: 1; flex-direction: column; justify-content: space-between; gap: 18px; min-width: 0; margin: 0; padding: 20px; }
 .research-figure-link { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .research-figure-link img { display: block; width: 100%; height: auto; object-fit: contain; }

@@ -10,13 +10,15 @@ const PLAYBACK_RATE = 1.2;
 
 export function BinaryRainArtwork() {
   const ref = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLPictureElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const node = ref.current;
+    const stage = stageRef.current;
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
-    if (!node || !canvas || !context) return;
+    if (!node || !stage || !canvas || !context) return;
     let renderer: ReturnType<typeof createBrainRenderer> | undefined;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
@@ -35,7 +37,9 @@ export function BinaryRainArtwork() {
 
     function prepareRenderer() {
       if (disposed || reducedMotion.matches) return;
-      const pixels = canvas!.getBoundingClientRect().width * Math.min(window.devicePixelRatio || 1, 2);
+      const { width, height } = canvas!.getBoundingClientRect();
+      const rainWidth = Math.max(width, height * BRAIN_WIDTH / BRAIN_HEIGHT);
+      const pixels = rainWidth * Math.min(window.devicePixelRatio || 1, 2);
       const scale: AtlasScale = pixels > BRAIN_WIDTH ? 2 : 1;
       if (atlasScale === scale || requestedScale === scale) return;
       requestedScale = scale;
@@ -76,7 +80,7 @@ export function BinaryRainArtwork() {
         node!.dataset.phase = "complete";
         // The responsive finished poster needs no atlas, bitmap crops, or canvas.
         if (renderer) {
-          renderer.resize();
+          renderer.resize(stage!.getBoundingClientRect().width);
           renderer.draw(elapsed, rainLeadIn);
         }
       } else {
@@ -89,12 +93,7 @@ export function BinaryRainArtwork() {
 
     function updateVisibility() {
       const bounds = canvas!.getBoundingClientRect();
-      const container = node!.getBoundingClientRect();
-      // The artwork clips the canvas on desktop; measure its displayed height.
-      const top = Math.max(bounds.top, container.top);
-      const bottom = Math.min(bounds.bottom, container.bottom);
-      const visibleHeight = Math.max(0, Math.min(bottom, window.innerHeight) - Math.max(top, 0));
-      const nextVisible = visibleHeight > 0;
+      const nextVisible = bounds.bottom > 0 && bounds.top < window.innerHeight;
       if (visible === nextVisible) return;
       visible = nextVisible;
       syncAnimation();
@@ -113,7 +112,7 @@ export function BinaryRainArtwork() {
 
     function resize() {
       if (renderer) {
-        renderer.resize();
+        renderer.resize(stage!.getBoundingClientRect().width);
         renderer.draw(elapsed, rainLeadIn);
         node!.dataset.ready = "true";
       }
@@ -151,25 +150,23 @@ export function BinaryRainArtwork() {
     <div ref={ref} className="hero-binary-art" data-phase="raining" aria-hidden="true">
       {([1, 2] as const).map(scale => <link key={`rain-${scale}`} rel="preload" as="image" href={`${BRAIN_ASSET_PATH}/rain-${scale}x.webp`} media={brainPosterMedia("no-preference", scale)} fetchPriority="high" />)}
       {([1, 2] as const).map(scale => <link key={`still-${scale}`} rel="preload" as="image" href={`${BRAIN_ASSET_PATH}/still-${scale}x.webp`} media={brainPosterMedia("reduce", scale)} fetchPriority="high" />)}
-      <div className="hero-brain-stage">
-        <picture>
-          <source media={brainPosterMedia("reduce", 1)} srcSet={`${BRAIN_ASSET_PATH}/still-1x.webp`} />
-          <source media="(prefers-reduced-motion: reduce)" srcSet={`${BRAIN_ASSET_PATH}/still-2x.webp`} />
-          <source media={SMALL_POSTER_MEDIA} srcSet={`${BRAIN_ASSET_PATH}/rain-1x.webp`} />
-          {/* Native picture URLs match the preload exactly, including on deployed builds. */}
-          <img
-            className="hero-brain-poster"
-            src={`${BRAIN_ASSET_PATH}/rain-2x.webp`}
-            alt=""
-            width={BRAIN_WIDTH}
-            height={BRAIN_HEIGHT}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </picture>
-        <canvas ref={canvasRef} width={BRAIN_WIDTH} height={BRAIN_HEIGHT} className="hero-brain-canvas" />
-      </div>
+      <picture className="hero-brain-stage" ref={stageRef}>
+        <source media={brainPosterMedia("reduce", 1)} srcSet={`${BRAIN_ASSET_PATH}/still-1x.webp`} />
+        <source media="(prefers-reduced-motion: reduce)" srcSet={`${BRAIN_ASSET_PATH}/still-2x.webp`} />
+        <source media={SMALL_POSTER_MEDIA} srcSet={`${BRAIN_ASSET_PATH}/rain-1x.webp`} />
+        {/* Native picture URLs match the preload exactly, including on deployed builds. */}
+        <img
+          className="hero-brain-poster"
+          src={`${BRAIN_ASSET_PATH}/rain-2x.webp`}
+          alt=""
+          width={BRAIN_WIDTH}
+          height={BRAIN_HEIGHT}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+        />
+      </picture>
+      <canvas ref={canvasRef} width={BRAIN_WIDTH} height={BRAIN_HEIGHT} className="hero-brain-canvas" />
     </div>
   );
 }

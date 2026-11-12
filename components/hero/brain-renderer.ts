@@ -10,18 +10,30 @@ export function createBrainRenderer(
   context: CanvasRenderingContext2D,
   atlas: { tiles: CanvasImageSource[]; occupied: number[] },
 ) {
-  function resize() {
-    const width = canvas.getBoundingClientRect().width;
+  let brainScale = 1;
+  let brainLeft = 0;
+  let brainTop = 0;
+
+  function resize(settledWidth?: number) {
+    const { width, height } = canvas.getBoundingClientRect();
     // Keep the same pixel density during motion and after settling, avoiding
     // a sharpness jump on the final frame. The pre-rendered atlas supports 2x.
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const pixelWidth = Math.max(1, Math.round(width * ratio));
-    const pixelHeight = Math.max(1, Math.round(width / BRAIN_WIDTH * BRAIN_HEIGHT * ratio));
-    if (canvas.width === pixelWidth && canvas.height === pixelHeight) return;
-    canvas.width = pixelWidth;
-    canvas.height = pixelHeight;
-    const scale = pixelWidth / BRAIN_WIDTH;
-    context.setTransform(scale, 0, 0, scale, 0, 0);
+    const pixelHeight = Math.max(1, Math.round(height * ratio));
+    if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+    if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
+    // Match the rain poster's object-fit: cover, including on tall phone frames.
+    const rainScale = Math.max(pixelWidth / BRAIN_WIDTH, pixelHeight / BRAIN_HEIGHT);
+    const left = (pixelWidth - BRAIN_WIDTH * rainScale) / 2;
+    const top = (pixelHeight - BRAIN_HEIGHT * rainScale) / 2;
+    context.setTransform(rainScale, 0, 0, rainScale, left, top);
+
+    // The silhouette is centered on y=320. Poster generation uses the original
+    // coordinate system; the page fits that artwork to its smaller landing area.
+    brainScale = settledWidth === undefined ? 1 : settledWidth * ratio / (BRAIN_WIDTH * rainScale);
+    brainLeft = (1 - brainScale) * BRAIN_WIDTH / 2;
+    brainTop = settledWidth === undefined ? 0 : BRAIN_HEIGHT / 2 - 320 * brainScale;
   }
 
   // The lead-in advances while rain loops, then stays fixed during assembly so
@@ -33,6 +45,7 @@ export function createBrainRenderer(
       const segment = segments[index];
       const t = clamp((elapsed - segment.catchAt) / segment.duration);
       const gather = smooth(t);
+      const tileScale = 1 + (brainScale - 1) * gather;
       let y: number;
       if (elapsed < segment.catchAt) {
         y = wrap(segment.phase + (rainLeadIn + elapsed) * segment.speed);
@@ -43,12 +56,13 @@ export function createBrainRenderer(
         const t3 = t2 * t;
         const caughtY = wrap(segment.phase + (rainLeadIn + segment.catchAt) * segment.speed);
         y = (2 * t3 - 3 * t2 + 1) * caughtY
-          + (-2 * t3 + 3 * t2) * segment.y
+          + (-2 * t3 + 3 * t2) * (brainTop + segment.y * brainScale)
           + (t3 - 2 * t2 + t) * segment.speed * segment.duration;
       }
-      const x = segment.rainX + (segment.x - segment.rainX) * gather
-        + Math.sin(Math.PI * gather) * segment.drift - PADDING;
-      context.drawImage(atlas.tiles[index], x, y - PADDING, TILE_WIDTH, TILE_HEIGHT);
+      const x = segment.rainX + (brainLeft + segment.x * brainScale - segment.rainX) * gather
+        + Math.sin(Math.PI * gather) * segment.drift;
+      context.drawImage(atlas.tiles[index], x - PADDING * tileScale, y - PADDING * tileScale,
+        TILE_WIDTH * tileScale, TILE_HEIGHT * tileScale);
     }
   }
 

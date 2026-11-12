@@ -122,6 +122,26 @@ test("Creative Machines Lab uses the same window, expanding and restoring in pla
   }
 });
 
+test("published figures expand from their green light and close from their red light", async ({ page }) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#research");
+    await expect(page.getByRole("tab", { name: "Research", exact: true })).toHaveAttribute("aria-selected", "true");
+    for (const kind of ["wasserstein", "aster", "gcinf"]) {
+      const artwork = page.locator(`[data-artwork="${kind}"]`);
+      const green = artwork.locator(".product-browser-light.is-green");
+      await green.click();
+      const dialog = page.getByRole("dialog", { name: /enlarged preview/ });
+      await expect(dialog).toBeVisible();
+      expect(await dialog.evaluate(node => node.matches(":modal"))).toBe(true);
+      await expect(dialog.getByRole("link", { name: /Open the full-size/ }).first()).toBeVisible();
+      await dialog.locator(".product-browser-light.is-red").click();
+      await expect(dialog).toHaveCount(0);
+      await expect(artwork.getByRole("button", { name: /Expand .* preview/ })).toBeFocused();
+    }
+  }
+});
+
 test("Embers automatically tracks the object, places it in inventory, and pauses offscreen", async ({ page }) => {
   await page.goto("/#work");
   const animation = await openProjectAnimation(page, "embers");
