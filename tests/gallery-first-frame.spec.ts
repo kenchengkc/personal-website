@@ -7,20 +7,24 @@ for (const width of [390, 1440]) {
     await expect(page.locator(".hero-binary-art")).toHaveAttribute("data-ready", "true");
     await page.locator(".portfolio-tabs").evaluate(element => element.scrollIntoView({ block: "start", behavior: "instant" }));
 
-    for (const [category, kind] of [["research", "cml"], ["awards", "cvrp"], ["work", "amazon"]]) {
-      const frames = await page.evaluate(({ category, kind }) => new Promise<boolean[]>(resolve => {
+    for (const [category, selector] of [
+      ["research", '[data-artwork="cml"] svg'],
+      ["awards", '[data-artwork="cvrp"] svg'],
+      ["work", '[data-artwork="amazon"] .amazon-source'],
+    ]) {
+      const frames = await page.evaluate(({ category, selector }) => new Promise<boolean[]>(resolve => {
         const tab = document.getElementById(`gallery-tab-${category}`)!;
         const panel = document.getElementById(tab.getAttribute("aria-controls")!)!;
         const samples: boolean[] = [];
         const start = performance.now();
         tab.click();
         function sample() {
-          if (!panel.hidden) samples.push(!!panel.querySelector(`[data-artwork="${kind}"] svg`));
+          if (!panel.hidden) samples.push(!!panel.querySelector(selector));
           if (samples.at(-1) || performance.now() - start > 1500) resolve(samples);
           else requestAnimationFrame(sample);
         }
         requestAnimationFrame(sample);
-      }), { category, kind });
+      }), { category, selector });
       expect(frames.length).toBeGreaterThan(0);
       expect(frames, `${category} exposed an empty visual before its artwork was ready`).not.toContain(false);
     }
@@ -31,7 +35,8 @@ test("illustrated previews are already present before JavaScript or scrolling", 
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto("/");
-  for (const kind of ["amazon", "cml", "speed", "cvrp", "embers"]) {
+  await expect(page.locator('[data-artwork="amazon"] .amazon-source')).toContainText(/v041.*v042/s);
+  for (const kind of ["cml", "speed", "cvrp", "embers"]) {
     await expect(page.locator(`[data-artwork="${kind}"] svg`).first()).toBeAttached();
   }
   await context.close();
