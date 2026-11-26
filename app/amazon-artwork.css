@@ -48,7 +48,7 @@
 .artwork-amazon .artwork-window-dialog:modal { width: min(800px, calc(100vw - 32px)); }
 .artwork-amazon .artwork-window-dialog:modal .amazon-diff-arrow { display: none; }
 .artwork-amazon .artwork-window-dialog:modal .amazon-pane { overflow: visible; }
-.artwork-amazon .artwork-window-dialog:modal .amazon-heading { padding-top: 14px; }
+.artwork-amazon .artwork-window-dialog:modal .amazon-heading { padding-block: 18px 10px; }
 @media (pointer: coarse) { .amazon-toolbar button { min-height: 40px; } }
 .artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 404px; }
 @container (max-width: 400px) {

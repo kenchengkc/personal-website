@@ -13,7 +13,7 @@
 .plot {
   position: relative;
   isolation: isolate;
-  padding: 0 18px 10px;
+  padding: 8px 18px 16px;
   background-image: radial-gradient(#50677552 .7px, transparent .9px);
   background-size: 14px 14px;
 }
@@ -71,7 +71,7 @@
 .stage:disabled { opacity: 1; cursor: default; }
 .shortName { display: none; }
 
-.originRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 19px; }
+.originRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 24px; }
 .origin {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -89,7 +89,7 @@
 .version { color: var(--route-active); white-space: nowrap; }
 .run { color: #b9c9d1; text-align: right; }
 
-.rows { margin: 8px 0 0; padding: 0; list-style: none; }
+.rows { margin: 12px 0 0; padding: 0; list-style: none; }
 .row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(130px, 31%);
@@ -97,7 +97,7 @@
   gap: 17px;
   min-height: 61px;
   margin-left: 32px;
-  padding: 6px 0;
+  padding: 10px 0;
 }
 .waypoints { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: start; }
 .hop { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; text-align: center; }
@@ -122,11 +122,12 @@
 }
 .repo { color: #e3ecef; font-size: 14px; font-weight: 500; line-height: 1.5; }
 .description { color: #b6c8d0; overflow-wrap: anywhere; }
+:global(.artwork-window-dialog:modal) :is(.origin, .hop, .destination) { row-gap: 4px; }
 .row:is([data-state="delivering"], [data-state="staged"], [data-state="applied"]) .destination { border-color: var(--route-active); }
 .row[data-state="applied"] .description { color: var(--route-active); }
 
 @container consumer-map (max-width: 480px) {
-  .plot { padding: 0 10px 8px; }
+  .plot { padding-inline: 10px; }
   .rail { --stage-gap: 8px; }
   .stage { padding: 7px 1px; font-size: 12px; }
   .stage:not(:last-child)::after { content: "›"; }
