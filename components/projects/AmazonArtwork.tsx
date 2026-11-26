@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArtworkWindow } from "./ArtworkWindow";
 import { ConfigurationDiff } from "./amazon/ConfigurationDiff";
 import { ConfigurationRoutes } from "./amazon/ConfigurationRoutes";
-import { buildRelease, clock, files, initialRun, routes, stageState, type FileId, type Frame, type Phase, type Value } from "./amazon/forecast";
+import { buildRelease, clock, files, initialRun, routes, stageState, type FileId, type Frame, type Value } from "./amazon/forecast";
 
 const poppins = localFont({
   src: [
@@ -19,11 +19,6 @@ const poppins = localFont({
 
 const preferredFiles: FileId[] = ["input", "input", "window", "delivery"];
 const configIds = Object.keys(files) as FileId[];
-const headers: Record<Phase, string> = {
-  draft: "Select a service to edit its files.", push: "Saving the revision", delivering: "Delivering the revision",
-  arrival: "Preparing for the scheduled run", queued: "Waiting for the effective run", running: "Applying at stage start",
-  complete: "Forecast published",
-};
 
 function observeMotion(callback: () => void) {
   const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -139,15 +134,14 @@ export function AmazonArtwork() {
     viewport.scrollBy({ top: diff.getBoundingClientRect().top - viewport.getBoundingClientRect().top, behavior: reduced ? "instant" : "smooth" });
   }
 
-  const message = frame?.caption ?? (draft === null ? "Enter a positive whole number to push this change."
-    : draft === base.value ? "Change the value to create a new revision."
-    : `Run ${lastRun} uses v${base.version}. The edit will take effect in run ${target}.`);
+  const message = frame?.caption ?? (draft === null ? "Enter a positive whole number."
+    : draft === base.value ? "Edit the value before pushing."
+    : `Run ${lastRun} uses v${base.version}. This edit applies to run ${target}.`);
   return <ArtworkWindow name="Amazon" title="Forecast configuration">
     <div className={`amazon-artifact ${poppins.variable}`} ref={root} role="figure" aria-label="Amazon configuration infrastructure"
       data-nearby={nearby} data-phase={phase} data-running={running}>
       <div className="amazon-pane" ref={pane}>
-        <div className="amazon-heading"><h3>Forecasting pipeline</h3><span>Example routes</span></div>
-        <div className="amazon-hint">{headers[phase]}</div>
+        <h3 className="amazon-heading">Forecasting pipeline</h3>
         <ConfigurationRoutes file={config.name} version={base.version + Number(Boolean(frame))} author={author}
           readers={config.readers} phase={phase} stages={stages} run={target} activeStage={frame?.stage ?? null}
           hopIndex={frame?.hop ?? null} onSelect={edit} />
@@ -160,14 +154,14 @@ export function AmazonArtwork() {
           <ArrowDown size={20} aria-hidden="true" />
         </button>}
       </div>
-      <div className="amazon-toolbar"><span>Effective next run</span><div>
+      <div className="amazon-toolbar">
         {!frame && <button type="button" className="amazon-primary" onClick={push} disabled={draft === null || draft === base.value}>Click to push version {base.version + 1}</button>}
         {frame && phase !== "complete" && <>
           {!reduced && <button type="button" onClick={() => setPlay(!play)}>{play ? "Pause" : "Resume"}</button>}
           {(reduced || !play) && <button type="button" onClick={() => setIndex(index + 1)}>Next event</button>}
         </>}
         {phase === "complete" && <button type="button" className="amazon-primary" onClick={() => { edit(author); showDiff(); }}>Edit again</button>}
-      </div></div>
+      </div>
       <div className="amazon-readout"><span>{frame?.clock ?? clock(lastRun, lastRun === initialRun ? 18 : 21)}</span><p role="status">{message}</p></div>
     </div>
   </ArtworkWindow>;

@@ -13,11 +13,7 @@
 }
 .amazon-artifact[data-nearby="true"] { --font-amazon-ui: var(--amazon-poppins); }
 .amazon-pane { overflow: auto; min-width: 0; min-height: 0; scrollbar-width: thin; scrollbar-color: #526775 #152631; }
-.amazon-heading, .amazon-toolbar { display: flex; align-items: baseline; justify-content: space-between; gap: 4px 10px; flex-wrap: wrap; }
-.amazon-heading { padding: 10px 14px 1px; }
-.amazon-heading h3 { margin: 0; color: #ecf3f4; font: 500 19px/1.25 var(--font-amazon-ui), sans-serif; letter-spacing: -.022em; }
-.amazon-heading span, .amazon-hint { color: #b4c5cd; font-size: 11px; }
-.amazon-hint { padding: 2px 14px 8px; }
+.amazon-heading { margin: 0; padding: 10px 14px 8px; color: #ecf3f4; font: 500 19px/1.25 var(--font-amazon-ui), sans-serif; letter-spacing: -.022em; }
 .amazon-diff-arrow {
   --arrow-size: 44px;
   position: sticky;
@@ -42,9 +38,7 @@
     30% { transform: translateY(2px); }
   }
 }
-.amazon-toolbar { align-items: center; padding: 7px 12px; border-top: 1px solid #334954; background: #1b2b37; }
-.amazon-toolbar > span { color: #c4d3db; font-size: 12px; }
-.amazon-toolbar > div { display: flex; align-items: center; gap: 6px; }
+.amazon-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: 6px; padding: 7px 12px; border-top: 1px solid #334954; background: #1b2b37; }
 .amazon-toolbar button { border: 1px solid #506570; border-radius: 5px; background: transparent; color: #ecf3f4; padding: 5px 10px; font: 500 12px/1.4 var(--font-amazon-ui), sans-serif; cursor: pointer; }
 .amazon-toolbar .amazon-primary { background: #ffca86; border-color: #ffca86; color: #322013; }
 .amazon-toolbar .amazon-primary:disabled { background: #34444e; color: #c3cdd1; border-color: #46565d; cursor: default; }
@@ -59,7 +53,7 @@
 .artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 404px; }
 @container (max-width: 400px) {
   .artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 438px; }
-  .artwork-amazon .artwork-window-dialog:not(:modal) .amazon-heading h3 { font-size: 16px; }
+  .artwork-amazon .artwork-window-dialog:not(:modal) .amazon-heading { font-size: 16px; }
 }
 @container (max-width: 300px) {
   .artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 482px; }

@@ -40,7 +40,7 @@ function Heatmap({ reply }: { reply: Reply }) {
         return <g key={word} className={styles.tokenRow} style={{ "--delay": `${i * 125}ms` } as CSSProperties}>
           <text x={left - 9} y={y + 13.5} textAnchor="end" className={styles.token}>{word}</text>
           {state.map((value, j) => <rect key={j} x={left + j * cellWidth} y={y} width={cellWidth - 1} height={cellHeight - 1}
-            fill={activationColor(value)}><title>{word}, unit {j + 1}: {value}</title></rect>)}
+            fill={activationColor(value)}><title>{`${word}, unit ${j + 1}: ${value}`}</title></rect>)}
         </g>;
       })}
       <g className={styles.meanRow}>
@@ -90,7 +90,7 @@ function Histogram({ reply, cutoff }: { reply: Reply; cutoff: number }) {
         const color = group === "honest" ? blue : rust;
         return <rect key={group + bin.start} x={scoreX(bin.start)} y={countY(count)}
           width={scoreX(bin.end) - scoreX(bin.start)} height={plot.bottom - countY(count)} fill={color} fillOpacity=".34" stroke={color} strokeWidth="1.1">
-          <title>{group}, scores {bin.start} to {bin.end}: {count} replies</title>
+          <title>{`${group}, scores ${bin.start} to ${bin.end}: ${count} replies`}</title>
         </rect>;
       }))}
     </g>

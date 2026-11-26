@@ -17,7 +17,7 @@ for (const width of [320, 1440]) {
     const artwork = await openProjectAnimation(page, "amazon");
     const arrow = artwork.getByRole("button", { name: "View configuration diff" });
     await expect(arrow).toBeHidden();
-    await expect(artwork.getByText("Effective next run", { exact: true })).toBeVisible();
+    await expect(artwork.getByRole("status")).toContainText(/Run 184 uses v41.*run 185/);
     await expect(artwork.getByRole("combobox", { name: /run/i })).toHaveCount(0);
     const diff = artwork.getByRole("region", { name: "Configuration file diff" });
     const horizon = diff.getByRole("spinbutton", { name: "New value for horizon_weeks" });
