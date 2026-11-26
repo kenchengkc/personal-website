@@ -25,7 +25,9 @@ for (const width of [320, 1440]) {
     await horizon.fill("12");
     await expect(diff.getByText("No changes", { exact: true })).toBeVisible();
     await expect(push).toBeDisabled();
-    await horizon.fill("19");
+    await horizon.fill("1.5");
+    await expect(push).toBeDisabled();
+    await horizon.fill("104");
     await expect(diff.locator('[data-kind="delete"][data-old-line="3"]')).toContainText("12");
     await expect(diff.locator('[data-kind="add"][data-new-line="3"]')).toContainText('"horizon_weeks"');
     await expect(diff).toContainText("@@ -1,5 +1,5 @@");
@@ -57,7 +59,7 @@ for (const width of [320, 1440]) {
     await expect(diff.locator('[data-kind="add"]')).toBeInViewport();
     await artwork.getByRole("button", { name: "Edit again" }).click();
     await expect(arrow).toBeHidden();
-    await expect(horizon).toHaveValue("19");
+    await expect(horizon).toHaveValue("104");
     const pushNextVersion = artwork.getByRole("button", { name: "Click to push version 43", exact: true });
     await expect(pushNextVersion).toBeDisabled();
     await horizon.fill("24");
@@ -88,4 +90,7 @@ test("switching the author and edited file changes the diff and recipient routes
   await expect(file).toHaveValue("input");
   await expect(artwork.locator('[data-consumer="0"]')).toContainText("sales-ingest");
   await expect(artwork.locator('[data-consumer="2"], [data-consumer="3"]')).toHaveCount(0);
+  await artwork.getByRole("spinbutton", { name: "New value for history_days" }).fill("730");
+  await artwork.getByRole("button", { name: "Click to push version 42", exact: true }).click();
+  await expect(artwork.locator('[data-kind="add"]')).toContainText('"history_days": 730');
 });

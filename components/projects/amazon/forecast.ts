@@ -8,14 +8,12 @@ type ConfigFile = {
   initial: Value;
   sample: Value;
   readers: readonly number[];
-  min?: number;
-  max?: number;
   options?: readonly string[];
 };
 
 export const files: Record<FileId, ConfigFile> = {
-  input: { name: "sales-input.json", key: "history_days", kind: "number", initial: 56, sample: 84, min: 1, max: 365, readers: [0, 1] },
-  window: { name: "forecast-window.json", key: "horizon_weeks", kind: "number", initial: 12, sample: 16, min: 1, max: 52, readers: [1, 2, 3] },
+  input: { name: "sales-input.json", key: "history_days", kind: "number", initial: 56, sample: 84, readers: [0, 1] },
+  window: { name: "forecast-window.json", key: "horizon_weeks", kind: "number", initial: 12, sample: 16, readers: [1, 2, 3] },
   delivery: { name: "delivery.json", key: "format", kind: "enum", initial: "csv", sample: "parquet", options: ["csv", "parquet", "jsonl"], readers: [2, 3] },
 };
 

@@ -139,7 +139,7 @@ export function AmazonArtwork() {
     viewport.scrollBy({ top: diff.getBoundingClientRect().top - viewport.getBoundingClientRect().top, behavior: reduced ? "instant" : "smooth" });
   }
 
-  const message = frame?.caption ?? (draft === null ? `Enter a whole number from ${config.min} to ${config.max}.`
+  const message = frame?.caption ?? (draft === null ? "Enter a positive whole number to push this change."
     : draft === base.value ? "Change the value to create a new revision."
     : `Run ${lastRun} uses v${base.version}. The edit will take effect in run ${target}.`);
   return <ArtworkWindow name="Amazon" title="Forecast configuration">

@@ -56,12 +56,12 @@ function EditedValue({ id, value, onValue }: Pick<Props, "id" | "value" | "onVal
   }
 
   const text = value === null ? invalidText : String(value);
-  return <input type="number" inputMode="numeric" step={1} min={config.min} max={config.max}
+  return <input type="number" inputMode="numeric" step={1} min={1} max={Number.MAX_SAFE_INTEGER} required
     aria-label={label} aria-invalid={value === null} value={text}
     style={{ width: `${Math.max(1.25, text.length + .15)}ch` }}
     onChange={event => {
       const input = event.currentTarget;
-      if (input.validity.valid && Number.isFinite(input.valueAsNumber)) {
+      if (input.validity.valid && Number.isSafeInteger(input.valueAsNumber)) {
         onValue(input.valueAsNumber);
       } else {
         setInvalidText(input.value);
