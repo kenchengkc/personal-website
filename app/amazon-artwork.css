@@ -13,28 +13,32 @@
 }
 .amazon-artifact[data-nearby="true"] { --font-amazon-ui: var(--amazon-poppins); }
 .amazon-pane { overflow: auto; min-width: 0; min-height: 0; scrollbar-width: thin; scrollbar-color: #526775 #152631; }
+.amazon-preview-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+}
 .amazon-heading, .amazon-toolbar { display: flex; align-items: baseline; justify-content: space-between; gap: 4px 10px; flex-wrap: wrap; }
-.amazon-heading { padding: 10px 14px 1px; }
 .amazon-heading h3 { margin: 0; color: #ecf3f4; font: 500 19px/1.25 var(--font-amazon-ui), sans-serif; letter-spacing: -.022em; }
 .amazon-heading span, .amazon-hint { color: #b4c5cd; font-size: 11px; }
-.amazon-hint { padding: 2px 14px 8px; }
+.amazon-hint { margin-top: 3px; }
 .amazon-diff-arrow {
-  --arrow-size: 44px;
-  position: sticky;
-  bottom: 6px;
   display: grid;
   place-items: center;
-  width: var(--arrow-size);
-  height: var(--arrow-size);
-  margin: calc(-1 * var(--arrow-size)) auto 0;
-  border: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #ffe2b0;
   border-radius: 50%;
-  color: #ecf3f4;
-  background: radial-gradient(circle closest-side, #162632 70%, #526775 72%, #526775 76%, transparent 78%);
+  color: #302013;
+  background: #ffbd64;
+  box-shadow: 0 2px 5px #08131e80;
   cursor: pointer;
 }
-.amazon-diff-arrow:hover, .amazon-diff-arrow:focus-visible { color: #ffca86; }
-.amazon-diff-arrow:focus-visible { outline: 2px solid currentColor; }
+.amazon-diff-arrow[data-visible="false"] { visibility: hidden; }
+.amazon-diff-arrow:hover { background: #ffd594; }
+.amazon-diff-arrow:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 @media (prefers-reduced-motion: no-preference) {
   .amazon-diff-arrow svg { animation: amazon-arrow-bounce 1.6s ease-in-out infinite; }
   @keyframes amazon-arrow-bounce {
@@ -54,7 +58,7 @@
 .artwork-amazon .artwork-window-dialog:modal { width: min(800px, calc(100vw - 32px)); }
 .artwork-amazon .artwork-window-dialog:modal .amazon-diff-arrow { display: none; }
 .artwork-amazon .artwork-window-dialog:modal .amazon-pane { overflow: visible; }
-.artwork-amazon .artwork-window-dialog:modal .amazon-heading { padding-top: 14px; }
+.artwork-amazon .artwork-window-dialog:modal .amazon-preview-header { display: block; padding-top: 14px; }
 @media (pointer: coarse) { .amazon-toolbar button { min-height: 40px; } }
 .artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 404px; }
 @container (max-width: 400px) {

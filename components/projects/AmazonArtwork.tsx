@@ -146,8 +146,15 @@ export function AmazonArtwork() {
     <div className={`amazon-artifact ${poppins.variable}`} ref={root} role="figure" aria-label="Amazon configuration infrastructure"
       data-nearby={nearby} data-phase={phase} data-running={running}>
       <div className="amazon-pane" ref={pane}>
-        <div className="amazon-heading"><h3>Forecasting pipeline</h3><span>Example routes</span></div>
-        <div className="amazon-hint">{headers[phase]}</div>
+        <div className="amazon-preview-header">
+          <div>
+            <div className="amazon-heading"><h3>Forecasting pipeline</h3><span>Example routes</span></div>
+            <div className="amazon-hint">{headers[phase]}</div>
+          </div>
+          <button type="button" className="amazon-diff-arrow" data-visible={showDiffArrow} aria-label="View configuration diff" onClick={showDiff}>
+            <ArrowDown size={24} strokeWidth={2.75} aria-hidden="true" />
+          </button>
+        </div>
         <ConfigurationRoutes file={config.name} version={base.version + Number(Boolean(frame))} author={author}
           readers={config.readers} phase={phase} stages={stages} run={target} activeStage={frame?.stage ?? null}
           hopIndex={frame?.hop ?? null} onSelect={edit} />
@@ -156,9 +163,6 @@ export function AmazonArtwork() {
             original={base.value} value={draft} baseVersion={base.version} locked={Boolean(frame)}
             onFile={setId} onValue={value => setDrafts({ ...drafts, [id]: value })} />
         </div>
-        {showDiffArrow && <button type="button" className="amazon-diff-arrow" aria-label="View configuration diff" onClick={showDiff}>
-          <ArrowDown size={20} aria-hidden="true" />
-        </button>}
       </div>
       <div className="amazon-toolbar"><span>Effective next run</span><div>
         {!frame && <button type="button" className="amazon-primary" onClick={push} disabled={draft === null || draft === base.value}>Push v{base.version + 1}</button>}
