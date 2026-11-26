@@ -107,7 +107,7 @@ test("Creative Machines Lab uses the same window, expanding and restoring in pla
     expect(enlarged.x + enlarged.width / 2).toBeCloseTo(720, 0);
     expect(enlarged.y).toBeGreaterThanOrEqual(8);
     expect(enlarged.y + enlarged.height).toBeLessThanOrEqual(992);
-    // Both the reply cards and the charts use the same scene proportions.
+    // The enlarged notebook retains its scene proportions and fits inside the dialog.
     expect(await dialog.evaluate(node => {
       const drawing = node.querySelector(".animated-artwork-scene")!.getBoundingClientRect();
       return { ratio: Math.round(drawing.width / drawing.height * 100) / 100, scrolls: node.scrollWidth > node.clientWidth + 1 || node.scrollHeight > node.clientHeight + 1 };

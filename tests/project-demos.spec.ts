@@ -2,42 +2,57 @@ import { expect, test } from "@playwright/test";
 import { openProjectAnimation } from "./helpers/gallery";
 
 for (const width of [320, 1440]) {
-  test(`CML follows either reply through the detector and switches transfer models at ${width}px`, async ({ page }) => {
+  test(`CML traces reply records, tests review cutoffs, and inspects transfer at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: width === 320 ? "reduce" : "no-preference" });
     await page.goto("/#research");
     const artwork = page.locator('[data-artwork="cml"] .animated-artwork');
     const steps = artwork.getByRole("group", { name: "Animation steps" });
-    const replies = artwork.getByRole("group", { name: "Example reply" });
-    const scene = artwork.locator(".animated-artwork-scene");
+    const csv = artwork.getByRole("button", { name: /replies\.csv/i });
+    const notebook = artwork.getByRole("button", { name: /probe\.ipynb/i });
+    const reply = artwork.getByRole("combobox", { name: "Example reply" });
+    const cutoff = artwork.getByRole("slider", { name: "Review cutoff" });
+    const run = artwork.getByRole("button", { name: "Run cell" });
+    const count = artwork.getByLabel("Cell execution count");
 
-    await steps.getByRole("button", { name: "Replies", exact: true }).press("Enter");
-    await replies.getByRole("button", { name: "Reply A", exact: true }).click();
-    await expect(scene).toContainText("It covers defects. Spills are excluded.");
-    await replies.getByRole("button", { name: "Reply B", exact: true }).click();
-    await expect(scene).toContainText("You get two years of protection.");
+    await expect(steps.getByRole("button")).toHaveText(["Score", "Signals", "Transfer"]);
+    await steps.getByRole("button", { name: "Score", exact: true }).press("Enter");
+    await csv.click();
+    await expect(notebook).toBeVisible();
+    await notebook.click();
+    await expect(run).toBeVisible();
+
+    for (const id of ["A", "B"]) {
+      await csv.click();
+      await artwork.getByRole("button", { name: `Trace reply ${id}` }).click();
+      await expect(artwork).toHaveAttribute("data-stage", "0");
+      await expect(reply).toHaveValue(id);
+      const previous = Number((await count.innerText()).match(/\d+/)?.[0]);
+      await run.click();
+      await expect(count).toHaveText(`[${previous + 1}]:`);
+      const score = artwork.getByRole("img", { name: new RegExp(`Probe score histogram for reply ${id}`, "i") });
+      await expect(score).toHaveAccessibleName(id === "A" ? /10\.5, below.*cutoff of 20/i : /28\.5, above.*cutoff of 20/i);
+    }
+
+    const score = artwork.getByRole("img", { name: /Probe score histogram for reply B/i });
+    await cutoff.press("End");
+    await expect(score).toHaveAccessibleName(/28\.5, below.*cutoff of 35/i);
+    await cutoff.press("Home");
+    await expect(score).toHaveAccessibleName(/28\.5, above.*cutoff of 5/i);
+
     await steps.getByRole("button", { name: "Signals", exact: true }).click();
-    await expect(replies.getByRole("button", { name: "Reply B", exact: true })).toHaveAttribute("aria-pressed", "true");
-    await expect(scene.getByRole("img")).toBeVisible();
-
-    await steps.getByRole("button", { name: "Score", exact: true }).click();
-    const score = scene.getByRole("img");
-    await expect(score).toHaveAccessibleName(/above.*cutoff/i);
-    await expect(scene).toContainText("Flag for review");
-    await replies.getByRole("button", { name: "Reply A", exact: true }).click();
-    await expect(score).toHaveAccessibleName(/below.*cutoff/i);
-    await expect(scene).toContainText("Below cutoff");
+    await expect(artwork.getByRole("img", { name: /Token activation heatmap for reply B/i })).toBeVisible();
+    await reply.selectOption("A");
+    await expect(artwork.getByRole("img", { name: /Token activation heatmap for reply A/i })).toBeVisible();
 
     await steps.getByRole("button", { name: "Transfer", exact: true }).click();
-    await expect(replies).toHaveCount(0);
-    const models = artwork.getByRole("group", { name: "Transfer model" });
-    for (const [name, title] of [["Llama", /^Proposed Llama training/i], ["Qwen", /^Proposed Qwen transfer/i]] as const) {
-      const model = models.getByRole("button", { name, exact: true });
-      await model.click();
-      await expect(model).toHaveAttribute("aria-pressed", "true");
-      await expect(scene.getByRole("img")).toHaveAccessibleName(title);
-      await expect(scene).toContainText(`${name} adapter`);
-      await expect(scene).toContainText(/shared classifier/i);
+    await expect(reply).toHaveCount(0);
+    const model = artwork.getByRole("combobox", { name: "Transfer model" });
+    for (const name of ["Llama", "Qwen"]) {
+      await model.selectOption({ label: name });
+      const config = artwork.getByRole("table", { name: new RegExp(`Proposed ${name}`, "i") });
+      await expect(config.getByRole("row", { name: new RegExp(`Train ${name} adapter`, "i") })).toContainText(/true/i);
+      await expect(config.getByRole("row", { name: /Train shared classifier/i })).toContainText(name === "Llama" ? /true/i : /false/i);
     }
     expect(await artwork.evaluate(node => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1)).toBe(true);
     await page.getByRole("button", { name: "Expand Creative Machines Lab preview" }).click();

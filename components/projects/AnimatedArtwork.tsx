@@ -22,7 +22,7 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
   timeline?: readonly { stage: number; at: number }[];
   playground?: (stage: number) => ReactNode;
   onReplay?: () => void;
-  children: (stage: number, frame: number, pause: () => void) => ReactNode;
+  children: (stage: number, frame: number, pause: () => void, selectStep: (index: number) => void) => ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const inspectionFrame = useRef(0);
@@ -35,7 +35,7 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
   const visible = useSyncExternalStore(subscribeVisibility, () => !document.hidden, () => false);
   const frames = timeline?.length ? timeline : undefined;
   const automaticStage = frames ? frames[automatic].stage : automatic;
-  const stage = selected ?? (reducedMotion ? steps.length - 1 : automaticStage);
+  const stage = selected ?? (reducedMotion ? (frames?.at(-1)?.stage ?? steps.length - 1) : automaticStage);
   const frame = frames && (selected !== null || reducedMotion)
     ? frames.findLastIndex(tick => tick.stage === stage)
     : automatic;
@@ -88,6 +88,11 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
 
   useEffect(() => () => cancelAnimationFrame(inspectionFrame.current), []);
 
+  function selectStep(index: number) {
+    setSelected(index);
+    setPlaying(false);
+  }
+
   function inspect() {
     setSelected(stage);
     setPlaying(false);
@@ -124,12 +129,12 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
 
   return <div ref={root} className={`animated-artwork${playground ? " has-playground" : ""}`} role="figure" aria-label={label}
     data-stage={stage} data-running={running} data-motion-active={inView && visible && !reducedMotion}>
-    <div className="animated-artwork-scene">{children(stage, frames ? frame : stage, () => setPlaying(false))}</div>
+    <div className="animated-artwork-scene">{children(stage, frames ? frame : stage, () => setPlaying(false), selectStep)}</div>
     <div className="animated-artwork-footer">
       <p>{steps[stage].caption}</p>
       {playground && <div className="animated-artwork-playground" onFocusCapture={inspect} onClickCapture={inspect} onChangeCapture={inspect}>{playground(stage)}</div>}
       <div className="animated-artwork-controls">
-        <div role="group" aria-label="Animation steps">{steps.map((step, index) => <button key={step.label} type="button" aria-pressed={stage === index} onClick={() => { setSelected(index); setPlaying(false); }}>{step.label}</button>)}</div>
+        <div role="group" aria-label="Animation steps">{steps.map((step, index) => <button key={step.label} type="button" aria-pressed={stage === index} onClick={() => selectStep(index)}>{step.label}</button>)}</div>
         {!reducedMotion && <button type="button" className="animated-artwork-play" aria-label={playbackLabel} onClick={togglePlayback}><PlaybackIcon size={13} aria-hidden="true" /></button>}
       </div>
     </div>

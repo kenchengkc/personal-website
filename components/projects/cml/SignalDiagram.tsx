@@ -1,146 +1,122 @@
 import { useId, type CSSProperties } from "react";
+import { decision, histogram, meanActivation, referenceCount, replies, scoreReply, type Reply } from "./probe";
 import styles from "./signal-diagram.module.css";
 
-type Vector = readonly [number, number];
-type Token = { word: string; state: Vector };
-export type Reply = "A" | "B";
+const blue = "#3069ad";
+const rust = "#b44c31";
+const ink = "#252b31";
+const grid = "#d8dce0";
 
-// Both the token states and the labeled training examples are invented for this map.
-const replies: Record<Reply, readonly Token[]> = {
-  A: [
-    { word: "It", state: [0.7, 0.8] }, { word: "covers", state: [0.65, 2.05] },
-    { word: "defects.", state: [1.85, 2.45] }, { word: "Spills", state: [1.15, 1.3] },
-    { word: "are", state: [2.2, 0.7] }, { word: "excluded.", state: [2.45, 1.7] },
-  ],
-  B: [
-    { word: "You", state: [2.65, 4.5] }, { word: "get", state: [3.25, 5.35] },
-    { word: "two", state: [4.35, 4.25] }, { word: "years", state: [3.8, 3.5] },
-    { word: "of", state: [2.75, 3.85] }, { word: "protection.", state: [4.2, 5.55] },
-  ],
-};
-const honestMean: Vector = [1, 1];
-const misleadingMean: Vector = [4, 5];
-const cutoff = 20;
-const offsets: readonly Vector[] = [
-  [0.82, 0.17], [0.53, 0.54], [0.28, -0.59], [0.74, -0.32], [0.15, 0.78], [0.05, 0.26],
-];
-
-export function replyText(reply: Reply) {
-  return replies[reply].map(token => token.word).join(" ");
+// The same symmetric color limits apply to both replies and to the mean row.
+function activationColor(value: number) {
+  const white = [248, 248, 245];
+  const limit = value < 0 ? [48, 105, 173] : [180, 76, 49];
+  const strength = Math.min(1, Math.abs(value) / 6);
+  return `rgb(${white.map((start, i) => Math.round(start + (limit[i] - start) * strength)).join(",")})`;
 }
 
-function replyMean(reply: Reply): Vector {
-  const tokens = replies[reply];
-  const mean = (i: number) => tokens.reduce((sum, token) => sum + token.state[i], 0) / tokens.length;
-  return [mean(0), mean(1)];
+function displayValue(value: number) {
+  return String(value).replace("-", "−");
 }
 
-// Rotation and uniform scale preserve the angle between the learned direction and the decision boundary.
-function mapPoint([x, y]: Vector) {
-  return { x: 100 + 40 * (0.8 * (x - 1) + 0.6 * (y - 1)), y: 125 + 40 * (0.6 * (x - 1) - 0.8 * (y - 1)) };
-}
-const direction: Vector = [misleadingMean[0] - honestMean[0], misleadingMean[1] - honestMean[1]];
-function project([x, y]: Vector) {
-  return x * direction[0] + y * direction[1];
-}
-
-// Two points on the line where the dot product equals the validation cutoff.
-const boundaryStart = mapPoint([0, cutoff / direction[1]]);
-const boundaryEnd = mapPoint([cutoff / direction[0], 0]);
-function cutoffX(y: number) {
-  return boundaryStart.x + (y - boundaryStart.y) * (boundaryEnd.x - boundaryStart.x) / (boundaryEnd.y - boundaryStart.y);
-}
-
-function ReferenceCloud({ mean, kind }: { mean: Vector; kind: "honest" | "misleading" }) {
-  const center = mapPoint(mean);
-  return <g className={styles[kind]}>
-    <ellipse cx={center.x} cy={center.y} rx="41" ry="31" transform={`rotate(-16 ${center.x} ${center.y})`} className={styles.contour} />
-    {offsets.flatMap(([dx, dy], i) => [-1, 1].map(sign => {
-      const { x, y } = mapPoint([mean[0] + sign * dx, mean[1] + sign * dy]);
-      return kind === "honest"
-        ? <circle key={`${i}/${sign}`} cx={x} cy={y} r="3.5" />
-        : <path key={`${i}/${sign}`} d={`M${x} ${y - 4}l4 4-4 4-4-4z`} />;
-    }))}
-  </g>;
-}
-
-export function SignalDiagram({ reply, stage }: { reply: Reply; stage: "signals" | "score" }) {
+function Heatmap({ reply }: { reply: Reply }) {
   const id = useId();
   const tokens = replies[reply];
-  const previous = reply === "A" ? "B" : "A";
-  const mean = replyMean(reply);
-  const point = mapPoint(mean);
-  const previousPoint = mapPoint(replyMean(previous));
-  const score = Number(project(mean).toFixed(1));
-  const flagged = score >= cutoff;
-  const scoring = stage === "score";
-  const result = flagged ? "Flag for review" : "Below cutoff";
-  const label = scoring
-    ? `Detector score map for reply ${reply}. Score ${score}, ${flagged ? "above" : "below"} the validation cutoff of ${cutoff}. ${result}.`
-    : `Final-layer signal map for reply ${reply}. Six token states from “${replyText(reply)}” average to a single reply point at (${mean.map(value => value.toFixed(1)).join(", ")}).`;
-  // Use a fixed-width typeface for the source sentence so each token begins over its own word.
-  const charWidth = 9.4;
-  const sentenceX = (400 - replyText(reply).length * charWidth) / 2;
-  const top = 5, bottom = 174;
-  const cutoffTop = cutoffX(top), cutoffBottom = cutoffX(bottom);
-  return <svg className={styles.diagram} viewBox="0 0 400 210" role="img" aria-label={label}>
+  const mean = meanActivation(reply);
+  const left = 98, top = 29, cellWidth = 40, cellHeight = 18;
+  const meanY = top + cellHeight * tokens.length + 6;
+  const label = `Token activation heatmap for reply ${reply}. Rows are six public-answer tokens and columns are six final-layer units. Mean activations: ${mean.join(", ")}. Colors range from minus six to plus six.`;
+  return <svg viewBox="0 0 352 197" className={styles.diagram} role="img" aria-label={label}>
     <defs>
-      <clipPath id={id + "-map"}><rect x="6" y={top} width="388" height={bottom - top} rx="9" /></clipPath>
-      <pattern id={id + "-grid"} width="20" height="20" patternUnits="userSpaceOnUse">
-        <circle cx="10" cy="10" r="0.9" fill="#aac2cb" opacity=".24" />
-      </pattern>
-      <radialGradient id={id + "-focus"}>
-        <stop stopColor="#82ddcd" stopOpacity=".16" />
-        <stop offset="1" stopColor="#82ddcd" stopOpacity="0" />
-      </radialGradient>
+      <linearGradient id={id}>
+        <stop stopColor={blue} /><stop offset=".5" stopColor={activationColor(0)} /><stop offset="1" stopColor={rust} />
+      </linearGradient>
     </defs>
-    <rect x="6" y={top} width="388" height={bottom - top} rx="9" fill="#101e29" stroke="#314650" />
-    <g clipPath={`url(#${id}-map)`}>
-      <rect width="400" height={bottom} fill={`url(#${id}-grid)`} />
-      {!scoring && <ellipse cx={point.x} cy={point.y} rx="82" ry="62" fill={`url(#${id}-focus)`} />}
-      {scoring && <g className={styles.landscape}>
-        <path d={`M6 ${top}H${cutoffTop}L${cutoffBottom} ${bottom}H6Z`} fill="#82ddcd" fillOpacity=".07" />
-        <path d={`M${cutoffTop} ${top}H394V${bottom}H${cutoffBottom}Z`} fill="#ffca86" fillOpacity=".10" />
-        <ReferenceCloud mean={honestMean} kind="honest" />
-        <ReferenceCloud mean={misleadingMean} kind="misleading" />
-        <path className={styles.boundary} d={`M${cutoffTop} ${top}L${cutoffBottom} ${bottom}`} pathLength="1" />
-        <text x={cutoffX(26) - 8} y="27" textAnchor="end" className={styles.cutoff}>Cutoff {cutoff}</text>
-        <text x="18" y="81" className={styles.honest}>Honest examples</text>
-        <text x="381" y="25" textAnchor="end" className={styles.misleading}>Misleading examples</text>
-      </g>}
-    </g>
-    {!scoring && <g className={styles.meanKey}>
-      <circle cx="24" cy="23" r="7" /><circle cx="24" cy="23" r="2" fill="currentColor" />
-      <text x="39" y="28">Reply average</text>
-    </g>}
-    {tokens.map(({ word, state }, i) => {
-      const token = mapPoint(state);
-      const old = mapPoint(replies[previous][i].state);
-      const before = tokens.slice(0, i).reduce((length, token) => length + token.word.length + 1, 0);
-      const sourceX = sentenceX + (before + word.length / 2) * charWidth;
-      const motion = {
-        "--word-x": `${sourceX - token.x}px`, "--word-y": `${193 - token.y}px`,
-        "--old-x": `${old.x - token.x}px`, "--old-y": `${old.y - token.y}px`,
-        "--mean-x": `${point.x - token.x}px`, "--mean-y": `${point.y - token.y}px`, "--delay": `${i * 160}ms`,
-      } as CSSProperties;
-      return <g key={reply + word} style={motion}>
-        {!scoring && <text x={sourceX} y="199" textAnchor="middle" className={styles.word}>{word}</text>}
-        <g transform={`translate(${token.x} ${token.y})`}>
-          <circle className={scoring ? styles.ghost : styles.token} r={scoring ? 2 : 4.5} />
-          {!scoring && <circle r="3.5" className={styles.pool} />}
-          {!scoring && (i === 3 || i === 5) &&
-            <text className={styles.pointWord} x={i === 5 ? 8 : -8} y={i === 5 ? 5 : -7} textAnchor={i === 5 ? "start" : "end"}>{word}</text>}
-        </g>
-      </g>;
-    })}
-    <g transform={`translate(${point.x} ${point.y})`}>
-      <g key={reply} className={styles.replyPoint} style={{ "--old-x": `${previousPoint.x - point.x}px`, "--old-y": `${previousPoint.y - point.y}px` } as CSSProperties}>
-        <circle className={styles.halo} r="13" /><circle className={styles.ring} r="8" /><circle r="2.8" fill="#f3f8fa" />
+    <text x={left - 9} y="19" textAnchor="end" className={styles.axisLabel}>Token</text>
+    {mean.map((_, j) => <text key={j} x={left + (j + .5) * cellWidth} y="19" textAnchor="middle" className={styles.unit}>U{j + 1}</text>)}
+    <g key={reply}>
+      {tokens.map(({ word, state }, i) => {
+        const y = top + i * cellHeight;
+        return <g key={word} className={styles.tokenRow} style={{ "--delay": `${i * 125}ms` } as CSSProperties}>
+          <text x={left - 9} y={y + 13.5} textAnchor="end" className={styles.token}>{word}</text>
+          {state.map((value, j) => <rect key={j} x={left + j * cellWidth} y={y} width={cellWidth - 1} height={cellHeight - 1}
+            fill={activationColor(value)}><title>{word}, unit {j + 1}: {value}</title></rect>)}
+        </g>;
+      })}
+      <g className={styles.meanRow}>
+        <text x={left - 9} y={meanY + 13.5} textAnchor="end" className={styles.meanLabel}>Mean</text>
+        {mean.map((value, j) => <g key={j}>
+          <rect x={left + j * cellWidth} y={meanY} width={cellWidth - 1} height={cellHeight} fill={activationColor(value)} />
+          <text x={left + (j + .5) * cellWidth} y={meanY + 13.3} textAnchor="middle" className={styles.value}
+            fill={Math.abs(value) >= 5.5 ? "#fff" : "#151b20"}>{displayValue(value)}</text>
+        </g>)}
       </g>
     </g>
-    {scoring && <g className={styles.outcome}>
-      <text x="12" y="199">Reply {reply} · {score}</text>
-      <text x="388" y="199" textAnchor="end" className={flagged ? styles.misleading : styles.honest}>{result}</text>
-    </g>}
+    <text x={left - 9} y="183" textAnchor="end" className={styles.axisLabel}>Activation</text>
+    <rect x={left} y="174" width="130" height="8" fill={`url(#${id})`} />
+    {["−6", "0", "+6"].map((tick, i) => <text key={tick} x={left + i * 65} y="196" textAnchor="middle" className={styles.tick}>{tick}</text>)}
   </svg>;
+}
+
+const plot = { left: 38, right: 339, top: 39, bottom: 127 };
+const maxScore = histogram[histogram.length - 1].end;
+const maxCount = Math.ceil(Math.max(...histogram.map(bin => Math.max(bin.honest, bin.misleading))) / 2) * 2;
+const scoreX = (score: number) => plot.left + (plot.right - plot.left) * score / maxScore;
+const countY = (count: number) => plot.bottom - (plot.bottom - plot.top) * count / maxCount;
+
+function Histogram({ reply, cutoff }: { reply: Reply; cutoff: number }) {
+  const score = scoreReply(reply);
+  const result = decision(score, cutoff);
+  const relation = score < cutoff ? "below" : score > cutoff ? "above" : "at";
+  const label = `Probe score histogram for reply ${reply}. Score ${score}, ${relation} the cutoff of ${cutoff}. ${result}. Counts of ${referenceCount} illustrative reference replies in four-point score bins, grouped by honest and misleading labels.`;
+  return <svg viewBox="0 0 352 192" className={styles.diagram} role="img" aria-label={label}>
+    <g className={styles.legend}>
+      <rect x="37" y="6" width="13" height="9" fill={blue} fillOpacity=".36" stroke={blue} />
+      <text x="56" y="15">Honest</text>
+      <rect x="115" y="6" width="13" height="9" fill={rust} fillOpacity=".36" stroke={rust} />
+      <text x="134" y="15">Misleading</text>
+      <path d="M232 11h19" stroke={ink} strokeWidth="1.8" strokeDasharray="4 3" />
+      <text x="257" y="15">Cutoff {cutoff}</text>
+    </g>
+    {Array.from({ length: maxCount / 2 + 1 }, (_, i) => i * 2).map(count => <g key={count}>
+      <line x1={plot.left} x2={plot.right} y1={countY(count)} y2={countY(count)} stroke={grid} strokeWidth=".8" />
+      <text x={plot.left - 7} y={countY(count) + 4} textAnchor="end" className={styles.tick}>{count}</text>
+    </g>)}
+    <text transform="translate(12 85) rotate(-90)" textAnchor="middle" className={styles.axisLabel}>Count</text>
+    <g className={styles.bars}>
+      {(["honest", "misleading"] as const).map(group => histogram.map(bin => {
+        const count = bin[group];
+        if (!count) return null;
+        const color = group === "honest" ? blue : rust;
+        return <rect key={group + bin.start} x={scoreX(bin.start)} y={countY(count)}
+          width={scoreX(bin.end) - scoreX(bin.start)} height={plot.bottom - countY(count)} fill={color} fillOpacity=".34" stroke={color} strokeWidth="1.1">
+          <title>{group}, scores {bin.start} to {bin.end}: {count} replies</title>
+        </rect>;
+      }))}
+    </g>
+    <g className={styles.indicator} style={{ transform: `translateX(${scoreX(cutoff)}px)` }}>
+      <path d={`M0 ${plot.top - 5}V${plot.bottom}`} stroke={ink} strokeWidth="1.8" strokeDasharray="4 3" />
+    </g>
+    <g className={styles.indicator} style={{ transform: `translateX(${scoreX(score)}px)` }}>
+      <g key={reply} className={styles.marker}>
+        <path d={`M0 ${plot.top - 3}V${plot.bottom}`} stroke={ink} strokeWidth="2.2" />
+        <path d={`M-4.8 ${plot.top - 9}h9.6L0 ${plot.top - 1}z`} fill={ink} />
+      </g>
+    </g>
+    <line x1={plot.left} x2={plot.right} y1={plot.bottom} y2={plot.bottom} stroke="#555f66" />
+    {[0, 10, 20, 30, 40].map(tick => <g key={tick}>
+      <line x1={scoreX(tick)} x2={scoreX(tick)} y1={plot.bottom} y2={plot.bottom + 3} stroke="#555f66" />
+      <text x={scoreX(tick)} y={plot.bottom + 15} textAnchor="middle" className={styles.tick}>{tick}</text>
+    </g>)}
+    <text x={(plot.left + plot.right) / 2} y="159" textAnchor="middle" className={styles.axisLabel}>Probe score</text>
+    <g className={styles.result} key={reply + result}>
+      <path d="m13 174 4.5 7 4.5-7z" fill={ink} />
+      <text x="29" y="184">Reply {reply} · {score}</text>
+      <text x={plot.right} y="184" textAnchor="end" fill={score >= cutoff ? rust : blue}>{result}</text>
+    </g>
+  </svg>;
+}
+
+export function SignalDiagram({ reply, stage, cutoff }: { reply: Reply; stage: "signals" | "score"; cutoff: number }) {
+  return stage === "signals" ? <Heatmap reply={reply} /> : <Histogram reply={reply} cutoff={cutoff} />;
 }
