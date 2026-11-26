@@ -1,0 +1,48 @@
+.diagram { display: block; width: 100%; height: 100%; min-height: 0; fill: #e4edf1; font: 500 16px/1 var(--font-sans), sans-serif; }
+.honest { color: #82ddcd; fill: currentColor; }
+.misleading { color: #ffca86; fill: currentColor; }
+.contour { fill: currentColor; fill-opacity: .06; stroke: currentColor; stroke-opacity: .26; }
+.landscape text { font-size: 15px; paint-order: stroke; stroke: #14242d; stroke-width: 3; stroke-linejoin: round; }
+.boundary { fill: none; stroke: #d7e3e3; stroke-width: 1.7; }
+.cutoff { fill: #e4edf1; }
+.meanKey { color: #ecf4f7; }
+.meanKey circle { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.meanKey text { fill: currentColor; }
+.token { fill: #a9dcd9; stroke: #12202b; stroke-width: 1.5; }
+.pointWord { font-size: 15px; fill: #d0e5e5; }
+.ghost { fill: #e4edf1; opacity: .24; }
+.pool { fill: #e6faf8; opacity: 0; }
+.halo { fill: #c3f1ed; fill-opacity: .14; }
+.ring { fill: #132732; stroke: #f3f8fa; stroke-width: 2.5; }
+.diagram .word { font: 500 15.6px/1 var(--font-mono), monospace; fill: #cbdce2; }
+.outcome { font-size: 17px; font-weight: 600; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(.animated-artwork[data-running="true"]) .token {
+    animation: fromWord 900ms cubic-bezier(.23,.7,.24,1) var(--delay) backwards;
+  }
+  :global(.animated-artwork[data-running="true"]) .word { animation: readWord 800ms ease-out var(--delay); }
+  :global(.animated-artwork[data-running="true"]) .pointWord { animation: reveal 400ms ease-out calc(750ms + var(--delay)) backwards; }
+  :global(.animated-artwork[data-running="true"]) .pool,
+  :global(.animated-artwork[data-motion-active="true"]) :global(.cml-process[data-choice-motion="true"]) .pool {
+    animation: collect 1500ms ease-in-out calc(1550ms + var(--delay)) both;
+  }
+  :global(.animated-artwork[data-running="true"]) .landscape { animation: reveal 850ms ease-out backwards; }
+  :global(.animated-artwork[data-running="true"]) .boundary { animation: drawBoundary 1s ease-out both; }
+  :global(.animated-artwork[data-motion-active="true"]) :global(.cml-process[data-choice-motion="true"]) :is(.token, .ghost, .replyPoint) {
+    animation: resettle 850ms cubic-bezier(.22,.72,.25,1) both;
+    --artwork-play-state: running;
+  }
+  :global(.animated-artwork[data-motion-active="true"]) :global(.cml-process[data-choice-motion="true"]) .pool { --artwork-play-state: running; }
+  @keyframes fromWord { from { transform: translate(var(--word-x), var(--word-y)); opacity: .25; } to { transform: translate(0, 0); opacity: 1; } }
+  @keyframes resettle { from { transform: translate(var(--old-x), var(--old-y)); } to { transform: translate(0, 0); } }
+  @keyframes collect {
+    0% { transform: translate(0, 0); opacity: 0; }
+    15% { opacity: 1; }
+    86% { opacity: .85; }
+    100% { transform: translate(var(--mean-x), var(--mean-y)); opacity: 0; }
+  }
+  @keyframes reveal { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes readWord { 30% { fill: #fff4ce; } }
+  @keyframes drawBoundary { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
+}

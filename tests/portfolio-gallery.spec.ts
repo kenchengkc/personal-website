@@ -344,10 +344,10 @@ test("research shows published results and keeps only the CML animation", async 
 
   const cml = page.locator('.portfolio-entry[data-project="cml"]');
   await cml.locator('.portfolio-details > summary').click();
-  await expect(cml).toContainText("1,602");
-  await expect(cml).toContainText("990");
-  await expect(cml).toContainText("provisional");
-  await expect(cml).toContainText("detector training");
+  const details = cml.locator(".portfolio-details");
+  await expect(details).toContainText(/deception detector/i);
+  await expect(details).toContainText(/shared classifier/i);
+  await expect(details).toContainText(/new scenarios/i);
   await expect(cml.locator('.animated-artwork')).toBeVisible();
   await expect(page.locator('#research .animated-artwork')).toHaveCount(1);
 

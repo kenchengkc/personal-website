@@ -177,7 +177,7 @@ export const otherWork: OtherWork[] = [
   {
     title: "Creative Machines Lab",
     meta: "Columbia · Undergraduate Deep Learning Researcher · Sep 2026 – Present",
-    detail: "Built a reproducible pipeline for studying deceptive communication in language models, linking 1,602 recipient-answer records to factual-check evidence and 990 decoder-layer activation matrices. The latest controlled comparison collected 288 answers and 144 separate factual checks across Qwen3-8B reasoning modes and Llama-3.1-8B prompt styles, with unchanged model weights. Preserved prompts, token positions, model revisions, and activation checksums for review. Labels remain provisional pending human validation; principal component analysis and detector training have not yet been performed on this dataset.",
+    detail: "Developing a deception detector that can recognize misleading replies across language models. The lab’s baseline scores a model’s internal signals against patterns learned from honest and misleading answers. In an October study, I linked 1,602 replies to factual checks and indexed 990 recordings of internal signals. My research asks whether a small adapter for each model can translate its signals for one shared classifier. The test is how many labeled replies a new model needs to detect misleading answers on new scenarios while keeping false alarms low.",
   },
   {
     title: "Wasserstein Regimes",

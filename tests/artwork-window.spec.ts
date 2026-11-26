@@ -90,7 +90,7 @@ test("Creative Machines Lab uses the same window, expanding and restoring in pla
   await host.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
   const animation = host.locator(".animated-artwork");
   const scene = await animation.elementHandle();
-  await animation.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(1).click();
+  await animation.getByRole("group", { name: "Animation steps" }).getByRole("button", { name: "Signals", exact: true }).click();
   const inline = (await host.boundingBox())!;
   const scrollY = await page.evaluate(() => window.scrollY);
   const expand = host.getByRole("button", { name: "Expand Creative Machines Lab preview", exact: true });
@@ -107,9 +107,9 @@ test("Creative Machines Lab uses the same window, expanding and restoring in pla
     expect(enlarged.x + enlarged.width / 2).toBeCloseTo(720, 0);
     expect(enlarged.y).toBeGreaterThanOrEqual(8);
     expect(enlarged.y + enlarged.height).toBeLessThanOrEqual(992);
-    // The enlarged diagram fills the window at its own proportions, without scrolling.
+    // Both the reply cards and the charts use the same scene proportions.
     expect(await dialog.evaluate(node => {
-      const drawing = node.querySelector(".cml-process svg")!.getBoundingClientRect();
+      const drawing = node.querySelector(".animated-artwork-scene")!.getBoundingClientRect();
       return { ratio: Math.round(drawing.width / drawing.height * 100) / 100, scrolls: node.scrollWidth > node.clientWidth + 1 || node.scrollHeight > node.clientHeight + 1 };
     })).toEqual({ ratio: 1.97, scrolls: false });
 

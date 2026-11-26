@@ -1,6 +1,51 @@
 import { expect, test } from "@playwright/test";
 import { openProjectAnimation } from "./helpers/gallery";
 
+for (const width of [320, 1440]) {
+  test(`CML follows either reply through the detector and switches transfer models at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: width === 320 ? "reduce" : "no-preference" });
+    await page.goto("/#research");
+    const artwork = page.locator('[data-artwork="cml"] .animated-artwork');
+    const steps = artwork.getByRole("group", { name: "Animation steps" });
+    const replies = artwork.getByRole("group", { name: "Example reply" });
+    const scene = artwork.locator(".animated-artwork-scene");
+
+    await steps.getByRole("button", { name: "Replies", exact: true }).press("Enter");
+    await replies.getByRole("button", { name: "Reply A", exact: true }).click();
+    await expect(scene).toContainText("It covers defects. Spills are excluded.");
+    await replies.getByRole("button", { name: "Reply B", exact: true }).click();
+    await expect(scene).toContainText("You get two years of protection.");
+    await steps.getByRole("button", { name: "Signals", exact: true }).click();
+    await expect(replies.getByRole("button", { name: "Reply B", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await expect(scene.getByRole("img")).toBeVisible();
+
+    await steps.getByRole("button", { name: "Score", exact: true }).click();
+    const score = scene.getByRole("img");
+    await expect(score).toHaveAccessibleName(/above.*cutoff/i);
+    await expect(scene).toContainText("Flag for review");
+    await replies.getByRole("button", { name: "Reply A", exact: true }).click();
+    await expect(score).toHaveAccessibleName(/below.*cutoff/i);
+    await expect(scene).toContainText("Below cutoff");
+
+    await steps.getByRole("button", { name: "Transfer", exact: true }).click();
+    await expect(replies).toHaveCount(0);
+    const models = artwork.getByRole("group", { name: "Transfer model" });
+    for (const [name, title] of [["Llama", /^Proposed Llama training/i], ["Qwen", /^Proposed Qwen transfer/i]] as const) {
+      const model = models.getByRole("button", { name, exact: true });
+      await model.click();
+      await expect(model).toHaveAttribute("aria-pressed", "true");
+      await expect(scene.getByRole("img")).toHaveAccessibleName(title);
+      await expect(scene).toContainText(`${name} adapter`);
+      await expect(scene).toContainText(/shared classifier/i);
+    }
+    expect(await artwork.evaluate(node => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+    await page.getByRole("button", { name: "Expand Creative Machines Lab preview" }).click();
+    const dialog = page.getByRole("dialog", { name: "Creative Machines Lab enlarged preview" });
+    expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+  });
+}
+
 test("Embers has one animation whose keyboard-selected step stays in place", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".project-walkthrough")).toHaveCount(0);

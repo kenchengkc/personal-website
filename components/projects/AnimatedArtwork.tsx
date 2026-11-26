@@ -13,7 +13,7 @@ function subscribeVisibility(callback: () => void) {
   return () => document.removeEventListener("visibilitychange", callback);
 }
 
-export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = true, timeline, playground, children }: {
+export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = true, timeline, playground, onReplay, children }: {
   label: string;
   steps: readonly { label: string; caption: string }[];
   duration?: number;
@@ -21,7 +21,8 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
   /** Frames start at zero and advance in milliseconds. Playback holds on the last frame. */
   timeline?: readonly { stage: number; at: number }[];
   playground?: (stage: number) => ReactNode;
-  children: (stage: number, frame: number) => ReactNode;
+  onReplay?: () => void;
+  children: (stage: number, frame: number, pause: () => void) => ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const inspectionFrame = useRef(0);
@@ -103,6 +104,7 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
 
   function togglePlayback() {
     if (finished) {
+      onReplay?.();
       elapsed.current = 0;
       setAutomatic(0);
       setSelected(null);
@@ -120,8 +122,9 @@ export function AnimatedArtwork({ label, steps, duration = 3400, cycleSteps = tr
   const PlaybackIcon = finished ? RotateCcw : playing ? Pause : Play;
   const playbackLabel = finished ? "Replay animation" : playing ? "Pause animation" : "Play animation";
 
-  return <div ref={root} className={`animated-artwork${playground ? " has-playground" : ""}`} role="figure" aria-label={label} data-stage={stage} data-running={running}>
-    <div className="animated-artwork-scene">{children(stage, frames ? frame : stage)}</div>
+  return <div ref={root} className={`animated-artwork${playground ? " has-playground" : ""}`} role="figure" aria-label={label}
+    data-stage={stage} data-running={running} data-motion-active={inView && visible && !reducedMotion}>
+    <div className="animated-artwork-scene">{children(stage, frames ? frame : stage, () => setPlaying(false))}</div>
     <div className="animated-artwork-footer">
       <p>{steps[stage].caption}</p>
       {playground && <div className="animated-artwork-playground" onFocusCapture={inspect} onClickCapture={inspect} onChangeCapture={inspect}>{playground(stage)}</div>}

@@ -1,0 +1,34 @@
+.drawing { display: block; width: 100%; height: 100%; }
+.outgoing { opacity: 0; }
+.tuningNeedle, .fixedNeedle { transform-origin: 327px 116px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawing[data-entry="dock"] .incoming { animation: dock 1.15s both; }
+  .drawing[data-entry="swap"] .outgoing { animation: remove .68s ease-in both; }
+  .drawing[data-entry="swap"] .incoming { animation: dock 1.15s .68s both; }
+  .drawing[data-entry="dock"] .tuningNeedle { animation: tune 1.9s 1s ease-in-out both; }
+  .drawing[data-entry="swap"] .tuningNeedle { animation: tune 1.9s 1.5s ease-in-out both; }
+
+  :global(.animated-artwork[data-motion-active="true"] .cml-process[data-choice-motion="true"]) :is(.incoming, .outgoing, .tuningNeedle) {
+    --artwork-play-state: running;
+  }
+}
+
+@keyframes dock {
+  0% { transform: translate(-63px, -20px); opacity: 0; }
+  21% { transform: translate(-43px, -6px); opacity: 1; }
+  46% { transform: translate(-39px, 0); animation-timing-function: ease-in; }
+  79% { transform: translate(1.6px, 0); animation-timing-function: ease-out; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}
+@keyframes remove {
+  0% { opacity: 1; transform: translate(0, 0); }
+  48% { opacity: 1; transform: translate(-34px, 0); }
+  100% { opacity: 0; transform: translate(-59px, -20px); }
+}
+@keyframes tune {
+  0% { transform: rotate(-69deg); }
+  38% { transform: rotate(9deg); }
+  65% { transform: rotate(-13deg); }
+  100% { transform: rotate(0); }
+}
