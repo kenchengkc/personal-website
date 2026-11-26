@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowDown } from "lucide-react";
 import localFont from "next/font/local";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArtworkWindow } from "./ArtworkWindow";
@@ -40,6 +41,7 @@ export function AmazonArtwork() {
   const diffStart = useRef<HTMLDivElement>(null);
   const [nearby, setNearby] = useState(false);
   const [inView, setInView] = useState(false);
+  const [showDiffArrow, setShowDiffArrow] = useState(false);
   const [author, setAuthor] = useState(2);
   const [id, setId] = useState<FileId>("window");
   const [lastRun, setLastRun] = useState(initialRun);
@@ -76,6 +78,14 @@ export function AmazonArtwork() {
     });
     viewport.observe(root.current!);
     return () => viewport.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowDiffArrow(entry.intersectionRatio < 0.6);
+    }, { root: pane.current, threshold: 0.6 });
+    observer.observe(diffStart.current!);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -122,7 +132,11 @@ export function AmazonArtwork() {
   }
 
   function showDiff() {
-    if (pane.current && diffStart.current) pane.current.scrollTop += diffStart.current.getBoundingClientRect().top - pane.current.getBoundingClientRect().top;
+    const viewport = pane.current;
+    const diff = diffStart.current;
+    if (!viewport || !diff) return;
+    diff.focus({ preventScroll: true });
+    viewport.scrollBy({ top: diff.getBoundingClientRect().top - viewport.getBoundingClientRect().top, behavior: reduced ? "instant" : "smooth" });
   }
 
   const message = frame?.caption ?? (draft === null ? `Enter a whole number from ${config.min} to ${config.max}.`
@@ -133,15 +147,18 @@ export function AmazonArtwork() {
       data-nearby={nearby} data-phase={phase} data-running={running}>
       <div className="amazon-pane" ref={pane}>
         <div className="amazon-heading"><h3>Forecasting pipeline</h3><span>Example routes</span></div>
-        <div className="amazon-hint"><span>{headers[phase]}</span><button type="button" onClick={showDiff}>View diff ↓</button></div>
+        <div className="amazon-hint">{headers[phase]}</div>
         <ConfigurationRoutes file={config.name} version={base.version + Number(Boolean(frame))} author={author}
           readers={config.readers} phase={phase} stages={stages} run={target} activeStage={frame?.stage ?? null}
           hopIndex={frame?.hop ?? null} onSelect={edit} />
-        <div ref={diffStart}>
+        <div ref={diffStart} tabIndex={-1}>
           <ConfigurationDiff id={id} files={configIds.filter(item => files[item].readers.includes(author))} authorName={routes[author].name}
             original={base.value} value={draft} baseVersion={base.version} locked={Boolean(frame)}
             onFile={setId} onValue={value => setDrafts({ ...drafts, [id]: value })} />
         </div>
+        {showDiffArrow && <button type="button" className="amazon-diff-arrow" aria-label="View configuration diff" onClick={showDiff}>
+          <ArrowDown size={20} aria-hidden="true" />
+        </button>}
       </div>
       <div className="amazon-toolbar"><span>Effective next run</span><div>
         {!frame && <button type="button" className="amazon-primary" onClick={push} disabled={draft === null || draft === base.value}>Push v{base.version + 1}</button>}
