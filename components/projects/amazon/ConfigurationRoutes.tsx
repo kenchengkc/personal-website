@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { FileDiff, Pencil } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import { routes, type Phase, type StageState } from "./forecast";
 import styles from "./configuration-routes.module.css";
@@ -17,6 +18,7 @@ type Props = {
   activeStage: number | null;
   hopIndex: number | null;
   onSelect: (index: number) => void;
+  onOpenFile: () => void;
 };
 
 const shortNames = ["Ingest", "Prepare", "Forecast", "Publish"];
@@ -53,7 +55,10 @@ function placePaths(plot: HTMLDivElement, author: number) {
   const railX = origin.x + 7;
   const railY = origin.y + origin.h;
   for (const row of plot.querySelectorAll<HTMLElement>("[data-consumer]")) {
-    const stops = Array.from(row.querySelectorAll("[data-service-icon]"), relative);
+    const stops = Array.from(row.querySelectorAll("[data-service-stop]"), stop => {
+      const box = relative(stop);
+      return box.w ? box : relative(stop.querySelector("img")!);
+    });
     const paths = graphic.querySelectorAll(`[data-lane="${row.dataset.consumer}"] path`);
     const target = relative(row.querySelector("[data-destination]")!);
     stops.forEach((stop, i) => {
@@ -73,7 +78,9 @@ function placePaths(plot: HTMLDivElement, author: number) {
   }
 }
 
-export function ConfigurationRoutes({ file, version, author, readers, phase, stages, run, activeStage, hopIndex, onSelect }: Props) {
+export function ConfigurationRoutes({ file, version, author, readers, phase, stages, run, activeStage, hopIndex, onSelect, onOpenFile }: Props) {
+  const FileAction = phase === "draft" ? Pencil : FileDiff;
+  const fileLabel = phase === "draft" ? `Edit ${file}` : `View diff for ${file}`;
   const plotRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const plot = plotRef.current!;
@@ -104,7 +111,7 @@ export function ConfigurationRoutes({ file, version, author, readers, phase, sta
     draw();
     const observer = new ResizeObserver(draw);
     observer.observe(plot);
-    for (const el of plot.querySelectorAll("[data-origin],[data-consumer]")) observer.observe(el);
+    for (const el of plot.querySelectorAll("[data-origin],[data-consumer],[data-service-stop]")) observer.observe(el);
     const onMotionChange = () => { if (motion.matches) animation?.cancel(); };
     motion.addEventListener("change", onMotionChange);
     return () => {
@@ -139,11 +146,12 @@ export function ConfigurationRoutes({ file, version, author, readers, phase, sta
         </button>)}
       </div>
       <div className={styles.originRow}>
-        <div data-origin="" className={styles.origin}>
+        <button type="button" data-origin="" className={styles.origin} aria-label={fileLabel} title={fileLabel} onClick={onOpenFile}>
           <span className={styles.originLabel}>Shared configuration</span>
           <span className={styles.file}>{file}</span><span className={styles.version}>v{version}</span>
-        </div>
-        <span className={styles.run}>Run {run} · {readers.length} consumers</span>
+          <FileAction size={12} aria-hidden="true" />
+        </button>
+        <span className={styles.run}>Run {run}<span className={styles.consumerCount}> · {readers.length} consumers</span></span>
       </div>
       <ul className={styles.rows} aria-label="Delivery routes by consuming repository">
         {readers.map(index => {
@@ -153,9 +161,11 @@ export function ConfigurationRoutes({ file, version, author, readers, phase, sta
             <div className={styles.waypoints}>
               {route.hops.map((hop, j) => <div key={hop.service} className={styles.hop}
                 data-active={activeStage === index && phase === "delivering" && j === hopIndex}>
-                <Image data-service-icon="" className={styles.icon} src={`/images/amazon/${hop.service.toLowerCase()}.svg`}
-                  width={27} height={27} unoptimized alt="" />
-                <span className={styles.service}>{hop.service === "CloudFormation" ? <>Cloud<wbr />Formation</> : hop.service}</span>
+                <span data-service-stop="" className={styles.stop}>
+                  <Image data-service-icon="" className={styles.icon} src={`/images/amazon/${hop.service.toLowerCase()}.svg`}
+                    width={27} height={27} unoptimized alt="" />
+                  <span className={styles.service}>{hop.service === "CloudFormation" ? <>Cloud<wbr />Formation</> : hop.service}</span>
+                </span>
                 <span className={styles.action}>{hop.action}</span>
               </div>)}
             </div>

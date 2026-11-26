@@ -74,8 +74,8 @@
 .originRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 24px; }
 .origin {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  column-gap: 8px;
   align-items: center;
   min-width: 0;
   max-width: 100%;
@@ -83,7 +83,13 @@
   border: 1px solid #5c7383;
   border-radius: 5px;
   background: #253747;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
+.origin:hover, .origin:focus-visible { border-color: var(--route-gold); }
+.origin svg { color: #c4d2d8; }
 .originLabel { grid-column: 1 / -1; color: #bdcbd3; }
 .file, .repo { overflow-wrap: anywhere; }
 .version { color: var(--route-active); white-space: nowrap; }
@@ -101,6 +107,7 @@
 }
 .waypoints { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: start; }
 .hop { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; text-align: center; }
+.stop { display: contents; }
 .icon {
   display: block;
   width: 27px;
@@ -151,19 +158,24 @@
 
 @media (pointer: coarse) { .stage { min-height: 44px; } }
 
-/* Leave all delivery lanes visible in the gallery's compact window. */
-:global(.artwork-window-dialog:not(:modal)) .plot { padding: 0 10px 4px; }
-:global(.artwork-window-dialog:not(:modal)) .originRow { margin-top: 10px; }
-:global(.artwork-window-dialog:not(:modal)) .origin { padding: 3px 7px; }
-:global(.artwork-window-dialog:not(:modal)) .rows { margin-top: 3px; }
-:global(.artwork-window-dialog:not(:modal)) .row { min-height: 42px; padding-block: 2px; }
-:global(.artwork-window-dialog:not(:modal)) .icon { width: 20px; height: 20px; }
+/* The compact overview fills one pane. The file opens its diff in the same pane. */
+:global(.artwork-window-dialog:not(:modal)) .map { flex: 1; display: flex; }
+:global(.artwork-window-dialog:not(:modal)) .plot { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 4px 14px 14px; }
+:global(.artwork-window-dialog:not(:modal)) .originRow { margin-top: 18px; }
+:global(.artwork-window-dialog:not(:modal)) .origin { padding: 6px 8px; }
+:global(.artwork-window-dialog:not(:modal)) :is(.originLabel, .consumerCount, .action),
+:global(.artwork-window-dialog:not(:modal)) .row[data-state="reader"] .description { display: none; }
+:global(.artwork-window-dialog:not(:modal)) .rows { flex: 1; display: grid; align-content: space-evenly; gap: 5px; margin-top: 10px; }
+:global(.artwork-window-dialog:not(:modal)) .row { min-height: 46px; padding-block: 2px; }
+:global(.artwork-window-dialog:not(:modal)) .icon { width: 22px; height: 22px; }
 :global(.artwork-window-dialog:not(:modal)) .service { font-size: 11px; }
 :global(.artwork-window-dialog:not(:modal)) .repo { font-size: 12px; }
+:global(.artwork-window-dialog:not(:modal)) .destination { min-height: 0; }
 :global(.artwork-window-dialog:not(:modal)) .description { font-size: 11px; }
-:global(.artwork-window-dialog:not(:modal)) .action { display: none; }
 
-@container consumer-map (max-width: 400px) {
+@container consumer-map (min-width: 400px) {
+  :global(.artwork-window-dialog:not(:modal)) .stop { display: inline-flex; align-items: center; gap: 5px; padding-inline: 4px; background: var(--map-background); }
+}
+@container consumer-map (max-width: 399px) {
   :global(.artwork-window-dialog:not(:modal)) .row { grid-template-columns: minmax(0, 1fr) 44%; }
-  :global(.artwork-window-dialog:not(:modal)) .row[data-state="reader"] .description { display: none; }
 }

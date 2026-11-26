@@ -2,7 +2,7 @@
 .amazon-artifact {
   --font-amazon-ui: var(--font-sans);
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   min-width: 0;
   background: #14232f;
   color: #ecf3f4;
@@ -14,15 +14,12 @@
 .amazon-artifact[data-nearby="true"] { --font-amazon-ui: var(--amazon-poppins); }
 .amazon-pane { overflow: auto; min-width: 0; min-height: 0; scrollbar-width: thin; scrollbar-color: #526775 #152631; }
 .amazon-heading { margin: 0; padding: 10px 14px 8px; color: #ecf3f4; font: 500 19px/1.25 var(--font-amazon-ui), sans-serif; letter-spacing: -.022em; }
+.amazon-diff-shortcut { display: grid; place-items: center; min-height: 44px; background: #11202b; }
 .amazon-diff-arrow {
-  --arrow-size: 44px;
-  position: sticky;
-  bottom: 6px;
   display: grid;
   place-items: center;
-  width: var(--arrow-size);
-  height: var(--arrow-size);
-  margin: calc(-1 * var(--arrow-size)) auto 0;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 50%;
   color: #ecf3f4;
@@ -38,19 +35,22 @@
     30% { transform: translateY(2px); }
   }
 }
-.amazon-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: 6px; padding: 7px 12px; border-top: 1px solid #334954; background: #1b2b37; }
+.amazon-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 14px; border-top: 1px solid #334954; background: #162632; }
+.amazon-toolbar { display: flex; align-items: center; gap: 6px; margin-inline-start: auto; }
 .amazon-toolbar button { border: 1px solid #506570; border-radius: 5px; background: transparent; color: #ecf3f4; padding: 5px 10px; font: 500 12px/1.4 var(--font-amazon-ui), sans-serif; cursor: pointer; }
 .amazon-toolbar .amazon-primary { background: #ffca86; border-color: #ffca86; color: #322013; }
 .amazon-toolbar .amazon-primary:disabled { background: #34444e; color: #c3cdd1; border-color: #46565d; cursor: default; }
-.amazon-readout { display: flex; align-items: baseline; gap: 8px; padding: 7px 12px; border-top: 1px solid #334954; background: #101d27; font-size: 12px; }
+.amazon-readout { display: flex; flex: 1 1 185px; align-items: baseline; gap: 8px; font-size: 12px; }
 .amazon-readout > span { color: #88e0d1; font-variant-numeric: tabular-nums; }
 .amazon-readout p { margin: 0; min-width: 0; color: #bdcdd5; font: inherit; }
 .artwork-amazon .artwork-window-dialog:modal { width: min(800px, calc(100vw - 32px)); }
-.artwork-amazon .artwork-window-dialog:modal .amazon-diff-arrow { display: none; }
+.artwork-amazon .artwork-window-dialog:modal .amazon-diff-shortcut { display: none; }
 .artwork-amazon .artwork-window-dialog:modal .amazon-pane { overflow: visible; }
 .artwork-amazon .artwork-window-dialog:modal .amazon-heading { padding-block: 18px 10px; }
 @media (pointer: coarse) { .amazon-toolbar button { min-height: 40px; } }
-.artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 404px; }
+.artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 424px; }
+.artwork-amazon .artwork-window-dialog:not(:modal) .amazon-overview { display: flex; flex-direction: column; min-height: 100%; }
+.artwork-amazon .artwork-window-dialog:not(:modal) .amazon-heading { padding: 14px 14px 12px; }
 @container (max-width: 400px) {
   .artwork-amazon .artwork-window-dialog:not(:modal) { min-height: 438px; }
   .artwork-amazon .artwork-window-dialog:not(:modal) .amazon-heading { font-size: 16px; }

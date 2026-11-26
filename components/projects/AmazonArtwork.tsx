@@ -96,13 +96,14 @@ export function AmazonArtwork() {
 
   useEffect(() => {
     const viewport = pane.current;
-    if (!viewport || frame?.stage === undefined || viewport.scrollHeight <= viewport.clientHeight) return;
-    const lane = viewport.querySelector(`[data-consumer="${frame.stage}"]`);
-    if (!lane) return;
-    const row = lane.getBoundingClientRect();
+    if (!viewport || !frame || viewport.scrollHeight <= viewport.clientHeight) return;
+    const target = frame.phase === "complete" ? viewport.querySelector(".amazon-diff-shortcut")
+      : frame.stage !== undefined ? viewport.querySelector(`[data-consumer="${frame.stage}"]`) : null;
+    if (!target) return;
+    const row = target.getBoundingClientRect();
     const bounds = viewport.getBoundingClientRect();
     if (row.bottom > bounds.bottom) viewport.scrollTop += row.bottom - bounds.bottom;
-    else if (row.top < bounds.top) viewport.scrollTop += row.top - bounds.top;
+    else if (frame.phase !== "complete" && row.top < bounds.top) viewport.scrollTop += row.top - bounds.top;
   }, [frame]);
 
   function push() {
@@ -131,7 +132,9 @@ export function AmazonArtwork() {
     const diff = diffStart.current;
     if (!viewport || !diff) return;
     diff.focus({ preventScroll: true });
-    viewport.scrollBy({ top: diff.getBoundingClientRect().top - viewport.getBoundingClientRect().top, behavior: reduced ? "instant" : "smooth" });
+    const behavior = reduced ? "instant" : "smooth";
+    if (viewport.closest("dialog:modal")) diff.scrollIntoView({ block: "nearest", behavior });
+    else viewport.scrollBy({ top: diff.getBoundingClientRect().top - viewport.getBoundingClientRect().top, behavior });
   }
 
   const message = frame?.caption ?? (draft === null ? "Enter a positive whole number."
@@ -141,28 +144,34 @@ export function AmazonArtwork() {
     <div className={`amazon-artifact ${poppins.variable}`} ref={root} role="figure" aria-label="Amazon configuration infrastructure"
       data-nearby={nearby} data-phase={phase} data-running={running}>
       <div className="amazon-pane" ref={pane}>
-        <h3 className="amazon-heading">Forecasting pipeline</h3>
-        <ConfigurationRoutes file={config.name} version={base.version + Number(Boolean(frame))} author={author}
-          readers={config.readers} phase={phase} stages={stages} run={target} activeStage={frame?.stage ?? null}
-          hopIndex={frame?.hop ?? null} onSelect={edit} />
+        <div className="amazon-overview">
+          <h3 className="amazon-heading">Forecasting pipeline</h3>
+          <ConfigurationRoutes file={config.name} version={base.version + Number(Boolean(frame))} author={author}
+            readers={config.readers} phase={phase} stages={stages} run={target} activeStage={frame?.stage ?? null}
+            hopIndex={frame?.hop ?? null} onSelect={edit} onOpenFile={() => { setPlay(false); showDiff(); }} />
+          {phase === "complete" && <div className="amazon-diff-shortcut">
+            {showDiffArrow && <button type="button" className="amazon-diff-arrow" aria-label="View configuration diff" onClick={showDiff}>
+              <ArrowDown size={20} aria-hidden="true" />
+            </button>}
+          </div>}
+        </div>
         <div ref={diffStart} tabIndex={-1}>
           <ConfigurationDiff id={id} files={configIds.filter(item => files[item].readers.includes(author))} authorName={routes[author].name}
             original={base.value} value={draft} baseVersion={base.version} locked={Boolean(frame)}
             onFile={setId} onValue={value => setDrafts({ ...drafts, [id]: value })} />
         </div>
-        {phase === "complete" && showDiffArrow && <button type="button" className="amazon-diff-arrow" aria-label="View configuration diff" onClick={showDiff}>
-          <ArrowDown size={20} aria-hidden="true" />
-        </button>}
       </div>
-      <div className="amazon-toolbar">
-        {!frame && <button type="button" className="amazon-primary" onClick={push} disabled={draft === null || draft === base.value}>Click to push version {base.version + 1}</button>}
-        {frame && phase !== "complete" && <>
-          {!reduced && <button type="button" onClick={() => setPlay(!play)}>{play ? "Pause" : "Resume"}</button>}
-          {(reduced || !play) && <button type="button" onClick={() => setIndex(index + 1)}>Next event</button>}
-        </>}
-        {phase === "complete" && <button type="button" className="amazon-primary" onClick={() => { edit(author); showDiff(); }}>Edit again</button>}
+      <div className="amazon-footer">
+        <div className="amazon-readout"><span>{frame?.clock ?? clock(lastRun, lastRun === initialRun ? 18 : 21)}</span><p role="status">{message}</p></div>
+        <div className="amazon-toolbar">
+          {!frame && <button type="button" className="amazon-primary" onClick={push} disabled={draft === null || draft === base.value}>Click to push version {base.version + 1}</button>}
+          {frame && phase !== "complete" && <>
+            {!reduced && <button type="button" onClick={() => setPlay(!play)}>{play ? "Pause" : "Resume"}</button>}
+            {(reduced || !play) && <button type="button" onClick={() => setIndex(index + 1)}>Next event</button>}
+          </>}
+          {phase === "complete" && <button type="button" className="amazon-primary" onClick={() => { edit(author); showDiff(); }}>Edit again</button>}
+        </div>
       </div>
-      <div className="amazon-readout"><span>{frame?.clock ?? clock(lastRun, lastRun === initialRun ? 18 : 21)}</span><p role="status">{message}</p></div>
     </div>
   </ArtworkWindow>;
 }
