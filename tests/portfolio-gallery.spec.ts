@@ -285,29 +285,29 @@ test("each featured project has one visual with no duplicate walkthrough", async
     const recorded = project.demo === "quantiv" || project.demo === "fdre";
     await entry.locator('.project-artwork').scrollIntoViewIfNeeded();
     await expect(entry.locator('.product-browser-preview')).toHaveCount(recorded ? 1 : 0);
-    await expect(entry.locator('.animated-artwork')).toHaveCount(recorded ? 0 : 1);
-    await expect(entry.locator('.animated-artwork-playground')).toHaveCount(project.demo === "amazon" ? 1 : 0);
+    await expect(entry.locator('.amazon-artifact, .animated-artwork')).toHaveCount(recorded ? 0 : 1);
     await entry.locator('.portfolio-details > summary').click();
     await expect(entry.getByText('Interactive walkthrough', { exact: true })).toHaveCount(0);
-    await expect(entry.locator('.animated-artwork, .product-browser-preview')).toHaveCount(1);
+    await expect(entry.locator('.amazon-artifact, .animated-artwork, .product-browser-preview')).toHaveCount(1);
     await entry.locator('.portfolio-details > summary').click();
   }
 });
 
-test("gallery animations advance while visible, pause on demand, and stop in hidden categories", async ({ page }) => {
+test("an Amazon configuration push plays on demand and pauses in a hidden category", async ({ page }) => {
   await page.goto("/#work");
   await page.locator('[data-artwork="amazon"]').scrollIntoViewIfNeeded();
-  const artwork = page.locator('[data-artwork="amazon"] .animated-artwork');
+  const artwork = page.locator('[data-artwork="amazon"] .amazon-artifact');
   await artwork.scrollIntoViewIfNeeded();
+  await artwork.getByRole("button", { name: "Push v42", exact: true }).click();
   await expect(artwork).toHaveAttribute("data-running", "true");
-  await expect(artwork).toHaveAttribute("data-stage", "1", { timeout: 6500 });
-  await artwork.getByRole("button", { name: "Pause animation", exact: true }).click();
+  await expect(artwork).toHaveAttribute("data-phase", "delivering", { timeout: 6500 });
+  await artwork.getByRole("button", { name: "Pause", exact: true }).click();
   await expect(artwork).toHaveAttribute("data-running", "false");
-  const stage = await artwork.getAttribute("data-stage");
+  const status = await artwork.getByRole("status").textContent();
   await page.waitForTimeout(350);
-  await expect(artwork).toHaveAttribute("data-stage", stage!);
+  await expect(artwork.getByRole("status")).toHaveText(status!);
   await expect.poll(() => artwork.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
-  await artwork.getByRole("button", { name: "Play animation", exact: true }).click();
+  await artwork.getByRole("button", { name: "Resume", exact: true }).click();
   await expect(artwork).toHaveAttribute("data-running", "true");
   await page.getByRole("tab", { name: "Research", exact: true }).click();
   await expect(artwork).toHaveAttribute("data-running", "false");

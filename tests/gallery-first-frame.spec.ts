@@ -10,7 +10,7 @@ for (const width of [390, 1440]) {
     for (const [category, selector] of [
       ["research", '[data-artwork="cml"] svg'],
       ["awards", '[data-artwork="cvrp"] svg'],
-      ["work", '[data-artwork="amazon"] .amazon-source'],
+      ["work", '[data-artwork="amazon"] [aria-label="Configuration file diff"]'],
     ]) {
       const frames = await page.evaluate(({ category, selector }) => new Promise<boolean[]>(resolve => {
         const tab = document.getElementById(`gallery-tab-${category}`)!;
@@ -35,7 +35,7 @@ test("illustrated previews are already present before JavaScript or scrolling", 
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto("/");
-  await expect(page.locator('[data-artwork="amazon"] .amazon-source')).toContainText(/v041.*v042/s);
+  await expect(page.locator('[data-artwork="amazon"] [aria-label="Configuration file diff"]')).toContainText(/v41.*v42/s);
   for (const kind of ["cml", "speed", "cvrp", "embers"]) {
     await expect(page.locator(`[data-artwork="${kind}"] svg`).first()).toBeAttached();
   }

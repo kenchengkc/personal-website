@@ -1,99 +1,157 @@
 "use client";
 
-import { FileJson2 } from "lucide-react";
-import { useState } from "react";
-import { AnimatedArtwork } from "./AnimatedArtwork";
+import localFont from "next/font/local";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArtworkWindow } from "./ArtworkWindow";
+import { ConfigurationDiff } from "./amazon/ConfigurationDiff";
+import { ConfigurationRoutes } from "./amazon/ConfigurationRoutes";
+import { buildRelease, clock, files, initialRun, routes, stageState, type FileId, type Frame, type Phase, type Value } from "./amazon/forecast";
 
-const steps = [
-  { label: "Compare", caption: "A forecast output has a new revision." },
-  { label: "Trace", caption: "Trace the output to the configs that read it." },
-  { label: "Publish", caption: "Only configs that read this output receive v042." },
-] as const;
+const poppins = localFont({
+  src: [
+    { path: "./amazon/fonts/poppins-latin-400.woff2", weight: "400" },
+    { path: "./amazon/fonts/poppins-latin-500.woff2", weight: "500" },
+    { path: "./amazon/fonts/poppins-latin-600.woff2", weight: "600" },
+  ],
+  preload: false, display: "swap", variable: "--amazon-poppins",
+});
 
-// Each tick reveals a reference or updates a revision in the same four rows.
-const timeline = [
-  { stage: 0, at: 0 },
-  { stage: 1, at: 2000 },
-  { stage: 1, at: 2800 },
-  { stage: 1, at: 3400 },
-  { stage: 1, at: 4100 },
-  { stage: 2, at: 6000 },
-  { stage: 2, at: 6600 },
-  { stage: 2, at: 7200 },
-  { stage: 2, at: 9000 },
-] as const;
-
-type Output = "A" | "B";
-
-// Illustrative excerpts. A config keeps the same source in both views.
-const configSource = {
-  "01": "A", "03": "A", "07": "B", "08": "B", "09": "B", "14": "A",
-} as const;
-const excerpts: Record<Output, readonly (keyof typeof configSource)[]> = {
-  A: ["01", "03", "08", "14"],
-  B: ["01", "07", "08", "09"],
+const preferredFiles: FileId[] = ["input", "input", "window", "delivery"];
+const configIds = Object.keys(files) as FileId[];
+const headers: Record<Phase, string> = {
+  draft: "Select a service to edit its files.", push: "Saving the revision", delivering: "Delivering the revision",
+  arrival: "Preparing for the scheduled run", queued: "Waiting for the effective run", running: "Applying at stage start",
+  complete: "Forecast published",
 };
 
-function SourceDiff({ output }: { output: Output }) {
-  return <div className="amazon-source">
-    <div className="amazon-source-heading">
-      <span><FileJson2 aria-hidden="true" size={15} />config-{output.toLowerCase()}.json</span>
-      <small>Sample data</small>
-    </div>
-    <div className="amazon-source-line">
-      <span aria-hidden="true" className="amazon-line-number">2</span>
-      <code>{'"source": '}<b>{`"output-${output.toLowerCase()}"`}</b>,</code>
-    </div>
-    <div className="amazon-source-line amazon-source-edit">
-      <span aria-hidden="true" className="amazon-line-number">3</span>
-      <code>{'"version": '}<del>{'"v041"'}</del> <span aria-hidden="true">→</span> <ins>{'"v042"'}</ins></code>
-    </div>
-  </div>;
+function observeMotion(callback: () => void) {
+  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+  media.addEventListener("change", callback);
+  return () => media.removeEventListener("change", callback);
 }
-
-function ConfigurationTrace({ output, frame }: { output: Output; frame: number }) {
-  const rows = excerpts[output];
-  const linked = rows.filter(id => configSource[id] === output);
-
-  return <table className="amazon-configs" aria-label="Downstream configurations">
-    <thead><tr><th scope="col">Configuration</th><th scope="col">Source reference</th><th scope="col">Version</th></tr></thead>
-    <tbody>{rows.map((id, index) => {
-      const source = "output-" + configSource[id].toLowerCase();
-      const matchIndex = linked.indexOf(id);
-      const inspected = frame > index;
-      const matched = inspected && matchIndex >= 0;
-      const published = matchIndex >= 0 && frame >= 5 + matchIndex;
-      return <tr key={id} data-linked={matchIndex >= 0} data-matched={matched} data-published={published}>
-        <th scope="row">cfg-{id}</th>
-        <td className="amazon-reference">
-          {inspected
-            ? matchIndex === 0
-              ? <code className="amazon-match-field"><span>{'"source": '}</span><b>{`"${source}"`}</b></code>
-              : <code>{source}</code>
-            : <span className="amazon-pending" aria-label="Awaiting trace">—</span>}
-        </td>
-        <td className="amazon-revision"><span key={String(published)}>{published ? "v042" : "v041"}</span></td>
-      </tr>;
-    })}</tbody>
-  </table>;
+function observeTab(callback: () => void) {
+  document.addEventListener("visibilitychange", callback);
+  return () => document.removeEventListener("visibilitychange", callback);
 }
 
 export function AmazonArtwork() {
-  const [output, setOutput] = useState<Output>("A");
-  return <ArtworkWindow name="Amazon" title="Configuration review">
-    <div className="amazon-artifact">
-      <AnimatedArtwork label="Amazon configuration infrastructure" steps={steps} timeline={timeline}
-        playground={() => <div className="amazon-output" role="group" aria-label="Research output">
-          <span>Output</span>
-          {(["A", "B"] as const).map(value => <button key={value} type="button" aria-label={`Output ${value}`}
-            aria-pressed={value === output} onClick={() => setOutput(value)}>{value}</button>)}
-        </div>}>
-        {(stage, frame) => <div className="amazon-review" data-amazon-stage={stage}>
-          <SourceDiff output={output} />
-          <ConfigurationTrace output={output} frame={frame} />
-        </div>}
-      </AnimatedArtwork>
+  const root = useRef<HTMLDivElement>(null);
+  const pane = useRef<HTMLDivElement>(null);
+  const diffStart = useRef<HTMLDivElement>(null);
+  const [nearby, setNearby] = useState(false);
+  const [inView, setInView] = useState(false);
+  const [author, setAuthor] = useState(2);
+  const [id, setId] = useState<FileId>("window");
+  const [lastRun, setLastRun] = useState(initialRun);
+  const [ledger, setLedger] = useState<Record<FileId, { version: number; value: Value }>>(() => ({
+    input: { version: 41, value: files.input.initial }, window: { version: 41, value: files.window.initial },
+    delivery: { version: 41, value: files.delivery.initial },
+  }));
+  const [drafts, setDrafts] = useState<Record<FileId, Value | null>>({
+    input: files.input.sample, window: files.window.sample, delivery: files.delivery.sample,
+  });
+  const [timeline, setTimeline] = useState<Frame[]>([]);
+  const [index, setIndex] = useState(0);
+  const [play, setPlay] = useState(false);
+  const reduced = useSyncExternalStore(observeMotion, () => window.matchMedia("(prefers-reduced-motion: reduce)").matches, () => false);
+  const tabVisible = useSyncExternalStore(observeTab, () => !document.hidden, () => false);
+  const elapsed = useRef({ frame: undefined as Frame | undefined, ms: 0 });
+
+  const config = files[id];
+  const base = ledger[id];
+  const draft = drafts[id];
+  const target = lastRun + 1;
+  const frame = timeline[index];
+  const phase = frame?.phase ?? "draft";
+  const running = Boolean(frame && phase !== "complete" && play && inView && tabVisible && !reduced);
+  const stages = routes.map((route, stage) => {
+    const state = stageState(frame, config.readers.includes(stage), stage);
+    return { state, version: state === "other" ? null : base.version + Number(state === "applied"), time: clock(target, route.minute) };
+  });
+
+  useEffect(() => {
+    const viewport = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+      if (entry.isIntersecting) setNearby(true);
+    });
+    viewport.observe(root.current!);
+    return () => viewport.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!running || !frame) return;
+    if (elapsed.current.frame !== frame) elapsed.current = { frame, ms: 0 };
+    const started = performance.now();
+    const timer = window.setTimeout(() => setIndex(index + 1), Math.max(0, frame.duration - elapsed.current.ms));
+    return () => {
+      clearTimeout(timer);
+      elapsed.current.ms += performance.now() - started;
+    };
+  }, [running, frame, index]);
+
+  useEffect(() => {
+    const viewport = pane.current;
+    if (!viewport || frame?.stage === undefined || viewport.scrollHeight <= viewport.clientHeight) return;
+    const lane = viewport.querySelector(`[data-consumer="${frame.stage}"]`);
+    if (!lane) return;
+    const row = lane.getBoundingClientRect();
+    const bounds = viewport.getBoundingClientRect();
+    if (row.bottom > bounds.bottom) viewport.scrollTop += row.bottom - bounds.bottom;
+    else if (row.top < bounds.top) viewport.scrollTop += row.top - bounds.top;
+  }, [frame]);
+
+  function push() {
+    if (frame || draft === null || draft === base.value) return;
+    setTimeline(buildRelease(id, draft, author, lastRun, base.version));
+    setIndex(0);
+    setPlay(!reduced);
+    pane.current?.scrollTo({ top: 0 });
+  }
+
+  function edit(stage: number) {
+    if (frame) {
+      if (phase !== "complete" || draft === null) return;
+      setLedger({ ...ledger, [id]: { value: draft, version: base.version + 1 } });
+      setLastRun(target);
+      setTimeline([]);
+      setIndex(0);
+      setPlay(false);
+    }
+    if (stage !== author) setId(preferredFiles[stage]);
+    setAuthor(stage);
+  }
+
+  function showDiff() {
+    if (pane.current && diffStart.current) pane.current.scrollTop += diffStart.current.getBoundingClientRect().top - pane.current.getBoundingClientRect().top;
+  }
+
+  const message = frame?.caption ?? (draft === null ? `Enter a whole number from ${config.min} to ${config.max}.`
+    : draft === base.value ? "Change the value to create a new revision."
+    : `Run ${lastRun} uses v${base.version}. The edit will take effect in run ${target}.`);
+  return <ArtworkWindow name="Amazon" title="Forecast configuration">
+    <div className={`amazon-artifact ${poppins.variable}`} ref={root} role="figure" aria-label="Amazon configuration infrastructure"
+      data-nearby={nearby} data-phase={phase} data-running={running}>
+      <div className="amazon-pane" ref={pane}>
+        <div className="amazon-heading"><h3>Forecasting pipeline</h3><span>Example routes</span></div>
+        <div className="amazon-hint"><span>{headers[phase]}</span><button type="button" onClick={showDiff}>View diff ↓</button></div>
+        <ConfigurationRoutes file={config.name} version={base.version + Number(Boolean(frame))} author={author}
+          readers={config.readers} phase={phase} stages={stages} run={target} activeStage={frame?.stage ?? null}
+          hopIndex={frame?.hop ?? null} onSelect={edit} />
+        <div ref={diffStart}>
+          <ConfigurationDiff id={id} files={configIds.filter(item => files[item].readers.includes(author))} authorName={routes[author].name}
+            original={base.value} value={draft} baseVersion={base.version} locked={Boolean(frame)}
+            onFile={setId} onValue={value => setDrafts({ ...drafts, [id]: value })} />
+        </div>
+      </div>
+      <div className="amazon-toolbar"><span>Effective next run</span><div>
+        {!frame && <button type="button" className="amazon-primary" onClick={push} disabled={draft === null || draft === base.value}>Push v{base.version + 1}</button>}
+        {frame && phase !== "complete" && <>
+          {!reduced && <button type="button" onClick={() => setPlay(!play)}>{play ? "Pause" : "Resume"}</button>}
+          {(reduced || !play) && <button type="button" onClick={() => setIndex(index + 1)}>Next event</button>}
+        </>}
+        {phase === "complete" && <button type="button" className="amazon-primary" onClick={() => { edit(author); showDiff(); }}>Edit again</button>}
+      </div></div>
+      <div className="amazon-readout"><span>{frame?.clock ?? clock(lastRun, lastRun === initialRun ? 18 : 21)}</span><p role="status">{message}</p></div>
     </div>
   </ArtworkWindow>;
 }

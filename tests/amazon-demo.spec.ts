@@ -1,85 +1,82 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
 import { openProjectAnimation } from "./helpers/gallery";
 
-for (const width of [320, 390, 1440]) {
-  test(`Amazon shows why three configurations receive the new version at ${width}px`, async ({ page }) => {
+async function advanceTo(artwork: Locator, phase: string) {
+  const next = artwork.getByRole("button", { name: "Next event", exact: true });
+  for (let step = 0; step < 20 && (await artwork.getAttribute("data-phase")) !== phase; step++) {
+    await next.click();
+  }
+  await expect(artwork).toHaveAttribute("data-phase", phase);
+}
+
+for (const width of [320, 1440]) {
+  test(`Amazon stages a revision for its readers and activates it on the next run at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
-    const animation = await openProjectAnimation(page, "amazon");
-    const steps = animation.getByRole("group", { name: "Animation steps" });
-    const outputs = animation.getByRole("group", { name: "Research output" });
-    const source = animation.locator(".amazon-source");
-    const rows = animation.getByRole("table", { name: "Downstream configurations" }).locator("tbody tr");
-    const linked = rows.and(animation.locator('[data-linked="true"]'));
-    const unlinked = rows.and(animation.locator('[data-linked="false"]'));
+    const artwork = await openProjectAnimation(page, "amazon");
+    await expect(artwork.getByText("Effective next run", { exact: true })).toBeVisible();
+    await expect(artwork.getByRole("combobox", { name: /run/i })).toHaveCount(0);
+    const diff = artwork.getByRole("region", { name: "Configuration file diff" });
+    const horizon = diff.getByRole("spinbutton", { name: "New value for horizon_weeks" });
+    const push = artwork.getByRole("button", { name: "Push v42", exact: true });
+    await horizon.fill("12");
+    await expect(diff.getByText("No changes", { exact: true })).toBeVisible();
+    await expect(push).toBeDisabled();
+    await horizon.fill("19");
+    await expect(diff.locator('[data-kind="delete"][data-old-line="3"]')).toContainText("12");
+    await expect(diff.locator('[data-kind="add"][data-new-line="3"]')).toContainText('"horizon_weeks"');
+    await expect(diff).toContainText("@@ -1,5 +1,5 @@");
+    await expect(artwork.locator('[data-consumer="0"]')).toHaveCount(0);
+    await expect(artwork.locator("[data-consumer]")).toHaveCount(3);
+    await push.press("Enter");
+    await expect(artwork).toHaveAttribute("data-phase", "push");
+    await expect(artwork.getByRole("button", { name: "Pause", exact: true })).toHaveCount(0);
+    await advanceTo(artwork, "queued");
+    const readers = artwork.locator("[data-consumer]");
+    for (const row of await readers.all()) await expect(row).toHaveAttribute("data-state", "staged");
+    await expect(artwork.getByRole("status")).toContainText(/184.*v41/);
 
-    for (const [output, unchangedConfig] of [["A", "cfg-08"], ["B", "cfg-01"]] as const) {
-      await steps.getByRole("button", { name: "Compare", exact: true }).click();
-      const choice = outputs.getByRole("button", { name: `Output ${output}`, exact: true });
-      await choice.click();
-      await expect(choice).toHaveAttribute("aria-pressed", "true");
-      await expect(animation).toHaveAttribute("data-running", "false");
-      const reference = `output-${output.toLowerCase()}`;
-      await expect(source).toContainText(reference);
-      await expect(source).toContainText(/v041.*v042/s);
-      await expect(rows.locator("td:last-child")).toHaveText(Array(4).fill("v041"));
-      await expect(unlinked).toContainText(unchangedConfig);
-
-      await steps.getByRole("button", { name: "Trace", exact: true }).click();
-      await expect(linked).toHaveCount(3);
-      const evidence = linked.getByText(new RegExp(`"source"\\s*:\\s*"${reference}"`));
-      await expect(evidence).toHaveCount(1);
-      await expect(evidence).toBeVisible();
-      await expect(rows.locator("td:last-child")).toHaveText(Array(4).fill("v041"));
-
-      const layoutIssues = await animation.evaluate(node => {
-        const dialog = node.closest("dialog")!.getBoundingClientRect();
-        const host = node.closest(".artwork-window-host")!.getBoundingClientRect();
-        const items = [...node.querySelectorAll("tbody th, tbody td, button")].map(element => {
-          const range = document.createRange();
-          range.selectNodeContents(element);
-          return {
-            label: element.getAttribute("aria-label") || element.textContent,
-            rect: element.matches("button") ? element.getBoundingClientRect() : range.getBoundingClientRect(),
-          };
-        });
-        const issues: string[] = [];
-        for (const [index, { label, rect }] of items.entries()) {
-          if ([dialog, host].some(bounds => rect.left < bounds.left - 1 || rect.right > bounds.right + 1
-            || rect.top < bounds.top - 1 || rect.bottom > bounds.bottom + 1)) issues.push(`${label} is clipped`);
-          for (const other of items.slice(index + 1)) {
-            if (Math.min(rect.right, other.rect.right) - Math.max(rect.left, other.rect.left) > 1
-              && Math.min(rect.bottom, other.rect.bottom) - Math.max(rect.top, other.rect.top) > 1) {
-              issues.push(`${label} overlaps ${other.label}`);
-            }
-          }
-        }
-        return issues;
-      });
-      expect(layoutIssues).toEqual([]);
-
-      await steps.getByRole("button", { name: "Publish", exact: true }).click();
-      await expect(linked.locator("td:last-child")).toHaveText(Array(3).fill("v042"));
-      await expect(unlinked.locator("td:last-child")).toHaveText("v041");
-      await expect(unlinked).toContainText(unchangedConfig);
+    // Ingestion does not read forecast-window.json. It starts without activating any delivery.
+    const next = artwork.getByRole("button", { name: "Next event", exact: true });
+    await next.click();
+    await expect(artwork.locator('[data-consumer][data-state="applied"]')).toHaveCount(0);
+    for (const [index, time] of ["07:04", "07:12", "07:20"].entries()) {
+      await next.click();
+      await expect(artwork.locator('[data-consumer][data-state="applied"]')).toHaveCount(index + 1);
+      await expect(artwork.locator(`[data-consumer="${index + 1}"]`)).toContainText(time);
     }
+    await advanceTo(artwork, "complete");
+    await expect(artwork.getByRole("status")).toContainText(/185.*v42/);
+    await artwork.getByRole("button", { name: "Edit again" }).click();
+    await expect(horizon).toHaveValue("19");
+    await expect(artwork.getByRole("button", { name: "Push v43" })).toBeDisabled();
+    await horizon.fill("24");
+    await artwork.getByRole("button", { name: "Push v43" }).click();
+    await advanceTo(artwork, "complete");
+    await expect(artwork.getByRole("status")).toContainText(/186.*v43/);
+    expect(await artwork.evaluate(el => el.scrollWidth <= el.clientWidth + 1 && document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
 
-test("Amazon plays through the trace once, holds the published versions, and replays from the diff", async ({ page }) => {
+test("switching the author and edited file changes the diff and recipient routes", async ({ page }) => {
   await page.goto("/");
-  const animation = await openProjectAnimation(page, "amazon");
-  const play = animation.getByRole("button", { name: "Play animation", exact: true });
-  const replay = animation.getByRole("button", { name: "Replay animation", exact: true });
-  await animation.getByRole("button", { name: "Compare", exact: true }).click();
-  await play.click();
-  await expect(animation).toHaveAttribute("data-stage", "1", { timeout: 3500 });
-  await expect(animation).toHaveAttribute("data-stage", "2", { timeout: 5500 });
-  await expect(replay).toBeVisible({ timeout: 4500 });
-  await expect(animation).toHaveAttribute("data-running", "false");
-  await expect(animation).toHaveAttribute("data-stage", "2");
-  await replay.click();
-  await expect(animation).toHaveAttribute("data-stage", "0");
-  await expect(animation).toHaveAttribute("data-running", "true");
-  await expect(animation.getByRole("table").locator("tbody td:last-child")).toHaveText(Array(4).fill("v041"));
+  const artwork = await openProjectAnimation(page, "amazon");
+  const publishing = artwork.getByRole("button", { name: /^Publishing/ });
+  await publishing.press("Enter");
+  await expect(publishing).toHaveAttribute("aria-pressed", "true");
+  const file = artwork.getByRole("combobox", { name: "Configuration file" });
+  await expect(file).toHaveValue("delivery");
+  await artwork.getByRole("combobox", { name: "New value for format" }).selectOption("jsonl");
+  await expect(artwork.locator("[data-consumer]")).toHaveCount(2);
+  await expect(artwork.locator('[data-consumer="2"]')).toContainText(/SNS.*Lambda.*demand-model/s);
+  await expect(artwork.locator('[data-consumer="3"]')).toContainText(/S3.*CloudFormation.*forecast-publisher/s);
+  await file.selectOption("window");
+  await expect(artwork.locator("[data-consumer]")).toHaveCount(3);
+  await file.selectOption("delivery");
+  await expect(artwork.getByRole("combobox", { name: "New value for format" })).toHaveValue("jsonl");
+  await artwork.getByRole("button", { name: /^Ingestion/ }).press("Enter");
+  await expect(file).toHaveValue("input");
+  await expect(artwork.locator('[data-consumer="0"]')).toContainText("sales-ingest");
+  await expect(artwork.locator('[data-consumer="2"], [data-consumer="3"]')).toHaveCount(0);
 });

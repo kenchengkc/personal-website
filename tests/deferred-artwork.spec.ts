@@ -36,7 +36,7 @@ for (const width of [320, 390, 1440]) {
       const slot = page.locator(`[data-artwork="${kind}"]`);
       const before = (await slot.boundingBox())!;
       await slot.scrollIntoViewIfNeeded();
-      await expect(slot.locator(".animated-artwork, .product-browser-preview")).toBeVisible();
+      await expect(slot.locator(".animated-artwork, .amazon-artifact, .product-browser-preview")).toBeVisible();
       const after = (await slot.boundingBox())!;
       expect(Math.abs(after.height - before.height)).toBeLessThan(1);
       expect(Math.abs(after.width - before.width)).toBeLessThan(1);
@@ -57,14 +57,14 @@ for (const width of [320, 390, 1440]) {
 test("a reached animation retains its node and manual choices when switching categories", async ({ page }) => {
   await page.goto("/");
   const animation = await openProjectAnimation(page, "amazon");
-  await animation.getByRole("button", { name: "Output B", exact: true }).click();
-  await animation.getByRole("button", { name: "Publish", exact: true }).click();
+  const horizon = animation.getByRole("spinbutton", { name: "New value for horizon_weeks" });
+  await horizon.fill("21");
   const original = (await animation.elementHandle())!;
   await page.getByRole("tab", { name: "Research", exact: true }).click();
   await expect(animation).toBeHidden();
   await expect(animation).toHaveAttribute("data-running", "false");
   await page.getByRole("tab", { name: "Work", exact: true }).click();
-  await expect(animation).toHaveAttribute("data-stage", "2");
-  await expect(animation.getByRole("button", { name: "Output B", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(animation).toHaveAttribute("data-phase", "draft");
+  await expect(horizon).toHaveValue("21");
   expect(await original.evaluate(node => node.isConnected)).toBe(true);
 });

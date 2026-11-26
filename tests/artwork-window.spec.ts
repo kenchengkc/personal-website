@@ -7,9 +7,13 @@ for (const product of [{ kind: "amazon", name: "Amazon" }, { kind: "embers", nam
     const animation = await openProjectAnimation(page, product.kind);
     const host = page.locator(`[data-window="${product.kind}"]`);
     const scene = await animation.elementHandle();
-    const steps = animation.getByRole("group", { name: "Animation steps" }).getByRole("button");
-    await steps.nth(1).click();
-    if (product.kind === "amazon") await animation.getByRole("button", { name: "Output B", exact: true }).click();
+    const horizon = animation.getByRole("spinbutton", { name: "New value for horizon_weeks" });
+    if (product.kind === "amazon") await horizon.fill("21");
+    else await animation.getByRole("group", { name: "Animation steps" }).getByRole("button").nth(1).click();
+    async function expectSelection() {
+      if (product.kind === "amazon") await expect(horizon).toHaveValue("21");
+      else await expect(animation).toHaveAttribute("data-stage", "1");
+    }
     const inline = (await host.boundingBox())!;
     const scrollY = await page.evaluate(() => window.scrollY);
     const expand = host.getByRole("button", { name: `Expand ${product.name} preview`, exact: true });
@@ -19,7 +23,7 @@ for (const product of [{ kind: "amazon", name: "Amazon" }, { kind: "embers", nam
       const dialog = page.getByRole("dialog", { name: `${product.name} enlarged preview`, exact: true });
       await expect(dialog).toBeVisible();
       expect(await dialog.evaluate(node => node.matches(":modal"))).toBe(true);
-      await expect(animation).toHaveAttribute("data-stage", "1");
+      await expectSelection();
       await expect(animation).toHaveAttribute("data-running", "false");
       expect(await scene!.evaluate(node => node.isConnected)).toBe(true);
       expect((await host.boundingBox())!.height).toBeCloseTo(inline.height, 1);
@@ -30,7 +34,6 @@ for (const product of [{ kind: "amazon", name: "Amazon" }, { kind: "embers", nam
       expect(await dialog.evaluate(node => getComputedStyle(node, "::backdrop").backgroundColor)).not.toBe("rgba(0, 0, 0, 0)");
       await page.mouse.wheel(0, 120);
       expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
-      if (product.kind === "amazon") await expect(animation.getByRole("button", { name: "Output B", exact: true })).toHaveAttribute("aria-pressed", "true");
       await page.keyboard.press("Tab");
       expect(await dialog.evaluate(node => !document.hasFocus() || node.contains(document.activeElement))).toBe(true);
 
@@ -41,7 +44,7 @@ for (const product of [{ kind: "amazon", name: "Amazon" }, { kind: "embers", nam
       await expect(page.getByRole("dialog", { name: `${product.name} enlarged preview`, exact: true })).toHaveCount(0);
       await expect(expand).toBeFocused();
       expect(await scene!.evaluate(node => node.isConnected)).toBe(true);
-      await expect(animation).toHaveAttribute("data-stage", "1");
+      await expectSelection();
       expect((await host.boundingBox())!.height).toBeCloseTo(inline.height, 1);
       expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
     }

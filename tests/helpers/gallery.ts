@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
-export type FeaturedAnimation = "amazon" | "embers";
+type FeaturedAnimation = "amazon" | "embers";
 export type ProductRecording = "quantiv" | "fdre";
 
 /** Select the Work gallery and bring its single interactive animation into view. */
@@ -8,7 +8,8 @@ export async function openProjectAnimation(page: Page, project: FeaturedAnimatio
   const work = page.getByRole("tab", { name: "Work", exact: true });
   if (await work.getAttribute("aria-selected") !== "true") await work.click();
   await page.locator(`.portfolio-entry[data-project="${project}"] .project-artwork`).scrollIntoViewIfNeeded();
-  const animation = page.locator(`.portfolio-entry[data-project="${project}"] .animated-artwork`);
+  const selector = project === "amazon" ? ".amazon-artifact" : ".animated-artwork";
+  const animation = page.locator(`.portfolio-entry[data-project="${project}"] ${selector}`);
   await expect(animation).toBeAttached();
   await animation.evaluate(node => node.scrollIntoView({ behavior: "instant", block: "center" }));
   return animation;
