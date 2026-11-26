@@ -298,7 +298,7 @@ test("an Amazon configuration push plays on demand and pauses in a hidden catego
   await page.locator('[data-artwork="amazon"]').scrollIntoViewIfNeeded();
   const artwork = page.locator('[data-artwork="amazon"] .amazon-artifact');
   await artwork.scrollIntoViewIfNeeded();
-  await artwork.getByRole("button", { name: "Push v42", exact: true }).click();
+  await artwork.getByRole("button", { name: "Click to push version 42", exact: true }).click();
   await expect(artwork).toHaveAttribute("data-running", "true");
   await expect(artwork).toHaveAttribute("data-phase", "delivering", { timeout: 6500 });
   await artwork.getByRole("button", { name: "Pause", exact: true }).click();

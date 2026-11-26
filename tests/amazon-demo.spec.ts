@@ -15,11 +15,13 @@ for (const width of [320, 1440]) {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     const artwork = await openProjectAnimation(page, "amazon");
+    const arrow = artwork.getByRole("button", { name: "View configuration diff" });
+    await expect(arrow).toBeHidden();
     await expect(artwork.getByText("Effective next run", { exact: true })).toBeVisible();
     await expect(artwork.getByRole("combobox", { name: /run/i })).toHaveCount(0);
     const diff = artwork.getByRole("region", { name: "Configuration file diff" });
     const horizon = diff.getByRole("spinbutton", { name: "New value for horizon_weeks" });
-    const push = artwork.getByRole("button", { name: "Push v42", exact: true });
+    const push = artwork.getByRole("button", { name: "Click to push version 42", exact: true });
     await horizon.fill("12");
     await expect(diff.getByText("No changes", { exact: true })).toBeVisible();
     await expect(push).toBeDisabled();
@@ -31,6 +33,7 @@ for (const width of [320, 1440]) {
     await expect(artwork.locator("[data-consumer]")).toHaveCount(3);
     await push.press("Enter");
     await expect(artwork).toHaveAttribute("data-phase", "push");
+    await expect(arrow).toBeHidden();
     await expect(artwork.getByRole("button", { name: "Pause", exact: true })).toHaveCount(0);
     await advanceTo(artwork, "queued");
     const readers = artwork.locator("[data-consumer]");
@@ -48,11 +51,17 @@ for (const width of [320, 1440]) {
     }
     await advanceTo(artwork, "complete");
     await expect(artwork.getByRole("status")).toContainText(/185.*v42/);
+    await expect(arrow).toBeVisible();
+    await arrow.click();
+    await expect(arrow).toBeHidden();
+    await expect(diff.locator('[data-kind="add"]')).toBeInViewport();
     await artwork.getByRole("button", { name: "Edit again" }).click();
+    await expect(arrow).toBeHidden();
     await expect(horizon).toHaveValue("19");
-    await expect(artwork.getByRole("button", { name: "Push v43" })).toBeDisabled();
+    const pushNextVersion = artwork.getByRole("button", { name: "Click to push version 43", exact: true });
+    await expect(pushNextVersion).toBeDisabled();
     await horizon.fill("24");
-    await artwork.getByRole("button", { name: "Push v43" }).click();
+    await pushNextVersion.click();
     await advanceTo(artwork, "complete");
     await expect(artwork.getByRole("status")).toContainText(/186.*v43/);
     expect(await artwork.evaluate(el => el.scrollWidth <= el.clientWidth + 1 && document.documentElement.scrollWidth <= innerWidth)).toBe(true);
