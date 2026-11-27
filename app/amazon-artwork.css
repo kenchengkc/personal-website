@@ -36,13 +36,14 @@
   }
 }
 .amazon-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 14px; border-top: 1px solid #334954; background: #162632; }
-.amazon-toolbar { display: flex; align-items: center; gap: 6px; margin-inline-start: auto; }
+/* Reserve both control and caption space so playback never changes the footer layout. */
+.amazon-toolbar { display: flex; flex: 0 1 168px; align-items: center; justify-content: flex-end; gap: 6px; margin-inline-start: auto; }
 .amazon-toolbar button { border: 1px solid #506570; border-radius: 5px; background: transparent; color: #ecf3f4; padding: 5px 10px; font: 500 12px/1.4 var(--font-amazon-ui), sans-serif; cursor: pointer; }
 .amazon-toolbar .amazon-primary { background: #ffca86; border-color: #ffca86; color: #322013; }
 .amazon-toolbar .amazon-primary:disabled { background: #34444e; color: #c3cdd1; border-color: #46565d; cursor: default; }
-.amazon-readout { display: flex; flex: 1 1 185px; align-items: baseline; gap: 8px; font-size: 12px; }
+.amazon-readout { display: flex; flex: 1 1 248px; min-width: 0; min-block-size: 3lh; align-items: baseline; gap: 8px; font-size: 12px; }
 .amazon-readout > span { color: #88e0d1; font-variant-numeric: tabular-nums; }
-.amazon-readout p { margin: 0; min-width: 0; color: #bdcdd5; font: inherit; }
+.amazon-readout p { margin: 0; min-width: 0; overflow-wrap: anywhere; color: #bdcdd5; font: inherit; }
 .artwork-amazon .artwork-window-dialog:modal { width: min(800px, calc(100vw - 32px)); }
 .artwork-amazon .artwork-window-dialog:modal .amazon-diff-shortcut { display: none; }
 .artwork-amazon .artwork-window-dialog:modal .amazon-pane { overflow: visible; }

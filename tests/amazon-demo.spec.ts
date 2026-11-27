@@ -3,8 +3,11 @@ import { openProjectAnimation } from "./helpers/gallery";
 
 async function advanceTo(artwork: Locator, phase: string) {
   const next = artwork.getByRole("button", { name: "Next event", exact: true });
+  const pane = artwork.locator(".amazon-pane");
+  const height = await pane.evaluate(node => node.clientHeight);
   for (let step = 0; step < 20 && (await artwork.getAttribute("data-phase")) !== phase; step++) {
     await next.click();
+    expect(await pane.evaluate(node => node.clientHeight), "The pipeline height should stay fixed as the log changes").toBe(height);
   }
   await expect(artwork).toHaveAttribute("data-phase", phase);
 }
